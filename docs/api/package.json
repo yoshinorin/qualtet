@@ -1,0 +1,15 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "redoc-cli bundle openapi.yml -o ./dist/index.html",
+    "server": "redoc-cli serve openapi.yml",
+    "serve": "npm run server"
+  },
+  "author": "yoshinorin",
+  "devDependencies": {
+    "redoc-cli": "^0.11.4"
+  }
+}
