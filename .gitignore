@@ -1,0 +1,36 @@
+# General
+*.class
+*.log
+**/logs/**
+*.gz
+**/node_modules/*
+
+# sbt specific
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+.bsp/
+
+# Scala-IDE specific
+.scala_dependencies
+.classpath
+.project
+.cache
+.settings
+
+# IntelliJ specific
+.idea/
+.idea_modules/
+
+# Documentation
+docs/api/dist
+
+# Docker
+docker/data
+docker/config
+
+# Artifacts
+*.jar
