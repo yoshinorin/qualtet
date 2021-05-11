@@ -1,0 +1,30 @@
+/* TODO: have to consider column, multiple-column indexes, foreign key etc...  */
+CREATE TABLE IF NOT EXISTS authors (
+    uuid CHAR(36) CHARACTER SET ascii NOT NULL,
+    name VARCHAR(32) UNIQUE NOT NULL,
+    display_name VARCHAR(32),
+    created_at BIGINT UNSIGNED DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS hosts(
+    uuid CHAR(36) CHARACTER SET ascii NOT NULL,
+    name VARCHAR(255) UNIQUE NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS contents (
+    uuid CHAR(36) CHARACTER SET ascii NOT NULL,
+    host_id CHAR(36) CHARACTER SET ascii NOT NULL,
+    author_id CHAR(36) CHARACTER SET ascii NOT NULL,
+    path VARCHAR(512) UNIQUE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    raw_content MEDIUMTEXT NOT NULL,
+    html_content MEDIUMTEXT NOT NULL,
+    published_at BIGINT UNSIGNED DEFAULT 0,
+    updated_at BIGINT UNSIGNED DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS tags(
+    uuid CHAR(36) CHARACTER SET ascii NOT NULL,
+    name VARCHAR(32) UNIQUE NOT NULL,
+    content_id CHAR(36) CHARACTER SET ascii NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

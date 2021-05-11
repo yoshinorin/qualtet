@@ -4,6 +4,7 @@
 **/logs/**
 *.gz
 **/node_modules/*
+.env
 
 # sbt specific
 dist/*
@@ -34,3 +35,4 @@ docker/config
 
 # Artifacts
 *.jar
+
