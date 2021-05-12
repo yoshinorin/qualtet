@@ -21,6 +21,7 @@ project/plugins/project/
 .project
 .cache
 .settings
+.vscode
 
 # IntelliJ specific
 .idea/
