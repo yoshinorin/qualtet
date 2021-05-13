@@ -1,0 +1,63 @@
+<configuration>
+    <appender name="APPLICATION_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${application.home:-.}/logs/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Daily rollover with compression -->
+            <fileNamePattern>application-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <!-- keep 30 days worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from %logger - %message%n%xException</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>DENY</onMatch>
+        </filter>
+    </appender>
+
+    <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${application.home:-.}/logs/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover with compression -->
+            <fileNamePattern>debug-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <!-- keep 1 week worth of history -->
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} %message%n</pattern>
+            <!-- this quadruples logging throughput -->
+            <immediateFlush>false</immediateFlush>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <logger name="error" level="ERROR" additivity="false">
+        <appender-ref ref="APPLICATION_FILE" />
+    </logger>
+
+    <logger name="info" level="INFO" additivity="false">
+        <appender-ref ref="APPLICATION_FILE" />
+    </logger>
+
+    <logger name="debug" level="DEBUG" additivity="false">
+        <appender-ref ref="DEBUG_FILE" />
+    </logger>
+
+    <root level="ERROR">
+        <appender-ref ref="APPLICATION_FILE"/>
+    </root>
+
+    <root level="INFO">
+        <appender-ref ref="APPLICATION_FILE"/>
+    </root>
+
+    <root level="DEBUG">
+        <appender-ref ref="APPLICATION_FILE"/>
+        <appender-ref ref="DEBUG_FILE"/>
+    </root>
+</configuration>

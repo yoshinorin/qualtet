@@ -10,4 +10,7 @@ object Config {
   val dbUser: String = config.getString("db.ctx.dataSource.user")
   val dbPassword: String = config.getString("db.ctx.dataSource.password")
 
+  val httpHost: String = config.getString("http.host")
+  val httpPort: Int = config.getInt("http.port")
+
 }
