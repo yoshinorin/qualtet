@@ -20,6 +20,9 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+  "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
   "org.mariadb.jdbc" % "mariadb-java-client" % "2.7.2",
-  "org.flywaydb" % "flyway-core" % "7.8.2"
+  "org.flywaydb" % "flyway-core" % "7.8.2",
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "org.slf4j" % "slf4j-api" % "1.7.30"
 )
