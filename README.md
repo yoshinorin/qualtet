@@ -45,3 +45,35 @@ $ cd ./docs/api
 $ npm run serve
 Server started: http://127.0.0.1:8080
 ```
+
+### Code format
+
+```sh
+$ scalafmt
+```
+
+### Test
+
+Run all tests
+
+```sh
+$ sbt test
+```
+
+Run specific test
+
+
+```sh
+$ sbt
+$ testOnly *xxxxxSpec
+```
+
+Generate Coverage report
+
+```sh
+$ sbt coverageReport
+
+or
+
+$ sbt clean coverage test coverageReport
+```
