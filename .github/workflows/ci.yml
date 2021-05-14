@@ -1,0 +1,41 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [11]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-sbt-libs
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+            ~/.cache/coursier/v1
+          key: build-${{ env.cache-name }}-${{ hashFiles('build.sbt') }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+
+      - name: Run tests
+        working-directory: ./src
+        run: source ./scripts/devenv.sh && sbt test
+
+      - name: Generate Coverage Report
+        working-directory: ./src
+        run: source ./scripts/devenv.sh && sbt clean coverage test coverageReport
+
+      - name: Send Coverage Report
+        working-directory: ./cahsper-backend
+        run: source ./scripts/devenv.sh && sbt ++${{ matrix.scala }} coverageAggregate coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}

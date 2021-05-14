@@ -30,3 +30,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.8" % "test",
   "org.mockito" % "mockito-core" % "3.10.0" % "test"
 )
+
+coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration; net.yoshinorin.qualtet.http.HttpServer;"
+org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
