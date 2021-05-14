@@ -37,6 +37,7 @@ jobs:
 
       - name: Send Coverage Report
         working-directory: .
-        run: source ./scripts/devenv.sh && sbt ++${{ matrix.scala }} coverageAggregate coveralls
+        run: source ./scripts/devenv.sh && sbt coverageAggregate coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
