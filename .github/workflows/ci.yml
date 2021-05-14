@@ -29,14 +29,14 @@ jobs:
 
       - name: Run tests
         working-directory: ./src
-        run: source ./scripts/devenv.sh && sbt test
+        run: source ../scripts/devenv.sh && sbt test
 
       - name: Generate Coverage Report
         working-directory: ./src
-        run: source ./scripts/devenv.sh && sbt clean coverage test coverageReport
+        run: source ../scripts/devenv.sh && sbt clean coverage test coverageReport
 
       - name: Send Coverage Report
         working-directory: ./cahsper-backend
-        run: source ./scripts/devenv.sh && sbt ++${{ matrix.scala }} coverageAggregate coveralls
+        run: source ../scripts/devenv.sh && sbt ++${{ matrix.scala }} coverageAggregate coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
