@@ -1,18 +1,18 @@
 /* TODO: have to consider column, multiple-column indexes, foreign key etc...  */
 CREATE TABLE IF NOT EXISTS authors (
-    uuid CHAR(36) CHARACTER SET ascii UNIQUE NOT NULL,
+    id CHAR(36) CHARACTER SET ascii UNIQUE NOT NULL,
     name VARCHAR(32) UNIQUE NOT NULL,
     display_name VARCHAR(32),
     created_at BIGINT UNSIGNED DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE content_types (
-    uuid CHAR(36) CHARACTER SET ascii UNIQUE NOT NULL,
+    id CHAR(36) CHARACTER SET ascii UNIQUE NOT NULL,
     name VARCHAR(32) UNIQUE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS contents (
-    uuid CHAR(36) CHARACTER SET ascii UNIQUE NOT NULL,
+    id CHAR(36) CHARACTER SET ascii UNIQUE NOT NULL,
     author_id CHAR(36) CHARACTER SET ascii NOT NULL,
     content_type_id CHAR(36) CHARACTER SET ascii NOT NULL,
     path VARCHAR(512) UNIQUE NOT NULL,
@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS contents (
     html_content MEDIUMTEXT NOT NULL,
     published_at BIGINT UNSIGNED DEFAULT 0,
     updated_at BIGINT UNSIGNED DEFAULT 0,
-    FOREIGN KEY fk_author(author_id) REFERENCES authors(uuid),
-    FOREIGN KEY fk_content_type(content_type_id) REFERENCES content_types(uuid),
+    FOREIGN KEY fk_author(author_id) REFERENCES authors(id),
+    FOREIGN KEY fk_content_type(content_type_id) REFERENCES content_types(id),
     FULLTEXT idx_fulltext(raw_content)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
