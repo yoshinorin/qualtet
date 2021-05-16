@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.models.contentTypes
+package net.yoshinorin.qualtet.domains.models.contentTypes
 
 import java.util.UUID
 

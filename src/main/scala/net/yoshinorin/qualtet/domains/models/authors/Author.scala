@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.models.authors
+package net.yoshinorin.qualtet.domains.models.authors
 
 import java.time.ZonedDateTime
 import java.util.UUID

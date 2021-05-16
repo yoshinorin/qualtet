@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.infrastructure.db.doobie
 
 import doobie.implicits._
 import cats.effect.IO
-import net.yoshinorin.qualtet.models.contents.{Content, ContentRepository}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository}
 
 class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
 

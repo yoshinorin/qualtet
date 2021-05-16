@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.models.contents
+package net.yoshinorin.qualtet.domains.models.contents
 
 trait ContentRepository {
 
