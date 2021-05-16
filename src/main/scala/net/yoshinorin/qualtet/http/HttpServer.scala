@@ -5,13 +5,14 @@ import akka.http.scaladsl.Http.ServerBinding
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives.extractClientIP
-import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, HomeRoute}
+import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ContentRoute, HomeRoute}
 
 import scala.concurrent.Future
 
 class HttpServer(
   homeRoute: HomeRoute,
-  apiStatusRoute: ApiStatusRoute
+  apiStatusRoute: ApiStatusRoute,
+  contentRoute: ContentRoute
 )(implicit actorSystem: ActorSystem)
     extends HttpLogger {
 
@@ -25,7 +26,8 @@ class HttpServer(
     extractClientIP { ip =>
       httpLogging(ip) {
         homeRoute.route ~
-          apiStatusRoute.route
+          apiStatusRoute.route ~
+          contentRoute.route
       }
     }
 }

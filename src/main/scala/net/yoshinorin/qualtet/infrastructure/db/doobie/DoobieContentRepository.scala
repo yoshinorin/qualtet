@@ -12,7 +12,7 @@ class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
    * @param data Instance of Content
    * @return created Content
    */
-  override def insert(data: Content): Content = ???
+  def insert(data: Content): Content = ???
 
   // TODO: should update
   def getAll: IO[Seq[Content]] = {

@@ -1,5 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.contents
 
+import cats.effect.IO
+
 trait ContentRepository {
 
   /**
@@ -13,4 +15,6 @@ trait ContentRepository {
   def find = ???
 
   def update = ???
+
+  def getAll: IO[Seq[Content]]
 }
