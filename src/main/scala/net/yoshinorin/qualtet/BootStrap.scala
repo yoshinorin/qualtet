@@ -30,6 +30,11 @@ object BootStrap extends App {
     case Success(binding) =>
       val address = binding.localAddress
       println(s"Server online at http://${address.getHostString}:${address.getPort}/")
+      // TODO: delete comment out when create docker image
+      StdIn.readLine()
+      binding
+        .unbind()
+        .onComplete(_ => actorSystem.terminate())
     case Failure(ex) =>
       println("Failed to bind HTTP endpoint, terminating system", ex)
       actorSystem.terminate()
