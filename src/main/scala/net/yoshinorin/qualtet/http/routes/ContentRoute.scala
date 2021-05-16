@@ -15,9 +15,11 @@ class ContentRoute(
     pathPrefix("contents") {
       pathEndOrSingleSlash {
         get {
-          // TODO: temp implementation
-          val x = contentService.getAll.unsafeRunSync()
-          complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${x}")))
+          // TODO: need fix?
+          onSuccess(contentService.getAll.unsafeToFuture()) { result =>
+            // TODO: toJSON
+            complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${result}")))
+          }
         }
       }
     }
