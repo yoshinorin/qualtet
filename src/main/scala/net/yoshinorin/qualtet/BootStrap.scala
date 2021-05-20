@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import akka.actor.ActorSystem
-import net.yoshinorin.qualtet.application.contents.ContentFinder
+import net.yoshinorin.qualtet.application.contents.{ContentCreator, ContentFinder}
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.services.ContentService
 import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ContentRoute, HomeRoute}
@@ -24,7 +24,8 @@ object BootStrap extends App {
   val contentRepository = new DoobieContentRepository(doobieContext)
 
   val contentFinder: ContentFinder = new ContentFinder(contentRepository)
-  val contentService: ContentService = new ContentService(contentFinder)
+  val contentCreator: ContentCreator = new ContentCreator(contentRepository)
+  val contentService: ContentService = new ContentService(contentFinder, contentCreator)
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()

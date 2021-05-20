@@ -25,6 +25,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
   "org.mariadb.jdbc" % "mariadb-java-client" % "2.7.2",
   "org.tpolecat" %% "doobie-core" % "0.13.2",
+  "org.tpolecat" %% "doobie-quill" % "0.13.2",
   "org.tpolecat" %% "doobie-scalatest" % "0.13.2" % Test,
   "org.flywaydb" % "flyway-core" % "7.8.2",
   "ch.qos.logback" % "logback-classic" % "1.2.3",

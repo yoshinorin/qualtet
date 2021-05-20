@@ -20,6 +20,9 @@ class ContentRoute(
             // TODO: toJSON
             complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${result}")))
           }
+        } ~ post {
+          // TODO
+          complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, "TODO")))
         }
       }
     }

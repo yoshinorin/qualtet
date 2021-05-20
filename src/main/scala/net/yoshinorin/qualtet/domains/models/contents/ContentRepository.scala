@@ -10,7 +10,7 @@ trait ContentRepository {
    * @param data Instance of Content
    * @return created Content
    */
-  def insert(data: Content): Content
+  def insert(data: Content): IO[Content]
 
   def find = ???
 
