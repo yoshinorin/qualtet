@@ -26,23 +26,23 @@ object BootStrap extends App {
   implicit val executionContextExecutor: ExecutionContextExecutor = actorSystem.dispatcher
 
   implicit val doobieContext: DoobieContext = new DoobieContext()
-  val contentRepository = new DoobieContentRepository(doobieContext)
-  val authorRepository = new DoobieAuthorRepository(doobieContext)
-  val contentTypeRepository = new DoobieContentTypeRepository(doobieContext)
 
+  val authorRepository = new DoobieAuthorRepository(doobieContext)
+  val authorFinder: AuthorFinder = new AuthorFinder(authorRepository)
+  val authorService: AuthoreService = new AuthoreService(authorFinder)
+
+  val contentRepository = new DoobieContentRepository(doobieContext)
   val contentFinder: ContentFinder = new ContentFinder(contentRepository)
   val contentCreator: ContentCreator = new ContentCreator(contentRepository)
   val contentService: ContentService = new ContentService(contentFinder, contentCreator)
 
+  val contentTypeRepository = new DoobieContentTypeRepository(doobieContext)
   val contentTypeFinder: ContentTypeFinder = new ContentTypeFinder(contentTypeRepository)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeFinder)
 
-  val authorFinder: AuthorFinder = new AuthorFinder(authorRepository)
-  val authoreService: AuthoreService = new AuthoreService(authorFinder)
-
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
-  val authorRoute: AuthorRoute = new AuthorRoute(authoreService)
+  val authorRoute: AuthorRoute = new AuthorRoute(authorService)
   val contentRoute: ContentRoute = new ContentRoute(contentService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
 
