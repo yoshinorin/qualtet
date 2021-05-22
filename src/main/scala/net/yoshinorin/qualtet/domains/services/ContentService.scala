@@ -8,6 +8,12 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 class ContentService(contentFinder: ContentFinder, contentCreator: ContentCreator)(implicit doobieContext: DoobieContext) {
 
+  /**
+   * create a content
+   *
+   * @param data Instance of Content
+   * @return Instance of created Content with IO
+   */
   def create(data: Content): IO[Content] = {
     for {
       _ <- contentCreator.create(data).transact(doobieContext.transactor)
@@ -15,6 +21,11 @@ class ContentService(contentFinder: ContentFinder, contentCreator: ContentCreato
     } yield c
   }
 
+  /**
+   * get all contents
+   *
+   * @return Instance of Contents with IO
+   */
   def getAll: IO[Seq[Content]] = {
     contentFinder.getAll.transact(doobieContext.transactor)
   }
