@@ -1,5 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.authors
 
+import doobie.ConnectionIO
+
 trait AuthorRepository {
 
   /**
@@ -9,5 +11,13 @@ trait AuthorRepository {
    * @return created Author
    */
   def insert(date: Author): Author
+
+  /**
+   * get all Author
+   *
+   *
+   * @return Authors
+   */
+  def getAll: ConnectionIO[Seq[Author]]
 
 }
