@@ -18,9 +18,18 @@ class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
    * @return created Content
    */
   def insert(data: Content): IO[Content] = {
-    //val q = quote(contents.insert(lift(data)))
-    //val q = quote { query[Content].insert(lift(data)) }
-    ???
+    val q = quote(contents.insert(lift(data)))
+    for {
+      _ <- run(q).transact(doobie.transactor)
+      c <- this.findByPath(data.path)
+    } yield c
+  }
+
+  def findByPath(path: String): IO[Content] = {
+    sql"SELECT * FROM contents WHERE path = $path"
+      .query[Content]
+      .unique
+      .transact(doobie.transactor)
   }
 
   // TODO: should update

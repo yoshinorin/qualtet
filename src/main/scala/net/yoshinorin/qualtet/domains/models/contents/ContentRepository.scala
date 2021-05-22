@@ -14,6 +14,8 @@ trait ContentRepository {
 
   def find = ???
 
+  def findByPath(path: String): IO[Content]
+
   def update = ???
 
   def getAll: IO[Seq[Content]]
