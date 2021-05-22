@@ -1,10 +1,9 @@
-package net.yoshinorin.qualtet.infrastructure.db.doobie
+package net.yoshinorin.qualtet.domains.models.contents
 
-import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.implicits._
-import io.getquill.{idiom => _, _}
-import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository}
+import io.getquill.{idiom => _}
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
 

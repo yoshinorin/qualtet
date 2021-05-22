@@ -5,11 +5,12 @@ import scala.util.{Failure, Success}
 import akka.actor.ActorSystem
 import net.yoshinorin.qualtet.application.contents.{ContentCreator, ContentFinder}
 import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.domains.models.contents.DoobieContentRepository
 import net.yoshinorin.qualtet.domains.services.ContentService
 import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ContentRoute, HomeRoute}
 import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
-import net.yoshinorin.qualtet.infrastructure.db.doobie.{DoobieContentRepository, DoobieContext}
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 import scala.io.StdIn
 
