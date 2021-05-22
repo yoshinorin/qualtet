@@ -20,7 +20,7 @@ object BootStrap extends App {
   implicit val actorSystem: ActorSystem = ActorSystem("qualtet")
   implicit val executionContextExecutor: ExecutionContextExecutor = actorSystem.dispatcher
 
-  val doobieContext: DoobieContext = new DoobieContext()
+  implicit val doobieContext: DoobieContext = new DoobieContext()
   val contentRepository = new DoobieContentRepository(doobieContext)
 
   val contentFinder: ContentFinder = new ContentFinder(contentRepository)

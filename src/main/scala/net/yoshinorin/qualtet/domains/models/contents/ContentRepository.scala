@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.models.contents
 
-import cats.effect.IO
+import doobie.ConnectionIO
 
 trait ContentRepository {
 
@@ -8,15 +8,15 @@ trait ContentRepository {
    * create a content
    *
    * @param data Instance of Content
-   * @return created Content
+   * @return dummy long (Doobie return Long)
    */
-  def insert(data: Content): IO[Content]
+  def insert(data: Content): ConnectionIO[Long]
 
   def find = ???
 
-  def findByPath(path: String): IO[Content]
+  def findByPath(path: String): ConnectionIO[Content]
 
   def update = ???
 
-  def getAll: IO[Seq[Content]]
+  def getAll: ConnectionIO[Seq[Content]]
 }
