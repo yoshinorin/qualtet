@@ -6,6 +6,7 @@ import doobie._
 import doobie.quill.DoobieContext
 import io.getquill.{idiom => _, _}
 import cats.effect._
+import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.config.Config
 
 class DoobieContext {
@@ -17,7 +18,7 @@ class DoobieContext {
 
   val ctx: DoobieContext.MySQL[SnakeCase] = new DoobieContext.MySQL(SnakeCase)
 
-  val transactor = Transactor.fromDriverManager[IO](
+  val transactor: Aux[IO, Unit] = Transactor.fromDriverManager[IO](
     "org.mariadb.jdbc.Driver",
     Config.dbUrl,
     Config.dbUser,
