@@ -37,3 +37,6 @@ docker/config
 # Artifacts
 *.jar
 
+# Others
+memo/
+sandbox/
