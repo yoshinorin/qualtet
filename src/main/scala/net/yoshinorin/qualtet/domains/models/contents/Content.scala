@@ -2,6 +2,8 @@ package net.yoshinorin.qualtet.domains.models.contents
 
 import java.time.ZonedDateTime
 import java.util.UUID
+import io.circe.Encoder
+import io.circe.generic.semiauto.deriveEncoder
 
 final case class Content(
   id: String = UUID.randomUUID().toString,
@@ -14,3 +16,8 @@ final case class Content(
   publishedAt: Long = ZonedDateTime.now.toEpochSecond,
   updatedAt: Long = ZonedDateTime.now.toEpochSecond
 )
+
+object Content {
+  implicit val encodeAuthor: Encoder[Content] = deriveEncoder[Content]
+  implicit val encodeAuthors: Encoder[List[Content]] = Encoder.encodeList[Content]
+}
