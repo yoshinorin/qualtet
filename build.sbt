@@ -16,6 +16,7 @@ scalacOptions ++= Seq(
 val akkaVersion = "2.6.14"
 val akkaHttpVersion = "10.2.4"
 val circeVersion = "0.13.0"
+val doobieVersion = "0.13.2"
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.1",
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
@@ -28,9 +29,9 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic" % circeVersion,
   "io.circe" %% "circe-parser" % circeVersion,
   "org.mariadb.jdbc" % "mariadb-java-client" % "2.7.2",
-  "org.tpolecat" %% "doobie-core" % "0.13.2",
-  "org.tpolecat" %% "doobie-quill" % "0.13.2",
-  "org.tpolecat" %% "doobie-scalatest" % "0.13.2" % Test,
+  "org.tpolecat" %% "doobie-core" % doobieVersion,
+  "org.tpolecat" %% "doobie-quill" % doobieVersion,
+  "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
   "org.flywaydb" % "flyway-core" % "7.8.2",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "org.slf4j" % "slf4j-api" % "1.7.30",
