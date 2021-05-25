@@ -18,6 +18,6 @@ final case class Content(
 )
 
 object Content {
-  implicit val encodeAuthor: Encoder[Content] = deriveEncoder[Content]
-  implicit val encodeAuthors: Encoder[List[Content]] = Encoder.encodeList[Content]
+  implicit val encodeContent: Encoder[Content] = deriveEncoder[Content]
+  implicit val encodeContents: Encoder[List[Content]] = Encoder.encodeList[Content]
 }
