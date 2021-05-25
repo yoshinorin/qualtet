@@ -5,10 +5,10 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import io.circe.syntax._
-import net.yoshinorin.qualtet.domains.services.AuthoreService
+import net.yoshinorin.qualtet.domains.services.AuthorService
 
 class AuthorRoute(
-  authoreService: AuthoreService
+  authoreService: AuthorService
 ) {
 
   def route: Route = {

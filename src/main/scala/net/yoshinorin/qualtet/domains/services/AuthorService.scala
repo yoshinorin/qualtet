@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.application.authors.AuthorFinder
 import net.yoshinorin.qualtet.domains.models.authors.Author
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
-class AuthoreService(authorFinder: AuthorFinder)(implicit doobieContext: DoobieContext) {
+class AuthorService(authorFinder: AuthorFinder)(implicit doobieContext: DoobieContext) {
 
   /**
    * get all Authors

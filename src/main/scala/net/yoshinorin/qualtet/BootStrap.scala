@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.authors.DoobieAuthorRepository
 import net.yoshinorin.qualtet.domains.models.contentTypes.DoobieContentTypeRepository
 import net.yoshinorin.qualtet.domains.models.contents.DoobieContentRepository
-import net.yoshinorin.qualtet.domains.services.{AuthoreService, ContentService, ContentTypeService}
+import net.yoshinorin.qualtet.domains.services.{AuthorService, ContentService, ContentTypeService}
 import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, AuthorRoute, ContentRoute, ContentTypeRoute, HomeRoute}
 import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
@@ -29,7 +29,7 @@ object BootStrap extends App {
 
   val authorRepository = new DoobieAuthorRepository(doobieContext)
   val authorFinder: AuthorFinder = new AuthorFinder(authorRepository)
-  val authorService: AuthoreService = new AuthoreService(authorFinder)
+  val authorService: AuthorService = new AuthorService(authorFinder)
 
   val contentRepository = new DoobieContentRepository(doobieContext)
   val contentFinder: ContentFinder = new ContentFinder(contentRepository)
