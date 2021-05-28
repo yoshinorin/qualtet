@@ -27,13 +27,11 @@ object Content {
 }
 
 final case class RequestContent(
-  id: String = UUID.randomUUID().toString,
-  authorId: String,
-  contentTypeId: String,
+  author: String,
+  contentType: String,
   path: String,
   title: String,
   rawContent: String,
-  htmlContent: String,
   publishedAt: Long = ZonedDateTime.now.toEpochSecond,
   updatedAt: Long = ZonedDateTime.now.toEpochSecond
 )
@@ -45,18 +43,14 @@ object RequestContent {
   implicit val decodeRequestContent: Decoder[RequestContent] = deriveDecoder[RequestContent]
   implicit val decodeRequestContents: Decoder[List[RequestContent]] = Decoder.decodeList[RequestContent]
 
-  /* TODO
   def apply(
-    id: String,
-    authorId: String,
-    contentTypeId: String,
+    author: String,
+    contentType: String, // TODO: set default
     path: String,
     title: String,
     rawContent: String,
-    htmlContent: String,
     publishedAt: Long,
     updatedAt: Long
   ): RequestContent =
-    new RequestContent(id, authorId, contentTypeId, path, title, rawContent, htmlContent, publishedAt, updatedAt)
- */
+    new RequestContent(author, contentType, path, title, rawContent, publishedAt, updatedAt)
 }
