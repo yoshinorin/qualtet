@@ -13,8 +13,6 @@ class ContentRoute(
   contentService: ContentService
 ) extends RequestDecoder {
 
-  import Content._
-
   def route: Route = {
     // TODO: change path
     pathPrefix("contents") {
