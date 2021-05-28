@@ -27,6 +27,7 @@ object Content {
 }
 
 final case class RequestContent(
+  requestId: String = UUID.randomUUID().toString,
   author: String,
   contentType: String,
   path: String,
@@ -38,19 +39,14 @@ final case class RequestContent(
 
 object RequestContent {
 
+  import io.circe.generic.extras.Configuration
+  import io.circe.generic.extras.auto._
+  import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
+
+  implicit val circeCustomConfig: Configuration = Configuration.default.withDefaults
+
   implicit val encodeRequestContent: Encoder[RequestContent] = deriveEncoder[RequestContent]
   implicit val encodeRequestContents: Encoder[List[RequestContent]] = Encoder.encodeList[RequestContent]
-  implicit val decodeRequestContent: Decoder[RequestContent] = deriveDecoder[RequestContent]
+  implicit val decodeRequestContent: Decoder[RequestContent] = deriveConfiguredDecoder
   implicit val decodeRequestContents: Decoder[List[RequestContent]] = Decoder.decodeList[RequestContent]
-
-  def apply(
-    author: String,
-    contentType: String, // TODO: set default
-    path: String,
-    title: String,
-    rawContent: String,
-    publishedAt: Long,
-    updatedAt: Long
-  ): RequestContent =
-    new RequestContent(author, contentType, path, title, rawContent, publishedAt, updatedAt)
 }

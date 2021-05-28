@@ -28,6 +28,7 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % circeVersion,
   "io.circe" %% "circe-generic" % circeVersion,
   "io.circe" %% "circe-parser" % circeVersion,
+  "io.circe" %% "circe-generic-extras" % circeVersion,
   "org.mariadb.jdbc" % "mariadb-java-client" % "2.7.2",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-quill" % doobieVersion,
