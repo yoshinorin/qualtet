@@ -17,4 +17,14 @@ class AuthorService(authorFinder: AuthorFinder)(implicit doobieContext: DoobieCo
     authorFinder.getAll.transact(doobieContext.transactor)
   }
 
+  /**
+   * find an Author by name
+   *
+   * @param name author's name
+   * @return Author
+   */
+  def findByName(name: String): IO[Option[Author]] = {
+    authorFinder.findByName(name).transact(doobieContext.transactor)
+  }
+
 }

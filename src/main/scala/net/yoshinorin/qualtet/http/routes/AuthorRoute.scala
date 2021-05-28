@@ -21,6 +21,18 @@ class AuthorRoute(
             complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${result.asJson}")))
           }
         }
+      } ~ {
+        // example: host/authors/exampleAuthor
+        pathPrefix(".+".r) { authorName =>
+          pathEndOrSingleSlash {
+            get {
+              onSuccess(authoreService.findByName(authorName).unsafeToFuture()) {
+                case Some(author) => complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${author.asJson}")))
+                case _ => complete(HttpResponse(NotFound, entity = HttpEntity(ContentTypes.`application/json`, s"TODO: NOT FOUND")))
+              }
+            }
+          }
+        }
       }
     }
   }

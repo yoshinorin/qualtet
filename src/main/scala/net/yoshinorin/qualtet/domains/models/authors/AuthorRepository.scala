@@ -20,4 +20,11 @@ trait AuthorRepository {
    */
   def getAll: ConnectionIO[Seq[Author]]
 
+  /**
+   * find a Author by name
+   *
+   * @param name author's name
+   * @return Author
+   */
+  def findByName(name: String): ConnectionIO[Option[Author]]
 }

@@ -14,4 +14,14 @@ class AuthorFinder(authorRepository: AuthorRepository) {
     authorRepository.getAll
   }
 
+  /**
+   * find an Author by name
+   *
+   * @param name author's name
+   * @return Author
+   */
+  def findByName(name: String): ConnectionIO[Option[Author]] = {
+    authorRepository.findByName(name)
+  }
+
 }

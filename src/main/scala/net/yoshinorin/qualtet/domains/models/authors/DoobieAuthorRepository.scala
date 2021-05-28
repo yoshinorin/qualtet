@@ -29,4 +29,16 @@ class DoobieAuthorRepository(doobie: DoobieContext) extends AuthorRepository {
       .query[Author]
       .to[Seq]
   }
+
+  /**
+   * find a Author by name
+   *
+   * @param name author's name
+   * @return Author
+   */
+  override def findByName(name: String): ConnectionIO[Option[Author]] = {
+    sql"SELECT * FROM authors where name = $name"
+      .query[Author]
+      .option
+  }
 }
