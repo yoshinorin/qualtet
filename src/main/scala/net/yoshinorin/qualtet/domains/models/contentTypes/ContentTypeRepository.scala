@@ -4,7 +4,13 @@ import doobie.ConnectionIO
 
 trait ContentTypeRepository {
 
-  def findByName = ???
+  /**
+   * find a ContentType by name
+   *
+   * @param name name of ContentType
+   * @return ContentType
+   */
+  def findByName(name: String): ConnectionIO[Option[ContentType]]
 
   /**
    * get all ContentTypes

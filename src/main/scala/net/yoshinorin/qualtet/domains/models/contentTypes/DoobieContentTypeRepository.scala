@@ -21,4 +21,16 @@ class DoobieContentTypeRepository(doobie: DoobieContext) extends ContentTypeRepo
       .query[ContentType]
       .to[Seq]
   }
+
+  /**
+   * find a ContentType by name
+   *
+   * @param name name of ContentType
+   * @return ContentType
+   */
+  override def findByName(name: String): ConnectionIO[Option[ContentType]] = {
+    sql"SELECT * FROM content_types WHERE name = $name"
+      .query[ContentType]
+      .option
+  }
 }

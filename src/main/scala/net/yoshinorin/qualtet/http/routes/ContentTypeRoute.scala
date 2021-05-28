@@ -20,6 +20,18 @@ class ContentTypeRoute(
             complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${result.asJson}")))
           }
         }
+      } ~ {
+        // example: host/content-types/article
+        pathPrefix(".+".r) { conetntTypeName =>
+          pathEndOrSingleSlash {
+            get {
+              onSuccess(contentTypeService.findByName(conetntTypeName).unsafeToFuture()) {
+                case Some(contentType) => complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${contentType.asJson}")))
+                case _ => complete(HttpResponse(NotFound, entity = HttpEntity(ContentTypes.`application/json`, s"TODO: NOT FOUND")))
+              }
+            }
+          }
+        }
       }
     }
   }

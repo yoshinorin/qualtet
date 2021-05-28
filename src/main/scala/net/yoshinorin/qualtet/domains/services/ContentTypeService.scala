@@ -9,6 +9,16 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 class ContentTypeService(contentTypeFinder: ContentTypeFinder)(implicit doobieContext: DoobieContext) {
 
   /**
+   * find a ContentType by name
+   *
+   * @param name name of ContentType
+   * @return ContentType
+   */
+  def findByName(name: String): IO[Option[ContentType]] = {
+    contentTypeFinder.findByName(name).transact(doobieContext.transactor)
+  }
+
+  /**
    * get all ContentTypes
    *
    * @return ContentTypes

@@ -6,6 +6,16 @@ import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentT
 class ContentTypeFinder(contentTypeRepository: ContentTypeRepository) {
 
   /**
+   * find a ContentType by name
+   *
+   * @param name name of ContentType
+   * @return ContentType
+   */
+  def findByName(name: String): ConnectionIO[Option[ContentType]] = {
+    contentTypeRepository.findByName(name)
+  }
+
+  /**
    * get all ContentTypes
    *
    * @return ContentTypes
