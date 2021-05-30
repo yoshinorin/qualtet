@@ -26,14 +26,9 @@ class ContentRoute(
           entity(as[String]) { payload =>
             decode[RequestContent](payload) match {
               case Right(v) =>
-                /*
-                  TODO:
-                   Find UserId
-                   Find ContentId
-                   RequestContent to Content
-                   Insert Contents TABLE
-                 */
-                complete(HttpResponse(Created, entity = HttpEntity(ContentTypes.`application/json`, s"${v.asJson}")))
+                onSuccess(contentService.createContentFromRequest(v).unsafeToFuture()) { result =>
+                  complete(HttpResponse(Created, entity = HttpEntity(ContentTypes.`application/json`, s"${result.asJson}")))
+                }
               case Left(message) =>
                 complete(HttpResponse(BadRequest, entity = HttpEntity(ContentTypes.`application/json`, s"${message.asJson}")))
             }

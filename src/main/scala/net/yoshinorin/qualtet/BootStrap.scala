@@ -31,14 +31,14 @@ object BootStrap extends App {
   val authorFinder: AuthorFinder = new AuthorFinder(authorRepository)
   val authorService: AuthorService = new AuthorService(authorFinder)
 
-  val contentRepository = new DoobieContentRepository(doobieContext)
-  val contentFinder: ContentFinder = new ContentFinder(contentRepository)
-  val contentCreator: ContentCreator = new ContentCreator(contentRepository)
-  val contentService: ContentService = new ContentService(contentFinder, contentCreator)
-
   val contentTypeRepository = new DoobieContentTypeRepository(doobieContext)
   val contentTypeFinder: ContentTypeFinder = new ContentTypeFinder(contentTypeRepository)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeFinder)
+
+  val contentRepository = new DoobieContentRepository(doobieContext)
+  val contentFinder: ContentFinder = new ContentFinder(contentRepository)
+  val contentCreator: ContentCreator = new ContentCreator(contentRepository)
+  val contentService: ContentService = new ContentService(contentFinder, contentCreator, authorService, contentTypeService)
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
