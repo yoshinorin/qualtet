@@ -2,11 +2,10 @@ package net.yoshinorin.qualtet.domains.services
 
 import cats.effect.IO
 import doobie.implicits._
-import net.yoshinorin.qualtet.application.authors.AuthorFinder
-import net.yoshinorin.qualtet.domains.models.authors.Author
+import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorRepository}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
-class AuthorService(authorFinder: AuthorFinder)(implicit doobieContext: DoobieContext) {
+class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: DoobieContext) {
 
   /**
    * get all Authors
@@ -14,7 +13,7 @@ class AuthorService(authorFinder: AuthorFinder)(implicit doobieContext: DoobieCo
    * @return Authors
    */
   def getAll: IO[Seq[Author]] = {
-    authorFinder.getAll.transact(doobieContext.transactor)
+    authorRepository.getAll.transact(doobieContext.transactor)
   }
 
   /**
@@ -24,7 +23,7 @@ class AuthorService(authorFinder: AuthorFinder)(implicit doobieContext: DoobieCo
    * @return Author
    */
   def findByName(name: String): IO[Option[Author]] = {
-    authorFinder.findByName(name).transact(doobieContext.transactor)
+    authorRepository.findByName(name).transact(doobieContext.transactor)
   }
 
 }

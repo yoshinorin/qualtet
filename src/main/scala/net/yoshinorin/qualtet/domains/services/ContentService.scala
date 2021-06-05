@@ -2,15 +2,11 @@ package net.yoshinorin.qualtet.domains.services
 
 import cats.effect.IO
 import doobie.implicits._
-import net.yoshinorin.qualtet.application.authors.AuthorFinder
-import net.yoshinorin.qualtet.application.contentTypes.ContentTypeFinder
-import net.yoshinorin.qualtet.application.contents.{ContentCreator, ContentFinder}
-import net.yoshinorin.qualtet.domains.models.contents.{Content, RequestContent}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, RequestContent}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 class ContentService(
-  contentFinder: ContentFinder,
-  contentCreator: ContentCreator,
+  contentRepository: ContentRepository,
   authorService: AuthorService,
   contentTypeService: ContentTypeService
 )(
@@ -53,8 +49,8 @@ class ContentService(
    */
   def create(data: Content): IO[Content] = {
     for {
-      _ <- contentCreator.create(data).transact(doobieContext.transactor)
-      c <- contentFinder.findByPath(data.path).transact(doobieContext.transactor)
+      _ <- contentRepository.insert(data).transact(doobieContext.transactor)
+      c <- contentRepository.findByPath(data.path).transact(doobieContext.transactor)
     } yield c
   }
 
@@ -64,7 +60,7 @@ class ContentService(
    * @return Instance of Contents with IO
    */
   def getAll: IO[Seq[Content]] = {
-    contentFinder.getAll.transact(doobieContext.transactor)
+    contentRepository.getAll.transact(doobieContext.transactor)
   }
 
 }

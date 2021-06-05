@@ -2,11 +2,10 @@ package net.yoshinorin.qualtet.domains.services
 
 import cats.effect.IO
 import doobie.implicits._
-import net.yoshinorin.qualtet.application.contentTypes.ContentTypeFinder
-import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
+import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentTypeRepository}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
-class ContentTypeService(contentTypeFinder: ContentTypeFinder)(implicit doobieContext: DoobieContext) {
+class ContentTypeService(contentTypeRepository: ContentTypeRepository)(implicit doobieContext: DoobieContext) {
 
   /**
    * find a ContentType by name
@@ -15,7 +14,7 @@ class ContentTypeService(contentTypeFinder: ContentTypeFinder)(implicit doobieCo
    * @return ContentType
    */
   def findByName(name: String): IO[Option[ContentType]] = {
-    contentTypeFinder.findByName(name).transact(doobieContext.transactor)
+    contentTypeRepository.findByName(name).transact(doobieContext.transactor)
   }
 
   /**
@@ -24,7 +23,7 @@ class ContentTypeService(contentTypeFinder: ContentTypeFinder)(implicit doobieCo
    * @return ContentTypes
    */
   def getAll: IO[Seq[ContentType]] = {
-    contentTypeFinder.getAll.transact(doobieContext.transactor)
+    contentTypeRepository.getAll.transact(doobieContext.transactor)
   }
 
 }

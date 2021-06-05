@@ -3,9 +3,6 @@ package net.yoshinorin.qualtet
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import akka.actor.ActorSystem
-import net.yoshinorin.qualtet.application.authors.AuthorFinder
-import net.yoshinorin.qualtet.application.contentTypes.ContentTypeFinder
-import net.yoshinorin.qualtet.application.contents.{ContentCreator, ContentFinder}
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.authors.DoobieAuthorRepository
 import net.yoshinorin.qualtet.domains.models.contentTypes.DoobieContentTypeRepository
@@ -28,17 +25,13 @@ object BootStrap extends App {
   implicit val doobieContext: DoobieContext = new DoobieContext()
 
   val authorRepository = new DoobieAuthorRepository(doobieContext)
-  val authorFinder: AuthorFinder = new AuthorFinder(authorRepository)
-  val authorService: AuthorService = new AuthorService(authorFinder)
+  val authorService: AuthorService = new AuthorService(authorRepository)
 
   val contentTypeRepository = new DoobieContentTypeRepository(doobieContext)
-  val contentTypeFinder: ContentTypeFinder = new ContentTypeFinder(contentTypeRepository)
-  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeFinder)
+  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository)
 
   val contentRepository = new DoobieContentRepository(doobieContext)
-  val contentFinder: ContentFinder = new ContentFinder(contentRepository)
-  val contentCreator: ContentCreator = new ContentCreator(contentRepository)
-  val contentService: ContentService = new ContentService(contentFinder, contentCreator, authorService, contentTypeService)
+  val contentService: ContentService = new ContentService(contentRepository, authorService, contentTypeService)
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
