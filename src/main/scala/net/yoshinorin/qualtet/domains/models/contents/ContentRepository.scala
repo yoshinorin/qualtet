@@ -10,7 +10,7 @@ trait ContentRepository {
    * @param data Instance of Content
    * @return dummy long id (Doobie return Long)
    */
-  def insert(data: Content): ConnectionIO[Long]
+  def upsert(data: Content): ConnectionIO[Long]
 
   def find = ???
 

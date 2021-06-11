@@ -17,8 +17,20 @@ class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
    * @param data Instance of Content
    * @return created Content with ConnectionIO
    */
-  def insert(data: Content): ConnectionIO[Long] = {
-    val q = quote(contents.insert(lift(data)))
+  def upsert(data: Content): ConnectionIO[Long] = {
+    val q = quote(
+      contents
+        .insert(lift(data))
+        .onConflictUpdate(
+          (existingRow, newRow) => existingRow.path -> (newRow.path),
+          (existingRow, newRow) => existingRow.title -> (newRow.title),
+          (existingRow, newRow) => existingRow.contentTypeId -> (newRow.contentTypeId),
+          (existingRow, newRow) => existingRow.rawContent -> (newRow.rawContent),
+          (existingRow, newRow) => existingRow.htmlContent -> (newRow.htmlContent),
+          (existingRow, newRow) => existingRow.publishedAt -> (newRow.publishedAt),
+          (existingRow, newRow) => existingRow.updatedAt -> (newRow.updatedAt)
+        )
+    )
     run(q)
   }
 

@@ -60,7 +60,7 @@ class ContentService(
    */
   def create(data: Content): IO[Content] = {
     for {
-      _ <- contentRepository.insert(data).transact(doobieContext.transactor)
+      _ <- contentRepository.upsert(data).transact(doobieContext.transactor)
       c <- contentRepository.findByPath(data.path).transact(doobieContext.transactor)
     } yield c
   }
