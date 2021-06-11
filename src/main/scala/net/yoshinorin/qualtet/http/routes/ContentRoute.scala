@@ -4,7 +4,9 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import cats.effect.IO
 import io.circe.syntax._
+import net.yoshinorin.qualtet.domains.models.Fail
 import net.yoshinorin.qualtet.domains.models.contents.{Content, RequestContent}
 import net.yoshinorin.qualtet.domains.services.ContentService
 import net.yoshinorin.qualtet.http.RequestDecoder
@@ -26,8 +28,19 @@ class ContentRoute(
           entity(as[String]) { payload =>
             decode[RequestContent](payload) match {
               case Right(v) =>
-                onSuccess(contentService.createContentFromRequest(v).unsafeToFuture()) { result =>
-                  complete(HttpResponse(Created, entity = HttpEntity(ContentTypes.`application/json`, s"${result.asJson}")))
+                onSuccess(
+                  contentService
+                    .createContentFromRequest(v)
+                    .handleErrorWith { e => IO.pure(e) }
+                    .unsafeToFuture()
+                ) {
+                  case c: Content =>
+                    complete(HttpResponse(Created, entity = HttpEntity(ContentTypes.`application/json`, s"${c.asJson}")))
+                  case t: Fail =>
+                    complete(HttpResponse(InternalServerError, entity = HttpEntity(ContentTypes.`application/json`, s"${t.asJson}")))
+                  case _ =>
+                    // TODO: create Internal server error case class
+                    complete(HttpResponse(InternalServerError, entity = HttpEntity(ContentTypes.`application/json`, s"Internal server error")))
                 }
               case Left(message) =>
                 complete(HttpResponse(BadRequest, entity = HttpEntity(ContentTypes.`application/json`, s"${message.asJson}")))
