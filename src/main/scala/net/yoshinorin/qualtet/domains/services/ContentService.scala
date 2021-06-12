@@ -7,6 +7,7 @@ import net.yoshinorin.qualtet.domains.models.authors.Author
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
 import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, RequestContent}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.utils.CommonMark.renderHtml
 
 class ContentService(
   contentRepository: ContentRepository,
@@ -44,7 +45,8 @@ class ContentService(
           path = request.path,
           title = request.title,
           rawContent = request.rawContent,
-          htmlContent = request.rawContent,
+          // TODO: render html with apply
+          htmlContent = renderHtml(request.rawContent),
           publishedAt = request.publishedAt,
           updatedAt = request.updatedAt
         )

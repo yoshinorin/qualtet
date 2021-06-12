@@ -34,6 +34,7 @@ libraryDependencies ++= Seq(
   "org.tpolecat" %% "doobie-quill" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
   "org.flywaydb" % "flyway-core" % "7.8.2",
+  "org.commonmark" % "commonmark" % "0.17.2",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "org.slf4j" % "slf4j-api" % "1.7.30",
   "org.scalatest" %% "scalatest" % "3.2.8" % "test",
