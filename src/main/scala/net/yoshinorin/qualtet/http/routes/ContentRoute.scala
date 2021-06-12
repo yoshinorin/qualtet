@@ -36,8 +36,8 @@ class ContentRoute(
                 ) {
                   case c: Content =>
                     complete(HttpResponse(Created, entity = HttpEntity(ContentTypes.`application/json`, s"${c.asJson}")))
-                  case t: Fail =>
-                    complete(HttpResponse(InternalServerError, entity = HttpEntity(ContentTypes.`application/json`, s"${t.asJson}")))
+                  case f: Fail =>
+                    complete(HttpResponse(UnprocessableEntity, entity = HttpEntity(ContentTypes.`application/json`, s"${f.asJson}")))
                   case _ =>
                     // TODO: create Internal server error case class
                     complete(HttpResponse(InternalServerError, entity = HttpEntity(ContentTypes.`application/json`, s"Internal server error")))
