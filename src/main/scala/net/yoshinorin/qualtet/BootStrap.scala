@@ -4,11 +4,12 @@ import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import akka.actor.ActorSystem
 import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.domains.models.articles.DoobieArticleRepository
 import net.yoshinorin.qualtet.domains.models.authors.DoobieAuthorRepository
 import net.yoshinorin.qualtet.domains.models.contentTypes.DoobieContentTypeRepository
 import net.yoshinorin.qualtet.domains.models.contents.DoobieContentRepository
-import net.yoshinorin.qualtet.domains.services.{AuthorService, ContentService, ContentTypeService}
-import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, AuthorRoute, ContentRoute, ContentTypeRoute, HomeRoute}
+import net.yoshinorin.qualtet.domains.services.{ArticleService, AuthorService, ContentService, ContentTypeService}
+import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ArticleRoute, AuthorRoute, ContentRoute, ContentTypeRoute, HomeRoute}
 import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
@@ -33,13 +34,17 @@ object BootStrap extends App {
   val contentRepository = new DoobieContentRepository(doobieContext)
   val contentService: ContentService = new ContentService(contentRepository, authorService, contentTypeService)
 
+  val articleRepository = new DoobieArticleRepository(doobieContext)
+  val articleService: ArticleService = new ArticleService(articleRepository, contentTypeService)
+
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val authorRoute: AuthorRoute = new AuthorRoute(authorService)
   val contentRoute: ContentRoute = new ContentRoute(contentService)
+  val articleRoute: ArticleRoute = new ArticleRoute(articleService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
 
-  val httpServer: HttpServer = new HttpServer(homeRoute, apiStatusRoute, authorRoute, contentRoute, contentTypeRoute)
+  val httpServer: HttpServer = new HttpServer(homeRoute, apiStatusRoute, authorRoute, contentRoute, articleRoute, contentTypeRoute)
 
   httpServer.start(Config.httpHost, Config.httpPort).onComplete {
     case Success(binding) =>
