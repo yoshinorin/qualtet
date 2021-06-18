@@ -3,12 +3,12 @@ package net.yoshinorin.qualtet.domains.services
 import cats.effect.IO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.NotFound
-import net.yoshinorin.qualtet.domains.models.articles.{ArticleRepository, ResponseArticle}
+import net.yoshinorin.qualtet.domains.models.archives.{ArchiveRepository, ResponseArchive}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
-class ArticleService(
-  articleRepository: ArticleRepository,
+class ArchiveService(
+  archiveRepository: ArchiveRepository,
   contentTypeService: ContentTypeService
 )(
   implicit doobieContext: DoobieContext
@@ -20,10 +20,10 @@ class ArticleService(
     case Some(x) => IO(x)
   }
 
-  def get: IO[Seq[ResponseArticle]] = {
+  def get: IO[Seq[ResponseArchive]] = {
     for {
       c <- this.contentType // TODO: get from cache
-      articles <- articleRepository.get(c.id).transact(doobieContext.transactor)
+      articles <- archiveRepository.get(c.id).transact(doobieContext.transactor)
     } yield articles
   }
 

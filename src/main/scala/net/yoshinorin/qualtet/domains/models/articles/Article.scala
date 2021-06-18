@@ -17,16 +17,3 @@ object ResponseArticle {
   implicit val decodeContent: Decoder[ResponseArticle] = deriveDecoder[ResponseArticle]
   implicit val decodeContents: Decoder[List[ResponseArticle]] = Decoder.decodeList[ResponseArticle]
 }
-
-final case class ResponseArticleSimple(
-  path: String,
-  title: String,
-  publishedAt: Long
-)
-
-object ResponseArticleSimple {
-  implicit val encodeContent: Encoder[ResponseArticleSimple] = deriveEncoder[ResponseArticleSimple]
-  implicit val encodeContents: Encoder[List[ResponseArticleSimple]] = Encoder.encodeList[ResponseArticleSimple]
-  implicit val decodeContent: Decoder[ResponseArticleSimple] = deriveDecoder[ResponseArticleSimple]
-  implicit val decodeContents: Decoder[List[ResponseArticleSimple]] = Decoder.decodeList[ResponseArticleSimple]
-}

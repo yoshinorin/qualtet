@@ -19,15 +19,4 @@ class DoobieArticleRepository(doobie: DoobieContext) extends ArticleRepository {
       .to[Seq]
   }
 
-  def getAll(contentTypeId: String): ConnectionIO[Seq[ResponseArticleSimple]] = {
-    sql"""
-      SELECT path, title, published_at
-      FROM contents
-        WHERE content_type_id = $contentTypeId
-        ORDER BY published_at desc
-    """
-      .query[ResponseArticleSimple]
-      .to[Seq]
-  }
-
 }
