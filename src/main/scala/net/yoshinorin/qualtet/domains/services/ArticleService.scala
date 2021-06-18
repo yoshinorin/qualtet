@@ -24,7 +24,16 @@ class ArticleService(
     for {
       c <- this.contentType // TODO: get from cache
       articles <- articleRepository.get(c.id).transact(doobieContext.transactor)
-    } yield articles
+    } yield articles.map(a => {
+      // TODO: why apply when execute SQL with doobie
+      ResponseArticle(
+        a.path,
+        a.title,
+        a.content,
+        a.publishedAt,
+        a.updatedAt
+      )
+    })
   }
 
 }
