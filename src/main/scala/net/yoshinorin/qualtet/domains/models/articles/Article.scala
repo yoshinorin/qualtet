@@ -20,13 +20,13 @@ object ResponseArticle {
   implicit val decodeContent: Decoder[ResponseArticle] = deriveDecoder[ResponseArticle]
   implicit val decodeContents: Decoder[List[ResponseArticle]] = Decoder.decodeList[ResponseArticle]
 
-  val random = new Random
-
   def apply(path: String, title: String, content: String, publishedAt: Long, updatedAt: Long): ResponseArticle = {
+    val stripedContent = content.stripHtmlTags
+    val stripedContentLen = if (stripedContent.length > 100) 100 else stripedContent.length
     new ResponseArticle(
       path,
       title,
-      content.stripHtmlTags.substring(random.nextInt(70), 100),
+      stripedContent.substring(0, Random.between(stripedContentLen - 30, stripedContentLen)),
       publishedAt,
       updatedAt
     )
