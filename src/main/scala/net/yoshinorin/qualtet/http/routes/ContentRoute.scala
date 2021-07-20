@@ -48,7 +48,8 @@ class ContentRoute(
           }
         }
       } ~ {
-        // example: yyyy/mm/dd/content-name
+        // NOTE: no-need slash on the prefix but it is required on the suffix
+        // example: yyyy/mm/dd/content-name/
         path(Remaining) { path =>
           get {
             onSuccess(contentService.findByPath(path).unsafeToFuture()) {
