@@ -50,19 +50,16 @@ class ContentRoute(
       } ~ {
         // example: yyyy/mm/dd/content-name
         path(Remaining) { path =>
-          pathEndOrSingleSlash {
-            get {
-              onSuccess(contentService.findByPath(path).unsafeToFuture()) {
-                case Some(content) =>
-                  complete(
-                    HttpResponse(
-                      OK,
-                      entity =
-                        HttpEntity(ContentTypes.`application/json`, s"${ResponseContent(content.title, content.htmlContent, content.publishedAt).asJson}")
-                    )
+          get {
+            onSuccess(contentService.findByPath(path).unsafeToFuture()) {
+              case Some(content) =>
+                complete(
+                  HttpResponse(
+                    OK,
+                    entity = HttpEntity(ContentTypes.`application/json`, s"${ResponseContent(content.title, content.htmlContent, content.publishedAt).asJson}")
                   )
-                case _ => complete(HttpResponse(NotFound, entity = HttpEntity(ContentTypes.`application/json`, s"TODO: NOT FOUND")))
-              }
+                )
+              case _ => complete(HttpResponse(NotFound, entity = HttpEntity(ContentTypes.`application/json`, s"TODO: NOT FOUND")))
             }
           }
         }
