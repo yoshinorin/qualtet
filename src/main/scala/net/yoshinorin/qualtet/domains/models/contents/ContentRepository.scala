@@ -19,8 +19,10 @@ trait ContentRepository {
    *
    * @param path path of content
    * @return content
+   *
+   * TODO: should not depends on doobie.
    */
-  def findByPath(path: String): ConnectionIO[Content]
+  def findByPath(path: String): ConnectionIO[Option[Content]]
 
   def update = ???
 

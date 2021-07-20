@@ -6,6 +6,7 @@ import io.circe.Decoder
 import io.circe.Encoder
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.generic.semiauto.deriveEncoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
 final case class Content(
   id: String = UUID.randomUUID().toString,
@@ -40,8 +41,6 @@ final case class RequestContent(
 object RequestContent {
 
   import io.circe.generic.extras.Configuration
-  import io.circe.generic.extras.auto._
-  import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
   implicit val circeCustomConfig: Configuration = Configuration.default.withDefaults
 
@@ -49,4 +48,15 @@ object RequestContent {
   implicit val encodeRequestContents: Encoder[List[RequestContent]] = Encoder.encodeList[RequestContent]
   implicit val decodeRequestContent: Decoder[RequestContent] = deriveConfiguredDecoder
   implicit val decodeRequestContents: Decoder[List[RequestContent]] = Decoder.decodeList[RequestContent]
+}
+
+final case class ResponseContent(
+  title: String,
+  content: String,
+  publishedAt: Long
+)
+
+object ResponseContent {
+  implicit val encodeResponseContent: Encoder[ResponseContent] = deriveEncoder[ResponseContent]
+  implicit val decodeResponseContent: Decoder[ResponseContent] = deriveDecoder[ResponseContent]
 }

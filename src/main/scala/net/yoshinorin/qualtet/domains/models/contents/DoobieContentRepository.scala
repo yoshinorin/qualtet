@@ -40,10 +40,10 @@ class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
    * @param path path of content
    * @return Content with ConnectionIO
    */
-  def findByPath(path: String): ConnectionIO[Content] = {
+  def findByPath(path: String): ConnectionIO[Option[Content]] = {
     sql"SELECT * FROM contents WHERE path = $path"
       .query[Content]
-      .unique
+      .option
   }
 
   /**

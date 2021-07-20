@@ -5,7 +5,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.NotFound
 import net.yoshinorin.qualtet.domains.models.authors.Author
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
-import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, RequestContent}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.CommonMark.renderHtml
 
@@ -64,7 +64,17 @@ class ContentService(
     for {
       _ <- contentRepository.upsert(data).transact(doobieContext.transactor)
       c <- contentRepository.findByPath(data.path).transact(doobieContext.transactor)
-    } yield c
+    } yield c.get // TODO: maybe taken Option[Content]
+  }
+
+  /**
+   * Find a content by path
+   *
+   * @param path a content path
+   * @return ResponseContent instance
+   */
+  def findByPath(path: String): IO[Option[Content]] = {
+    contentRepository.findByPath(path).transact(doobieContext.transactor)
   }
 
   /**
