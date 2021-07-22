@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.services
 
 import cats.effect.IO
 import doobie.implicits._
-import net.yoshinorin.qualtet.domains.models.Fail.NotFound
+import net.yoshinorin.qualtet.domains.models.Fail.{NotFound, InternalServerError}
 import net.yoshinorin.qualtet.domains.models.authors.Author
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
 import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, RequestContent, ResponseContent}
@@ -61,10 +61,16 @@ class ContentService(
    * @return Instance of created Content with IO
    */
   def create(data: Content): IO[Content] = {
+
+    def content: IO[Content] = this.findByPath(data.path).flatMap {
+      case None => IO.raiseError(InternalServerError) //NOTE: 404 is better?
+      case Some(x) => IO(x)
+    }
+
     for {
       _ <- contentRepository.upsert(data).transact(doobieContext.transactor)
-      c <- contentRepository.findByPath(data.path).transact(doobieContext.transactor)
-    } yield c.get // TODO: maybe taken Option[Content]
+      c <- content
+    } yield c
   }
 
   /**

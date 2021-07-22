@@ -14,5 +14,6 @@ object Fail {
   case class UnprocessableEntity(message: String) extends Fail
   case class BadRequest(message: String) extends Fail
   case object Forbidden extends Fail
+  case object InternalServerError extends Fail
 
 }
