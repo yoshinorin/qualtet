@@ -5,7 +5,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.{NotFound, InternalServerError}
 import net.yoshinorin.qualtet.domains.models.authors.Author
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
-import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, RequestContent, ResponseContent}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, RequestContent}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.CommonMark.renderHtml
 
