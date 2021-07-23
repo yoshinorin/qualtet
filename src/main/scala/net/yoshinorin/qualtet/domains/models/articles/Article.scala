@@ -26,7 +26,7 @@ object ResponseArticle {
     new ResponseArticle(
       path,
       title,
-      stripedContent.substring(0, Random.between(stripedContentLen - 30, stripedContentLen)),
+      stripedContent.substring(0, Random.between((stripedContentLen - stripedContentLen / 3), stripedContentLen)),
       publishedAt,
       updatedAt
     )
