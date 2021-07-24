@@ -32,3 +32,15 @@ object ResponseArticle {
     )
   }
 }
+
+final case class ResponseArticleWithCount(
+  count: Int,
+  articles: Seq[ResponseArticle]
+)
+
+object ResponseArticleWithCount {
+  implicit val encodeResponseArticleWithCount: Encoder[ResponseArticleWithCount] = deriveEncoder[ResponseArticleWithCount]
+  implicit val encodeResponseArticlesWithCount: Encoder[List[ResponseArticleWithCount]] = Encoder.encodeList[ResponseArticleWithCount]
+  implicit val decodeResponseArticleWithCount: Decoder[ResponseArticleWithCount] = deriveDecoder[ResponseArticleWithCount]
+  implicit val decodeResponseArticlesWithCount: Decoder[List[ResponseArticleWithCount]] = Decoder.decodeList[ResponseArticleWithCount]
+}

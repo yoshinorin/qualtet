@@ -6,6 +6,14 @@ import net.yoshinorin.qualtet.http.ArticlesQueryParamater
 trait ArticleRepository {
 
   /**
+   * get number of articles
+   *
+   * @param contentTypeId contentTypeId
+   * @return Number of articles with ConnectionIO
+   */
+  def count(contentTypeId: String): ConnectionIO[Int]
+
+  /**
    * get all Articles
    *
    * @return Articles with ConnectionIO

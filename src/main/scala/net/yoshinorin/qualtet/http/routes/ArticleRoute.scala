@@ -17,7 +17,7 @@ class ArticleRoute(
       pathEndOrSingleSlash {
         get {
           parameters("page".as[Int].?, "limit".as[Int].?) { (page, limit) =>
-            onSuccess(articleService.get(ArticlesQueryParamater(page, limit)).unsafeToFuture()) { result =>
+            onSuccess(articleService.getWithCount(ArticlesQueryParamater(page, limit)).unsafeToFuture()) { result =>
               complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${result.asJson}")))
             }
           }

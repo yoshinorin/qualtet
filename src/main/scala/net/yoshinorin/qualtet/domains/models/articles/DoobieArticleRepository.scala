@@ -9,6 +9,22 @@ class DoobieArticleRepository(doobie: DoobieContext) extends ArticleRepository {
 
   import doobie.ctx._
 
+  /**
+   * get number of articles
+   *
+   * @param contentTypeId contentTypeId
+   * @return Number of articles with ConnectionIO
+   */
+  def count(contentTypeId: String): ConnectionIO[Int] = {
+    sql"""
+      SELECT count(1)
+      FROM contents
+        WHERE content_type_id = $contentTypeId
+    """
+      .query[Int]
+      .unique
+  }
+
   def get(contentTypeId: String, queryParam: ArticlesQueryParamater): ConnectionIO[Seq[ResponseArticle]] = {
     sql"""
       SELECT path, title, html_content, published_at, updated_at
@@ -21,5 +37,4 @@ class DoobieArticleRepository(doobie: DoobieContext) extends ArticleRepository {
       .query[ResponseArticle]
       .to[Seq]
   }
-
 }
