@@ -19,3 +19,7 @@ object ArticlesQueryParamater {
   }
 
 }
+
+object QueryParamatersAliases {
+  type SqlParams = ArticlesQueryParamater
+}
