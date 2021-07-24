@@ -21,6 +21,7 @@ class ArticleService(
     case Some(x) => IO(x)
   }
 
+  // TODO: get from cache
   def count(): IO[Int] = {
     for {
       c <- this.contentType // TODO: get from cache
