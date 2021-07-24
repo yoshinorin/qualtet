@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.articles
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.http.ArticlesQueryParamater
 
 trait ArticleRepository {
 
@@ -12,5 +13,5 @@ trait ArticleRepository {
    * TODO: pagination
    * TODO: rename
    */
-  def get(contentTypeId: String): ConnectionIO[Seq[ResponseArticle]]
+  def get(contentTypeId: String, queryParam: ArticlesQueryParamater): ConnectionIO[Seq[ResponseArticle]]
 }

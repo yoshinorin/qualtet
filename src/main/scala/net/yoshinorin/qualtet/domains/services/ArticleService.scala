@@ -5,6 +5,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.NotFound
 import net.yoshinorin.qualtet.domains.models.articles.{ArticleRepository, ResponseArticle}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
+import net.yoshinorin.qualtet.http.ArticlesQueryParamater
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 class ArticleService(
@@ -20,10 +21,10 @@ class ArticleService(
     case Some(x) => IO(x)
   }
 
-  def get: IO[Seq[ResponseArticle]] = {
+  def get(queryParam: ArticlesQueryParamater): IO[Seq[ResponseArticle]] = {
     for {
       c <- this.contentType // TODO: get from cache
-      articles <- articleRepository.get(c.id).transact(doobieContext.transactor)
+      articles <- articleRepository.get(c.id, queryParam).transact(doobieContext.transactor)
     } yield articles.map(a => {
       // TODO: why apply when execute SQL with doobie
       ResponseArticle(

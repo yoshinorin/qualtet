@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.services.ArticleService
-import net.yoshinorin.qualtet.http.RequestDecoder
+import net.yoshinorin.qualtet.http.{ArticlesQueryParamater, RequestDecoder}
 
 class ArticleRoute(
   articleService: ArticleService
@@ -16,8 +16,10 @@ class ArticleRoute(
     pathPrefix("articles") {
       pathEndOrSingleSlash {
         get {
-          onSuccess(articleService.get.unsafeToFuture()) { result =>
-            complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${result.asJson}")))
+          parameters("page".as[Int].?, "limit".as[Int].?) { (page, limit) =>
+            onSuccess(articleService.get(ArticlesQueryParamater(page, limit)).unsafeToFuture()) { result =>
+              complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${result.asJson}")))
+            }
           }
         }
       }
