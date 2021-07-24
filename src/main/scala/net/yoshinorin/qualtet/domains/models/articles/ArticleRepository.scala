@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.articles
 
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.http.QueryParamatersAliases
+import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
 trait ArticleRepository {
 
@@ -17,8 +17,8 @@ trait ArticleRepository {
    * get all Articles
    *
    * @param contentTypeId contentTypeId
-   * @param sqlParams sql paramaters for limit, offset
+   * @param sqlParams sql parameters for limit, offset
    * @return Articles with ConnectionIO
    */
-  def get(contentTypeId: String, sqlParams: QueryParamatersAliases.SqlParams): ConnectionIO[Seq[ResponseArticle]]
+  def get(contentTypeId: String, sqlParams: SqlParams): ConnectionIO[Seq[ResponseArticle]]
 }

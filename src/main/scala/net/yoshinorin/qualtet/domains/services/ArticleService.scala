@@ -5,7 +5,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.NotFound
 import net.yoshinorin.qualtet.domains.models.articles.{ArticleRepository, ResponseArticle, ResponseArticleWithCount}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
-import net.yoshinorin.qualtet.http.ArticlesQueryParamater
+import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 class ArticleService(
@@ -29,7 +29,7 @@ class ArticleService(
     } yield cnt
   }
 
-  def get(queryParam: ArticlesQueryParamater): IO[Seq[ResponseArticle]] = {
+  def get(queryParam: ArticlesQueryParameter): IO[Seq[ResponseArticle]] = {
     for {
       c <- this.contentType // TODO: get from cache
       articles <- articleRepository.get(c.id, queryParam).transact(doobieContext.transactor)
@@ -45,7 +45,7 @@ class ArticleService(
     })
   }
 
-  def getWithCount(queryParam: ArticlesQueryParamater): IO[ResponseArticleWithCount] = {
+  def getWithCount(queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
     for {
       c <- this.count
       a <- this.get(queryParam)

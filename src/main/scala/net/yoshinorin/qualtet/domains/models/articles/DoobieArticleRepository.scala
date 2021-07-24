@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.models.articles
 
 import doobie.ConnectionIO
 import doobie.implicits._
-import net.yoshinorin.qualtet.http.QueryParamatersAliases.SqlParams
+import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 class DoobieArticleRepository(doobie: DoobieContext) extends ArticleRepository {
