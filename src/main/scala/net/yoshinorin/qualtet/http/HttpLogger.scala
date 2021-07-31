@@ -1,29 +1,41 @@
 package net.yoshinorin.qualtet.http
 
-import akka.event.Logging
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.{HttpRequest, RemoteAddress}
 import akka.http.scaladsl.server.{Directive0, RouteResult}
-import akka.http.scaladsl.server.directives.{DebuggingDirectives, LogEntry}
+import akka.http.scaladsl.server.directives.{DebuggingDirectives, LogEntry, LoggingMagnet}
 
 trait HttpLogger {
 
-  private[this] def requestAndResponseLogging(request: HttpRequest, ip: RemoteAddress): RouteResult => Option[LogEntry] = {
-    case RouteResult.Complete(response) =>
-      Some(
+  private[this] def requestAndResponseLogging(loggingAdapter: LoggingAdapter, requestTimestamp: Long, ip: RemoteAddress)(
+    request: HttpRequest
+  )(res: RouteResult): Unit = {
+    val responseTimestamp: Long = System.nanoTime
+    val elapsedTime: Long = (responseTimestamp - requestTimestamp) / 1000000
+    val entry = res match {
+      case RouteResult.Complete(response) =>
         LogEntry(
-          ip.toOption.map(_.getHostAddress).getOrElse("unknown") + " - " + request.method.name + " - " + request.uri + " - " + response.status,
+          s"""${ip.toOption
+            .map(_.getHostAddress)
+            .getOrElse("unknown")} - ${request.method.name} - ${request.uri} - ${response.status} - ${elapsedTime}ms""",
           Logging.InfoLevel
         )
-      )
-    case RouteResult.Rejected(rejections) =>
-      Some(
+      case RouteResult.Rejected(rejections) =>
         LogEntry(
-          ip.toOption.map(_.getHostAddress).getOrElse("unknown") + " - " + request.method.name + " - " + request.uri + " - " + rejections,
+          s"""${ip.toOption
+            .map(_.getHostAddress)
+            .getOrElse("unknown")} - ${request.method.name} - ${request.uri} - ${rejections.mkString(",")} - ${elapsedTime}ms""",
           Logging.ErrorLevel
         )
-      )
+    }
+    entry.logTo(loggingAdapter)
   }
 
-  def httpLogging(ip: RemoteAddress): Directive0 = DebuggingDirectives.logRequestResult(requestAndResponseLogging(_, ip))
+  private[this] def loggingFunction(log: LoggingAdapter, ip: RemoteAddress): HttpRequest => RouteResult => Unit = {
+    val requestTimestamp = System.nanoTime
+    requestAndResponseLogging(log, requestTimestamp, ip)
+  }
+
+  def httpLogging(ip: RemoteAddress): Directive0 = DebuggingDirectives.logRequestResult(LoggingMagnet(loggingFunction(_, ip)))
 
 }
