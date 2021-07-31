@@ -19,12 +19,7 @@ class ContentRoute(
     // TODO: change path
     pathPrefix("contents") {
       pathEndOrSingleSlash {
-        get {
-          // TODO: need fix?
-          onSuccess(contentService.getAll.unsafeToFuture()) { result =>
-            complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${result.asJson}")))
-          }
-        } ~ post {
+        post {
           entity(as[String]) { payload =>
             decode[RequestContent](payload) match {
               case Right(v) =>
