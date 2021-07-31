@@ -29,6 +29,7 @@ project/plugins/project/
 
 # Documentation
 docs/api/dist
+index.html
 
 # Docker
 docker/data
