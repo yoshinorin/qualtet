@@ -25,3 +25,232 @@ paths:
                   status:
                     type: string
                     example: operational
+  /archives:
+    get:
+      summary: Get all articles
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/article'
+  /articles:
+    get:
+      summary: Get articles with count
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    description: The numbers of all articles.
+                    type: integer
+                    example: 99
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/simpleArticle'
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The numbers of page for pagination.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return. Max is 10.
+  /authors:
+    get:
+      summary: Get all authors
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/author'
+  /authors/{authorName}:
+    get:
+      summary: Get an author
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/author'
+        404:
+          description: Author not found
+          # content: TODO
+  /contents:
+    post:
+      summary: Create a content
+      description: |
+        Create a new content
+      responses:
+        201:
+          description: Create a content succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fullContent'
+        404:
+          description: Content type is not found
+          # content: TODO
+  /contents/{contentPath}:
+    get:
+      summary: Get a content
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/content'
+        404:
+          description: Content not found
+          # content: TODO
+  /content-types/{contentPath}:
+    get:
+      summary: Get content-types
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/contentType'
+  /content-types/{contentTypeName}:
+    get:
+      summary: Get a content-type with name
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contentType'
+components:
+  schemas:
+    author:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "07b99gh8-6d0c-12ef-6545-2a3530778k4f"
+        name:
+          type: string
+          example: JohnDoe
+        displayName:
+          type: string
+          example: John
+        createdAt:
+          type: long
+          description: Unix time
+          example: 1625065318
+    simpleArticle:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "04b89f7a-6d0c-46c5-87a2-2a35307765bf"
+        title:
+          type: string
+          example: "Post Title"
+        publishedAt:
+          type: long
+          description: Unix time
+          example: 1625065318
+    article:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "04b89f7a-6d0c-46c5-87a2-2a35307765bf"
+        title:
+          type: string
+          example: "Post Title"
+        content:
+          type: string
+          example: "Post Content.... RAW strings"
+        publishedAt:
+          type: long
+          description: Unix time
+          example: 1625065509
+        updatedAt:
+          type: long
+          description: Unix time
+          example: 1625065592
+    content:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Post Title"
+        content:
+          type: string
+          example: "Post Content.... HTML strings"
+        publishedAt:
+          type: long
+          description: Unix time
+          example: 1625065509
+    fullContent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "04b89f7a-6d0c-46c5-87a2-2a35307765bf"
+        authorId:
+          type: string
+          format: uuid
+          example: "07b99gh8-6d0c-12ef-6545-2a3530778k4f"
+        contentTypeId:
+          type: string
+          format: uuid
+          example: "d9c32735-b4cd-11eb-a566-663f66aa018c"
+        path:
+          type: string
+          example: "/2020/01/01/new-year"
+        title:
+          type: string
+          example: "Post Title"
+        rawContent:
+          type: string
+          example: "Post Content.... RAW strings"
+        htmlContent:
+          type: string
+          example: "Post Content.... HTML strings"
+        publishedAt:
+          type: long
+          description: Unix time
+          example: 1625065509
+        updatedAt:
+          type: long
+          description: Unix time
+          example: 1625065509
+    contentType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "d9c32735-b4cd-11eb-a566-663f66aa018c"
+        name:
+          type: string
+          example: "article"
