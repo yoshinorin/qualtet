@@ -9,10 +9,10 @@ trait HttpLogger {
 
   private[this] def requestAndResponseLogging(loggingAdapter: LoggingAdapter, requestTimestamp: Long, ip: RemoteAddress)(
     request: HttpRequest
-  )(res: RouteResult): Unit = {
+  )(response: RouteResult): Unit = {
     val responseTimestamp: Long = System.nanoTime
     val elapsedTime: Long = (responseTimestamp - requestTimestamp) / 1000000
-    val entry = res match {
+    val entry = response match {
       case RouteResult.Complete(response) =>
         LogEntry(
           s"""${ip.toOption
