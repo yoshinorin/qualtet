@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.utils.StringOps.StringOps
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.wordspec.AnyWordSpec
 
-// testOnly utils.StringOpsSpec
+// testOnly net.yoshinorin.qualtet.utils.StringOpsSpec
 class StringOpsSpec extends AnyWordSpec {
 
   import net.yoshinorin.qualtet.utils.StringOps._
