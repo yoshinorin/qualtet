@@ -1,5 +1,12 @@
 # [WIP] Qualtet
 
+|Build|API Doc|
+|---|---|
+|[![CI](https://img.shields.io/github/workflow/status/yoshinorin/qualtet/CI/master?label=CI)](https://github.com/yoshinorin/qualtet/actions)|[![](https://img.shields.io/badge/Doc-Swagger-blue.svg)](https://yoshinorin.github.io/qualtet/)|
+
+## Documentation
+
+* [API](https://yoshinorin.github.io/qualtet/)
 ## Requirements
 
 * sbt 1.5.x
