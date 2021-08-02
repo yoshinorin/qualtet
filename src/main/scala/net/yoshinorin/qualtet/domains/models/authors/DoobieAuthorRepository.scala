@@ -14,10 +14,17 @@ class DoobieAuthorRepository(doobie: DoobieContext) extends AuthorRepository {
   /**
    * create a author
    *
-   * @param date Instance of Author
+   * @param data Instance of Author
    * @return created Author
    */
-  override def insert(date: Author): Author = ???
+  override def upsert(data: Author): ConnectionIO[Long] = {
+    val q = quote(
+      authors
+        .insert(lift(data))
+        .onConflictUpdate((existingRow, newRow) => existingRow.displayName -> (newRow.displayName))
+    )
+    run(q)
+  }
 
   /**
    * get all Author

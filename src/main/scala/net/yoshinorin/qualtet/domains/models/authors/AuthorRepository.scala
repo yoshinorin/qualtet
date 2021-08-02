@@ -7,10 +7,10 @@ trait AuthorRepository {
   /**
    * create a author
    *
-   * @param date Instance of Author
-   * @return created Author
+   * @param data Instance of Author
+   * @return dummy long id (Doobie return Long)
    */
-  def insert(date: Author): Author
+  def upsert(data: Author): ConnectionIO[Long]
 
   /**
    * get all Author
