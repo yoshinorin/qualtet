@@ -17,6 +17,17 @@
         </filter>
     </appender>
 
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from %logger - %message%n%xException</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>DENY</onMatch>
+        </filter>
+    </appender>
+
     <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${application.home:-.}/logs/debug.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -37,10 +48,12 @@
     </appender>
 
     <logger name="error" level="ERROR" additivity="false">
+        <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE" />
     </logger>
 
     <logger name="info" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE" />
     </logger>
 
@@ -49,14 +62,17 @@
     </logger>
 
     <root level="ERROR">
+        <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE"/>
     </root>
 
     <root level="INFO">
+        <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE"/>
     </root>
 
     <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE"/>
         <appender-ref ref="DEBUG_FILE"/>
     </root>
