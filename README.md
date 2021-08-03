@@ -22,6 +22,25 @@ Create a database sachema before install application. Also, schema name is anyth
 CREATE DATABASE qualtet;
 ```
 
+## Create an author
+
+Qualtet does not have signup endpoint. You have to create an author with `sbt task`, like below.
+
+```scala
+$ sbt createUser <name> <displayName>
+
+// example
+$ sbt createUser jhonDue JD
+
+// result
+2021-08-03 21:54:03 +0900 [INFO] from net.yoshinorin.qualtet.tasks.CreateUser$ - user created: {
+  "id" : "086f0af1-6843-4116-96ee-73011b8538bb",
+  "name" : "jhonDue",
+  "displayName" : "JD",
+  "createdAt" : 1627995242
+}
+```
+
 ## Development
 
 ### Compile
