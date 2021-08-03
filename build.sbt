@@ -41,5 +41,16 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "3.10.0" % "test"
 )
 
+val createUser = inputKey[Unit]("create an user. args must be two. first arg for 'name', second arg for 'displayName.'")
+lazy val root = (project in file("."))
+  .settings(
+    createUser := Def.inputTaskDyn {
+      import sbt.Def.spaceDelimited
+      val args = spaceDelimited("<args>").parsed
+      val task = (Compile / runMain).toTask(s" net.yoshinorin.qualtet.tasks.CreateUser ${args.mkString(" ")}")
+      task
+    }.evaluated
+  )
+
 coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration; net.yoshinorin.qualtet.http.HttpServer;"
 org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
