@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.domains.services
 
 import cats.effect.IO
 import doobie.implicits._
-import net.yoshinorin.qualtet.domains.models.Fail.{NotFound, InternalServerError}
-import net.yoshinorin.qualtet.domains.models.authors.Author
+import net.yoshinorin.qualtet.domains.models.Fail.{InternalServerError, NotFound}
+import net.yoshinorin.qualtet.domains.models.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
 import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, RequestContent}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
@@ -25,7 +25,7 @@ class ContentService(
    */
   def createContentFromRequest(request: RequestContent): IO[Content] = {
 
-    def user: IO[Author] = authorService.findByName(request.author).flatMap {
+    def user: IO[ResponseAuthor] = authorService.findByName(request.author).flatMap {
       case None => IO.raiseError(NotFound(s"user not found: ${request.author}"))
       case Some(x) => IO(x)
     }

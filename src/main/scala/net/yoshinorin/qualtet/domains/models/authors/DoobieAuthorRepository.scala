@@ -31,9 +31,9 @@ class DoobieAuthorRepository(doobie: DoobieContext) extends AuthorRepository {
    *
    * @return Authors
    */
-  override def getAll: ConnectionIO[Seq[Author]] = {
-    sql"SELECT * FROM authors"
-      .query[Author]
+  override def getAll: ConnectionIO[Seq[ResponseAuthor]] = {
+    sql"SELECT id, name, display_name, created_at FROM authors"
+      .query[ResponseAuthor]
       .to[Seq]
   }
 
@@ -43,9 +43,9 @@ class DoobieAuthorRepository(doobie: DoobieContext) extends AuthorRepository {
    * @param name author's name
    * @return Author
    */
-  override def findByName(name: String): ConnectionIO[Option[Author]] = {
-    sql"SELECT * FROM authors where name = $name"
-      .query[Author]
+  override def findByName(name: String): ConnectionIO[Option[ResponseAuthor]] = {
+    sql"SELECT id, name, display_name, created_at FROM authors where name = $name"
+      .query[ResponseAuthor]
       .option
   }
 }

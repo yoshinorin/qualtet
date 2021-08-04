@@ -1,8 +1,9 @@
-/* TODO: have to consider column, multiple-column indexes, foreign key etc...  */
+/* TODO: have to consider column, column-length, multiple-column indexes, foreign key etc...  */
 CREATE TABLE IF NOT EXISTS authors (
     id CHAR(36) CHARACTER SET ascii UNIQUE NOT NULL,
     name VARCHAR(32) UNIQUE NOT NULL,
     display_name VARCHAR(32),
+    password VARCHAR(72) NOT NULL,
     created_at BIGINT UNSIGNED DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

@@ -18,7 +18,7 @@ trait AuthorRepository {
    *
    * @return Authors
    */
-  def getAll: ConnectionIO[Seq[Author]]
+  def getAll: ConnectionIO[Seq[ResponseAuthor]]
 
   /**
    * find a Author by name
@@ -26,5 +26,5 @@ trait AuthorRepository {
    * @param name author's name
    * @return Author
    */
-  def findByName(name: String): ConnectionIO[Option[Author]]
+  def findByName(name: String): ConnectionIO[Option[ResponseAuthor]]
 }

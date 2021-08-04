@@ -9,10 +9,18 @@ final case class Author(
   id: String = UUID.randomUUID().toString,
   name: String,
   displayName: String,
+  password: String,
   createdAt: Long = ZonedDateTime.now.toEpochSecond
 )
 
-object Author {
-  implicit val encodeAuthor: Encoder[Author] = deriveEncoder[Author]
-  implicit val encodeAuthors: Encoder[List[Author]] = Encoder.encodeList[Author]
+final case class ResponseAuthor(
+  id: String = UUID.randomUUID().toString,
+  name: String,
+  displayName: String,
+  createdAt: Long = ZonedDateTime.now.toEpochSecond
+)
+
+object ResponseAuthor {
+  implicit val encodeAuthor: Encoder[ResponseAuthor] = deriveEncoder[ResponseAuthor]
+  implicit val encodeAuthors: Encoder[List[ResponseAuthor]] = Encoder.encodeList[ResponseAuthor]
 }

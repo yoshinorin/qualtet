@@ -36,6 +36,7 @@ libraryDependencies ++= Seq(
   "org.flywaydb" % "flyway-core" % "7.8.2",
   "org.commonmark" % "commonmark" % "0.17.2",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "org.springframework.security" % "spring-security-core" % "5.5.1",
   "org.slf4j" % "slf4j-api" % "1.7.30",
   "org.scalatest" %% "scalatest" % "3.2.8" % "test",
   "org.mockito" % "mockito-core" % "3.10.0" % "test"
