@@ -24,13 +24,13 @@ CREATE DATABASE qualtet;
 
 ## Create an author
 
-Qualtet does not have signup endpoint. You have to create an author with `sbt task`, like below.
+Qualtet does not support signup endpoint. You have to create an author with `sbt task`, like below.
 
 ```scala
-$ sbt createUser <name> <displayName>
+$ sbt createUser <name> <displayName> <password>
 
 // example
-$ sbt createUser jhonDue JD
+$ sbt createUser jhonDue JD pass
 
 // result
 2021-08-03 21:54:03 +0900 [INFO] from net.yoshinorin.qualtet.tasks.CreateUser$ - user created: {

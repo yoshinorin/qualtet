@@ -42,7 +42,7 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "3.10.0" % "test"
 )
 
-val createUser = inputKey[Unit]("create an user. args must be two. first arg for 'name', second arg for 'displayName.'")
+val createUser = inputKey[Unit]("create an user. args must be three. They are 'name', 'displayName' and 'password'")
 lazy val root = (project in file("."))
   .settings(
     createUser := Def.inputTaskDyn {
