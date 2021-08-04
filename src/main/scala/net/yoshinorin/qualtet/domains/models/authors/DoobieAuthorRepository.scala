@@ -21,7 +21,10 @@ class DoobieAuthorRepository(doobie: DoobieContext) extends AuthorRepository {
     val q = quote(
       authors
         .insert(lift(data))
-        .onConflictUpdate((existingRow, newRow) => existingRow.displayName -> (newRow.displayName))
+        .onConflictUpdate(
+          (existingRow, newRow) => existingRow.displayName -> (newRow.displayName),
+          (existingRow, newRow) => existingRow.password -> (newRow.password)
+        )
     )
     run(q)
   }
