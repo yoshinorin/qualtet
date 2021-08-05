@@ -13,7 +13,7 @@ class AuthorSpec extends AnyWordSpec {
 
     "default instance" in {
       val currentUTCDateTime = ZonedDateTime.now(ZoneOffset.UTC)
-      val author = Author(name = "JhonDue", displayName = "Jhon")
+      val author = Author(name = "JhonDue", displayName = "Jhon", password = "")
       val instanceUTCDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(author.createdAt), ZoneOffset.UTC)
 
       assert(UUID.fromString(author.id).isInstanceOf[UUID])
@@ -26,7 +26,7 @@ class AuthorSpec extends AnyWordSpec {
     }
 
     "specific valuse" in {
-      val author = Author("cc827369-769d-11eb-a81e-663f66aa018c", "JhonDue", "Jhon", 1625065592)
+      val author = Author("cc827369-769d-11eb-a81e-663f66aa018c", "JhonDue", "Jhon", "", 1625065592)
 
       assert(author.id == "cc827369-769d-11eb-a81e-663f66aa018c")
       assert(author.name == "JhonDue")
