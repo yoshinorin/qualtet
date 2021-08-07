@@ -17,6 +17,7 @@ val akkaVersion = "2.6.14"
 val akkaHttpVersion = "10.2.4"
 val circeVersion = "0.13.0"
 val doobieVersion = "0.13.2"
+val jwtScalaVersion = "9.0.0"
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.1",
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
@@ -29,6 +30,8 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic" % circeVersion,
   "io.circe" %% "circe-parser" % circeVersion,
   "io.circe" %% "circe-generic-extras" % circeVersion,
+  "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
+  "com.github.jwt-scala" %% "jwt-circe" % jwtScalaVersion,
   "org.mariadb.jdbc" % "mariadb-java-client" % "2.7.2",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-quill" % doobieVersion,
