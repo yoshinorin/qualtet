@@ -4,3 +4,7 @@ setx QUALTET_DB_PASSWORD "pass"
 
 setx QUALTET_HTTP_BIND_ADDRESS "0.0.0.0"
 setx QUALTET_HTTP_PORT 9001
+
+setx QUALTET_JWT_ISS "http://localhost:9001"
+setx QUALTET_JWT_AUD "qualtet_dev_1111"
+

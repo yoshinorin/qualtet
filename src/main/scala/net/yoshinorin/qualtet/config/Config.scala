@@ -13,4 +13,7 @@ object Config {
   val httpHost: String = config.getString("http.host")
   val httpPort: Int = config.getInt("http.port")
 
+  val jwtIss: String = config.getString("jwt.iss")
+  val jwtAud: String = config.getString("jwt.aud")
+
 }

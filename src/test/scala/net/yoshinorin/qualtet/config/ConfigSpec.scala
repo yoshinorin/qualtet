@@ -16,6 +16,11 @@ class ConfigSpec extends AnyWordSpec {
       assert(Config.httpHost == "0.0.0.0")
       assert(Config.httpPort == 9001)
     }
+
+    "jwt configuration gettable from application.conf" in {
+      assert(Config.jwtIss == "http://localhost:9001")
+      assert(Config.jwtAud == "qualtet_dev_1111")
+    }
   }
 
 }

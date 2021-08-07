@@ -2,16 +2,22 @@ package net.yoshinorin.qualtet.auth
 
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
+import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.authors.Author
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
 import pdi.jwt.{JwtCirce, JwtOptions}
 
 import java.time.Instant
+import java.util.UUID
+import scala.util.Try
 
 final case class JwtClaim(
-  exp: Int,
-  iat: Int,
-  authorId: String
+  iss: String,
+  aud: String,
+  sub: String,
+  jti: String,
+  exp: Long,
+  iat: Long
 )
 
 object JwtClaim {
@@ -26,13 +32,15 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
   /**
    * create JWT with authorId. authorId uses claim names in JWT.
    *
-   * @param authorId authorId
+   * @param author Author instance
    * @return String (JWT)
    */
   def encode(author: Author): String = {
-    // TODO: add claim names
     val claim = pdi.jwt.JwtClaim(
-      s"""{"authorId":${author.id}}""",
+      issuer = Some(Config.jwtIss),
+      audience = Some(Set(Config.jwtAud)),
+      subject = Some(author.id),
+      jwtId = Some(UUID.randomUUID().toString),
       expiration = Some(Instant.now.plusSeconds(3600).getEpochSecond),
       issuedAt = Some(Instant.now.getEpochSecond)
     )
@@ -57,12 +65,31 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
    * TODO: consider return type of left
    */
   def decode(jwtString: String): Either[Throwable, JwtClaim] = {
+    Try {
+      pdi.jwt.Jwt.validate(jwtString)
+    }.toEither match {
+      case Left(t) => Left(t)
+      case _ => // Nothing to do
+    }
+
     // TODO: logging
     for {
       jsonString <- JwtCirce.decodeJson(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
       maybeJwtClaim <- jsonString.as[JwtClaim] match {
-        case Right(x) => Right(x)
         case Left(t) => Left(t)
+        case Right(x) => {
+          // TODO: clean up
+          if (x.aud != Config.jwtAud) {
+            return Left(new Exception("TODO"))
+          }
+          if (x.iss != Config.jwtIss) {
+            return Left(new Exception("TODO"))
+          }
+          if (Instant.now.getEpochSecond > x.exp) {
+            return Left(new Exception("TODO"))
+          }
+          Right(x)
+        }
       }
     } yield maybeJwtClaim
   }

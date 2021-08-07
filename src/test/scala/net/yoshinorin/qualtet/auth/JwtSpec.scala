@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.auth
 
 import io.circe.ParsingFailure
+import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.authors.Author
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.JwtAlgorithm
@@ -22,24 +23,16 @@ class JwtSpec extends AnyWordSpec {
 
       val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
       val id = UUID.randomUUID().toString
-      val jwtString = jwtInstance.encode(Author(name = "Jhon", displayName = "JD", password = ""))
+      val jwtString = jwtInstance.encode(Author(id = id, name = "Jhon", displayName = "JD", password = ""))
 
       jwtInstance.decode(jwtString) match {
-        case Right(j) => assert(j.authorId == id)
-        case _ => // nothing to do
+        case Right(j) => {
+          assert(j.iss == Config.jwtIss)
+          assert(j.aud == Config.jwtAud)
+          assert(j.sub == id)
+        }
+        case _ => assert(false)
       }
-
-    }
-
-    "invalid JSON" in {
-
-      val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
-      val anotherJwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
-      val id = UUID.randomUUID().toString
-      val anotherJwtString = anotherJwtInstance.encode(Author(id = id, name = "Jhon", displayName = "JD", password = ""))
-
-      val maybeJwtClaims = jwtInstance.decode(anotherJwtString)
-      assert(maybeJwtClaims.left.getOrElse().isInstanceOf[ParsingFailure])
 
     }
 

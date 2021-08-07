@@ -6,3 +6,6 @@ export QUALTET_DB_PASSWORD="pass"
 
 export QUALTET_HTTP_BIND_ADDRESS="0.0.0.0"
 export QUALTET_HTTP_PORT=9001
+
+export QUALTET_JWT_ISS="http://localhost:9001"
+export QUALTET_JWT_AUD="qualtet_dev_1111"
