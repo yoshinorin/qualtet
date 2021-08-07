@@ -1,8 +1,8 @@
 # [WIP] Qualtet
 
-|Build|API Doc|
-|---|---|
-|[![CI](https://img.shields.io/github/workflow/status/yoshinorin/qualtet/CI/master?label=CI)](https://github.com/yoshinorin/qualtet/actions)|[![](https://img.shields.io/badge/Doc-Swagger-blue.svg)](https://yoshinorin.github.io/qualtet/)|
+|Build|Coverage|API Doc|
+|---|---|---|
+|[![CI](https://img.shields.io/github/workflow/status/yoshinorin/qualtet/CI/master?label=CI)](https://github.com/yoshinorin/qualtet/actions)|[![Coverage Status](https://coveralls.io/repos/github/yoshinorin/qualtet/badge.svg?branch=master)](https://coveralls.io/github/yoshinorin/qualtet?branch=master)|[![](https://img.shields.io/badge/Doc-Swagger-blue.svg)](https://yoshinorin.github.io/qualtet/)|
 
 ## Documentation
 
