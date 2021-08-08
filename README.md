@@ -22,7 +22,7 @@ Create a database sachema before install application. Also, schema name is anyth
 CREATE DATABASE qualtet;
 ```
 
-## Create an author
+### Create an author
 
 Qualtet does not support signup endpoint. You have to create an author with `sbt task`, like below.
 
@@ -38,6 +38,25 @@ $ sbt createUser jhonDue JD pass
   "name" : "jhonDue",
   "displayName" : "JD",
   "createdAt" : 1627995242
+}
+```
+
+## Examples
+
+API execution examples
+
+### Generate ID Token
+
+```
+$ curl -D - -X POST -H "Content-Type: application/json" -d '{"authorId":"dbed0c8e-57b9-4224-af10-c2ee9b49c066","password":"pass"}' 127.0.0.1:9001/token/
+HTTP/1.1 201 Created
+Server: akka-http/10.2.4
+Date: Sun, 08 Aug 2021 16:39:21 GMT
+Content-Type: application/json
+Content-Length: 638
+
+{
+  "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3Mi...."
 }
 ```
 
