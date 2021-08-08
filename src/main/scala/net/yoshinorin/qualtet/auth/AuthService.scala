@@ -23,7 +23,7 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
       if (bcryptPasswordEncoder.matches(tokenRequest.password, password)) {
         IO()
       } else {
-        IO(logger.error(s"authorId: ${tokenRequest.authorId} - wrong password"))
+        logger.error(s"authorId: ${tokenRequest.authorId} - wrong password")
         IO.raiseError(Unauthorized("unauthorized"))
       }
     }
