@@ -25,6 +25,27 @@ paths:
                   status:
                     type: string
                     example: operational
+  /token:
+    post:
+      summary: Create a IDToken
+      description: |
+        Create a IDToken
+      responses:
+        201:
+          description: Create a IDToken succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/idToken'
+        400:
+          description: Payload is wrong
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/errorMessage'
+        401:
+          description: Unauthorized
   /archives:
     get:
       summary: Get all articles
@@ -144,6 +165,12 @@ paths:
                 $ref: '#/components/schemas/contentType'
 components:
   schemas:
+    idToken:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3Mi...."
     author:
       type: object
       properties:
@@ -254,3 +281,9 @@ components:
         name:
           type: string
           example: "article"
+    errorMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Something is wrong

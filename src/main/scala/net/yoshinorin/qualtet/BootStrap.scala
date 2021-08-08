@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import akka.actor.ActorSystem
+import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.archives.DoobieArchiveRepository
 import net.yoshinorin.qualtet.domains.models.articles.DoobieArticleRepository
@@ -10,11 +11,13 @@ import net.yoshinorin.qualtet.domains.models.authors.DoobieAuthorRepository
 import net.yoshinorin.qualtet.domains.models.contentTypes.DoobieContentTypeRepository
 import net.yoshinorin.qualtet.domains.models.contents.DoobieContentRepository
 import net.yoshinorin.qualtet.domains.services.{ArchiveService, ArticleService, AuthorService, ContentService, ContentTypeService}
-import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ArchiveRoute, ArticleRoute, AuthorRoute, ContentRoute, ContentTypeRoute, HomeRoute}
+import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ArchiveRoute, ArticleRoute, AuthRoute, AuthorRoute, ContentRoute, ContentTypeRoute, HomeRoute}
 import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import pdi.jwt.JwtAlgorithm
 
+import java.security.SecureRandom
 import scala.io.StdIn
 
 object BootStrap extends App {
@@ -26,8 +29,16 @@ object BootStrap extends App {
 
   implicit val doobieContext: DoobieContext = new DoobieContext()
 
+  // NOTE: for generate JWT. They are reset when re-boot application.
+  val keyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
+  val message: Array[Byte] = SecureRandom.getInstanceStrong.toString.getBytes
+  val signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
+  val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
+
   val authorRepository = new DoobieAuthorRepository(doobieContext)
   val authorService: AuthorService = new AuthorService(authorRepository)
+
+  val authService = new AuthService(authorService, jwtInstance)
 
   val contentTypeRepository = new DoobieContentTypeRepository(doobieContext)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository)
@@ -43,13 +54,14 @@ object BootStrap extends App {
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
+  val authRoute: AuthRoute = new AuthRoute(authService)
   val authorRoute: AuthorRoute = new AuthorRoute(authorService)
   val contentRoute: ContentRoute = new ContentRoute(contentService)
   val articleRoute: ArticleRoute = new ArticleRoute(articleService)
   val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
 
-  val httpServer: HttpServer = new HttpServer(homeRoute, apiStatusRoute, authorRoute, contentRoute, articleRoute, archiveRoute, contentTypeRoute)
+  val httpServer: HttpServer = new HttpServer(homeRoute, apiStatusRoute, authRoute, authorRoute, contentRoute, articleRoute, archiveRoute, contentTypeRoute)
 
   httpServer.start(Config.httpHost, Config.httpPort).onComplete {
     case Success(binding) =>
