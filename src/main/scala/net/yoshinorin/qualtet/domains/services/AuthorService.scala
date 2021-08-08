@@ -37,6 +37,26 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
   }
 
   /**
+   * find an Author by id
+   *
+   * @param id author's id
+   * @return Author
+   */
+  def findById(id: String): IO[Option[ResponseAuthor]] = {
+    authorRepository.findByName(id).transact(doobieContext.transactor)
+  }
+
+  /**
+   * find an Author by id
+   *
+   * @param id author's id
+   * @return Author
+   */
+  def findByIdWithPassword(id: String): IO[Option[Author]] = {
+    authorRepository.findByIdWithPassword(id).transact(doobieContext.transactor)
+  }
+
+  /**
    * find an Author by name
    *
    * @param name author's name

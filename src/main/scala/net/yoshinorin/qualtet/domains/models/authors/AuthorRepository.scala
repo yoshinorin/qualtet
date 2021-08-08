@@ -21,6 +21,22 @@ trait AuthorRepository {
   def getAll: ConnectionIO[Seq[ResponseAuthor]]
 
   /**
+   * find a Author by id
+   *
+   * @param id author's id
+   * @return Author
+   */
+  def findById(id: String): ConnectionIO[Option[ResponseAuthor]]
+
+  /**
+   * find a Author by id
+   *
+   * @param id author's id
+   * @return Author
+   */
+  def findByIdWithPassword(id: String): ConnectionIO[Option[Author]]
+
+  /**
    * find a Author by name
    *
    * @param name author's name

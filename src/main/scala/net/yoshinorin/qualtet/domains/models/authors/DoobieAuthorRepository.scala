@@ -41,6 +41,30 @@ class DoobieAuthorRepository(doobie: DoobieContext) extends AuthorRepository {
   }
 
   /**
+   * find a Author by id
+   *
+   * @param id author's id
+   * @return Author
+   */
+  override def findById(id: String): ConnectionIO[Option[ResponseAuthor]] = {
+    sql"SELECT id, name, display_name, created_at FROM authors where id = $id"
+      .query[ResponseAuthor]
+      .option
+  }
+
+  /**
+   * find a Author by id
+   *
+   * @param id author's id
+   * @return Author
+   */
+  override def findByIdWithPassword(id: String): ConnectionIO[Option[Author]] = {
+    sql"SELECT id, name, display_name, password, created_at FROM authors where id = $id"
+      .query[Author]
+      .option
+  }
+
+  /**
    * find a Author by name
    *
    * @param name author's name
