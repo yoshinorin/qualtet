@@ -3,9 +3,6 @@ package net.yoshinorin.qualtet.http.routes
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import cats.effect.IO
-import io.circe.generic.extras.Configuration
-import io.circe.generic.extras.decoding.ConfiguredDecoder
-import io.circe.generic.extras.defaults.defaultGenericConfiguration
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair, ReponseToken, RequestToken}
 import net.yoshinorin.qualtet.http.RequestDecoder
 import org.mockito.Mockito
