@@ -13,11 +13,11 @@ object RequestToken {
   implicit val decodeTokenRequest: Decoder[RequestToken] = deriveDecoder[RequestToken]
 }
 
-final case class ReponseToken(
+final case class ResponseToken(
   token: String
 )
 
-object ReponseToken {
-  implicit val encodeTokenReponse: Encoder[ReponseToken] = deriveEncoder[ReponseToken]
-  implicit val decodeTokenReponse: Decoder[ReponseToken] = deriveDecoder[ReponseToken]
+object ResponseToken {
+  implicit val encodeTokenReponse: Encoder[ResponseToken] = deriveEncoder[ResponseToken]
+  implicit val decodeTokenReponse: Decoder[ResponseToken] = deriveDecoder[ResponseToken]
 }

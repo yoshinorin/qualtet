@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Directives.{path, _}
 import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import io.circe.syntax._
-import net.yoshinorin.qualtet.auth.{AuthService, ReponseToken, RequestToken}
+import net.yoshinorin.qualtet.auth.{AuthService, ResponseToken, RequestToken}
 import net.yoshinorin.qualtet.domains.models.Fail
 import net.yoshinorin.qualtet.http.RequestDecoder
 
@@ -25,7 +25,7 @@ class AuthRoute(authService: AuthService) extends RequestDecoder {
                     .handleErrorWith { e => IO.pure(e) }
                     .unsafeToFuture()
                 ) {
-                  case rt: ReponseToken =>
+                  case rt: ResponseToken =>
                     complete(HttpResponse(Created, entity = HttpEntity(ContentTypes.`application/json`, s"${rt.asJson}")))
                   case f: Fail =>
                     complete(HttpResponse(UnprocessableEntity, entity = HttpEntity(ContentTypes.`application/json`, s"${f.asJson}")))

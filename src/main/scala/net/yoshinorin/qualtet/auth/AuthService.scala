@@ -12,7 +12,7 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
   private[this] val bcryptPasswordEncoder = new BCryptPasswordEncoder()
 
-  def generateToken(tokenRequest: RequestToken): IO[ReponseToken] = {
+  def generateToken(tokenRequest: RequestToken): IO[ResponseToken] = {
 
     def author: IO[Author] = authorService.findByIdWithPassword(tokenRequest.authorId).flatMap {
       case None => IO.raiseError(NotFound(s"${tokenRequest.authorId} is not found."))
@@ -32,7 +32,7 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
       a <- author
       _ <- verifyPassword(a.password)
       jwt <- IO(jwt.encode(a))
-      jwtString <- IO(ReponseToken(jwt))
+      jwtString <- IO(ResponseToken(jwt))
     } yield jwtString
 
   }
