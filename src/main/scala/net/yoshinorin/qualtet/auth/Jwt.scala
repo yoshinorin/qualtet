@@ -73,7 +73,7 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
     }.toEither match {
       case Left(t) =>
         logger.error(t.getMessage)
-        Left(t)
+        return Left(t)
       case _ => // Nothing to do
     }
 
