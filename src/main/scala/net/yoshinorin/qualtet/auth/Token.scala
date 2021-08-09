@@ -18,6 +18,6 @@ final case class ResponseToken(
 )
 
 object ResponseToken {
-  implicit val encodeTokenReponse: Encoder[ResponseToken] = deriveEncoder[ResponseToken]
-  implicit val decodeTokenReponse: Decoder[ResponseToken] = deriveDecoder[ResponseToken]
+  implicit val encodeTokenResponse: Encoder[ResponseToken] = deriveEncoder[ResponseToken]
+  implicit val decodeTokenResponse: Decoder[ResponseToken] = deriveDecoder[ResponseToken]
 }
