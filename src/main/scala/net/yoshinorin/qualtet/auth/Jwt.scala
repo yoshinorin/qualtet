@@ -55,9 +55,10 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
    *
    * @param jwtString String of JWT
    */
-  def verify(jwtString: String): Unit = {
-    // TODO: verify claim names
-    pdi.jwt.Jwt.validate(jwtString)
+  def verify(jwtString: String): Either[Throwable, Unit] = {
+    Try {
+      pdi.jwt.Jwt.validate(jwtString, keyPair.publicKey)
+    }.toEither
   }
 
   /**
@@ -68,16 +69,8 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
    * TODO: consider return type of left
    */
   def decode(jwtString: String): Either[Throwable, JwtClaim] = {
-    Try {
-      pdi.jwt.Jwt.validate(jwtString)
-    }.toEither match {
-      case Left(t) =>
-        logger.error(t.getMessage)
-        return Left(t)
-      case _ => // Nothing to do
-    }
-
     for {
+      _ <- verify(jwtString)
       jsonString <- JwtCirce.decodeJson(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
       maybeJwtClaim <- jsonString.as[JwtClaim] match {
         case Left(t) =>
