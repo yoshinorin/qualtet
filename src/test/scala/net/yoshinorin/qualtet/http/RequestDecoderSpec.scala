@@ -24,7 +24,9 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |}
         """.stripMargin
 
-      decode[RequestContent](json) match {
+      val result = decode[RequestContent](json)
+      assert(result.isRight)
+      result match {
         case Left(_) => // Nothing to do
         case Right(r) => {
           assert(r.isInstanceOf[RequestContent])
@@ -53,7 +55,9 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |}
         """.stripMargin
 
-      decode[RequestContent](json) match {
+      val result = decode[RequestContent](json)
+      assert(result.isRight)
+      result match {
         case Left(_) => // Nothing to do
         case Right(r) => {
           assert(r.isInstanceOf[RequestContent])
@@ -78,7 +82,9 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |}
         """.stripMargin
 
-      decode[RequestContent](json) match {
+      val result = decode[RequestContent](json)
+      assert(result.isLeft)
+      result match {
         case Right(_) => // Nothig to do
         case Left(l) => assert(l.isInstanceOf[BadRequest])
       }
@@ -93,7 +99,9 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |}
         """.stripMargin
 
-      decode[RequestToken](json) match {
+      val result = decode[RequestToken](json)
+      assert(result.isRight)
+      result match {
         case Left(_) => // Nothing to do
         case Right(r) => {
           assert(r.isInstanceOf[RequestToken])
@@ -111,12 +119,13 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |}
         """.stripMargin
 
-      decode[RequestToken](json) match {
+      val result = decode[RequestToken](json)
+      assert(result.isLeft)
+      result match {
         case Right(_) => // Nothig to do
         case Left(l) => assert(l.isInstanceOf[BadRequest])
       }
     }
-
   }
 
 }
