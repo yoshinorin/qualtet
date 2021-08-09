@@ -4,6 +4,7 @@ import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.authors.Author
+import org.slf4j.LoggerFactory
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
 import pdi.jwt.{JwtCirce, JwtOptions}
 
@@ -28,6 +29,8 @@ object JwtClaim {
 }
 
 class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signature) {
+
+  private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
   /**
    * create JWT with authorId. authorId uses claim names in JWT.
@@ -68,15 +71,18 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
     Try {
       pdi.jwt.Jwt.validate(jwtString)
     }.toEither match {
-      case Left(t) => Left(t)
+      case Left(t) =>
+        logger.error(t.getMessage)
+        Left(t)
       case _ => // Nothing to do
     }
 
-    // TODO: logging
     for {
       jsonString <- JwtCirce.decodeJson(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
       maybeJwtClaim <- jsonString.as[JwtClaim] match {
-        case Left(t) => Left(t)
+        case Left(t) =>
+          logger.error(t.getMessage)
+          Left(t)
         case Right(x) => {
           // TODO: clean up
           if (x.aud != Config.jwtAud) {
