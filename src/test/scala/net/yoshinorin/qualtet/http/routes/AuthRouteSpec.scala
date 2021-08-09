@@ -3,22 +3,14 @@ package net.yoshinorin.qualtet.http.routes
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import cats.effect.IO
-import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair, ResponseToken, RequestToken}
+import net.yoshinorin.qualtet.auth.{AuthService, RequestToken, ResponseToken}
 import net.yoshinorin.qualtet.http.RequestDecoder
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.wordspec.AnyWordSpec
-import pdi.jwt.JwtAlgorithm
-
-import java.security.SecureRandom
 
 // testOnly net.yoshinorin.qualtet.http.routes.AuthRouteSpec
-class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest with RequestDecoder {
-
-  val keyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
-  val message: Array[Byte] = SecureRandom.getInstanceStrong.toString.getBytes
-  val signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
-  val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
+class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
   val mockAuthService: AuthService = Mockito.mock(classOf[AuthService])
   val authRoute: AuthRoute = new AuthRoute(mockAuthService)
