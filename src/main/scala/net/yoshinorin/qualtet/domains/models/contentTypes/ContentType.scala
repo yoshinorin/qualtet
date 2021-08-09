@@ -10,6 +10,6 @@ final case class ContentType(
 )
 
 object ContentType {
-  implicit val encodeAuthor: Encoder[ContentType] = deriveEncoder[ContentType]
-  implicit val encodeAuthors: Encoder[List[ContentType]] = Encoder.encodeList[ContentType]
+  implicit val encodeContentType: Encoder[ContentType] = deriveEncoder[ContentType]
+  implicit val encodeContentTypes: Encoder[List[ContentType]] = Encoder.encodeList[ContentType]
 }
