@@ -2,9 +2,10 @@ package net.yoshinorin.qualtet.domains.models.archives
 
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
+import net.yoshinorin.qualtet.domains.models.contents.Path
 
 final case class ResponseArchive(
-  path: String,
+  path: Path,
   title: String,
   publishedAt: Long
 )

@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.articles
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
 trait ArticleRepository {
@@ -11,7 +12,7 @@ trait ArticleRepository {
    * @param contentTypeId contentTypeId
    * @return Number of articles with ConnectionIO
    */
-  def count(contentTypeId: String): ConnectionIO[Int]
+  def count(contentTypeId: ContentTypeId): ConnectionIO[Int]
 
   /**
    * get all Articles
@@ -20,5 +21,5 @@ trait ArticleRepository {
    * @param sqlParams sql parameters for limit, offset
    * @return Articles with ConnectionIO
    */
-  def get(contentTypeId: String, sqlParams: SqlParams): ConnectionIO[Seq[ResponseArticle]]
+  def get(contentTypeId: ContentTypeId, sqlParams: SqlParams): ConnectionIO[Seq[ResponseArticle]]
 }

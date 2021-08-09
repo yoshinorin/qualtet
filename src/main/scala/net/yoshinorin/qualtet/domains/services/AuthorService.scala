@@ -3,13 +3,13 @@ package net.yoshinorin.qualtet.domains.services
 import cats.effect.IO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.InternalServerError
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorRepository, ResponseAuthor}
+import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorId, AuthorName, AuthorRepository, ResponseAuthor}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: DoobieContext) {
 
   /**
-   * create an author
+   * create an authorName
    *
    * @param data Instance of Author
    * @return Instance of created Author with IO
@@ -39,30 +39,30 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
   /**
    * find an Author by id
    *
-   * @param id author's id
+   * @param id authorName's id
    * @return Author
    */
-  def findById(id: String): IO[Option[ResponseAuthor]] = {
-    authorRepository.findByName(id).transact(doobieContext.transactor)
+  def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
+    authorRepository.findById(id).transact(doobieContext.transactor)
   }
 
   /**
    * find an Author by id
    *
-   * @param id author's id
+   * @param id authorName's id
    * @return Author
    */
-  def findByIdWithPassword(id: String): IO[Option[Author]] = {
+  def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
     authorRepository.findByIdWithPassword(id).transact(doobieContext.transactor)
   }
 
   /**
    * find an Author by name
    *
-   * @param name author's name
+   * @param name authorName's name
    * @return Author
    */
-  def findByName(name: String): IO[Option[ResponseAuthor]] = {
+  def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
     authorRepository.findByName(name).transact(doobieContext.transactor)
   }
 

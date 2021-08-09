@@ -12,7 +12,7 @@ class DoobieAuthorRepository(doobie: DoobieContext) extends AuthorRepository {
   private val authors = quote(querySchema[Author]("authors"))
 
   /**
-   * create a author
+   * create a authorName
    *
    * @param data Instance of Author
    * @return created Author
@@ -43,10 +43,10 @@ class DoobieAuthorRepository(doobie: DoobieContext) extends AuthorRepository {
   /**
    * find a Author by id
    *
-   * @param id author's id
+   * @param id authorName's id
    * @return Author
    */
-  override def findById(id: String): ConnectionIO[Option[ResponseAuthor]] = {
+  override def findById(id: AuthorId): ConnectionIO[Option[ResponseAuthor]] = {
     sql"SELECT id, name, display_name, created_at FROM authors where id = $id"
       .query[ResponseAuthor]
       .option
@@ -55,10 +55,10 @@ class DoobieAuthorRepository(doobie: DoobieContext) extends AuthorRepository {
   /**
    * find a Author by id
    *
-   * @param id author's id
+   * @param id authorName's id
    * @return Author
    */
-  override def findByIdWithPassword(id: String): ConnectionIO[Option[Author]] = {
+  override def findByIdWithPassword(id: AuthorId): ConnectionIO[Option[Author]] = {
     sql"SELECT id, name, display_name, password, created_at FROM authors where id = $id"
       .query[Author]
       .option
@@ -67,10 +67,10 @@ class DoobieAuthorRepository(doobie: DoobieContext) extends AuthorRepository {
   /**
    * find a Author by name
    *
-   * @param name author's name
+   * @param name authorName's name
    * @return Author
    */
-  override def findByName(name: String): ConnectionIO[Option[ResponseAuthor]] = {
+  override def findByName(name: AuthorName): ConnectionIO[Option[ResponseAuthor]] = {
     sql"SELECT id, name, display_name, created_at FROM authors where name = $name"
       .query[ResponseAuthor]
       .option

@@ -5,6 +5,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import io.circe.syntax._
+import net.yoshinorin.qualtet.domains.models.authors.AuthorName
 import net.yoshinorin.qualtet.domains.services.AuthorService
 
 class AuthorRoute(
@@ -26,7 +27,7 @@ class AuthorRoute(
         pathPrefix(".+".r) { authorName =>
           pathEndOrSingleSlash {
             get {
-              onSuccess(authoreService.findByName(authorName).unsafeToFuture()) {
+              onSuccess(authoreService.findByName(AuthorName(authorName)).unsafeToFuture()) {
                 case Some(author) => complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${author.asJson}")))
                 case _ => complete(HttpResponse(NotFound, entity = HttpEntity(ContentTypes.`application/json`, s"TODO: NOT FOUND")))
               }

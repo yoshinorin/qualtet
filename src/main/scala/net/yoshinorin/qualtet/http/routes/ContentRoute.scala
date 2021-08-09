@@ -7,7 +7,7 @@ import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.models.Fail
-import net.yoshinorin.qualtet.domains.models.contents.{Content, RequestContent, ResponseContent}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.services.ContentService
 import net.yoshinorin.qualtet.http.RequestDecoder
 
@@ -43,11 +43,11 @@ class ContentRoute(
           }
         }
       } ~ {
-        // NOTE: no-need slash on the prefix but it is required on the suffix
-        // example: yyyy/mm/dd/content-name/
+        // NOTE: need slash on the prefix but it is required on the suffix
+        // example: /yyyy/mm/dd/content-name/
         path(Remaining) { path =>
           get {
-            onSuccess(contentService.findByPath(path).unsafeToFuture()) {
+            onSuccess(contentService.findByPath(Path(path)).unsafeToFuture()) {
               case Some(content) =>
                 complete(
                   HttpResponse(

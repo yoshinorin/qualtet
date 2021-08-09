@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Directives.{path, _}
 import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import io.circe.syntax._
-import net.yoshinorin.qualtet.auth.{AuthService, ResponseToken, RequestToken}
+import net.yoshinorin.qualtet.auth.{AuthService, RequestToken, ResponseToken}
 import net.yoshinorin.qualtet.domains.models.Fail
 import net.yoshinorin.qualtet.http.RequestDecoder
 

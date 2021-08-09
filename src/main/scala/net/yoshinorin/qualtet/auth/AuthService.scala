@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.auth
 import cats.effect.IO
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.models.Fail.{NotFound, Unauthorized}
-import net.yoshinorin.qualtet.domains.models.authors.Author
+import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorId}
 import net.yoshinorin.qualtet.domains.services.AuthorService
 import org.slf4j.LoggerFactory
 

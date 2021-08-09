@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.models.articles
 
 import doobie.ConnectionIO
 import doobie.implicits._
+import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
@@ -15,7 +16,7 @@ class DoobieArticleRepository(doobie: DoobieContext) extends ArticleRepository {
    * @param contentTypeId contentTypeId
    * @return Number of articles with ConnectionIO
    */
-  def count(contentTypeId: String): ConnectionIO[Int] = {
+  def count(contentTypeId: ContentTypeId): ConnectionIO[Int] = {
     sql"""
       SELECT count(1)
       FROM contents
@@ -25,7 +26,7 @@ class DoobieArticleRepository(doobie: DoobieContext) extends ArticleRepository {
       .unique
   }
 
-  def get(contentTypeId: String, sqlParams: SqlParams): ConnectionIO[Seq[ResponseArticle]] = {
+  def get(contentTypeId: ContentTypeId, sqlParams: SqlParams): ConnectionIO[Seq[ResponseArticle]] = {
     sql"""
       SELECT path, title, html_content, published_at, updated_at
       FROM contents

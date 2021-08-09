@@ -22,7 +22,7 @@ trait ContentRepository {
    *
    * TODO: should not depends on doobie.
    */
-  def findByPath(path: String): ConnectionIO[Option[Content]]
+  def findByPath(path: Path): ConnectionIO[Option[Content]]
 
   def update = ???
 

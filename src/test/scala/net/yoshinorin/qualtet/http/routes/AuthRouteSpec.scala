@@ -4,6 +4,7 @@ import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import cats.effect.IO
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken, ResponseToken}
+import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.http.RequestDecoder
 import org.mockito.Mockito
 import org.mockito.Mockito.when
@@ -19,7 +20,7 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
     "return JWT correctly" in {
       when(
-        mockAuthService.generateToken(RequestToken("dbed0c8e-57b9-4224-af10-c2ee9b49c066", "valid-password"))
+        mockAuthService.generateToken(RequestToken(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"), "valid-password"))
       ).thenReturn(
         IO(
           ResponseToken(

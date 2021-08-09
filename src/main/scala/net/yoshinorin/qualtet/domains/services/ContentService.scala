@@ -5,7 +5,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.models.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
-import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, RequestContent}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, Path, RequestContent}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.CommonMark.renderHtml
 
@@ -25,8 +25,8 @@ class ContentService(
    */
   def createContentFromRequest(request: RequestContent): IO[Content] = {
 
-    def user: IO[ResponseAuthor] = authorService.findByName(request.author).flatMap {
-      case None => IO.raiseError(NotFound(s"user not found: ${request.author}"))
+    def user: IO[ResponseAuthor] = authorService.findByName(request.authorName).flatMap {
+      case None => IO.raiseError(NotFound(s"user not found: ${request.authorName}"))
       case Some(x) => IO(x)
     }
 
@@ -79,7 +79,7 @@ class ContentService(
    * @param path a content path
    * @return ResponseContent instance
    */
-  def findByPath(path: String): IO[Option[Content]] = {
+  def findByPath(path: Path): IO[Option[Content]] = {
     contentRepository.findByPath(path).transact(doobieContext.transactor)
   }
 

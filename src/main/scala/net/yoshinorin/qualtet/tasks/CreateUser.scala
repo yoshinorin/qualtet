@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import io.circe.syntax._
 import org.slf4j.LoggerFactory
-import net.yoshinorin.qualtet.domains.models.authors.{Author, DoobieAuthorRepository}
+import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorName, DoobieAuthorRepository}
 import net.yoshinorin.qualtet.domains.services.AuthorService
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -32,8 +32,8 @@ object CreateUser {
     // https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage-bcrypt
     val bcryptPasswordEncoder = new BCryptPasswordEncoder()
     val author = for {
-      _ <- authorService.create(Author(name = args(0), displayName = args(1), password = bcryptPasswordEncoder.encode(args(2))))
-      a <- authorService.findByName(args(0))
+      _ <- authorService.create(Author(name = AuthorName(args(0)), displayName = AuthorDisplayName(args(1)), password = bcryptPasswordEncoder.encode(args(2))))
+      a <- authorService.findByName(AuthorName(args(0)))
     } yield a
     author.unsafeToFuture().onComplete {
       case Success(author) =>
