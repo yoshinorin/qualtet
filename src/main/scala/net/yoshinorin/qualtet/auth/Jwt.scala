@@ -69,28 +69,28 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
    * TODO: consider return type of left
    */
   def decode(jwtString: String): Either[Throwable, JwtClaim] = {
-    for {
+    (for {
       _ <- verify(jwtString)
       jsonString <- JwtCirce.decodeJson(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
-      maybeJwtClaim <- jsonString.as[JwtClaim] match {
-        case Left(t) =>
-          logger.error(t.getMessage)
-          Left(t)
-        case Right(x) => {
-          // TODO: clean up
-          if (x.aud != Config.jwtAud) {
-            return Left(new Exception("TODO"))
-          }
-          if (x.iss != Config.jwtIss) {
-            return Left(new Exception("TODO"))
-          }
-          if (Instant.now.getEpochSecond > x.exp) {
-            return Left(new Exception("TODO"))
-          }
-          Right(x)
+      maybeJwtClaim <- jsonString.as[JwtClaim]
+    } yield maybeJwtClaim) match {
+      case Left(t) =>
+        logger.error(t.getMessage)
+        Left(t)
+      case Right(x) => {
+        // TODO: clean up
+        if (x.aud != Config.jwtAud) {
+          return Left(new Exception("TODO"))
         }
+        if (x.iss != Config.jwtIss) {
+          return Left(new Exception("TODO"))
+        }
+        if (Instant.now.getEpochSecond > x.exp) {
+          return Left(new Exception("TODO"))
+        }
+        Right(x)
       }
-    } yield maybeJwtClaim
+    }
   }
 
 }
