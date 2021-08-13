@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.services.AuthorService
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
-object CreateUser {
+object CreateAuthor {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -37,7 +37,7 @@ object CreateUser {
     } yield a
     author.unsafeToFuture().onComplete {
       case Success(author) =>
-        logger.info(s"user created: ${author.asJson}")
+        logger.info(s"author created: ${author.asJson}")
         logger.info("shutting down...")
         actorSystem.terminate()
       case Failure(ex) =>

@@ -13,7 +13,6 @@ class AuthorRoute(
 ) {
 
   def route: Route = {
-    // TODO: authors or users?
     pathPrefix("authors") {
       pathEndOrSingleSlash {
         get {

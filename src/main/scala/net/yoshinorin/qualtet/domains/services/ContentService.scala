@@ -25,7 +25,7 @@ class ContentService(
    */
   def createContentFromRequest(request: RequestContent): IO[Content] = {
 
-    def user: IO[ResponseAuthor] = authorService.findByName(request.authorName).flatMap {
+    def author: IO[ResponseAuthor] = authorService.findByName(request.authorName).flatMap {
       case None => IO.raiseError(NotFound(s"user not found: ${request.authorName}"))
       case Some(x) => IO(x)
     }
@@ -36,11 +36,11 @@ class ContentService(
     }
 
     for {
-      u <- user
+      a <- author
       c <- contentType
       createdContent <- this.create(
         Content(
-          authorId = u.id,
+          authorId = a.id,
           contentTypeId = c.id,
           path = request.path,
           title = request.title,

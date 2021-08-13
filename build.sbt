@@ -45,13 +45,13 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "3.10.0" % "test"
 )
 
-val createUser = inputKey[Unit]("create an user. args must be three. They are 'name', 'displayName' and 'password'")
+val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
 lazy val root = (project in file("."))
   .settings(
-    createUser := Def.inputTaskDyn {
+    createAuthor := Def.inputTaskDyn {
       import sbt.Def.spaceDelimited
       val args = spaceDelimited("<args>").parsed
-      val task = (Compile / runMain).toTask(s" net.yoshinorin.qualtet.tasks.CreateUser ${args.mkString(" ")}")
+      val task = (Compile / runMain).toTask(s" net.yoshinorin.qualtet.tasks.CreateAuthor ${args.mkString(" ")}")
       task
     }.evaluated
   )

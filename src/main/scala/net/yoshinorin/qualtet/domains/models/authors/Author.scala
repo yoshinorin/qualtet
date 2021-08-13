@@ -21,8 +21,8 @@ object AuthorId {
 
 final case class AuthorName(value: String) extends AnyVal
 object AuthorName {
-  implicit val encodeUserName: Encoder[AuthorName] = Encoder[String].contramap(_.value)
-  implicit val decodeUserName: Decoder[AuthorName] = Decoder[String].map(AuthorName.apply)
+  implicit val encodeAuthorName: Encoder[AuthorName] = Encoder[String].contramap(_.value)
+  implicit val decodeAuthorName: Decoder[AuthorName] = Decoder[String].map(AuthorName.apply)
   val authorNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
   def apply(value: String): AuthorName = {
@@ -36,8 +36,8 @@ object AuthorName {
 
 final case class AuthorDisplayName(value: String) extends AnyVal
 object AuthorDisplayName {
-  implicit val encodeUserName: Encoder[AuthorDisplayName] = Encoder[String].contramap(_.value)
-  implicit val decodeUserName: Decoder[AuthorDisplayName] = Decoder[String].map(AuthorDisplayName.apply)
+  implicit val encodeAuthorDisplayName: Encoder[AuthorDisplayName] = Encoder[String].contramap(_.value)
+  implicit val decodeAuthorDisplayName: Decoder[AuthorDisplayName] = Decoder[String].map(AuthorDisplayName.apply)
   val authorDisplayNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
   def apply(value: String): AuthorDisplayName = {
