@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.auth
 import cats.effect.IO
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.models.Fail.{NotFound, Unauthorized}
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorId}
+import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorId, BCryptPassword}
 import net.yoshinorin.qualtet.domains.services.AuthorService
 import org.slf4j.LoggerFactory
 
@@ -19,8 +19,8 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
       case Some(x) => IO(x)
     }
 
-    def verifyPassword(password: String): IO[Unit] = {
-      if (bcryptPasswordEncoder.matches(tokenRequest.password, password)) {
+    def verifyPassword(password: BCryptPassword): IO[Unit] = {
+      if (bcryptPasswordEncoder.matches(tokenRequest.password, password.value)) {
         IO()
       } else {
         logger.error(s"authorId: ${tokenRequest.authorId} - wrong password")

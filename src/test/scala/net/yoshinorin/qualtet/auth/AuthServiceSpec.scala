@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.auth
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.services.AuthorService
 import net.yoshinorin.qualtet.domains.models.Fail.{NotFound, Unauthorized}
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
+import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import org.mockito.Mockito
 import org.mockito.Mockito._
@@ -35,7 +35,7 @@ class AuthServiceSpec extends AnyWordSpec {
                 id = AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"),
                 name = AuthorName("JhonDue"),
                 displayName = AuthorDisplayName("JD"),
-                password = "$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O"
+                password = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
               )
             )
           )
@@ -55,7 +55,7 @@ class AuthServiceSpec extends AnyWordSpec {
                 id = AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"),
                 name = AuthorName("JhonDue"),
                 displayName = AuthorDisplayName("JD"),
-                password = "$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O"
+                password = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
               )
             )
           )

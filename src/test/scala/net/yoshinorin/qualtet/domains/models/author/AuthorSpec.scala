@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.author
 
 import io.circe.syntax._
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, ResponseAuthor}
+import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword, ResponseAuthor}
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
@@ -51,10 +51,31 @@ class AuthorSpec extends AnyWordSpec {
     }
   }
 
+  "BCryptPassword" should {
+    "valid value" in {
+      assert(
+        BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O").value == "$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O"
+      )
+    }
+    "invalid value" in {
+      // TODO: declare exception
+      assertThrows[Exception] {
+        BCryptPassword("")
+      }
+      assertThrows[Exception] {
+        BCryptPassword("$2a10XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
+      }
+    }
+  }
+
   "Author" should {
     "default instance" in {
       val currentUTCDateTime = ZonedDateTime.now(ZoneOffset.UTC)
-      val author = Author(name = AuthorName("JhonDue"), displayName = AuthorDisplayName("JD"), password = "")
+      val author = Author(
+        name = AuthorName("JhonDue"),
+        displayName = AuthorDisplayName("JD"),
+        password = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
+      )
       val instanceUTCDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(author.createdAt), ZoneOffset.UTC)
 
       assert(author.id.isInstanceOf[AuthorId])
@@ -67,7 +88,13 @@ class AuthorSpec extends AnyWordSpec {
     }
 
     "specific values" in {
-      val author = Author(AuthorId("cc827369-769d-11eb-a81e-663f66aa018c"), AuthorName("JhonDue"), AuthorDisplayName("JD"), "", 1625065592)
+      val author = Author(
+        AuthorId("cc827369-769d-11eb-a81e-663f66aa018c"),
+        AuthorName("JhonDue"),
+        AuthorDisplayName("JD"),
+        BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O"),
+        1625065592
+      )
 
       assert(author.id.value == "cc827369-769d-11eb-a81e-663f66aa018c")
       assert(author.name.value == "jhondue")

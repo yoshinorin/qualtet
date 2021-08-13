@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.auth
 
 import net.yoshinorin.qualtet.config.Config
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
+import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword}
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.JwtAlgorithm
 import pdi.jwt.exceptions.JwtValidationException
@@ -20,7 +20,14 @@ class JwtSpec extends AnyWordSpec {
     "encode and decode" in {
       val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
       val id = UUID.randomUUID().toString
-      val jwtString = jwtInstance.encode(Author(id = AuthorId(id), name = AuthorName("Jhon"), displayName = AuthorDisplayName("JD"), password = ""))
+      val jwtString = jwtInstance.encode(
+        Author(
+          id = AuthorId(id),
+          name = AuthorName("Jhon"),
+          displayName = AuthorDisplayName("JD"),
+          password = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
+        )
+      )
 
       jwtInstance.decode(jwtString) match {
         case Right(j) => {

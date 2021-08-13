@@ -49,11 +49,23 @@ object AuthorDisplayName {
   }
 }
 
+final case class BCryptPassword(value: String) extends AnyVal
+object BCryptPassword {
+  def apply(value: String): BCryptPassword = {
+    // https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage-dpe
+    if (!value.startsWith("$2a$")) {
+      // TODO: declare exception
+      throw new Exception("TODO")
+    }
+    new BCryptPassword(value)
+  }
+}
+
 final case class Author(
   id: AuthorId = new AuthorId,
   name: AuthorName,
   displayName: AuthorDisplayName,
-  password: String,
+  password: BCryptPassword,
   createdAt: Long = ZonedDateTime.now.toEpochSecond
 )
 
