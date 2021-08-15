@@ -13,7 +13,7 @@ object Fail {
   case class Unauthorized(message: String) extends Fail
   case class UnprocessableEntity(message: String) extends Fail
   case class BadRequest(message: String) extends Fail
-  case object Forbidden extends Fail
-  case object InternalServerError extends Fail
+  case class Forbidden(message: String) extends Fail
+  case class InternalServerError(message: String) extends Fail
 
 }

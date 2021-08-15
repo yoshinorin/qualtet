@@ -63,7 +63,7 @@ class ContentService(
   def create(data: Content): IO[Content] = {
 
     def content: IO[Content] = this.findByPath(data.path).flatMap {
-      case None => IO.raiseError(InternalServerError) //NOTE: 404 is better?
+      case None => IO.raiseError(InternalServerError("content not found")) //NOTE: 404 is better?
       case Some(x) => IO(x)
     }
 

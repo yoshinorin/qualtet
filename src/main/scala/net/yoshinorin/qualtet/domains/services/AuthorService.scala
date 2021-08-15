@@ -17,7 +17,7 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
   def create(data: Author): IO[ResponseAuthor] = {
 
     def author: IO[ResponseAuthor] = this.findByName(data.name).flatMap {
-      case None => IO.raiseError(InternalServerError) //NOTE: 404 is better?
+      case None => IO.raiseError(InternalServerError("user not found")) //NOTE: 404 is better?
       case Some(x) => IO(x)
     }
 

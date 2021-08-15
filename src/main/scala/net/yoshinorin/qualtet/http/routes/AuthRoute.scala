@@ -1,16 +1,14 @@
 package net.yoshinorin.qualtet.http.routes
 
 import akka.http.scaladsl.model.StatusCodes._
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse}
-import akka.http.scaladsl.server.Directives.{path, _}
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import cats.effect.IO
-import io.circe.syntax._
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken, ResponseToken}
 import net.yoshinorin.qualtet.domains.models.Fail
-import net.yoshinorin.qualtet.http.RequestDecoder
+import net.yoshinorin.qualtet.http.{RequestDecoder, ResponseHandler}
 
-class AuthRoute(authService: AuthService) extends RequestDecoder {
+class AuthRoute(authService: AuthService) extends RequestDecoder with ResponseHandler {
 
   def route: Route = {
     pathPrefix("token") {
@@ -25,17 +23,15 @@ class AuthRoute(authService: AuthService) extends RequestDecoder {
                     .handleErrorWith { e => IO.pure(e) }
                     .unsafeToFuture()
                 ) {
-                  case rt: ResponseToken =>
-                    complete(HttpResponse(Created, entity = HttpEntity(ContentTypes.`application/json`, s"${rt.asJson}")))
+                  case r: ResponseToken =>
+                    httpResponse(Created, r)
                   case f: Fail =>
-                    complete(HttpResponse(UnprocessableEntity, entity = HttpEntity(ContentTypes.`application/json`, s"${f.asJson}")))
+                    httpResponse(f)
                   case _ =>
-                    // TODO: create Internal server error case class
-                    complete(HttpResponse(InternalServerError, entity = HttpEntity(ContentTypes.`application/json`, s"Internal server error")))
+                    httpResponse(Fail.InternalServerError("Internal server error"))
                 }
-
               case Left(message) =>
-                complete(HttpResponse(BadRequest, entity = HttpEntity(ContentTypes.`application/json`, s"${message.asJson}")))
+                httpResponse(message)
             }
           }
         }

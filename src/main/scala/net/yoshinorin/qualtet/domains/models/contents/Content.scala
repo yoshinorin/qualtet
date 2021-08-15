@@ -7,6 +7,7 @@ import io.circe.Encoder
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.generic.semiauto.deriveEncoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
+import net.yoshinorin.qualtet.domains.models.ResponseBase
 import net.yoshinorin.qualtet.domains.models.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 
@@ -82,7 +83,7 @@ final case class ResponseContent(
   title: String,
   content: String,
   publishedAt: Long
-)
+) extends ResponseBase
 
 object ResponseContent {
   implicit val encodeResponseContent: Encoder[ResponseContent] = deriveEncoder[ResponseContent]

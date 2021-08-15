@@ -4,6 +4,7 @@ import java.time.ZonedDateTime
 import java.util.UUID
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.deriveEncoder
+import net.yoshinorin.qualtet.domains.models.ResponseBase
 
 import scala.util.matching.Regex
 
@@ -74,7 +75,7 @@ final case class ResponseAuthor(
   name: AuthorName,
   displayName: AuthorDisplayName,
   createdAt: Long = ZonedDateTime.now.toEpochSecond
-)
+) extends ResponseBase
 
 object ResponseAuthor {
   implicit val encodeAuthor: Encoder[ResponseAuthor] = deriveEncoder[ResponseAuthor]
