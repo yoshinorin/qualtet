@@ -5,7 +5,6 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import cats.effect.IO
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken, ResponseToken}
 import net.yoshinorin.qualtet.domains.models.authors.AuthorId
-import net.yoshinorin.qualtet.http.RequestDecoder
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.wordspec.AnyWordSpec
