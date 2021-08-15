@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.services.AuthorService
 import net.yoshinorin.qualtet.http.ResponseHandler
 
 class AuthorRoute(
-  authoreService: AuthorService
+  authorService: AuthorService
 ) extends ResponseHandler {
 
   def route: Route = {
@@ -19,7 +19,7 @@ class AuthorRoute(
       pathEndOrSingleSlash {
         get {
           // TODO: need fix?
-          onSuccess(authoreService.getAll.unsafeToFuture()) { result =>
+          onSuccess(authorService.getAll.unsafeToFuture()) { result =>
             complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${result.asJson}")))
           }
         }
@@ -28,7 +28,7 @@ class AuthorRoute(
         pathPrefix(".+".r) { authorName =>
           pathEndOrSingleSlash {
             get {
-              onSuccess(authoreService.findByName(AuthorName(authorName)).unsafeToFuture()) {
+              onSuccess(authorService.findByName(AuthorName(authorName)).unsafeToFuture()) {
                 case Some(author) => httpResponse(OK, author)
                 case _ => httpResponse(Fail.NotFound("Not found"))
               }
