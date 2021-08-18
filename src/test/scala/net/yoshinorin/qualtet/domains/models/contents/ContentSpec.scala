@@ -28,11 +28,8 @@ class ContentSpec extends AnyWordSpec {
       assert(Path("/test/path").value == "/test/path")
     }
 
-    "can not create instance" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
-        Path("test/path")
-      }
+    "add slash on the top" in {
+      assert(Path("test/path").value == "/test/path")
     }
   }
 

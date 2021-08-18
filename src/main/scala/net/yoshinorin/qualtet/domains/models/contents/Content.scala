@@ -31,9 +31,10 @@ object Path {
   def apply(value: String): Path = {
     // TODO: check valid url https://www.ietf.org/rfc/rfc3986.txt
     if (!value.startsWith("/")) {
-      throw new Exception("TODO: declare exception")
+      new Path(s"/${value}")
+    } else {
+      new Path(value)
     }
-    new Path(value)
   }
 }
 
