@@ -32,8 +32,8 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
       a <- author
       _ <- verifyPassword(a.password)
       jwt <- IO(jwt.encode(a))
-      jwtString <- IO(ResponseToken(jwt))
-    } yield jwtString
+      responseToken <- IO(ResponseToken(jwt))
+    } yield responseToken
 
   }
 
