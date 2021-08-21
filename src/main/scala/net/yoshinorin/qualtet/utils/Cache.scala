@@ -9,11 +9,7 @@ class Cache[T1, T2](caffeineCache: CaffeineCache[T1, T2]) {
   }
 
   def put(k: T1, v: T2): Unit = {
-    v match {
-      case x: T2 => caffeineCache.put(k, x)
-      case Some(x: T2) => caffeineCache.put(k, x)
-      case _ => // Nothing to do
-    }
+    caffeineCache.put(k, v)
   }
 
   def flush(): Unit = {
