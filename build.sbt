@@ -38,7 +38,7 @@ libraryDependencies ++= Seq(
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
   "com.github.ben-manes.caffeine" % "caffeine" % "3.0.3",
   "org.flywaydb" % "flyway-core" % "7.8.2",
-  "org.commonmark" % "commonmark" % "0.17.2",
+  "com.vladsch.flexmark" % "flexmark-all" % "0.62.2",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "org.springframework.security" % "spring-security-core" % "5.5.1",
   "org.slf4j" % "slf4j-api" % "1.7.30",

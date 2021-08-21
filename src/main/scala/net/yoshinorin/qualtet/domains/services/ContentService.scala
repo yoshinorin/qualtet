@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.domains.models.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
 import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, Path, RequestContent}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
-import net.yoshinorin.qualtet.utils.CommonMark.renderHtml
+import net.yoshinorin.qualtet.utils.Markdown.renderHtml
 
 class ContentService(
   contentRepository: ContentRepository,
