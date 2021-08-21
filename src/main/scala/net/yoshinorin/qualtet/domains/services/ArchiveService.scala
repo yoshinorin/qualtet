@@ -22,7 +22,7 @@ class ArchiveService(
 
   def get: IO[Seq[ResponseArchive]] = {
     for {
-      c <- this.contentType // TODO: get from cache
+      c <- this.contentType
       articles <- archiveRepository.get(c.id).transact(doobieContext.transactor)
     } yield articles
   }

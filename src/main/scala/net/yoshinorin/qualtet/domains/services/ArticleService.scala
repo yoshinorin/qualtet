@@ -24,14 +24,14 @@ class ArticleService(
   // TODO: get from cache
   def count(): IO[Int] = {
     for {
-      c <- this.contentType // TODO: get from cache
+      c <- this.contentType
       cnt <- articleRepository.count(c.id).transact(doobieContext.transactor)
     } yield cnt
   }
 
   def get(queryParam: ArticlesQueryParameter): IO[Seq[ResponseArticle]] = {
     for {
-      c <- this.contentType // TODO: get from cache
+      c <- this.contentType
       articles <- articleRepository.get(c.id, queryParam).transact(doobieContext.transactor)
     } yield articles.map(a => {
       // TODO: why apply when execute SQL with doobie

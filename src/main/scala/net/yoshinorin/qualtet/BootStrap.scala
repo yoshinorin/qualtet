@@ -3,21 +3,24 @@ package net.yoshinorin.qualtet
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import akka.actor.ActorSystem
+import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.archives.DoobieArchiveRepository
 import net.yoshinorin.qualtet.domains.models.articles.DoobieArticleRepository
 import net.yoshinorin.qualtet.domains.models.authors.DoobieAuthorRepository
-import net.yoshinorin.qualtet.domains.models.contentTypes.DoobieContentTypeRepository
+import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, DoobieContentTypeRepository}
 import net.yoshinorin.qualtet.domains.models.contents.DoobieContentRepository
 import net.yoshinorin.qualtet.domains.services.{ArchiveService, ArticleService, AuthorService, ContentService, ContentTypeService}
 import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ArchiveRoute, ArticleRoute, AuthRoute, AuthorRoute, ContentRoute, ContentTypeRoute, HomeRoute}
 import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.utils.Cache
 import pdi.jwt.JwtAlgorithm
 
 import java.security.SecureRandom
+import java.util.concurrent.TimeUnit
 import scala.io.StdIn
 
 object BootStrap extends App {
@@ -41,7 +44,11 @@ object BootStrap extends App {
   val authService = new AuthService(authorService, jwtInstance)
 
   val contentTypeRepository = new DoobieContentTypeRepository(doobieContext)
-  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository)
+  // TODO: from config for cache options
+  val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
+    Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
+  val contentTypeCache = new Cache[String, ContentType](contentTypeCaffeinCache)
+  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)
 
   val contentRepository = new DoobieContentRepository(doobieContext)
   val contentService: ContentService = new ContentService(contentRepository, authorService, contentTypeService)
