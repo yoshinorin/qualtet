@@ -46,7 +46,10 @@ class ContentService(
           title = request.title,
           rawContent = request.rawContent,
           // TODO: render html with apply
-          htmlContent = renderHtml(request.rawContent),
+          htmlContent = request.htmlContent match {
+            case Some(h) => h
+            case None => renderHtml(request.rawContent)
+          },
           publishedAt = request.publishedAt,
           updatedAt = request.updatedAt
         )

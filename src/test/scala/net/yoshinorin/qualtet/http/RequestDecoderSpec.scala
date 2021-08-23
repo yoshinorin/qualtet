@@ -72,6 +72,39 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
       }
     }
 
+    "Request content JSON can decode with htmlContent field" in {
+      val json =
+        """
+          |{
+          |  "authorName" : "JhonDue",
+          |  "contentType" : "article",
+          |  "path" : "/test/path",
+          |  "title" : "this is a title",
+          |  "rawContent" : "this is a raw content",
+          |  "htmlContent" : "this is a html content",
+          |  "publishedAt" : 1537974000,
+          |  "updatedAt" : 1621098091
+          |}
+        """.stripMargin
+
+      val result = decode[RequestContent](json)
+      assert(result.isRight)
+      result match {
+        case Left(_) => // Nothing to do
+        case Right(r) => {
+          assert(r.isInstanceOf[RequestContent])
+          assert(r.authorName.value == "jhondue")
+          assert(r.contentType == "article")
+          assert(r.path.value == "/test/path")
+          assert(r.title == "this is a title")
+          assert(r.rawContent == "this is a raw content")
+          assert(r.htmlContent.get == "this is a html content")
+          assert(r.publishedAt == 1537974000)
+          assert(r.updatedAt == 1621098091)
+        }
+      }
+    }
+
     "Request content JSON can not decode" in {
       val json =
         """
