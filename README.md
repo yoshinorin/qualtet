@@ -39,7 +39,7 @@ Qualtet does not support signup endpoint. You have to create an author with `sbt
 $ sbt createAuthor <name> <displayName> <password>
 
 // example
-$ sbt createUser jhonDue JD pass
+$ sbt createAuthor jhonDue JD pass
 
 // result
 2021-08-03 21:54:03 +0900 [INFO] from net.yoshinorin.qualtet.tasks.createAuthor$ - user created: {
