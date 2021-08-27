@@ -3,15 +3,19 @@ package net.yoshinorin.qualtet.http.routes
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives.{path, _}
 import akka.http.scaladsl.server.Route
+import akka.pattern.Backoff.onFailure
 import cats.effect.IO
+import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.models.Fail
 import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.services.ContentService
-import net.yoshinorin.qualtet.http.{RequestDecoder, ResponseHandler}
+import net.yoshinorin.qualtet.http.{Authentication, RequestDecoder, ResponseHandler}
 
 class ContentRoute(
+  authService: AuthService,
   contentService: ContentService
-) extends RequestDecoder
+) extends Authentication(authService)
+    with RequestDecoder
     with ResponseHandler {
 
   def route: Route = {
@@ -19,24 +23,27 @@ class ContentRoute(
     pathPrefix("contents") {
       pathEndOrSingleSlash {
         post {
-          entity(as[String]) { payload =>
-            decode[RequestContent](payload) match {
-              case Right(v) =>
-                onSuccess(
-                  contentService
-                    .createContentFromRequest(v)
-                    .handleErrorWith { e => IO.pure(e) }
-                    .unsafeToFuture()
-                ) {
-                  case c: Content =>
-                    httpResponse(Created, c)
-                  case e: Exception =>
-                    httpResponse(e)
-                  case _ =>
-                    httpResponse(Fail.InternalServerError("Internal server error"))
-                }
-              case Left(message) =>
-                httpResponse(message)
+          authenticate { author =>
+            entity(as[String]) { payload =>
+              decode[RequestContent](payload) match {
+                // TODO: use author for create content
+                case Right(v) =>
+                  onSuccess(
+                    contentService
+                      .createContentFromRequest(v)
+                      .handleErrorWith { e => IO.pure(e) }
+                      .unsafeToFuture()
+                  ) {
+                    case c: Content =>
+                      httpResponse(Created, c)
+                    case e: Exception =>
+                      httpResponse(e)
+                    case _ =>
+                      httpResponse(Fail.InternalServerError("Internal server error"))
+                  }
+                case Left(message) =>
+                  httpResponse(message)
+              }
             }
           }
         }

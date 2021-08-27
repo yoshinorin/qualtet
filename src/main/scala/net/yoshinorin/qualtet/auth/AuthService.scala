@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.auth
 import cats.effect.IO
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.models.Fail.{NotFound, Unauthorized}
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorId, BCryptPassword}
+import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorId, BCryptPassword, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.services.AuthorService
 import org.slf4j.LoggerFactory
 
@@ -35,6 +35,17 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
       responseToken <- IO(ResponseToken(jwt))
     } yield responseToken
 
+  }
+
+  def findAuthorFromJwtString(jwtString: String): IO[Option[ResponseAuthor]] = {
+    jwt.decode(jwtString) match {
+      case Right(jwtClaim: JwtClaim) =>
+        authorService.findById(AuthorId(jwtClaim.sub))
+      case Left(t) =>
+        logger.error(s"${t.getMessage}")
+        // TODO
+        throw t
+    }
   }
 
 }

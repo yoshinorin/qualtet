@@ -63,7 +63,7 @@ object BootStrap extends App {
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val authRoute: AuthRoute = new AuthRoute(authService)
   val authorRoute: AuthorRoute = new AuthorRoute(authorService)
-  val contentRoute: ContentRoute = new ContentRoute(contentService)
+  val contentRoute: ContentRoute = new ContentRoute(authService, contentService)
   val articleRoute: ArticleRoute = new ArticleRoute(articleService)
   val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
