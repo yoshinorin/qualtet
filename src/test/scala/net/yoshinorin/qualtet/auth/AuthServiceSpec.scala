@@ -41,8 +41,8 @@ class AuthServiceSpec extends AnyWordSpec {
           )
         )
 
-      val authorService = new AuthService(mockAuthorService, jwtInstance)
-      val token = authorService.generateToken(RequestToken(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"), "pass")).unsafeRunSync().token
+      val authService = new AuthService(mockAuthorService, jwtInstance)
+      val token = authService.generateToken(RequestToken(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"), "pass")).unsafeRunSync().token
       assert(jwtInstance.decode(token).isRight)
     }
 
@@ -61,9 +61,9 @@ class AuthServiceSpec extends AnyWordSpec {
           )
         )
 
-      val authorService = new AuthService(mockAuthorService, jwtInstance)
+      val authService = new AuthService(mockAuthorService, jwtInstance)
       assertThrows[Unauthorized] {
-        authorService.generateToken(RequestToken(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"), "wrongPassword")).unsafeRunSync()
+        authService.generateToken(RequestToken(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"), "wrongPassword")).unsafeRunSync()
       }
     }
 
@@ -71,9 +71,9 @@ class AuthServiceSpec extends AnyWordSpec {
       when(mockAuthorService.findByIdWithPassword(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c067")))
         .thenReturn(IO(None))
 
-      val authorService = new AuthService(mockAuthorService, jwtInstance)
+      val authService = new AuthService(mockAuthorService, jwtInstance)
       assertThrows[NotFound] {
-        authorService.generateToken(RequestToken(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c067"), "password")).unsafeRunSync()
+        authService.generateToken(RequestToken(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c067"), "password")).unsafeRunSync()
       }
     }
   }
