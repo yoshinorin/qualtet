@@ -1,18 +1,18 @@
 package net.yoshinorin.qualtet.domains.models.contentTypes
 
-import java.util.UUID
+import wvlet.airframe.ulid.ULID
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.deriveEncoder
 import net.yoshinorin.qualtet.domains.models.ResponseBase
 
-final case class ContentTypeId(value: String = UUID.randomUUID().toString) extends AnyVal
+final case class ContentTypeId(value: String = ULID.newULIDString) extends AnyVal
 object ContentTypeId {
   implicit val encodeContentTypeId: Encoder[ContentTypeId] = deriveEncoder[ContentTypeId]
   implicit val decodeContentTypeId: Decoder[ContentTypeId] = Decoder[String].map(ContentTypeId.apply)
 
   def apply(value: String): ContentTypeId = {
     // TODO: declare exception
-    UUID.fromString(value)
+    ULID.fromString(value)
     new ContentTypeId(value)
   }
 }

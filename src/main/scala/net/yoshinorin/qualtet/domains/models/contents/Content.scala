@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.contents
 
 import java.time.ZonedDateTime
-import java.util.UUID
+import wvlet.airframe.ulid.ULID
 import io.circe.Decoder
 import io.circe.Encoder
 import io.circe.generic.semiauto.deriveDecoder
@@ -11,14 +11,14 @@ import net.yoshinorin.qualtet.domains.models.ResponseBase
 import net.yoshinorin.qualtet.domains.models.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 
-final case class ContentId(value: String = UUID.randomUUID().toString) extends AnyVal
+final case class ContentId(value: String = ULID.newULIDString) extends AnyVal
 object ContentId {
   implicit val encodeContentId: Encoder[ContentId] = deriveEncoder[ContentId]
   implicit val decodeContentId: Decoder[ContentId] = Decoder[String].map(ContentId.apply)
 
   def apply(value: String): ContentId = {
     // TODO: declare exception
-    UUID.fromString(value)
+    ULID.fromString(value)
     new ContentId(value)
   }
 }
@@ -58,7 +58,7 @@ object Content {
 }
 
 final case class RequestContent(
-  requestId: String = UUID.randomUUID().toString,
+  requestId: String = ULID.newULIDString,
   authorName: AuthorName,
   contentType: String,
   path: Path,

@@ -9,7 +9,21 @@ class DoobieContentTypeRepository(doobie: DoobieContext) extends ContentTypeRepo
 
   import doobie.ctx._
 
-  private val authors = quote(querySchema[ContentType]("content_types"))
+  private val contentTypes = quote(querySchema[ContentType]("content_types"))
+
+  /**
+   * create a ContentType
+   *
+   * @param data Instance of ContentType
+   * @return created Content with ConnectionIO
+   */
+  def create(data: ContentType): ConnectionIO[Long] = {
+    val q = quote(
+      contentTypes
+        .insert(lift(data))
+    )
+    run(q)
+  }
 
   /**
    * get all ContentTypes

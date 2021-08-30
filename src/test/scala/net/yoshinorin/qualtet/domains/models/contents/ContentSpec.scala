@@ -12,13 +12,13 @@ class ContentSpec extends AnyWordSpec {
 
   "ContentId" should {
     "create instance with specific id" in {
-      assert(ContentId("5214b4e2-485e-41b2-9e1f-996fc75bd879").value == "5214b4e2-485e-41b2-9e1f-996fc75bd879")
+      assert(ContentId("01FEBB1333PD3431Q1A1E00FBT").value == "01FEBB1333PD3431Q1A1E00FBT")
     }
 
     "can not create instance" in {
       // TODO: declare exception
       assertThrows[Exception] {
-        ContentId("not-a-UUID")
+        ContentId("not-a-ULID")
       }
     }
   }
@@ -38,7 +38,7 @@ class ContentSpec extends AnyWordSpec {
       val currentUTCDateTime = ZonedDateTime.now(ZoneOffset.UTC)
       val content = Content(
         authorId = new AuthorId,
-        contentTypeId = ContentTypeId("5214b4e2-485e-41b2-9e1f-996fc75bd879"),
+        contentTypeId = ContentTypeId("01FEBB1333PD3431Q1A1E00FBT"),
         path = Path("/path"),
         title = "",
         rawContent = "",

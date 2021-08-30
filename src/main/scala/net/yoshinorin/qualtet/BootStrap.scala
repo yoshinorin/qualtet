@@ -25,8 +25,6 @@ import scala.io.StdIn
 
 object BootStrap extends App {
 
-  Migration.migrate()
-
   implicit val actorSystem: ActorSystem = ActorSystem("qualtet")
   implicit val executionContextExecutor: ExecutionContextExecutor = actorSystem.dispatcher
 
@@ -67,6 +65,8 @@ object BootStrap extends App {
   val articleRoute: ArticleRoute = new ArticleRoute(articleService)
   val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
+
+  Migration.migrate(contentTypeService)
 
   val httpServer: HttpServer = new HttpServer(homeRoute, apiStatusRoute, authRoute, authorRoute, contentRoute, articleRoute, archiveRoute, contentTypeRoute)
 

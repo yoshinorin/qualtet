@@ -1,21 +1,21 @@
 package net.yoshinorin.qualtet.domains.models.authors
 
 import java.time.ZonedDateTime
-import java.util.UUID
+import wvlet.airframe.ulid.ULID
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.deriveEncoder
 import net.yoshinorin.qualtet.domains.models.ResponseBase
 
 import scala.util.matching.Regex
 
-final case class AuthorId(value: String = UUID.randomUUID().toString) extends AnyVal
+final case class AuthorId(value: String = ULID.newULIDString) extends AnyVal
 object AuthorId {
   implicit val encodeAuthorId: Encoder[AuthorId] = Encoder[String].contramap(_.value)
   implicit val decodeAuthorId: Decoder[AuthorId] = Decoder[String].map(AuthorId.apply)
 
   def apply(value: String): AuthorId = {
     // TODO: declare exception
-    UUID.fromString(value)
+    ULID.fromString(value)
     new AuthorId(value)
   }
 }

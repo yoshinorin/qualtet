@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.services
 
 import cats.effect.IO
 import doobie.implicits._
+import net.yoshinorin.qualtet.domains.models.Fail.InternalServerError
 import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentTypeRepository}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.Cache
@@ -12,6 +13,27 @@ class ContentTypeService(
 )(
   implicit doobieContext: DoobieContext
 ) {
+
+  /**
+   * create a contentType
+   *
+   * @param name String
+   * @return
+   */
+  def create(data: ContentType): IO[Unit] = {
+
+    for {
+      maybeContentType <- this.findByName(data.name)
+    } yield maybeContentType match {
+      case Some(x: ContentType) => IO()
+      case None =>
+        contentTypeRepository.create(data).transact(doobieContext.transactor)
+        this.findByName(data.name).flatMap {
+          case None => IO.raiseError(InternalServerError("contentType not found")) //NOTE: 404 is better?
+          case Some(x: ContentType) => IO()
+        }
+    }
+  }
 
   /**
    * find a ContentType by name

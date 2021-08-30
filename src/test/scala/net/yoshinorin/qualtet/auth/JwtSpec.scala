@@ -7,7 +7,7 @@ import pdi.jwt.JwtAlgorithm
 import pdi.jwt.exceptions.JwtValidationException
 
 import java.security.SecureRandom
-import java.util.UUID
+import wvlet.airframe.ulid.ULID
 
 // testOnly net.yoshinorin.qualtet.auth.JwtSpec
 class JwtSpec extends AnyWordSpec {
@@ -19,7 +19,7 @@ class JwtSpec extends AnyWordSpec {
 
     "encode and decode" in {
       val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
-      val id = UUID.randomUUID().toString
+      val id = ULID.newULIDString
       val jwtString = jwtInstance.encode(
         Author(
           id = AuthorId(id),

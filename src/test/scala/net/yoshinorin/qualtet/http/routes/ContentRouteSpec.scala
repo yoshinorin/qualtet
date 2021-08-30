@@ -28,12 +28,12 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   val mockAuthorService: AuthorService = Mockito.mock(classOf[AuthorService])
 
   // Correct user
-  when(mockAuthorService.findByIdWithPassword(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066")))
+  when(mockAuthorService.findByIdWithPassword(AuthorId("01FEBB8AZ5T42M2H68XJ8C754A")))
     .thenReturn(
       IO(
         Some(
           Author(
-            id = AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"),
+            id = AuthorId("01FEBB8AZ5T42M2H68XJ8C754A"),
             name = AuthorName("JhonDue"),
             displayName = AuthorDisplayName("JD"),
             password = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
@@ -43,12 +43,12 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     )
 
   // Correct user
-  when(mockAuthorService.findById(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066")))
+  when(mockAuthorService.findById(AuthorId("01FEBB8AZ5T42M2H68XJ8C754A")))
     .thenReturn(
       IO(
         Some(
           ResponseAuthor(
-            id = AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"),
+            id = AuthorId("01FEBB8AZ5T42M2H68XJ8C754A"),
             name = AuthorName("JhonDue"),
             displayName = AuthorDisplayName("JD")
           )
@@ -57,12 +57,12 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     )
 
   // user not found
-  when(mockAuthorService.findByIdWithPassword(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c067")))
+  when(mockAuthorService.findByIdWithPassword(AuthorId("01FEBB8AZ5T42M2H68XJ8C754B")))
     .thenReturn(
       IO(
         Some(
           Author(
-            id = AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c067"),
+            id = AuthorId("01FEBB8AZ5T42M2H68XJ8C754B"),
             name = AuthorName("notfound"),
             displayName = AuthorDisplayName("NF"),
             password = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
@@ -72,14 +72,14 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     )
 
   // user not found
-  when(mockAuthorService.findById(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c067")))
+  when(mockAuthorService.findById(AuthorId("01FEBB8AZ5T42M2H68XJ8C754B")))
     .thenReturn(
       IO(None)
     )
 
   val authService = new AuthService(mockAuthorService, jwtInstance)
-  val validToken: String = authService.generateToken(RequestToken(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"), "pass")).unsafeRunSync().token
-  val notFoundUserToken: String = authService.generateToken(RequestToken(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c067"), "pass")).unsafeRunSync().token
+  val validToken: String = authService.generateToken(RequestToken(AuthorId("01FEBB8AZ5T42M2H68XJ8C754A"), "pass")).unsafeRunSync().token
+  val notFoundUserToken: String = authService.generateToken(RequestToken(AuthorId("01FEBB8AZ5T42M2H68XJ8C754B"), "pass")).unsafeRunSync().token
   val mockContentService: ContentService = Mockito.mock(classOf[ContentService])
   val contentRoute: ContentRoute = new ContentRoute(authService, mockContentService)
 

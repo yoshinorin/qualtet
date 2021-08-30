@@ -1,6 +1,8 @@
 package net.yoshinorin.qualtet.infrastructure.db
 
 import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
+import net.yoshinorin.qualtet.domains.services.ContentTypeService
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.FluentConfiguration
 
@@ -12,7 +14,11 @@ object Migration {
   /**
    * Do migration
    */
-  def migrate(): Unit = flyway.migrate()
+  def migrate(contentTypeService: ContentTypeService): Unit = {
+    flyway.migrate()
+    contentTypeService.create(ContentType(name = "article")).unsafeRunSync()
+    contentTypeService.create(ContentType(name = "page")).unsafeRunSync()
+  }
 
   /**
    * DROP all tables
@@ -24,9 +30,9 @@ object Migration {
    * DROP all tables and re-create
    * NOTE: for development
    */
-  def recrate(): Unit = {
+  def recrate(contentTypeService: ContentTypeService): Unit = {
     this.clean()
-    this.migrate()
+    this.migrate(contentTypeService)
   }
 
 }

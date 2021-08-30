@@ -1,6 +1,6 @@
 /* TODO: have to consider column, column-length, multiple-column indexes, foreign key etc...  */
 CREATE TABLE IF NOT EXISTS authors (
-    id CHAR(36) CHARACTER SET ascii UNIQUE NOT NULL,
+    id CHAR(26) CHARACTER SET ascii UNIQUE NOT NULL,
     name VARCHAR(32) UNIQUE NOT NULL,
     display_name VARCHAR(32),
     password VARCHAR(72) NOT NULL,
@@ -8,14 +8,14 @@ CREATE TABLE IF NOT EXISTS authors (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS content_types (
-    id CHAR(36) CHARACTER SET ascii UNIQUE NOT NULL,
+    id CHAR(26) CHARACTER SET ascii UNIQUE NOT NULL,
     name VARCHAR(32) UNIQUE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS contents (
-    id CHAR(36) CHARACTER SET ascii UNIQUE NOT NULL,
-    author_id CHAR(36) CHARACTER SET ascii NOT NULL,
-    content_type_id CHAR(36) CHARACTER SET ascii NOT NULL,
+    id CHAR(26) CHARACTER SET ascii UNIQUE NOT NULL,
+    author_id CHAR(26) CHARACTER SET ascii NOT NULL,
+    content_type_id CHAR(26) CHARACTER SET ascii NOT NULL,
     path VARCHAR(512) UNIQUE NOT NULL,
     title VARCHAR(255) NOT NULL,
     raw_content MEDIUMTEXT NOT NULL,
@@ -26,7 +26,3 @@ CREATE TABLE IF NOT EXISTS contents (
     FOREIGN KEY fk_content_type(content_type_id) REFERENCES content_types(id),
     FULLTEXT idx_fulltext(raw_content)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-INSERT INTO content_types VALUES (UUID(), 'article');
-INSERT INTO content_types VALUES (UUID(), 'page');

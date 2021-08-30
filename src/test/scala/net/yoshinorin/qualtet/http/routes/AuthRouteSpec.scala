@@ -19,7 +19,7 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
     "return JWT correctly" in {
       when(
-        mockAuthService.generateToken(RequestToken(AuthorId("dbed0c8e-57b9-4224-af10-c2ee9b49c066"), "valid-password"))
+        mockAuthService.generateToken(RequestToken(AuthorId("01FEBB8AZ5T42M2H68XJ8C754A"), "valid-password"))
       ).thenReturn(
         IO(
           ResponseToken(
@@ -31,7 +31,7 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       val json =
         """
           |{
-          |  "authorId" : "dbed0c8e-57b9-4224-af10-c2ee9b49c066",
+          |  "authorId" : "01FEBB8AZ5T42M2H68XJ8C754A",
           |  "password" : "valid-password"
           |}
         """.stripMargin
@@ -48,7 +48,7 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       val wrongJsonFormat =
         """
           |{
-          |  "authorId" : "dbed0c8e-57b9-4224-af10-c2ee9b49c066"
+          |  "authorId" : "01FEBB8AZ5T42M2H68XJ8C754A"
           |  "password" : "valid-password"
           |}
         """.stripMargin
@@ -63,7 +63,7 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       val wrongJson =
         """
           |{
-          |  "authorId" : "dbed0c8e-57b9-4224-af10-c2ee9b49c066"
+          |  "authorId" : "01FEBB8AZ5T42M2H68XJ8C754A"
           |}
         """.stripMargin
 

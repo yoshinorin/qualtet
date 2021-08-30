@@ -7,13 +7,13 @@ class ContentTypeSpec extends AnyWordSpec {
 
   "ContentTypeId" should {
     "create instance with specific id" in {
-      assert(ContentTypeId("5214b4e2-485e-41b2-9e1f-996fc75bd879").value == "5214b4e2-485e-41b2-9e1f-996fc75bd879")
+      assert(ContentTypeId("01FEBB1333PD3431Q1A1E00FBT").value == "01FEBB1333PD3431Q1A1E00FBT")
     }
 
     "can not create instance" in {
       // TODO: declare exception
       assertThrows[Exception] {
-        ContentTypeId("not-a-UUID")
+        ContentTypeId("not-a-ULID")
       }
     }
   }

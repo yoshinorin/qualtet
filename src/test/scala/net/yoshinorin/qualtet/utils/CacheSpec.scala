@@ -13,7 +13,7 @@ class CacheSpec extends AnyWordSpec {
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
 
   val contentTypeCache = new Cache[String, ContentType](contentTypeCaffeinCache)
-  val contentType: ContentType = ContentType(ContentTypeId("5214b4e2-485e-41b2-9e1f-996fc75bd879"), "article")
+  val contentType: ContentType = ContentType(ContentTypeId("01FEBB1333PD3431Q1A1E00FBT"), "article")
   contentTypeCache.put(contentType.name, contentType)
 
   val caffeinCache: CaffeineCache[Int, String] =
@@ -21,7 +21,7 @@ class CacheSpec extends AnyWordSpec {
 
   "Cache" should {
     "hit" in {
-      assert(contentTypeCache.get(contentType.name).get.id == ContentTypeId("5214b4e2-485e-41b2-9e1f-996fc75bd879"))
+      assert(contentTypeCache.get(contentType.name).get.id == ContentTypeId("01FEBB1333PD3431Q1A1E00FBT"))
     }
 
     "miss" in {

@@ -19,13 +19,13 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     IO(
       Seq(
         ResponseAuthor(
-          id = AuthorId("cc827369-769d-11eb-a81e-663f66aa018c"),
+          id = AuthorId("01FEBB8AZ5T42M2H68XJ8C754A"),
           name = AuthorName("jhondue"),
           displayName = AuthorDisplayName("JD"),
           createdAt = 1567814290
         ),
         ResponseAuthor(
-          id = AuthorId("cc827369-769d-11eb-a81e-663f66aa018d"),
+          id = AuthorId("01FEBB8AZ5T42M2H68XJ8C754B"),
           name = AuthorName("JhonDue2"),
           displayName = AuthorDisplayName("JD2"),
           createdAt = 1567814291
@@ -38,7 +38,7 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     IO(
       Option(
         ResponseAuthor(
-          id = AuthorId("cc827369-769d-11eb-a81e-663f66aa018c"),
+          id = AuthorId("01FEBB8AZ5T42M2H68XJ8C754A"),
           name = AuthorName("jhondue"),
           displayName = AuthorDisplayName("JD"),
           createdAt = 1567814290
@@ -57,13 +57,13 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         """
           |[
           |  {
-          |    "id" : "cc827369-769d-11eb-a81e-663f66aa018c",
+          |    "id" : "01FEBB8AZ5T42M2H68XJ8C754A",
           |    "name" : "jhondue",
           |    "displayName": "JD",
           |    "createdAt" : 1567814290
           |  },
           |  {
-          |    "id" : "cc827369-769d-11eb-a81e-663f66aa018d",
+          |    "id" : "01FEBB8AZ5T42M2H68XJ8C754B",
           |    "name" : "jhondue2",
           |    "displayName": "JD2",
           |    "createdAt" : 1567814291
@@ -82,7 +82,7 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       val expectJson =
         """
           |{
-          |  "id" : "cc827369-769d-11eb-a81e-663f66aa018c",
+          |  "id" : "01FEBB8AZ5T42M2H68XJ8C754A",
           |  "name" : "jhondue",
           |  "displayName": "JD",
           |  "createdAt" : 1567814290

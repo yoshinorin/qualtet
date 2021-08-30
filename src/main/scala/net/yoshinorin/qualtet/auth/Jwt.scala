@@ -7,9 +7,9 @@ import net.yoshinorin.qualtet.domains.models.authors.Author
 import org.slf4j.LoggerFactory
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
 import pdi.jwt.{JwtCirce, JwtOptions}
+import wvlet.airframe.ulid.ULID
 
 import java.time.Instant
-import java.util.UUID
 import scala.util.Try
 
 final case class JwtClaim(
@@ -43,7 +43,7 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
       issuer = Some(Config.jwtIss),
       audience = Some(Set(Config.jwtAud)),
       subject = Some(author.id.value),
-      jwtId = Some(UUID.randomUUID().toString),
+      jwtId = Some(ULID.newULIDString),
       expiration = Some(Instant.now.plusSeconds(3600).getEpochSecond),
       issuedAt = Some(Instant.now.getEpochSecond)
     )
