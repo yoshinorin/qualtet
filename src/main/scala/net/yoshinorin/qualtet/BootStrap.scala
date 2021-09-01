@@ -11,8 +11,19 @@ import net.yoshinorin.qualtet.domains.models.articles.DoobieArticleRepository
 import net.yoshinorin.qualtet.domains.models.authors.DoobieAuthorRepository
 import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, DoobieContentTypeRepository}
 import net.yoshinorin.qualtet.domains.models.contents.DoobieContentRepository
-import net.yoshinorin.qualtet.domains.services.{ArchiveService, ArticleService, AuthorService, ContentService, ContentTypeService}
-import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ArchiveRoute, ArticleRoute, AuthRoute, AuthorRoute, ContentRoute, ContentTypeRoute, HomeRoute}
+import net.yoshinorin.qualtet.domains.models.sitemaps.{DoobieSitemapsRepository, Url}
+import net.yoshinorin.qualtet.domains.services.{ArchiveService, ArticleService, AuthorService, ContentService, ContentTypeService, SitemapService}
+import net.yoshinorin.qualtet.http.routes.{
+  ApiStatusRoute,
+  ArchiveRoute,
+  ArticleRoute,
+  AuthRoute,
+  AuthorRoute,
+  ContentRoute,
+  ContentTypeRoute,
+  HomeRoute,
+  SitemapRoute
+}
 import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
@@ -57,6 +68,13 @@ object BootStrap extends App {
   val archiveRepository = new DoobieArchiveRepository(doobieContext)
   val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)
 
+  val sitemapRepository = new DoobieSitemapsRepository(doobieContext)
+  // TODO: from inf cache
+  val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
+    Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
+  val sitemapCache = new Cache[String, Seq[Url]](sitemapCaffeinCache)
+  val sitemapService = new SitemapService(sitemapRepository, sitemapCache)
+
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val authRoute: AuthRoute = new AuthRoute(authService)
@@ -65,10 +83,12 @@ object BootStrap extends App {
   val articleRoute: ArticleRoute = new ArticleRoute(articleService)
   val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
+  val sitemapRoute: SitemapRoute = new SitemapRoute(sitemapService)
 
   Migration.migrate(contentTypeService)
 
-  val httpServer: HttpServer = new HttpServer(homeRoute, apiStatusRoute, authRoute, authorRoute, contentRoute, articleRoute, archiveRoute, contentTypeRoute)
+  val httpServer: HttpServer =
+    new HttpServer(homeRoute, apiStatusRoute, authRoute, authorRoute, contentRoute, articleRoute, archiveRoute, contentTypeRoute, sitemapRoute)
 
   httpServer.start(Config.httpHost, Config.httpPort).onComplete {
     case Success(binding) =>

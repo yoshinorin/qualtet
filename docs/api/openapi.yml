@@ -163,6 +163,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/contentType'
+  /sitemaps:
+    get:
+      summary: Get an articles url & updated date for sitemaps.xml
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/sitemaps'
 components:
   schemas:
     idToken:
@@ -281,6 +293,15 @@ components:
         name:
           type: string
           example: "article"
+    sitemaps:
+      type: object
+      properties:
+        loc:
+          type: string
+          example: "https://example.com/aaa/bbb/ccc"
+        lastMod:
+          type: string
+          example: "YYYY-MM-DD"
     errorMessage:
       type: object
       properties:
