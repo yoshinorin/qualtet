@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.http.routes
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives.{path, _}
 import akka.http.scaladsl.server.Route
-import akka.pattern.Backoff.onFailure
 import cats.effect.IO
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.models.Fail
