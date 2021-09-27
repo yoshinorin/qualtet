@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.models.ResponseBase
 
 import scala.util.matching.Regex
 
-final case class AuthorId(value: String = ULID.newULIDString) extends AnyVal
+final case class AuthorId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
 object AuthorId {
   implicit val encodeAuthorId: Encoder[AuthorId] = Encoder[String].contramap(_.value)
   implicit val decodeAuthorId: Decoder[AuthorId] = Decoder[String].map(AuthorId.apply)

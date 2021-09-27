@@ -127,7 +127,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
       val json =
         """
           |{
-          |  "authorId" : "01FEBB8AZ5T42M2H68XJ8C754A",
+          |  "authorId" : "01febb8az5t42m2h68xj8c754a",
           |  "password" : "password"
           |}
         """.stripMargin
@@ -139,7 +139,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
         case Right(r) => {
           assert(r.isInstanceOf[RequestToken])
           assert(r.authorId.isInstanceOf[AuthorId])
-          assert(r.authorId.value == "01FEBB8AZ5T42M2H68XJ8C754A")
+          assert(r.authorId.value == "01febb8az5t42m2h68xj8c754a")
           assert(r.password == "password")
         }
       }
@@ -149,7 +149,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
       val json =
         """
           |{
-          |  "authorId" : "01FEBB8AZ5T42M2H68XJ8C754A"
+          |  "authorId" : "01febb8az5t42m2h68xj8c754a"
           |}
         """.stripMargin
 

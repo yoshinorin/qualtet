@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.models.ResponseBase
 import net.yoshinorin.qualtet.domains.models.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 
-final case class ContentId(value: String = ULID.newULIDString) extends AnyVal
+final case class ContentId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
 object ContentId {
   implicit val encodeContentId: Encoder[ContentId] = deriveEncoder[ContentId]
   implicit val decodeContentId: Decoder[ContentId] = Decoder[String].map(ContentId.apply)
@@ -58,7 +58,7 @@ object Content {
 }
 
 final case class RequestContent(
-  requestId: String = ULID.newULIDString,
+  requestId: String = ULID.newULIDString.toLowerCase,
   authorName: AuthorName,
   contentType: String,
   path: Path,

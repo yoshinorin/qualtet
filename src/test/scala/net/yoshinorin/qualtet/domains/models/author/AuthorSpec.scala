@@ -11,7 +11,7 @@ class AuthorSpec extends AnyWordSpec {
 
   "AuthorId" should {
     "valid value" in {
-      assert(AuthorId("01FEBB8AZ5T42M2H68XJ8C754A").value == "01FEBB8AZ5T42M2H68XJ8C754A")
+      assert(AuthorId("01febb8az5t42m2h68xj8c754a").value == "01febb8az5t42m2h68xj8c754a")
     }
     "invalid value" in {
       // TODO: declare exception
@@ -89,14 +89,14 @@ class AuthorSpec extends AnyWordSpec {
 
     "specific values" in {
       val author = Author(
-        AuthorId("01FEBB8AZ5T42M2H68XJ8C754A"),
+        AuthorId("01febb8az5t42m2h68xj8c754a"),
         AuthorName("JhonDue"),
         AuthorDisplayName("JD"),
         BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O"),
         1625065592
       )
 
-      assert(author.id.value == "01FEBB8AZ5T42M2H68XJ8C754A")
+      assert(author.id.value == "01febb8az5t42m2h68xj8c754a")
       assert(author.name.value == "jhondue")
       assert(author.displayName.value == "JD")
       assert(author.createdAt == 1625065592)
@@ -108,7 +108,7 @@ class AuthorSpec extends AnyWordSpec {
       val expectJson =
         """
           |{
-          |  "id" : "01FEBB8AZ5T42M2H68XJ8C754A",
+          |  "id" : "01febb8az5t42m2h68xj8c754a",
           |  "name" : "jhondue",
           |  "displayName": "JD",
           |  "createdAt" : 1567814290
@@ -116,7 +116,7 @@ class AuthorSpec extends AnyWordSpec {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       val json = ResponseAuthor(
-        id = AuthorId("01FEBB8AZ5T42M2H68XJ8C754A"),
+        id = AuthorId("01febb8az5t42m2h68xj8c754a"),
         name = AuthorName("JhonDue"),
         displayName = AuthorDisplayName("JD"),
         createdAt = 1567814290
@@ -131,13 +131,13 @@ class AuthorSpec extends AnyWordSpec {
         """
           |[
           |  {
-          |    "id" : "01FEBB8AZ5T42M2H68XJ8C754A",
+          |    "id" : "01febb8az5t42m2h68xj8c754a",
           |    "name" : "jhondue",
           |    "displayName": "JD",
           |    "createdAt" : 1567814290
           |  },
           |  {
-          |    "id" : "01FEBB8AZ5T42M2H68XJ8C754B",
+          |    "id" : "01febb8az5t42m2h68xj8c754b",
           |    "name" : "jhondue2",
           |    "displayName": "JD2",
           |    "createdAt" : 1567814291
@@ -147,13 +147,13 @@ class AuthorSpec extends AnyWordSpec {
 
       val json = Seq(
         ResponseAuthor(
-          id = AuthorId("01FEBB8AZ5T42M2H68XJ8C754A"),
+          id = AuthorId("01febb8az5t42m2h68xj8c754a"),
           name = AuthorName("JhonDue"),
           displayName = AuthorDisplayName("JD"),
           createdAt = 1567814290
         ),
         ResponseAuthor(
-          id = AuthorId("01FEBB8AZ5T42M2H68XJ8C754B"),
+          id = AuthorId("01febb8az5t42m2h68xj8c754b"),
           name = AuthorName("JhonDue2"),
           displayName = AuthorDisplayName("JD2"),
           createdAt = 1567814291

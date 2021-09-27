@@ -7,7 +7,7 @@ class ContentTypeSpec extends AnyWordSpec {
 
   "ContentTypeId" should {
     "create instance with specific id" in {
-      assert(ContentTypeId("01FEBB1333PD3431Q1A1E00FBT").value == "01FEBB1333PD3431Q1A1E00FBT")
+      assert(ContentTypeId("01febb1333pd3431q1a1e00fbt").value == "01febb1333pd3431q1a1e00fbt")
     }
 
     "can not create instance" in {

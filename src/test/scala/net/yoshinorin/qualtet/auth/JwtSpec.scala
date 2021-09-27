@@ -19,7 +19,7 @@ class JwtSpec extends AnyWordSpec {
 
     "encode and decode" in {
       val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
-      val id = ULID.newULIDString
+      val id = ULID.newULIDString.toLowerCase
       val jwtString = jwtInstance.encode(
         Author(
           id = AuthorId(id),
