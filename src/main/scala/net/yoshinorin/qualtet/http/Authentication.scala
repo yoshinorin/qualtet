@@ -20,6 +20,7 @@ class Authentication(authService: AuthService) {
     }
 
     // TODO: fix status code when reject
+    // TODO: logging (when success & failure)
     authenticateOrRejectWithChallenge[OAuth2BearerToken, ResponseAuthor] {
       case Some(OAuth2BearerToken(token)) =>
         (for {

@@ -18,7 +18,7 @@ class ContentRoute(
     with ResponseHandler {
 
   def route: Route = {
-    // TODO: change path
+    // TODO: logging (who create a content)
     pathPrefix("contents") {
       pathEndOrSingleSlash {
         post {
