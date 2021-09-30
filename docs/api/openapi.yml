@@ -189,7 +189,7 @@ components:
         id:
           type: string
           format: uuid
-          example: "07b99gh8-6d0c-12ef-6545-2a3530778k4f"
+          example: "01fgvhk1bz6546e4b1s2hdw0pw"
         name:
           type: string
           example: JohnDoe
@@ -206,7 +206,7 @@ components:
         id:
           type: string
           format: uuid
-          example: "04b89f7a-6d0c-46c5-87a2-2a35307765bf"
+          example: "01fgvhme5b7cj0m5agr9f4g2ca"
         title:
           type: string
           example: "Post Title"
@@ -220,7 +220,7 @@ components:
         id:
           type: string
           format: uuid
-          example: "04b89f7a-6d0c-46c5-87a2-2a35307765bf"
+          example: "01fgvhme5b7cj0m5agr9f4g2ca"
         title:
           type: string
           example: "Post Title"
@@ -254,15 +254,15 @@ components:
         id:
           type: string
           format: uuid
-          example: "04b89f7a-6d0c-46c5-87a2-2a35307765bf"
+          example: "01fgvhme5b7cj0m5agr9f4g2ca"
         authorId:
           type: string
           format: uuid
-          example: "07b99gh8-6d0c-12ef-6545-2a3530778k4f"
+          example: "01fgvhk1bz6546e4b1s2hdw0pw"
         contentTypeId:
           type: string
           format: uuid
-          example: "d9c32735-b4cd-11eb-a566-663f66aa018c"
+          example: "01fgvhjxftxfjvxg3xbvv78kr1"
         path:
           type: string
           example: "/2020/01/01/new-year"
@@ -289,7 +289,7 @@ components:
         id:
           type: string
           format: uuid
-          example: "d9c32735-b4cd-11eb-a566-663f66aa018c"
+          example: "01fgvhjxftxfjvxg3xbvv78kr1"
         name:
           type: string
           example: "article"
