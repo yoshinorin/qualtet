@@ -20,18 +20,20 @@ class ContentTypeService(
    * @param name String
    * @return
    */
-  def create(data: ContentType): IO[Unit] = {
+  def create(data: ContentType): IO[ContentType] = {
 
-    for {
-      maybeContentType <- this.findByName(data.name)
-    } yield maybeContentType match {
-      case Some(x: ContentType) => IO()
+    def contentType: IO[ContentType] = this.findByName(data.name).flatMap {
+      case None => IO.raiseError(InternalServerError("contentType not found")) //NOTE: 404 is better?
+      case Some(x: ContentType) => IO(x)
+    }
+
+    this.findByName(data.name).flatMap {
+      case Some(x: ContentType) => IO(x)
       case None =>
-        contentTypeRepository.create(data).transact(doobieContext.transactor)
-        this.findByName(data.name).flatMap {
-          case None => IO.raiseError(InternalServerError("contentType not found")) //NOTE: 404 is better?
-          case Some(x: ContentType) => IO()
-        }
+        for {
+          _ <- contentTypeRepository.create(data).transact(doobieContext.transactor)
+          c <- contentType
+        } yield c
     }
   }
 
