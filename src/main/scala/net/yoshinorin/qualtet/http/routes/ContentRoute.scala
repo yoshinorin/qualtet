@@ -25,11 +25,10 @@ class ContentRoute(
           authenticate { author =>
             entity(as[String]) { payload =>
               decode[RequestContent](payload) match {
-                // TODO: use author for create content
                 case Right(v) =>
                   onSuccess(
                     contentService
-                      .createContentFromRequest(v)
+                      .createContentFromRequest(v.copy(authorName = author.name))
                       .handleErrorWith { e => IO.pure(e) }
                       .unsafeToFuture()
                   ) {
