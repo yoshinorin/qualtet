@@ -26,3 +26,10 @@ CREATE TABLE IF NOT EXISTS contents (
     FOREIGN KEY fk_content_type(content_type_id) REFERENCES content_types(id),
     FULLTEXT idx_fulltext(raw_content)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+# https://developers.google.com/search/docs/advanced/robots/robots_meta_tag
+CREATE TABLE IF NOT EXISTS robots (
+    content_id CHAR(26) CHARACTER SET ascii UNIQUE NOT NULL,
+    attributes VARCHAR(128) NOT NULL,
+    FOREIGN KEY fk_content(content_id) REFERENCES contents(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
