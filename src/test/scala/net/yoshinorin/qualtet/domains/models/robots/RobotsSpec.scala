@@ -5,7 +5,7 @@ import org.scalatest.wordspec.AnyWordSpec
 // testOnly net.yoshinorin.qualtet.domains.models.robots.RobotsSpec
 class RobotsSpec extends AnyWordSpec {
 
-  "RobotsContent" should {
+  "Attributes" should {
     "create instance with valid attribute" in {
       assert(Attributes("nofollow").value == "nofollow")
     }
