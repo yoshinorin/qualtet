@@ -27,7 +27,7 @@ object Attributes {
       // TODO: declare exception
       throw new Exception("TODO")
     } else {
-      new Attributes(attributes.mkString(", "))
+      new Attributes(attributes.sorted.mkString(", "))
     }
   }
 }

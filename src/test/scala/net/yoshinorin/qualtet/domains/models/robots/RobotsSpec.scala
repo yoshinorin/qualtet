@@ -11,7 +11,7 @@ class RobotsSpec extends AnyWordSpec {
     "create instance" in {
       val robots = Robots(ContentId("01febb1333pd3431q1a1e00fbt"), Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex"))
       assert(robots.contentId.value == "01febb1333pd3431q1a1e00fbt")
-      assert(robots.attributes.value == "all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex")
+      assert(robots.attributes.value == "all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate")
     }
 
     "as JSON" in {
@@ -19,13 +19,13 @@ class RobotsSpec extends AnyWordSpec {
         """
           |{
           |  "contentId" : "01febb1333pd3431q1a1e00fbt",
-          |  "attributes" : "all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex"
+          |  "attributes" : "all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate"
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       val json = Robots(
         ContentId("01febb1333pd3431q1a1e00fbt"),
-        Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex")
+        Attributes("all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate")
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
       //NOTE: failed equally compare
@@ -38,24 +38,24 @@ class RobotsSpec extends AnyWordSpec {
       assert(Attributes("nofollow").value == "nofollow")
     }
 
-    "create instance with all valid attributes" in {
+    "create instance with all valid attributes and result are sorted" in {
       assert(
-        Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex").value == "all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex"
+        Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex").value == "all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate"
       )
     }
 
     "create instance with valid attributes pattern one" in {
       assert(
-        Attributes("all, noindex, nofollow, none, noarchive, notranslate").value == "all, noindex, nofollow, none, noarchive, notranslate"
+        Attributes("all, noindex, nofollow, none, noarchive, notranslate").value == "all, noarchive, nofollow, noindex, none, notranslate"
       )
     }
 
     "create instance with valid attributes pattern two" in {
-      assert(Attributes("all, noindex, nofollow, none, noarchive").value == "all, noindex, nofollow, none, noarchive")
+      assert(Attributes("all, noindex, nofollow, none, noarchive").value == "all, noarchive, nofollow, noindex, none")
     }
 
     "create instance with valid attributes and format them" in {
-      assert(Attributes(" all,noindex,    nofollow,none, noarchive  ").value == "all, noindex, nofollow, none, noarchive")
+      assert(Attributes(" all,noindex,    nofollow,none, noarchive  ").value == "all, noarchive, nofollow, noindex, none")
     }
 
     "can not create instance with invalid attribute" in {
