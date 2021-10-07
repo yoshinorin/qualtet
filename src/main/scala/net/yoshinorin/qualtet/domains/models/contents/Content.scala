@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 
 final case class ContentId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
 object ContentId {
-  implicit val encodeContentId: Encoder[ContentId] = deriveEncoder[ContentId]
+  implicit val encodeContentId: Encoder[ContentId] = Encoder[String].contramap(_.value)
   implicit val decodeContentId: Decoder[ContentId] = Decoder[String].map(ContentId.apply)
 
   def apply(value: String): ContentId = {
