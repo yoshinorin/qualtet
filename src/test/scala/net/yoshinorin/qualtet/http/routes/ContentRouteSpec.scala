@@ -86,8 +86,8 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   // POST
   when(
     mockContentService.createContentFromRequest(
+      AuthorName("JhonDue"),
       RequestContent(
-        authorName = AuthorName("JhonDue"),
         contentType = "article",
         path = Path("/test/path"),
         title = "this is a title",

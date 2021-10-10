@@ -59,7 +59,6 @@ object Content {
 
 final case class RequestContent(
   requestId: String = ULID.newULIDString.toLowerCase,
-  authorName: AuthorName,
   contentType: String,
   path: Path,
   title: String,

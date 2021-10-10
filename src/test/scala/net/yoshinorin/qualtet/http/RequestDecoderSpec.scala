@@ -16,7 +16,6 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
       val json =
         """
           |{
-          |  "authorName" : "JhonDue",
           |  "contentType" : "article",
           |  "path" : "/test/path",
           |  "title" : "this is a title",
@@ -30,7 +29,6 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
         case Left(_) => // Nothing to do
         case Right(r) => {
           assert(r.isInstanceOf[RequestContent])
-          assert(r.authorName.value == "jhondue")
           assert(r.contentType == "article")
           assert(r.path.value == "/test/path")
           assert(r.title == "this is a title")
@@ -45,7 +43,6 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
       val json =
         """
           |{
-          |  "authorName" : "JhonDue",
           |  "contentType" : "article",
           |  "path" : "/test/path",
           |  "title" : "this is a title",
@@ -61,7 +58,6 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
         case Left(_) => // Nothing to do
         case Right(r) => {
           assert(r.isInstanceOf[RequestContent])
-          assert(r.authorName.value == "jhondue")
           assert(r.contentType == "article")
           assert(r.path.value == "/test/path")
           assert(r.title == "this is a title")
@@ -76,7 +72,6 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
       val json =
         """
           |{
-          |  "authorName" : "JhonDue",
           |  "contentType" : "article",
           |  "path" : "/test/path",
           |  "title" : "this is a title",
@@ -93,7 +88,6 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
         case Left(_) => // Nothing to do
         case Right(r) => {
           assert(r.isInstanceOf[RequestContent])
-          assert(r.authorName.value == "jhondue")
           assert(r.contentType == "article")
           assert(r.path.value == "/test/path")
           assert(r.title == "this is a title")
