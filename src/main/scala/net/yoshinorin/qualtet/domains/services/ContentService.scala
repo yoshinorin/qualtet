@@ -6,11 +6,13 @@ import net.yoshinorin.qualtet.domains.models.Fail.{InternalServerError, NotFound
 import net.yoshinorin.qualtet.domains.models.authors.{AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
 import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.Markdown.renderHtml
 
 class ContentService(
   contentRepository: ContentRepository,
+  robotsRepository: RobotsRepository,
   authorService: AuthorService,
   contentTypeService: ContentTypeService
 )(
@@ -52,7 +54,8 @@ class ContentService(
           },
           publishedAt = request.publishedAt,
           updatedAt = request.updatedAt
-        )
+        ),
+        request.robotsAttributes
       )
     } yield createdContent
   }
@@ -63,15 +66,20 @@ class ContentService(
    * @param data Instance of Content
    * @return Instance of created Content with IO
    */
-  def create(data: Content): IO[Content] = {
+  def create(data: Content, robotsAttributes: Attributes): IO[Content] = {
 
     def content: IO[Content] = this.findByPath(data.path).flatMap {
       case None => IO.raiseError(InternalServerError("content not found")) //NOTE: 404 is better?
       case Some(x) => IO(x)
     }
 
+    val operations = for {
+      c <- contentRepository.upsert(data)
+      r <- robotsRepository.upsert(Robots(data.id, robotsAttributes))
+    } yield (c, r)
+
     for {
-      _ <- contentRepository.upsert(data).transact(doobieContext.transactor)
+      _ <- operations.transact(doobieContext.transactor)
       c <- content
     } yield c
   }

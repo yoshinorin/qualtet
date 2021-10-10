@@ -19,7 +19,8 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |  "contentType" : "article",
           |  "path" : "/test/path",
           |  "title" : "this is a title",
-          |  "rawContent" : "this is a raw content"
+          |  "rawContent" : "this is a raw content",
+          |  "robotsAttributes" : "noindex, noarchive, noimageindex, nofollow"
           |}
         """.stripMargin
 
@@ -47,6 +48,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |  "path" : "/test/path",
           |  "title" : "this is a title",
           |  "rawContent" : "this is a raw content",
+          |  "robotsAttributes" : "noindex, noarchive, noimageindex, nofollow",
           |  "publishedAt" : 1537974000,
           |  "updatedAt" : 1621098091
           |}
@@ -77,6 +79,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |  "title" : "this is a title",
           |  "rawContent" : "this is a raw content",
           |  "htmlContent" : "this is a html content",
+          |  "robotsAttributes" : "noindex, noarchive, noimageindex, nofollow",
           |  "publishedAt" : 1537974000,
           |  "updatedAt" : 1621098091
           |}

@@ -10,6 +10,7 @@ import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair, RequestToken}
 import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import net.yoshinorin.qualtet.domains.services.{AuthorService, ContentService}
 import org.mockito.Mockito
 import org.mockito.Mockito.when
@@ -91,7 +92,8 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         contentType = "article",
         path = Path("/test/path"),
         title = "this is a title",
-        rawContent = "this is a raw content"
+        rawContent = "this is a raw content",
+        robotsAttributes = Attributes("noindex, noarchive, noimageindex, nofollow")
       )
     )
   ).thenReturn(

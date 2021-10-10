@@ -11,6 +11,7 @@ import net.yoshinorin.qualtet.domains.models.articles.DoobieArticleRepository
 import net.yoshinorin.qualtet.domains.models.authors.DoobieAuthorRepository
 import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, DoobieContentTypeRepository}
 import net.yoshinorin.qualtet.domains.models.contents.DoobieContentRepository
+import net.yoshinorin.qualtet.domains.models.robots.DoobieRobotsRepository
 import net.yoshinorin.qualtet.domains.models.sitemaps.{DoobieSitemapsRepository, Url}
 import net.yoshinorin.qualtet.domains.services.{ArchiveService, ArticleService, AuthorService, ContentService, ContentTypeService, SitemapService}
 import net.yoshinorin.qualtet.http.routes.{
@@ -59,8 +60,10 @@ object BootStrap extends App {
   val contentTypeCache = new Cache[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)
 
+  val robotsRepository = new DoobieRobotsRepository(doobieContext)
+
   val contentRepository = new DoobieContentRepository(doobieContext)
-  val contentService: ContentService = new ContentService(contentRepository, authorService, contentTypeService)
+  val contentService: ContentService = new ContentService(contentRepository, robotsRepository, authorService, contentTypeService)
 
   val articleRepository = new DoobieArticleRepository(doobieContext)
   val articleService: ArticleService = new ArticleService(articleRepository, contentTypeService)
