@@ -97,11 +97,14 @@ object BootStrap extends App {
     case Success(binding) =>
       val address = binding.localAddress
       println(s"Server online at http://${address.getHostString}:${address.getPort}/")
-      // TODO: delete comment out when create docker image
+    // NOTE: docker & sbt-revolver does not work if below codes are enabled.
+    //       If do not user sbt-revolver when development below codes should be enable vice versa.
+    /*
       StdIn.readLine()
       binding
         .unbind()
         .onComplete(_ => actorSystem.terminate())
+     */
     case Failure(ex) =>
       println("Failed to bind HTTP endpoint, terminating system", ex)
       actorSystem.terminate()

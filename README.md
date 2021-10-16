@@ -92,6 +92,13 @@ $ sbt run
 [success] Total time: 5 s, completed 2021/05/12 3:01:27
 ```
 
+### Start server(Hot reload)
+
+```
+$ sbt
+$ ~reStart
+```
+
 ### API Document
 
 ```sh

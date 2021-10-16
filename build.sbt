@@ -58,5 +58,7 @@ lazy val root = (project in file("."))
     }.evaluated
   )
 
+reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
+
 coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration; net.yoshinorin.qualtet.http.HttpServer;"
 //org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
