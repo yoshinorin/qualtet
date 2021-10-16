@@ -42,8 +42,8 @@ $ sbt createAuthor <name> <displayName> <password>
 $ sbt createAuthor jhonDue JD pass
 
 // result
-2021-08-03 21:54:03 +0900 [INFO] from net.yoshinorin.qualtet.tasks.createAuthor$ - user created: {
-  "id" : "086f0af1-6843-4116-96ee-73011b8538bb",
+2021-08-03 21:54:03 +0900 [INFO] from net.yoshinorin.qualtet.tasks.createAuthor$ - author created: {
+  "id" : "01fgvhkzpyghp23wvp4p87nx29",
   "name" : "jhonDue",
   "displayName" : "JD",
   "createdAt" : 1627995242
@@ -89,7 +89,11 @@ sbt:qualtet> ~compile
 ```sh
 $ cd <source code dir>
 $ sbt run
-[success] Total time: 5 s, completed 2021/05/12 3:01:27
+Multiple main classes detected. Select one to run:
+ [1] net.yoshinorin.qualtet.BootStrap
+ [2] net.yoshinorin.qualtet.tasks.CreateAuthor
+
+Enter number: 1
 ```
 
 ### Start server(Hot reload)
