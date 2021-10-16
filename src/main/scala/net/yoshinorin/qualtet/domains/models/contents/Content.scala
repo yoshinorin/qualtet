@@ -84,6 +84,7 @@ object RequestContent {
 
 final case class ResponseContent(
   title: String,
+  robotsAttributes: Attributes,
   content: String,
   publishedAt: Long
 ) extends ResponseBase

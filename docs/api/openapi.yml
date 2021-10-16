@@ -241,6 +241,9 @@ components:
         title:
           type: string
           example: "Post Title"
+        robotsAttributes:
+          type: string
+          example: "noarchive, noimageindex"
         content:
           type: string
           example: "Post Content.... HTML strings"

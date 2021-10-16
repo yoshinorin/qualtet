@@ -51,9 +51,9 @@ class ContentRoute(
         // example: /yyyy/mm/dd/content-name/
         path(Remaining) { path =>
           get {
-            onSuccess(contentService.findByPath(Path(path)).unsafeToFuture()) {
+            onSuccess(contentService.findByPathWithMeta(Path(path)).unsafeToFuture()) {
               case Some(content) =>
-                httpResponse(OK, ResponseContent(content.title, content.htmlContent, content.publishedAt))
+                httpResponse(OK, content)
               case _ => httpResponse(Fail.NotFound("Not found"))
             }
           }

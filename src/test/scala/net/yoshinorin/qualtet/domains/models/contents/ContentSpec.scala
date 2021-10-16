@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.models.contents
 import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
@@ -60,6 +61,7 @@ class ContentSpec extends AnyWordSpec {
         """
           |{
           |  "title" : "title",
+          |  "robotsAttributes" : "noarchive, noimageindex",
           |  "content" : "this is a content",
           |  "publishedAt" : 1567814290
           |}
@@ -67,6 +69,7 @@ class ContentSpec extends AnyWordSpec {
 
       val json = ResponseContent(
         title = "title",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
         content = "this is a content",
         publishedAt = 1567814290
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
@@ -81,11 +84,13 @@ class ContentSpec extends AnyWordSpec {
           |[
           |  {
           |    "title" : "title1",
+          |    "robotsAttributes" : "noarchive, noimageindex",
           |    "content" : "this is a content1",
           |    "publishedAt" : 1567814290
           |  },
           |  {
           |    "title" : "title2",
+          |    "robotsAttributes" : "all",
           |    "content" : "this is a content2",
           |    "publishedAt" : 1567814291
           |  }
@@ -95,11 +100,13 @@ class ContentSpec extends AnyWordSpec {
       val json = Seq(
         ResponseContent(
           title = "title1",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
           content = "this is a content1",
           publishedAt = 1567814290
         ),
         ResponseContent(
           title = "title2",
+          robotsAttributes = Attributes("all"),
           content = "this is a content2",
           publishedAt = 1567814291
         )

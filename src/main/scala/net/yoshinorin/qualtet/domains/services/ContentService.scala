@@ -5,10 +5,12 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.models.authors.{AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
-import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, Path, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.Markdown.renderHtml
+
+import java.awt.Robot
 
 class ContentService(
   contentRepository: ContentRepository,
@@ -92,6 +94,16 @@ class ContentService(
    */
   def findByPath(path: Path): IO[Option[Content]] = {
     contentRepository.findByPath(path).transact(doobieContext.transactor)
+  }
+
+  /**
+   * Find a content by path
+   *
+   * @param path a content path
+   * @return ResponseContent instance
+   */
+  def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
+    contentRepository.findByPathWithMeta(path).transact(doobieContext.transactor)
   }
 
   /**

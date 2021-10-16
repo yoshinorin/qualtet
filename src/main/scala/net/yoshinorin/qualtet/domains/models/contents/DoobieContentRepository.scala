@@ -47,6 +47,30 @@ class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
   }
 
   /**
+   * find a content by path of content
+   *
+   * @param path path of content
+   * @return Content with ConnectionIO
+   */
+  def findByPathWithMeta(path: Path): ConnectionIO[Option[ResponseContent]] = {
+    sql"""
+       SELECT
+         title,
+         robots.attributes AS robotsAttributes,
+         html_content AS content,
+         published_at
+       FROM
+         contents
+       INNER JOIN robots ON
+         contents.id = robots.content_id
+       WHERE
+         path = $path
+    """
+      .query[ResponseContent]
+      .option
+  }
+
+  /**
    * get all Contents
    *
    * @return contents with ConnectionIO

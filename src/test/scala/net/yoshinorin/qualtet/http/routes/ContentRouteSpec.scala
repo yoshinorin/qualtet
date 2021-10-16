@@ -9,7 +9,7 @@ import cats.effect.IO
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair, RequestToken}
 import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import net.yoshinorin.qualtet.domains.services.{AuthorService, ContentService}
 import org.mockito.Mockito
@@ -93,7 +93,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         path = Path("/test/path"),
         title = "this is a title",
         rawContent = "this is a raw content",
-        robotsAttributes = Attributes("noindex, noarchive, noimageindex, nofollow")
+        robotsAttributes = Attributes("noarchive, noimageindex")
       )
     )
   ).thenReturn(
@@ -111,17 +111,14 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
   // GET
   when(
-    mockContentService.findByPath(Path("/this/is/a/example/"))
+    mockContentService.findByPathWithMeta(Path("/this/is/a/example/"))
   ).thenReturn(
     IO(
       Option(
-        Content(
-          authorId = new AuthorId,
-          contentTypeId = new ContentTypeId,
-          path = Path("/this/is/a/example/"),
+        ResponseContent(
           title = "this is a title",
-          rawContent = "raw content",
-          htmlContent = "html content",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          content = "html content",
           publishedAt = 1567814290
         )
       )
@@ -130,7 +127,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
   // GET
   when(
-    mockContentService.findByPath(Path("/this/is/a/404/"))
+    mockContentService.findByPathWithMeta(Path("/this/is/a/404/"))
   ).thenReturn(
     IO(None)
   )
@@ -223,6 +220,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         """
           |{
           |  "title" : "this is a title",
+          |  "robotsAttributes" : "noarchive, noimageindex",
           |  "content" : "html content",
           |  "publishedAt" : 1567814290
           |}
