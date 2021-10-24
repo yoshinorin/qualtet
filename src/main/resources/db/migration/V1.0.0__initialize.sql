@@ -33,3 +33,12 @@ CREATE TABLE IF NOT EXISTS robots (
     attributes VARCHAR(128) NOT NULL,
     FOREIGN KEY fk_content(content_id) REFERENCES contents(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS external_resources (
+    content_id CHAR(26) CHARACTER SET ascii UNIQUE NOT NULL,
+    kind VARCHAR(32) NOT NULL,
+    name VARCHAR(32) NOT NULL,
+    PRIMARY KEY (content_id, kind, name),
+    FOREIGN KEY fk_content_from_external_resources(content_id) REFERENCES contents(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
