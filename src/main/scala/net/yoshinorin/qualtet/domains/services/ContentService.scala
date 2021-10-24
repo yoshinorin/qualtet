@@ -10,8 +10,6 @@ import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsR
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.Markdown.renderHtml
 
-import java.awt.Robot
-
 class ContentService(
   contentRepository: ContentRepository,
   robotsRepository: RobotsRepository,
@@ -105,14 +103,4 @@ class ContentService(
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
     contentRepository.findByPathWithMeta(path).transact(doobieContext.transactor)
   }
-
-  /**
-   * get all contents
-   *
-   * @return Instance of Contents with IO
-   */
-  def getAll: IO[Seq[Content]] = {
-    contentRepository.getAll.transact(doobieContext.transactor)
-  }
-
 }

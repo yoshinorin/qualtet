@@ -69,16 +69,4 @@ class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
       .query[ResponseContent]
       .option
   }
-
-  /**
-   * get all Contents
-   *
-   * @return contents with ConnectionIO
-   * TODO: SQL should update
-   */
-  def getAll: ConnectionIO[Seq[Content]] = {
-    sql"SELECT * FROM contents"
-      .query[Content]
-      .to[Seq]
-  }
 }

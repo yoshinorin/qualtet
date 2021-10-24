@@ -29,13 +29,4 @@ trait ContentRepository {
    * @return content
    */
   def findByPathWithMeta(path: Path): ConnectionIO[Option[ResponseContent]]
-
-  def update = ???
-
-  /**
-   * get all contents
-   *
-   * @return contents
-   */
-  def getAll: ConnectionIO[Seq[Content]]
 }
