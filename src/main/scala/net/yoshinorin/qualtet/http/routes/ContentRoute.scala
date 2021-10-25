@@ -6,8 +6,7 @@ import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.models.Fail
-import net.yoshinorin.qualtet.domains.models.authors.AuthorName
-import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestContent, ResponseContent}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.services.ContentService
 import net.yoshinorin.qualtet.http.{Authentication, RequestDecoder, ResponseHandler}
 

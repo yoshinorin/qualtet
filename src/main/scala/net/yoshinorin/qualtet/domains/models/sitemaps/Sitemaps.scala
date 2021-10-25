@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.domains.models.sitemaps
 
-import java.util.Date
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import net.yoshinorin.qualtet.domains.models.ResponseBase
