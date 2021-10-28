@@ -5,10 +5,11 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.models.authors.{AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
-import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentRepository, Path, RequestContent, ResponseContent}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentId, ContentRepository, Path, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.Markdown.renderHtml
+import wvlet.airframe.ulid.ULID
 
 class ContentService(
   contentRepository: ContentRepository,
@@ -40,8 +41,13 @@ class ContentService(
     for {
       a <- author
       c <- contentType
+      maybeCurrentContent <- this.findByPath(request.path)
       createdContent <- this.create(
         Content(
+          id = maybeCurrentContent match {
+            case None => ContentId(ULID.newULIDString.toLowerCase)
+            case Some(x) => x.id
+          },
           authorId = a.id,
           contentTypeId = c.id,
           path = request.path,
