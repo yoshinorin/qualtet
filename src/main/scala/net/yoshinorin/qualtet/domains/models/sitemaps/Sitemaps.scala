@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.models.sitemaps
 
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
-import net.yoshinorin.qualtet.domains.models.ResponseBase
 
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
@@ -45,7 +44,7 @@ final case class Url(
   // https://www.sitemaps.org/protocol.html
   //changefreq: Option[String] = Option("daily"),
   //priolity: Option[Double] = Option(1.0)
-) extends ResponseBase
+)
 
 object Url {
   implicit val encodeUrl: Encoder[Url] = deriveEncoder[Url]

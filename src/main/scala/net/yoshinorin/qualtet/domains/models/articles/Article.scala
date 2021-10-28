@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.models.articles
 
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
-import net.yoshinorin.qualtet.domains.models.ResponseBase
 import net.yoshinorin.qualtet.domains.models.contents.Path
 import net.yoshinorin.qualtet.utils.StringOps.StringOps
 
@@ -14,7 +13,7 @@ final case class ResponseArticle(
   content: String,
   publishedAt: Long,
   updatedAt: Long
-) extends ResponseBase
+)
 
 object ResponseArticle {
   implicit val encodeContent: Encoder[ResponseArticle] = deriveEncoder[ResponseArticle]

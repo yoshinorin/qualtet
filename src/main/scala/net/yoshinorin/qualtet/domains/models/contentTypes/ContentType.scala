@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.domains.models.contentTypes
 import wvlet.airframe.ulid.ULID
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.deriveEncoder
-import net.yoshinorin.qualtet.domains.models.ResponseBase
 
 final case class ContentTypeId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
 object ContentTypeId {
@@ -20,7 +19,7 @@ object ContentTypeId {
 final case class ContentType(
   id: ContentTypeId = new ContentTypeId,
   name: String
-) extends ResponseBase
+)
 
 object ContentType {
   implicit val encodeContentType: Encoder[ContentType] = deriveEncoder[ContentType]
