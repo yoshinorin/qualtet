@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS robots (
 
 
 CREATE TABLE IF NOT EXISTS external_resources (
-    content_id CHAR(26) CHARACTER SET ascii UNIQUE NOT NULL,
+    content_id CHAR(26) CHARACTER SET ascii NOT NULL,
     kind VARCHAR(32) NOT NULL,
     name VARCHAR(32) NOT NULL,
     PRIMARY KEY (content_id, kind, name),
