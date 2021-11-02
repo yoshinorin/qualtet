@@ -44,7 +44,7 @@ class DoobieExternalResourceRepository(doobie: DoobieContext) extends ExternalRe
    */
   def bulkUpsert(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
     data match {
-      case None => 0.pure[ConnectionIO]
+      case None => 0.pure[ConnectionIO] // TODO: move somewhere
       case Some(x) =>
         val q = s"""
           INSERT INTO external_resources (content_id, kind, name)
