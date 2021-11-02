@@ -90,15 +90,15 @@ class ContentService(
       case Some(x) => Option(x.flatMap(a => a.values.map(v => ExternalResource(data.id, a.kind, v))))
     }
 
-    val operations = for {
-      c <- contentRepository.upsert(data)
-      r <- robotsRepository.upsert(Robots(data.id, robotsAttributes))
+    val queries = for {
+      contentUpsert <- contentRepository.upsert(data)
+      robotsUpsert <- robotsRepository.upsert(Robots(data.id, robotsAttributes))
       // TODO: check diff and clean up external_resources before upsert
-      b <- externalResourceRepository.bulkUpsert(maybeExternalResources)
-    } yield (c, r, b)
+      externalResourceBulkUpsert <- externalResourceRepository.bulkUpsert(maybeExternalResources)
+    } yield (contentUpsert, robotsUpsert, externalResourceBulkUpsert)
 
     for {
-      _ <- operations.transact(doobieContext.transactor)
+      _ <- queries.transact(doobieContext.transactor)
       c <- content
     } yield c
   }
