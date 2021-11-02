@@ -1,7 +1,7 @@
 organization := "net.yoshinorin"
 name := "qualtet"
 version := "0.0.1"
-scalaVersion := "2.13.5"
+scalaVersion := "2.13.7"
 
 scalacOptions ++= Seq(
   "-Yrangepos",
