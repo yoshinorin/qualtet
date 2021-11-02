@@ -20,7 +20,6 @@ class DoobieExternalResourceRepository(doobie: DoobieContext) extends ExternalRe
    * @return dummy long id (Doobie return Long)
    */
   def upsert(data: ExternalResource): ConnectionIO[Long] = {
-    println(data)
     val q = quote(
       externalResources
         .insert(lift(data))
