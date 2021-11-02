@@ -9,7 +9,8 @@ import cats.effect.IO
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair, RequestToken}
 import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestContent, ResponseContent}
+import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentId, Path, RequestContent, ResponseContent}
+import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import net.yoshinorin.qualtet.domains.services.{AuthorService, ContentService}
 import org.mockito.Mockito
@@ -93,7 +94,15 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         path = Path("/test/path"),
         title = "this is a title",
         rawContent = "this is a raw content",
-        robotsAttributes = Attributes("noarchive, noimageindex")
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        externalResources = Option(
+          List(
+            ExternalResources(
+              ExternalResourceKind("js"),
+              values = List("test", "foo", "bar")
+            )
+          )
+        )
       )
     )
   ).thenReturn(

@@ -9,6 +9,7 @@ import io.circe.generic.semiauto.deriveEncoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.models.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 
 final case class ContentId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
@@ -61,6 +62,7 @@ final case class RequestContent(
   requestId: String = ULID.newULIDString.toLowerCase,
   contentType: String,
   robotsAttributes: Attributes, // TODO: change to Option[Attributes]
+  externalResources: Option[List[ExternalResources]] = None,
   path: Path,
   title: String,
   rawContent: String,

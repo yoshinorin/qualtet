@@ -19,10 +19,19 @@ object ExternalResourceKind {
   }
 }
 
-final case class ExternalResources(
+final case class ExternalResource(
   contentId: ContentId,
   kind: ExternalResourceKind,
-  names: List[String]
+  name: String
+)
+object ExternalResource {
+  implicit val encodeExternalResource: Encoder[ExternalResource] = deriveEncoder[ExternalResource]
+  implicit val decodeExternalResource: Decoder[ExternalResource] = deriveDecoder[ExternalResource]
+}
+
+final case class ExternalResources(
+  kind: ExternalResourceKind,
+  values: List[String]
 )
 object ExternalResources {
   implicit val encodeExternalResources: Encoder[ExternalResources] = deriveEncoder[ExternalResources]

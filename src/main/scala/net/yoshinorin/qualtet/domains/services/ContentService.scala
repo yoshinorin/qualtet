@@ -1,19 +1,24 @@
 package net.yoshinorin.qualtet.domains.services
 
 import cats.effect.IO
+import cats.implicits._
+import doobie.ConnectionIO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.models.authors.{AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
 import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentId, ContentRepository, Path, RequestContent, ResponseContent}
+import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceRepository, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.Markdown.renderHtml
+import shapeless.syntax.std.traversable.traversableOps
 import wvlet.airframe.ulid.ULID
 
 class ContentService(
   contentRepository: ContentRepository,
   robotsRepository: RobotsRepository,
+  externalResourceRepository: ExternalResourceRepository,
   authorService: AuthorService,
   contentTypeService: ContentTypeService
 )(
@@ -61,7 +66,8 @@ class ContentService(
           publishedAt = request.publishedAt,
           updatedAt = request.updatedAt
         ),
-        request.robotsAttributes
+        request.robotsAttributes,
+        request.externalResources
       )
     } yield createdContent
   }
@@ -72,17 +78,24 @@ class ContentService(
    * @param data Instance of Content
    * @return Instance of created Content with IO
    */
-  def create(data: Content, robotsAttributes: Attributes): IO[Content] = {
+  def create(data: Content, robotsAttributes: Attributes, externalResources: Option[List[ExternalResources]]): IO[Content] = {
 
     def content: IO[Content] = this.findByPath(data.path).flatMap {
       case None => IO.raiseError(InternalServerError("content not found")) //NOTE: 404 is better?
       case Some(x) => IO(x)
     }
 
+    val maybeExternalResources = externalResources match {
+      case None => None
+      case Some(x) => Option(x.flatMap(a => a.values.map(v => ExternalResource(data.id, a.kind, v))))
+    }
+
     val operations = for {
       c <- contentRepository.upsert(data)
       r <- robotsRepository.upsert(Robots(data.id, robotsAttributes))
-    } yield (c, r)
+      // TODO: check diff and clean up external_resources before upsert
+      b <- externalResourceRepository.bulkUpsert(maybeExternalResources)
+    } yield (c, r, b)
 
     for {
       _ <- operations.transact(doobieContext.transactor)

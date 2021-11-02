@@ -4,6 +4,7 @@ import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.models.Fail.BadRequest
 import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.domains.models.contents.RequestContent
+import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.ZonedDateTime
@@ -34,6 +35,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           assert(r.path.value == "/test/path")
           assert(r.title == "this is a title")
           assert(r.rawContent == "this is a raw content")
+          assert(r.externalResources.isEmpty)
           assert(r.publishedAt <= ZonedDateTime.now.toEpochSecond)
           assert(r.updatedAt <= ZonedDateTime.now.toEpochSecond)
         }
@@ -80,6 +82,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |  "rawContent" : "this is a raw content",
           |  "htmlContent" : "this is a html content",
           |  "robotsAttributes" : "noindex, noarchive, noimageindex, nofollow",
+          |  "externalResources":[{"kind":"js","values":["js1","js2"]},{"kind":"css","values":["css1","css2"]}],
           |  "publishedAt" : 1537974000,
           |  "updatedAt" : 1621098091
           |}
@@ -96,6 +99,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           assert(r.title == "this is a title")
           assert(r.rawContent == "this is a raw content")
           assert(r.htmlContent.get == "this is a html content")
+          assert(r.robotsAttributes == Attributes("noindex, noarchive, noimageindex, nofollow"))
           assert(r.publishedAt == 1537974000)
           assert(r.updatedAt == 1621098091)
         }
