@@ -1,13 +1,11 @@
 package net.yoshinorin.qualtet.domains.models.externalResources
 
-import cats.implicits.catsSyntaxApplicativeId
 import doobie.ConnectionIO
-import doobie.implicits._
 import doobie.util.update.Update
 import io.getquill.{idiom => _}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.{ConnectionIOFaker, DoobieContext}
 
-class DoobieExternalResourceRepository(doobie: DoobieContext) extends ExternalResourceRepository {
+class DoobieExternalResourceRepository(doobie: DoobieContext) extends ExternalResourceRepository with ConnectionIOFaker {
 
   import doobie.ctx._
 
@@ -43,7 +41,7 @@ class DoobieExternalResourceRepository(doobie: DoobieContext) extends ExternalRe
    */
   def bulkUpsert(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
     data match {
-      case None => 0.pure[ConnectionIO] // TODO: move somewhere
+      case None => ConnectionIOWithInt
       case Some(x) =>
         val q = s"""
           INSERT INTO external_resources (content_id, kind, name)
