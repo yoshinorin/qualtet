@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.robots
 
 import io.circe.syntax._
+import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.domains.models.contents.ContentId
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -59,29 +60,25 @@ class RobotsSpec extends AnyWordSpec {
     }
 
     "can not create instance with invalid attribute" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
+      assertThrows[UnprocessableEntity] {
         Attributes("invalid-attribute")
       }
     }
 
     "can not create instance with includes invalid attribute" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
+      assertThrows[UnprocessableEntity] {
         Attributes("all, noindex, nofollow, invalid, none, noarchive, notranslate")
       }
     }
 
     "can not create instance with includes empty attribute start of string" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
+      assertThrows[UnprocessableEntity] {
         Attributes(",all, noindex, nofollow, none, noarchive")
       }
     }
 
     "can not create instance with includes empty attribute end of string" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
+      assertThrows[UnprocessableEntity] {
         Attributes("all, noindex, nofollow, none, noarchive,")
       }
     }

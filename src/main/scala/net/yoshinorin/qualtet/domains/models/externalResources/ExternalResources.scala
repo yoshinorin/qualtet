@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.models.externalResources
 
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
+import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.domains.models.contents.ContentId
 
 final case class ExternalResourceKind(value: String) extends AnyVal
@@ -12,8 +13,7 @@ object ExternalResourceKind {
   val allowedKinds = List("js", "css")
   def apply(value: String): ExternalResourceKind = {
     if (!allowedKinds.contains(value)) {
-      // TODO: declare exception
-      throw new Exception("TODO")
+      throw UnprocessableEntity("The field externalResource.kind allowed only js or css.")
     }
     new ExternalResourceKind(value)
   }

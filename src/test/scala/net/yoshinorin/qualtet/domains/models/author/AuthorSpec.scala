@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.author
 
 import io.circe.syntax._
+import net.yoshinorin.qualtet.domains.models.Fail.{Unauthorized, UnprocessableEntity}
 import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword, ResponseAuthor}
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -14,8 +15,7 @@ class AuthorSpec extends AnyWordSpec {
       assert(AuthorId("01febb8az5t42m2h68xj8c754a").value == "01febb8az5t42m2h68xj8c754a")
     }
     "invalid value" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
+      assertThrows[IllegalArgumentException] {
         AuthorId("not-a-ULID")
       }
     }
@@ -26,11 +26,10 @@ class AuthorSpec extends AnyWordSpec {
       assert(AuthorName("123AbcDef_-").value == "123abcdef_-")
     }
     "invalid value" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
+      assertThrows[UnprocessableEntity] {
         AuthorName("123AbcDef_-.")
       }
-      assertThrows[Exception] {
+      assertThrows[UnprocessableEntity] {
         AuthorName("123AbcDef_-!")
       }
     }
@@ -41,11 +40,10 @@ class AuthorSpec extends AnyWordSpec {
       assert(AuthorDisplayName("123AbcDef_-").value == "123AbcDef_-")
     }
     "invalid value" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
+      assertThrows[UnprocessableEntity] {
         AuthorDisplayName("123AbcDef_-.")
       }
-      assertThrows[Exception] {
+      assertThrows[UnprocessableEntity] {
         AuthorDisplayName("123AbcDef_-!")
       }
     }
@@ -58,11 +56,10 @@ class AuthorSpec extends AnyWordSpec {
       )
     }
     "invalid value" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
+      assertThrows[Unauthorized] {
         BCryptPassword("")
       }
-      assertThrows[Exception] {
+      assertThrows[Unauthorized] {
         BCryptPassword("$2a10XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
       }
     }

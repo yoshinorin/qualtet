@@ -43,8 +43,7 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
         authorService.findById(AuthorId(jwtClaim.sub))
       case Left(t) =>
         logger.error(s"${t.getMessage}")
-        // TODO
-        throw t
+        throw Unauthorized()
     }
   }
 

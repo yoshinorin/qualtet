@@ -18,7 +18,6 @@ object ContentId {
   implicit val decodeContentId: Decoder[ContentId] = Decoder[String].map(ContentId.apply)
 
   def apply(value: String): ContentId = {
-    // TODO: declare exception
     ULID.fromString(value)
     new ContentId(value)
   }

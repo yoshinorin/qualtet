@@ -4,6 +4,7 @@ import io.circe.Decoder
 import io.circe.Encoder
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.generic.semiauto.deriveEncoder
+import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.domains.models.contents.ContentId
 
 final case class Attributes(value: String) extends AnyVal
@@ -18,14 +19,12 @@ object Attributes {
 
   def apply(value: String): Attributes = {
     if (value.endsWith(",")) {
-      // TODO: declare exception
-      throw new Exception("TODO")
+      throw UnprocessableEntity("robots.attributes is invalid.")
     }
 
     val attributes = value.split(',').map(x => x.trim)
     if (attributes.diff(allowedAttributes).length > 0) {
-      // TODO: declare exception
-      throw new Exception("TODO")
+      throw UnprocessableEntity("robots.attributes is invalid.")
     } else {
       new Attributes(attributes.sorted.mkString(", "))
     }

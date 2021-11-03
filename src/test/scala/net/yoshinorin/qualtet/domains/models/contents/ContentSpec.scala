@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.contents
 
 import io.circe.syntax._
+import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
@@ -17,8 +18,7 @@ class ContentSpec extends AnyWordSpec {
     }
 
     "can not create instance" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
+      assertThrows[IllegalArgumentException] {
         ContentId("not-a-ULID")
       }
     }

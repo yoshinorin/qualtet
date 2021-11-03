@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.auth
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.domains.models.Fail.Unauthorized
 import net.yoshinorin.qualtet.domains.models.authors.Author
 import org.slf4j.LoggerFactory
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
@@ -66,7 +67,6 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
    *
    * @param jwtString String of JWT
    * @return JwtClaim
-   * TODO: consider return type of left
    */
   def decode(jwtString: String): Either[Throwable, JwtClaim] = {
     (for {
@@ -80,13 +80,13 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
       case Right(x) => {
         // TODO: clean up
         if (x.aud != Config.jwtAud) {
-          return Left(new Exception("TODO"))
+          return Left(Unauthorized())
         }
         if (x.iss != Config.jwtIss) {
-          return Left(new Exception("TODO"))
+          return Left(Unauthorized())
         }
         if (Instant.now.getEpochSecond > x.exp) {
-          return Left(new Exception("TODO"))
+          return Left(Unauthorized())
         }
         Right(x)
       }

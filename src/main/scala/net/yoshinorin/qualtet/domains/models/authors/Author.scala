@@ -4,6 +4,7 @@ import java.time.ZonedDateTime
 import wvlet.airframe.ulid.ULID
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.deriveEncoder
+import net.yoshinorin.qualtet.domains.models.Fail.{Unauthorized, UnprocessableEntity}
 
 import scala.util.matching.Regex
 
@@ -13,7 +14,6 @@ object AuthorId {
   implicit val decodeAuthorId: Decoder[AuthorId] = Decoder[String].map(AuthorId.apply)
 
   def apply(value: String): AuthorId = {
-    // TODO: declare exception
     ULID.fromString(value)
     new AuthorId(value)
   }
@@ -27,8 +27,7 @@ object AuthorName {
 
   def apply(value: String): AuthorName = {
     if (!authorNamePattern.matches(value)) {
-      // TODO: declare exception
-      throw new Exception("TODO")
+      throw UnprocessableEntity("authorName must be number, alphabet and underscore.")
     }
     new AuthorName(value.toLowerCase)
   }
@@ -42,8 +41,7 @@ object AuthorDisplayName {
 
   def apply(value: String): AuthorDisplayName = {
     if (!authorDisplayNamePattern.matches(value)) {
-      // TODO: declare exception
-      throw new Exception("TODO")
+      throw UnprocessableEntity("authorDisplayName must be number, alphabet or underscore.")
     }
     new AuthorDisplayName(value)
   }
@@ -54,8 +52,7 @@ object BCryptPassword {
   def apply(value: String): BCryptPassword = {
     // https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage-dpe
     if (!value.startsWith("$2a$")) {
-      // TODO: declare exception
-      throw new Exception("TODO")
+      throw Unauthorized()
     }
     new BCryptPassword(value)
   }

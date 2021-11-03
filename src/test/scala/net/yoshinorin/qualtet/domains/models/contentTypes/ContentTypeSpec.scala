@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.models.contentTypes
 
+import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeSpec
@@ -11,8 +12,7 @@ class ContentTypeSpec extends AnyWordSpec {
     }
 
     "can not create instance" in {
-      // TODO: declare exception
-      assertThrows[Exception] {
+      assertThrows[IllegalArgumentException] {
         ContentTypeId("not-a-ULID")
       }
     }
