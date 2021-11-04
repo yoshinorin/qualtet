@@ -9,7 +9,7 @@ import io.circe.generic.semiauto.deriveEncoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.models.externalResources.ExternalResources
+import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResource, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 
 final case class ContentId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
@@ -85,6 +85,7 @@ object RequestContent {
 final case class ResponseContent(
   title: String,
   robotsAttributes: Attributes,
+  externalResources: Option[List[ExternalResources]] = None,
   content: String,
   publishedAt: Long
 )
@@ -93,3 +94,12 @@ object ResponseContent {
   implicit val encodeResponseContent: Encoder[ResponseContent] = deriveEncoder[ResponseContent]
   implicit val decodeResponseContent: Decoder[ResponseContent] = deriveDecoder[ResponseContent]
 }
+
+final case class ResponseContentDbRow(
+  title: String,
+  robotsAttributes: Attributes,
+  externalResourceKindKeys: Option[String],
+  externalResourceKindValues: Option[String],
+  content: String,
+  publishedAt: Long
+)

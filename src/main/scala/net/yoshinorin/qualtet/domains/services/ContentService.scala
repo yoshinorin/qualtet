@@ -17,7 +17,8 @@ class ContentService(
   robotsRepository: RobotsRepository,
   externalResourceRepository: ExternalResourceRepository,
   authorService: AuthorService,
-  contentTypeService: ContentTypeService
+  contentTypeService: ContentTypeService,
+  externalResourceService: ExternalResourceService
 )(
   implicit doobieContext: DoobieContext
 ) {
@@ -117,6 +118,20 @@ class ContentService(
    * @return ResponseContent instance
    */
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
-    contentRepository.findByPathWithMeta(path).transact(doobieContext.transactor)
+    contentRepository.findByPathWithMeta(path).transact(doobieContext.transactor).flatMap {
+      case None => IO(None)
+      case Some(x) =>
+        IO(
+          Some(
+            ResponseContent(
+              title = x.title,
+              robotsAttributes = x.robotsAttributes,
+              externalResources = externalResourceService.toExternalResources(x.externalResourceKindKeys, x.externalResourceKindValues),
+              content = x.content,
+              publishedAt = x.publishedAt
+            )
+          )
+        )
+    }
   }
 }

@@ -4,6 +4,7 @@ import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -62,6 +63,7 @@ class ContentSpec extends AnyWordSpec {
           |{
           |  "title" : "title",
           |  "robotsAttributes" : "noarchive, noimageindex",
+          |  "externalResources" : null,
           |  "content" : "this is a content",
           |  "publishedAt" : 1567814290
           |}
@@ -85,12 +87,23 @@ class ContentSpec extends AnyWordSpec {
           |  {
           |    "title" : "title1",
           |    "robotsAttributes" : "noarchive, noimageindex",
+          |    "externalResources" : [
+          |      {
+          |        "kind": "css",
+          |        "values": ["css1","css2"]
+          |      },
+          |      {
+          |        "kind": "js",
+          |        "values": ["js1","js2"]
+          |      }
+          |    ],
           |    "content" : "this is a content1",
           |    "publishedAt" : 1567814290
           |  },
           |  {
           |    "title" : "title2",
           |    "robotsAttributes" : "all",
+          |    "externalResources" : null,
           |    "content" : "this is a content2",
           |    "publishedAt" : 1567814291
           |  }
@@ -101,12 +114,25 @@ class ContentSpec extends AnyWordSpec {
         ResponseContent(
           title = "title1",
           robotsAttributes = Attributes("noarchive, noimageindex"),
+          externalResources = Option(
+            List(
+              ExternalResources(
+                ExternalResourceKind("css"),
+                List("css1", "css2")
+              ),
+              ExternalResources(
+                ExternalResourceKind("js"),
+                List("js1", "js2")
+              )
+            )
+          ),
           content = "this is a content1",
           publishedAt = 1567814290
         ),
         ResponseContent(
           title = "title2",
           robotsAttributes = Attributes("all"),
+          externalResources = None,
           content = "this is a content2",
           publishedAt = 1567814291
         )

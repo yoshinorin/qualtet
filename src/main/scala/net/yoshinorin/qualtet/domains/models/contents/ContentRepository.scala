@@ -28,5 +28,5 @@ trait ContentRepository {
    * @param path path of content
    * @return content
    */
-  def findByPathWithMeta(path: Path): ConnectionIO[Option[ResponseContent]]
+  def findByPathWithMeta(path: Path): ConnectionIO[Option[ResponseContentDbRow]]
 }
