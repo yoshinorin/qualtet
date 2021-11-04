@@ -22,7 +22,7 @@ object ExternalResourceKind {
 final case class ExternalResource(
   contentId: ContentId,
   kind: ExternalResourceKind,
-  name: String
+  name: String // TODO: consider naming
 )
 object ExternalResource {
   implicit val encodeExternalResource: Encoder[ExternalResource] = deriveEncoder[ExternalResource]
