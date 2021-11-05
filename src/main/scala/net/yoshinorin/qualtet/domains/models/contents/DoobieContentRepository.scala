@@ -54,6 +54,8 @@ class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
    * @return Content with ConnectionIO
    */
   def findByPathWithMeta(path: Path): ConnectionIO[Option[ResponseContentDbRow]] = {
+    // NOTE: Do not use `.option` use `.query[Option[T]].unique` instead
+    //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
     sql"""
        SELECT
          title,
@@ -73,7 +75,7 @@ class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
        WHERE
          path = $path
     """
-      .query[ResponseContentDbRow]
-      .option
+      .query[Option[ResponseContentDbRow]]
+      .unique
   }
 }
