@@ -18,7 +18,7 @@
 * [API](https://yoshinorin.github.io/qualtet/)
 ## Requirements
 
-* sbt 1.5.x
+* sbt 1.6.x
 * Scala 2.13.x
 * JVM 11.x
 * MariaDB 10.5.x
