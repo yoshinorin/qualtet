@@ -54,6 +54,10 @@ $ sbt:qualtet>createAuthor jhonDue JD pass
 }
 ```
 
+## Remarks
+
+Qualtet **does not escape HTML** when creating or updating a content if you POST a content with `htmlContent` field. Please escape it your self before POST.
+
 ## Examples
 
 API execution examples
