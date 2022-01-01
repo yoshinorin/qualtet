@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS robots (
     FOREIGN KEY fk_content(content_id) REFERENCES contents(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
 CREATE TABLE IF NOT EXISTS external_resources (
     content_id CHAR(26) CHARACTER SET ascii NOT NULL,
     kind VARCHAR(32) NOT NULL,
@@ -42,3 +41,17 @@ CREATE TABLE IF NOT EXISTS external_resources (
     PRIMARY KEY (content_id, kind, name),
     FOREIGN KEY fk_content_from_external_resources(content_id) REFERENCES contents(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS tags(
+    id CHAR(26) CHARACTER SET ascii UNIQUE NOT NULL,
+    name VARCHAR(16) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS contents_tagging(
+    content_id CHAR(26) CHARACTER SET ascii NOT NULL,
+    tag_id CHAR(26) CHARACTER SET ascii NOT NULL,
+    PRIMARY KEY (content_id, tag_id),
+    FOREIGN KEY fk_content_from_contents_tagging(content_id) REFERENCES contents(id),
+    FOREIGN KEY fk_tag_from_contents_tagging(tag_id) REFERENCES tags(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
