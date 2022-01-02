@@ -8,12 +8,14 @@ import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
 import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentId, ContentRepository, Path, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResource, ExternalResourceRepository, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
+import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName, TagRepository}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.Markdown.renderHtml
 import wvlet.airframe.ulid.ULID
 
 class ContentService(
   contentRepository: ContentRepository,
+  tagRepository: TagRepository,
   robotsRepository: RobotsRepository,
   externalResourceRepository: ExternalResourceRepository,
   authorService: AuthorService,
@@ -41,10 +43,18 @@ class ContentService(
       case Some(x) => IO(x)
     }
 
+    def createTags(tagNames: Option[List[String]]): IO[Option[List[Tag]]] = {
+      tagNames match {
+        case None => IO(None)
+        case Some(x) => IO(Option(x.map(t => Tag(new TagId(), TagName(t)))))
+      }
+    }
+
     for {
       a <- author
       c <- contentType
       maybeCurrentContent <- this.findByPath(request.path)
+      maybeTags <- createTags(request.tags)
       createdContent <- this.create(
         Content(
           id = maybeCurrentContent match {
@@ -65,6 +75,7 @@ class ContentService(
           updatedAt = request.updatedAt
         ),
         request.robotsAttributes,
+        maybeTags,
         request.externalResources
       )
     } yield createdContent
@@ -76,7 +87,7 @@ class ContentService(
    * @param data Instance of Content
    * @return Instance of created Content with IO
    */
-  def create(data: Content, robotsAttributes: Attributes, externalResources: Option[List[ExternalResources]]): IO[Content] = {
+  def create(data: Content, robotsAttributes: Attributes, tags: Option[List[Tag]], externalResources: Option[List[ExternalResources]]): IO[Content] = {
 
     def content: IO[Content] = this.findByPath(data.path).flatMap {
       case None => IO.raiseError(InternalServerError("content not found")) //NOTE: 404 is better?
@@ -91,9 +102,11 @@ class ContentService(
     val queries = for {
       contentUpsert <- contentRepository.upsert(data)
       robotsUpsert <- robotsRepository.upsert(Robots(data.id, robotsAttributes))
+      // TODO: check diff and clean up tags before upsert
+      tagsBulkUpsert <- tagRepository.bulkUpsert(tags)
       // TODO: check diff and clean up external_resources before upsert
       externalResourceBulkUpsert <- externalResourceRepository.bulkUpsert(maybeExternalResources)
-    } yield (contentUpsert, robotsUpsert, externalResourceBulkUpsert)
+    } yield (contentUpsert, robotsUpsert, tagsBulkUpsert, externalResourceBulkUpsert)
 
     for {
       _ <- queries.transact(doobieContext.transactor)

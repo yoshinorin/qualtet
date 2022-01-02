@@ -95,6 +95,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         title = "this is a title",
         rawContent = "this is a raw content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = Option(List("Scala", "Akka")),
         externalResources = Option(
           List(
             ExternalResources(
