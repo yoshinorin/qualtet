@@ -11,6 +11,7 @@ import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
+import net.yoshinorin.qualtet.domains.models.tags.TagId
 
 final case class ContentId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
 object ContentId {
@@ -56,6 +57,11 @@ object Content {
   implicit val decodeContent: Decoder[Content] = deriveDecoder[Content]
   implicit val decodeContents: Decoder[List[Content]] = Decoder.decodeList[Content]
 }
+
+case class ContentTagging(
+  ContentId: ContentId,
+  TagId: TagId
+)
 
 final case class RequestContent(
   requestId: String = ULID.newULIDString.toLowerCase,

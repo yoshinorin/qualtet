@@ -5,17 +5,27 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.models.authors.{AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
-import net.yoshinorin.qualtet.domains.models.contents.{Content, ContentId, ContentRepository, Path, RequestContent, ResponseContent}
+import net.yoshinorin.qualtet.domains.models.contents.{
+  Content,
+  ContentId,
+  ContentRepository,
+  ContentTagging,
+  ContentTaggingRepository,
+  Path,
+  RequestContent,
+  ResponseContent
+}
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResource, ExternalResourceRepository, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
-import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName, TagRepository}
+import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.utils.Markdown.renderHtml
 import wvlet.airframe.ulid.ULID
 
 class ContentService(
   contentRepository: ContentRepository,
-  tagRepository: TagRepository,
+  tagService: TagService,
+  contentTaggingRepository: ContentTaggingRepository,
   robotsRepository: RobotsRepository,
   externalResourceRepository: ExternalResourceRepository,
   authorService: AuthorService,
@@ -43,10 +53,10 @@ class ContentService(
       case Some(x) => IO(x)
     }
 
-    def createTags(tagNames: Option[List[String]]): IO[Option[List[Tag]]] = {
-      tagNames match {
+    def createContentTagging(contentId: ContentId, tags: Option[List[Tag]]): IO[Option[List[ContentTagging]]] = {
+      tags match {
         case None => IO(None)
-        case Some(x) => IO(Option(x.map(t => Tag(new TagId(), TagName(t)))))
+        case Some(x) => IO(Option(x.map(t => ContentTagging(contentId, t.id))))
       }
     }
 
@@ -54,13 +64,15 @@ class ContentService(
       a <- author
       c <- contentType
       maybeCurrentContent <- this.findByPath(request.path)
-      maybeTags <- createTags(request.tags)
+      contentId = maybeCurrentContent match {
+        case None => ContentId(ULID.newULIDString.toLowerCase)
+        case Some(x) => x.id
+      }
+      maybeTags <- tagService.getTags(request.tags)
+      maybeContentTagging <- createContentTagging(contentId, maybeTags)
       createdContent <- this.create(
         Content(
-          id = maybeCurrentContent match {
-            case None => ContentId(ULID.newULIDString.toLowerCase)
-            case Some(x) => x.id
-          },
+          id = contentId,
           authorId = a.id,
           contentTypeId = c.id,
           path = request.path,
@@ -76,6 +88,7 @@ class ContentService(
         ),
         request.robotsAttributes,
         maybeTags,
+        maybeContentTagging,
         request.externalResources
       )
     } yield createdContent
@@ -87,7 +100,13 @@ class ContentService(
    * @param data Instance of Content
    * @return Instance of created Content with IO
    */
-  def create(data: Content, robotsAttributes: Attributes, tags: Option[List[Tag]], externalResources: Option[List[ExternalResources]]): IO[Content] = {
+  def create(
+    data: Content,
+    robotsAttributes: Attributes,
+    tags: Option[List[Tag]],
+    contentTagging: Option[List[ContentTagging]],
+    externalResources: Option[List[ExternalResources]]
+  ): IO[Content] = {
 
     def content: IO[Content] = this.findByPath(data.path).flatMap {
       case None => IO.raiseError(InternalServerError("content not found")) //NOTE: 404 is better?
@@ -103,10 +122,12 @@ class ContentService(
       contentUpsert <- contentRepository.upsert(data)
       robotsUpsert <- robotsRepository.upsert(Robots(data.id, robotsAttributes))
       // TODO: check diff and clean up tags before upsert
-      tagsBulkUpsert <- tagRepository.bulkUpsert(tags)
+      tagsBulkUpsert <- tagService.bulkUpsertWithoutTaransact(tags)
+      // TODO: check diff and clean up contentTagging before upsert
+      contentTaggingBulkUpsert <- contentTaggingRepository.bulkUpsert(contentTagging)
       // TODO: check diff and clean up external_resources before upsert
       externalResourceBulkUpsert <- externalResourceRepository.bulkUpsert(maybeExternalResources)
-    } yield (contentUpsert, robotsUpsert, tagsBulkUpsert, externalResourceBulkUpsert)
+    } yield (contentUpsert, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
 
     for {
       _ <- queries.transact(doobieContext.transactor)

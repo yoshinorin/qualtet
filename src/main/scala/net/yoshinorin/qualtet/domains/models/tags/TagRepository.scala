@@ -5,6 +5,14 @@ import doobie.ConnectionIO
 trait TagRepository {
 
   /**
+   * find a Tag by Name
+   *
+   * @param data tag name
+   * @return Instance of Tag
+   */
+  def findByName(data: TagName): ConnectionIO[Option[Tag]]
+
+  /**
    * create a Tag
    *
    * @param data Instance of ExternalResource

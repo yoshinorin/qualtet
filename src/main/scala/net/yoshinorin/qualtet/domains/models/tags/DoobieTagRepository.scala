@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.tags
 
 import doobie.ConnectionIO
+import doobie.implicits._
 import doobie.util.update.Update
 import net.yoshinorin.qualtet.infrastructure.db.doobie.{ConnectionIOFaker, DoobieContext}
 
@@ -9,6 +10,18 @@ class DoobieTagRepository(doobie: DoobieContext) extends TagRepository with Conn
   import doobie.ctx._
 
   private val tags = quote(querySchema[Tag]("tags"))
+
+  /**
+   * find a Tag by Name
+   *
+   * @param data Instance of ExternalResource
+   * @return dummy long id (Doobie return Long)
+   */
+  def findByName(data: TagName): ConnectionIO[Option[Tag]] = {
+    sql"SELECT * FROM tags WHERE name = $data"
+      .query[Tag]
+      .option
+  }
 
   /**
    * create a Tag
