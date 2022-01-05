@@ -232,6 +232,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
           |  "title" : "this is a title",
           |  "robotsAttributes" : "noarchive, noimageindex",
           |  "externalResources" : null,
+          |  "tags" : null,
           |  "content" : "html content",
           |  "publishedAt" : 1567814290
           |}

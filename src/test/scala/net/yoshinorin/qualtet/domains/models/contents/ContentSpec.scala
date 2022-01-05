@@ -6,6 +6,7 @@ import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
+import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
@@ -64,6 +65,7 @@ class ContentSpec extends AnyWordSpec {
           |  "title" : "title",
           |  "robotsAttributes" : "noarchive, noimageindex",
           |  "externalResources" : null,
+          |  "tags" : null,
           |  "content" : "this is a content",
           |  "publishedAt" : 1567814290
           |}
@@ -97,6 +99,16 @@ class ContentSpec extends AnyWordSpec {
           |        "values": ["js1","js2"]
           |      }
           |    ],
+          |    "tags" : [
+          |      {
+          |        "id": "01frdbdsdty42fv147cerqpv73",
+          |        "name": "ABC"
+          |      },
+          |      {
+          |        "id": "01frdbe1g83533h92rkhy8ctkw",
+          |        "name": "DEF"
+          |      }
+          |    ],
           |    "content" : "this is a content1",
           |    "publishedAt" : 1567814290
           |  },
@@ -104,6 +116,7 @@ class ContentSpec extends AnyWordSpec {
           |    "title" : "title2",
           |    "robotsAttributes" : "all",
           |    "externalResources" : null,
+          |    "tags" : null,
           |    "content" : "this is a content2",
           |    "publishedAt" : 1567814291
           |  }
@@ -124,6 +137,12 @@ class ContentSpec extends AnyWordSpec {
                 ExternalResourceKind("js"),
                 List("js1", "js2")
               )
+            )
+          ),
+          tags = Option(
+            List(
+              Tag(TagId("01frdbdsdty42fv147cerqpv73"), TagName("ABC")),
+              Tag(TagId("01frdbe1g83533h92rkhy8ctkw"), TagName("DEF"))
             )
           ),
           content = "this is a content1",
