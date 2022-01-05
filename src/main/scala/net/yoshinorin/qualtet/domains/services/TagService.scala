@@ -55,8 +55,6 @@ class TagService(
    * @param data List of Tag
    * @return dummy long id (Doobie return Int)
    *
-   * TODO: remove Option
-   * TODO: return ConnectionIO[Long]
    * TODO: avoid using ConnectionIO
    */
   def bulkUpsertWithoutTaransact(data: Option[List[Tag]]): ConnectionIO[Int] = {
