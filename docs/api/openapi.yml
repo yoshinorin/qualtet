@@ -125,7 +125,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/fullContent'
+                $ref: '#/components/schemas/requestContent'
         404:
           description: Content type is not found
           # content: TODO
@@ -138,7 +138,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/content'
+                $ref: '#/components/schemas/responseContent'
         404:
           description: Content not found
           # content: TODO
@@ -235,23 +235,7 @@ components:
           type: long
           description: Unix time
           example: 1625065592
-    content:
-      type: object
-      properties:
-        title:
-          type: string
-          example: "Post Title"
-        robotsAttributes:
-          type: string
-          example: "noarchive, noimageindex"
-        content:
-          type: string
-          example: "Post Content.... HTML strings"
-        publishedAt:
-          type: long
-          description: Unix time
-          example: 1625065509
-    fullContent:
+    requestContent:
       type: object
       properties:
         id:
@@ -278,11 +262,34 @@ components:
         htmlContent:
           type: string
           example: "Post Content.... HTML strings"
+        tags:
+          type: array
+          example: "['diary', 'tech']"
         publishedAt:
           type: long
           description: Unix time
           example: 1625065509
         updatedAt:
+          type: long
+          description: Unix time
+          example: 1625065509
+    responseContent:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Post Title"
+        robotsAttributes:
+          type: string
+          example: "noarchive, noimageindex"
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/tag'
+        content:
+          type: string
+          example: "Post Content.... HTML strings"
+        publishedAt:
           type: long
           description: Unix time
           example: 1625065509
@@ -296,6 +303,16 @@ components:
         name:
           type: string
           example: "article"
+    tag:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "01frdbdb6s2mxshxzk3wan0f6d"
+        name:
+          type: string
+          example: "diary"
     sitemaps:
       type: object
       properties:
