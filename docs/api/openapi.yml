@@ -188,7 +188,7 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          format: ulid
           example: "01fgvhk1bz6546e4b1s2hdw0pw"
         name:
           type: string
@@ -205,7 +205,7 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          format: ulid
           example: "01fgvhme5b7cj0m5agr9f4g2ca"
         title:
           type: string
@@ -219,7 +219,7 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          format: ulid
           example: "01fgvhme5b7cj0m5agr9f4g2ca"
         title:
           type: string
@@ -240,15 +240,15 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          format: ulid
           example: "01fgvhme5b7cj0m5agr9f4g2ca"
         authorId:
           type: string
-          format: uuid
+          format: ulid
           example: "01fgvhk1bz6546e4b1s2hdw0pw"
         contentTypeId:
           type: string
-          format: uuid
+          format: ulid
           example: "01fgvhjxftxfjvxg3xbvv78kr1"
         path:
           type: string
@@ -306,7 +306,7 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          format: ulid
           example: "01fgvhjxftxfjvxg3xbvv78kr1"
         name:
           type: string
@@ -325,7 +325,7 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          format: ulid
           example: "01frdbdb6s2mxshxzk3wan0f6d"
         name:
           type: string
