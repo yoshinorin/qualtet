@@ -200,6 +200,35 @@ components:
           type: long
           description: Unix time
           example: 1625065318
+    contentType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          example: "01fgvhjxftxfjvxg3xbvv78kr1"
+        name:
+          type: string
+          example: "article"
+    externalResource:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "js"
+        values:
+          type: array
+          example: "['mathjax','marmaid']"
+    tag:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          example: "01frdbdb6s2mxshxzk3wan0f6d"
+        name:
+          type: string
+          example: "diary"
     simpleArticle:
       type: object
       properties:
@@ -301,35 +330,6 @@ components:
           type: long
           description: Unix time
           example: 1625065509
-    contentType:
-      type: object
-      properties:
-        id:
-          type: string
-          format: ulid
-          example: "01fgvhjxftxfjvxg3xbvv78kr1"
-        name:
-          type: string
-          example: "article"
-    externalResource:
-      type: object
-      properties:
-        kind:
-          type: string
-          example: "js"
-        values:
-          type: array
-          example: "['mathjax','marmaid']"
-    tag:
-      type: object
-      properties:
-        id:
-          type: string
-          format: ulid
-          example: "01frdbdb6s2mxshxzk3wan0f6d"
-        name:
-          type: string
-          example: "diary"
     sitemaps:
       type: object
       properties:
