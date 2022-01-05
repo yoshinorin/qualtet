@@ -126,6 +126,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/requestContent'
+        401:
+          description: Unauthorized
         404:
           description: Content type is not found
           # content: TODO
