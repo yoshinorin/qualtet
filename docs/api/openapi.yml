@@ -253,6 +253,10 @@ components:
         path:
           type: string
           example: "/2020/01/01/new-year"
+        externalResources:
+          type: array
+          items:
+            $ref: '#/components/schemas/externalResource'
         title:
           type: string
           example: "Post Title"
@@ -282,6 +286,10 @@ components:
         robotsAttributes:
           type: string
           example: "noarchive, noimageindex"
+        externalResources:
+          type: array
+          items:
+            $ref: '#/components/schemas/externalResource'
         tags:
           type: array
           items:
@@ -303,6 +311,15 @@ components:
         name:
           type: string
           example: "article"
+    externalResource:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "js"
+        values:
+          type: array
+          example: "['mathjax','marmaid']"
     tag:
       type: object
       properties:
