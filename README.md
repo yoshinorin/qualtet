@@ -23,6 +23,10 @@
 * JVM 11.x
 * MariaDB 10.5.x
 
+## Features & TODO
+
+[List](./docs/features-todo.md)
+
 ## Set up
 
 Create a database sachema before install application. Also, schema name is anything will be fine.
@@ -57,10 +61,6 @@ $ sbt:qualtet>createAuthor jhonDue JD pass
 ## Remarks
 
 Qualtet **does not escape HTML** when creating or updating a content if you POST a content with `htmlContent` field. Please escape it your self before POST.
-
-## Features & TODO
-
-[List](./docs/features-todo.md)
 
 ## Examples
 
