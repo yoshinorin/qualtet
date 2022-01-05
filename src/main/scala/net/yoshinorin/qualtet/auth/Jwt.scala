@@ -80,12 +80,15 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
       case Right(x) => {
         // TODO: clean up
         if (x.aud != Config.jwtAud) {
+          logger.error("invalid aud")
           return Left(Unauthorized())
         }
         if (x.iss != Config.jwtIss) {
+          logger.error("invalid iss")
           return Left(Unauthorized())
         }
         if (Instant.now.getEpochSecond > x.exp) {
+          logger.error("token is expired")
           return Left(Unauthorized())
         }
         Right(x)
