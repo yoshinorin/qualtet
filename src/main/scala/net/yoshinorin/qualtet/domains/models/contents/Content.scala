@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
-import net.yoshinorin.qualtet.domains.models.tags.TagId
+import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId}
 
 final case class ContentId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
 object ContentId {
@@ -94,6 +94,7 @@ final case class ResponseContent(
   title: String,
   robotsAttributes: Attributes,
   externalResources: Option[List[ExternalResources]] = None,
+  tags: Option[List[Tag]] = None,
   content: String,
   publishedAt: Long
 )
@@ -108,6 +109,8 @@ final case class ResponseContentDbRow(
   robotsAttributes: Attributes,
   externalResourceKindKeys: Option[String],
   externalResourceKindValues: Option[String],
+  tagIds: Option[String],
+  tagNames: Option[String],
   content: String,
   publishedAt: Long
 )

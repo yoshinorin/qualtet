@@ -61,6 +61,8 @@ class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
          robots.attributes AS robotsAttributes,
          GROUP_CONCAT(external_resources.kind) AS externalResourceKindKey,
          GROUP_CONCAT(external_resources.name) AS externalResourceKindValue,
+         GROUP_CONCAT(tags.id) AS tagId,
+         GROUP_CONCAT(tags.name) AS tagName,
          html_content AS content,
          published_at,
          external_resources.kind,
@@ -71,6 +73,10 @@ class DoobieContentRepository(doobie: DoobieContext) extends ContentRepository {
          contents.id = robots.content_id
        LEFT JOIN external_resources ON
          contents.id = external_resources.content_id
+       LEFT JOIN contents_tagging ON
+         contents.id = contents_tagging.content_id
+       LEFT JOIN tags ON
+         contents_tagging.tag_id = tags.id
        WHERE
          path = $path
     """

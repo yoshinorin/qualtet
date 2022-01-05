@@ -17,8 +17,8 @@ object TagId {
 
 final case class TagName(value: String) extends AnyVal
 object TagName {
-  implicit val encodeTagName: Encoder[TagName] = deriveEncoder[TagName]
-  implicit val decodeTagName: Decoder[TagName] = deriveDecoder[TagName]
+  implicit val encodeTagName: Encoder[TagName] = Encoder[String].contramap(_.value)
+  implicit val decodeTagName: Decoder[TagName] = Decoder[String].map(TagName.apply)
   implicit val decodeTagNames: Decoder[List[TagName]] = Decoder.decodeList[TagName]
   implicit val encodeTagNames: Encoder[List[TagName]] = Encoder.encodeList[TagName]
 }
@@ -27,3 +27,8 @@ final case class Tag(
   id: TagId = new TagId,
   name: TagName
 )
+object Tag {
+  implicit val decodeTag: Decoder[Tag] = deriveDecoder[Tag]
+  implicit val encodeTag: Encoder[Tag] = deriveEncoder[Tag]
+  implicit val decodeTags: Decoder[Option[List[Tag]]] = Decoder[Option[List[Tag]]]
+}
