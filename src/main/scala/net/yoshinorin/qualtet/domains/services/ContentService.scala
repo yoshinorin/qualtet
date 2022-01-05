@@ -15,10 +15,11 @@ import net.yoshinorin.qualtet.domains.models.contents.{
   RequestContent,
   ResponseContent
 }
-import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResource, ExternalResourceRepository, ExternalResources}
+import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceRepository, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
-import net.yoshinorin.qualtet.domains.models.tags.Tag
+import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.utils.Converters
 import net.yoshinorin.qualtet.utils.Markdown.renderHtml
 import wvlet.airframe.ulid.ULID
 
@@ -29,8 +30,7 @@ class ContentService(
   robotsRepository: RobotsRepository,
   externalResourceRepository: ExternalResourceRepository,
   authorService: AuthorService,
-  contentTypeService: ContentTypeService,
-  externalResourceService: ExternalResourceService
+  contentTypeService: ContentTypeService
 )(
   implicit doobieContext: DoobieContext
 ) {
@@ -160,8 +160,10 @@ class ContentService(
             ResponseContent(
               title = x.title,
               robotsAttributes = x.robotsAttributes,
-              externalResources = externalResourceService.toExternalResources(x.externalResourceKindKeys, x.externalResourceKindValues),
-              tags = tagService.toTag(x.tagIds, x.tagNames),
+              externalResources = Converters.zipWithGroupByFromSeparatedComma(x.externalResourceKindKeys, x.externalResourceKindValues)((x, y) =>
+                ExternalResources(ExternalResourceKind(x), y.map(_._2))
+              ),
+              tags = Converters.zipFromSeparatedComma(x.tagIds, x.tagNames)((x, y) => new Tag(new TagId(x), new TagName(y))),
               content = x.content,
               publishedAt = x.publishedAt
             )

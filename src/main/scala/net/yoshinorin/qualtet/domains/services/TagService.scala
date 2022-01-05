@@ -13,22 +13,6 @@ class TagService(
   implicit doobieContext: DoobieContext
 ) {
 
-  // TODO: to generics & move somewhere
-  def toTag(k: Option[String], v: Option[String]): Option[List[Tag]] = {
-    val keys = k match {
-      case None => return None
-      case Some(x) => x.split(",").map(_.trim).toList
-    }
-    val values = v match {
-      case None => return None
-      case Some(x) => x.split(",").map(_.trim).toList
-    }
-    if (keys.size =!= values.size) {
-      return None
-    }
-    Option(keys.zip(values).map(x => Tag(TagId(x._1), TagName(x._2))))
-  }
-
   /**
    * find tag by tagName
    *
