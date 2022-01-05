@@ -45,6 +45,7 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
       audience = Some(Set(Config.jwtAud)),
       subject = Some(author.id.value),
       jwtId = Some(ULID.newULIDString.toLowerCase),
+      // TODO: from config
       expiration = Some(Instant.now.plusSeconds(3600).getEpochSecond),
       issuedAt = Some(Instant.now.getEpochSecond)
     )

@@ -12,6 +12,7 @@
 - [x] Key pair
 - [ ] Logging
 - [x] Generate JWT
+    - [ ] Configurable expireation
 - [x] Validate JWT
 
 ## Protection
@@ -34,12 +35,12 @@
 
 - [x] Create
 - [x] Select
-  - [ ] Return id
-  - [ ] GET API migrate from `path` to `id`
+    - [ ] Return id
+    - [ ] GET API migrate from `path` to `id`
 - [x] Update
-  - [ ] Check diff & clean up externalResources & Tags
+    - [ ] Check diff & clean up externalResources & Tags
 - [ ] Delete
-  - [ ] Delete with externalResources & Tags
+    - [ ] Delete with externalResources & Tags
 
 ## Tags
 
@@ -52,7 +53,7 @@
 
 - [ ] Create Table
 - [ ] Select
-  - [ ] By QueryParams
+    - [ ] By QueryParams
 
 ## Infrastracture
 
@@ -63,4 +64,4 @@
 - [ ] RSS
 - [x] Sitemap
 - [ ] Robots.txt
-  - implement with front end?
+    - implement with front end?
