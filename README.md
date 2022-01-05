@@ -23,7 +23,7 @@
 * JVM 11.x
 * MariaDB 10.5.x
 
-## Features & TODO
+## Features & Implementations todo
 
 [List](./docs/features-todo.md)
 

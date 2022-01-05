@@ -1,4 +1,4 @@
-# Features & implementation todo
+# Features & Implementations todo
 
 ## TypeSafe
 
@@ -51,7 +51,7 @@
 
 ## Search
 
-- [ ] Create Table
+- [ ] Imple Full-text search
 - [ ] Select
     - [ ] By QueryParams
 
