@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.models.contents
 
 import io.circe.syntax._
-import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.domains.models.authors.AuthorId
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}

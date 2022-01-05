@@ -14,7 +14,7 @@ import net.yoshinorin.qualtet.domains.models.contents.{DoobieContentRepository, 
 import net.yoshinorin.qualtet.domains.models.externalResources.DoobieExternalResourceRepository
 import net.yoshinorin.qualtet.domains.models.robots.DoobieRobotsRepository
 import net.yoshinorin.qualtet.domains.models.sitemaps.{DoobieSitemapsRepository, Url}
-import net.yoshinorin.qualtet.domains.models.tags.{DoobieTagRepository, TagRepository}
+import net.yoshinorin.qualtet.domains.models.tags.DoobieTagRepository
 import net.yoshinorin.qualtet.domains.services.{ArchiveService, ArticleService, AuthorService, ContentService, ContentTypeService, SitemapService, TagService}
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
