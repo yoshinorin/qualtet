@@ -37,10 +37,6 @@ trait ResponseHandler {
     complete(HttpResponse(r._1, entity = HttpEntity(ContentTypes.`application/json`, r._2.asJson.toString())))
   }
 
-  def httpResponse(statusCode: StatusCode, message: Message): StandardRoute = {
-    complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, message.asJson.toString())))
-  }
-
   def httpResponse[T](statusCode: StatusCode, response: T)(implicit e: Encoder[T]): StandardRoute = {
     complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, response.asJson.toString())))
   }
