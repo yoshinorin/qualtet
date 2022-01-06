@@ -25,7 +25,7 @@
 
 ## Features & Implementations todo
 
-[List](./docs/features-todo.md)
+* [List](./docs/features-todo.md)
 
 ## Set up
 
