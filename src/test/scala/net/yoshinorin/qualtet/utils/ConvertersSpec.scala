@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.utils
 
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}
+import net.yoshinorin.qualtet.utils.Converters.KeyValueCommaSeparatedString
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.utils.ConvertersSpec
@@ -9,10 +10,10 @@ class ConvertersSpec extends AnyWordSpec {
 
   "zipFromStringPair" should {
     "return list of [A]" in {
-      val maybeTags = Converters.zipFromSeparatedComma(
+      val maybeTags = (
         Option("A, B, C"),
         Option("Z, X, Y")
-      )((x, y) => new Tag(new TagId(x), new TagName(y)))
+      ).zip((x, y) => new Tag(new TagId(x), new TagName(y)))
 
       assert(maybeTags.get(0).id.value == "A")
       assert(maybeTags.get(0).name.value == "Z")
@@ -23,36 +24,36 @@ class ConvertersSpec extends AnyWordSpec {
     }
 
     "return None if first arg is None" in {
-      val maybeTags = Converters.zipFromSeparatedComma(
+      val maybeTags = (
         None,
         Option("Z, X, Y")
-      )((x, y) => new Tag(new TagId(x), new TagName(y)))
+      ).zip((x, y) => new Tag(new TagId(x), new TagName(y)))
       assert(maybeTags.isEmpty)
     }
 
     "return None if second arg is None" in {
-      val maybeTags = Converters.zipFromSeparatedComma(
+      val maybeTags = (
         Option("A, B, C"),
         None
-      )((x, y) => new Tag(new TagId(x), new TagName(y)))
+      ).zip((x, y) => new Tag(new TagId(x), new TagName(y)))
       assert(maybeTags.isEmpty)
     }
 
     "return None if two args list of string length are diff" in {
-      val maybeTags = Converters.zipFromSeparatedComma(
+      val maybeTags = (
         Option("A, B, C, D"),
         Option("Z, X, Y")
-      )((x, y) => new Tag(new TagId(x), new TagName(y)))
+      ).zip((x, y) => new Tag(new TagId(x), new TagName(y)))
       assert(maybeTags.isEmpty)
     }
   }
 
   "zipAndGroupByFromSeparatedComma" should {
     "return list of [A]" in {
-      val maybeExternalResource = Converters.zipWithGroupByFromSeparatedComma(
+      val maybeExternalResource = (
         Option("js, css, js, js, css"),
         Option("js1, css1, js2, js3, css2")
-      )((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
+      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
 
       assert(maybeExternalResource.get(0).kind.value == "css")
       assert(maybeExternalResource.get(1).kind.value == "js")
@@ -62,26 +63,26 @@ class ConvertersSpec extends AnyWordSpec {
     }
 
     "return None if first arg is None" in {
-      val maybeExternalResource = Converters.zipWithGroupByFromSeparatedComma(
+      val maybeExternalResource = (
         None,
         Option("js1, css1, js2, js3, css2")
-      )((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
+      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
       assert(maybeExternalResource.isEmpty)
     }
 
     "return None if second arg is None" in {
-      val maybeExternalResource = Converters.zipWithGroupByFromSeparatedComma(
+      val maybeExternalResource = (
         Option("js, css, js, js, css"),
         None
-      )((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
+      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
       assert(maybeExternalResource.isEmpty)
     }
 
     "return None if two args list of string length are diff" in {
-      val maybeExternalResource = Converters.zipWithGroupByFromSeparatedComma(
+      val maybeExternalResource = (
         Option("js, css, js, js, css"),
         Option("js1, css1, js2, js3")
-      )((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
+      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
       assert(maybeExternalResource.isEmpty)
     }
   }

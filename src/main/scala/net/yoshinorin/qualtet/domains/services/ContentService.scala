@@ -152,6 +152,9 @@ class ContentService(
    * @return ResponseContent instance
    */
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
+
+    import net.yoshinorin.qualtet.utils.Converters.KeyValueCommaSeparatedString
+
     contentRepository.findByPathWithMeta(path).transact(doobieContext.transactor).flatMap {
       case None => IO(None)
       case Some(x) =>
@@ -160,10 +163,9 @@ class ContentService(
             ResponseContent(
               title = x.title,
               robotsAttributes = x.robotsAttributes,
-              externalResources = Converters.zipWithGroupByFromSeparatedComma(x.externalResourceKindKeys, x.externalResourceKindValues)((x, y) =>
-                ExternalResources(ExternalResourceKind(x), y.map(_._2))
-              ),
-              tags = Converters.zipFromSeparatedComma(x.tagIds, x.tagNames)((x, y) => new Tag(new TagId(x), new TagName(y))),
+              externalResources =
+                (x.externalResourceKindKeys, x.externalResourceKindValues).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2))),
+              tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(new TagId(x), new TagName(y))),
               content = x.content,
               publishedAt = x.publishedAt
             )

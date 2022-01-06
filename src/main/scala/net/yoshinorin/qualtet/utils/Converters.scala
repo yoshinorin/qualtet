@@ -19,18 +19,23 @@ object Converters {
     Option(keys, values)
   }
 
-  def zipFromSeparatedComma[A](k: Option[String], v: Option[String])(f: (String, String) => A): Option[List[A]] = {
-    this.getKeyValueOrNone(k, v) match {
-      case None => None
-      case Some(kv) => Option(kv._1.zip(kv._2).map(x => f(x._1, x._2)))
-    }
-  }
+  implicit class KeyValueCommaSeparatedString(kv: (Option[String], Option[String])) {
 
-  def zipWithGroupByFromSeparatedComma[A](k: Option[String], v: Option[String])(f: (String, List[(String, String)]) => A): Option[List[A]] = {
-    this.getKeyValueOrNone(k, v) match {
-      case None => None
-      case Some(kv) => Option(kv._1.zip(kv._2).groupBy(_._1).map(x => f(x._1, x._2)).toList)
+    // equally: def zip[A](k: Option[String], v: Option[String])(f: (String, String) => A)
+    def zip[A](f: (String, String) => A): Option[List[A]] = {
+      getKeyValueOrNone(kv._1, kv._2) match {
+        case None => None
+        case Some(kv) => Option(kv._1.zip(kv._2).map(x => f(x._1, x._2)))
+      }
     }
+
+    def zipWithGroupBy[A](f: (String, List[(String, String)]) => A): Option[List[A]] = {
+      getKeyValueOrNone(kv._1, kv._2) match {
+        case None => None
+        case Some(kv) => Option(kv._1.zip(kv._2).groupBy(_._1).map(x => f(x._1, x._2)).toList)
+      }
+    }
+
   }
 
 }
