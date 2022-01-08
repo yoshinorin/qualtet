@@ -144,6 +144,31 @@ paths:
         404:
           description: Content not found
           # content: TODO
+  /tags:
+    get:
+      summary: Get a tags
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/tag'
+  /tags/{tagId}:
+    get:
+      summary: Get an articles by tag
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/simpleArticle'
+        404:
+          description: Content not found
+          # content: TODO
   /content-types/{contentPath}:
     get:
       summary: Get content-types

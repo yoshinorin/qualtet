@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.models.articles
 import doobie.ConnectionIO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.models.tags.TagId
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
@@ -10,32 +11,58 @@ class DoobieArticleRepository(doobie: DoobieContext) extends ArticleRepository {
 
   import doobie.ctx._
 
-  /**
-   * get number of articles
-   *
-   * @param contentTypeId contentTypeId
-   * @return Number of articles with ConnectionIO
-   */
-  def count(contentTypeId: ContentTypeId): ConnectionIO[Int] = {
+  // TOOD: delete none argument. Maybe lift is effective.
+  def getWithCount(contentTypeId: ContentTypeId, none: Unit = (), sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
     sql"""
-      SELECT count(1)
-      FROM contents
-        WHERE content_type_id = $contentTypeId
+      SELECT
+        count(1) OVER () AS count,
+        path,
+        title,
+        html_content,
+        published_at,
+        updated_at
+      FROM
+        contents
+      WHERE
+        content_type_id = $contentTypeId
+      ORDER BY
+        published_at DESC
+      LIMIT
+        ${sqlParams.limit}
+      OFFSET
+        ${sqlParams.offset}
     """
-      .query[Int]
-      .unique
+      .query[(Int, ResponseArticle)]
+      .to[Seq]
   }
 
-  def get(contentTypeId: ContentTypeId, sqlParams: SqlParams): ConnectionIO[Seq[ResponseArticle]] = {
+  def findByTagIdWithCount(contentTypeId: ContentTypeId, tagId: TagId, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
     sql"""
-      SELECT path, title, html_content, published_at, updated_at
-      FROM contents
-        WHERE content_type_id = $contentTypeId
-        ORDER BY published_at desc
-        LIMIT ${sqlParams.limit}
-        OFFSET ${sqlParams.offset}
+      SELECT
+        count(1) OVER () AS count,
+        path,
+        title,
+        html_content,
+        published_at,
+        updated_at
+      FROM
+        contents
+      LEFT JOIN contents_tagging ON
+        contents.id = contents_tagging.content_id
+      LEFT JOIN tags ON
+        contents_tagging.tag_id = tags.id
+      WHERE
+        content_type_id = $contentTypeId
+      AND
+        tags.id = $tagId
+      ORDER BY
+        published_at DESC
+      LIMIT
+        ${sqlParams.limit}
+      OFFSET
+        ${sqlParams.offset}
     """
-      .query[ResponseArticle]
+      .query[(Int, ResponseArticle)]
       .to[Seq]
   }
 }

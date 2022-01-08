@@ -1,10 +1,12 @@
 package net.yoshinorin.qualtet.domains.services
 
 import cats.effect.IO
+import doobie.ConnectionIO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.NotFound
 import net.yoshinorin.qualtet.domains.models.articles.{ArticleRepository, ResponseArticle, ResponseArticleWithCount}
-import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
+import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentTypeId}
+import net.yoshinorin.qualtet.domains.models.tags.TagId
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
@@ -21,35 +23,21 @@ class ArticleService(
     case Some(x) => IO(x)
   }
 
-  // TODO: get from cache
-  def count(): IO[Int] = {
+  def get[A](
+    data: A,
+    queryParam: ArticlesQueryParameter
+  )(f: (ContentTypeId, A, ArticlesQueryParameter) => ConnectionIO[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] =
     for {
       c <- this.contentType
-      cnt <- articleRepository.count(c.id).transact(doobieContext.transactor)
-    } yield cnt
-  }
-
-  def get(queryParam: ArticlesQueryParameter): IO[Seq[ResponseArticle]] = {
-    for {
-      c <- this.contentType
-      articles <- articleRepository.get(c.id, queryParam).transact(doobieContext.transactor)
-    } yield articles.map(a => {
-      // TODO: why apply when execute SQL with doobie
-      ResponseArticle(
-        a.path,
-        a.title,
-        a.content,
-        a.publishedAt,
-        a.updatedAt
-      )
-    })
-  }
+      articlesWithCount <- f(c.id, data, queryParam).transact(doobieContext.transactor)
+    } yield ResponseArticleWithCount(articlesWithCount.unzip._1.head, articlesWithCount.unzip._2)
 
   def getWithCount(queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
-    for {
-      c <- this.count
-      a <- this.get(queryParam)
-    } yield ResponseArticleWithCount(c, a)
+    this.get((), queryParam)(articleRepository.getWithCount)
+  }
+
+  def getByTagIdWithCount(tagId: TagId, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
+    this.get(tagId, queryParam)(articleRepository.findByTagIdWithCount)
   }
 
 }

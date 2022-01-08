@@ -32,3 +32,14 @@ object Tag {
   implicit val encodeTag: Encoder[Tag] = deriveEncoder[Tag]
   implicit val decodeTags: Decoder[Option[List[Tag]]] = Decoder[Option[List[Tag]]]
 }
+
+final case class ResponseTag(
+  id: TagId,
+  name: TagName
+)
+object ResponseTag {
+  implicit val decodeResponseTag: Decoder[ResponseTag] = deriveDecoder[ResponseTag]
+  implicit val encodeResponseTag: Encoder[ResponseTag] = deriveEncoder[ResponseTag]
+  implicit val decodeResponseTags: Decoder[List[ResponseTag]] = Decoder.decodeList[ResponseTag]
+  implicit val encodeResponseTags: Encoder[List[ResponseTag]] = Encoder.encodeList[ResponseTag]
+}

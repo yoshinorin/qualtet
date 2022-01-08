@@ -2,24 +2,30 @@ package net.yoshinorin.qualtet.domains.models.articles
 
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.models.tags.TagId
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
 trait ArticleRepository {
 
   /**
-   * get number of articles
-   *
-   * @param contentTypeId contentTypeId
-   * @return Number of articles with ConnectionIO
-   */
-  def count(contentTypeId: ContentTypeId): ConnectionIO[Int]
-
-  /**
    * get all Articles
    *
    * @param contentTypeId contentTypeId
+   * @param none dummy data. Should delete this argument. Maybe lift is effective.
    * @param sqlParams sql parameters for limit, offset
-   * @return Articles with ConnectionIO
+   * @return Articles & it's count with ConnectionIO
+   *
+   * TODO: delete none argument.
    */
-  def get(contentTypeId: ContentTypeId, sqlParams: SqlParams): ConnectionIO[Seq[ResponseArticle]]
+  def getWithCount(contentTypeId: ContentTypeId, none: Unit, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]]
+
+  /**
+   * get Articles by TagId
+   *
+   * @param contentTypeId contentTypeId
+   * @param tagId tagId
+   * @param sqlParams sql parameters for limit, offset
+   * @return Articles & it's count with ConnectionIO
+   */
+  def findByTagIdWithCount(contentTypeId: ContentTypeId, tagId: TagId, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]]
 }

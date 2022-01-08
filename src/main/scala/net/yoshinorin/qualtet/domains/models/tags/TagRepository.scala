@@ -5,6 +5,13 @@ import doobie.ConnectionIO
 trait TagRepository {
 
   /**
+   * get all tags
+   *
+   * @return Tags
+   */
+  def getAll: ConnectionIO[Seq[ResponseTag]]
+
+  /**
    * find a Tag by Name
    *
    * @param data tag name

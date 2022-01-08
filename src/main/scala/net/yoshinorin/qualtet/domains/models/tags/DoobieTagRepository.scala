@@ -11,6 +11,12 @@ class DoobieTagRepository(doobie: DoobieContext) extends TagRepository with Conn
 
   private val tags = quote(querySchema[Tag]("tags"))
 
+  def getAll: ConnectionIO[Seq[ResponseTag]] = {
+    sql"SELECT * FROM tags"
+      .query[ResponseTag]
+      .to[Seq]
+  }
+
   /**
    * find a Tag by Name
    *

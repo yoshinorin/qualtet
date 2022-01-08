@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.services
 
 import cats.effect.IO
+import doobie.ConnectionIO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.models.authors.{AuthorName, ResponseAuthor}
@@ -13,7 +14,8 @@ import net.yoshinorin.qualtet.domains.models.contents.{
   ContentTaggingRepository,
   Path,
   RequestContent,
-  ResponseContent
+  ResponseContent,
+  ResponseContentDbRow
 }
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceRepository, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
@@ -150,12 +152,23 @@ class ContentService(
    *
    * @param path a content path
    * @return ResponseContent instance
+   *
+   * @deprecated should replace findByIdWithMeta
    */
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
+    this.findBy(path)(contentRepository.findByPathWithMeta)
+  }
+
+  def findByIdWithMeta(id: ContentId): IO[Option[ResponseContent]] = {
+    ???
+    // TODO:  this.findBy(id)(contentRepository.findById)
+  }
+
+  def findBy[A](data: A)(f: A => ConnectionIO[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 
     import net.yoshinorin.qualtet.utils.Converters.KeyValueCommaSeparatedString
 
-    contentRepository.findByPathWithMeta(path).transact(doobieContext.transactor).flatMap {
+    f(data).transact(doobieContext.transactor).flatMap {
       case None => IO(None)
       case Some(x) =>
         IO(

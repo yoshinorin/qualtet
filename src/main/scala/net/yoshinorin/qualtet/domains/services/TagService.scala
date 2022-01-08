@@ -4,7 +4,7 @@ import cats.implicits._
 import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.implicits._
-import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName, TagRepository}
+import net.yoshinorin.qualtet.domains.models.tags.{ResponseTag, Tag, TagId, TagName, TagRepository}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 class TagService(
@@ -12,6 +12,15 @@ class TagService(
 )(
   implicit doobieContext: DoobieContext
 ) {
+
+  /**
+   * get all tags
+   *
+   * @return tags
+   */
+  def getAll: IO[Seq[ResponseTag]] = {
+    tagRepository.getAll.transact(doobieContext.transactor)
+  }
 
   /**
    * find tag by tagName

@@ -14,7 +14,8 @@ import net.yoshinorin.qualtet.http.routes.{
   ContentRoute,
   ContentTypeRoute,
   HomeRoute,
-  SitemapRoute
+  SitemapRoute,
+  TagRoute
 }
 
 import scala.concurrent.Future
@@ -25,6 +26,7 @@ class HttpServer(
   authRoute: AuthRoute,
   authorRoute: AuthorRoute,
   contentRoute: ContentRoute,
+  tagRoute: TagRoute,
   articleRoute: ArticleRoute,
   archiveRoute: ArchiveRoute,
   contentTypeRoute: ContentTypeRoute,
@@ -46,6 +48,7 @@ class HttpServer(
           authRoute.route ~
           authorRoute.route ~
           contentRoute.route ~
+          tagRoute.route ~
           articleRoute.route ~
           archiveRoute.route ~
           contentTypeRoute.route ~
