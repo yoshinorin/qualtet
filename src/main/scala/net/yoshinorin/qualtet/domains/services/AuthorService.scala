@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.domains.models.Fail.InternalServerError
 import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorId, AuthorName, AuthorRepository, ResponseAuthor}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
-class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: DoobieContext) {
+class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: DoobieContext) extends ServiceBase {
 
   /**
    * create an authorName
@@ -15,15 +15,9 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
    * @return Instance of created Author with IO
    */
   def create(data: Author): IO[ResponseAuthor] = {
-
-    def author: IO[ResponseAuthor] = this.findByName(data.name).flatMap {
-      case None => IO.raiseError(InternalServerError("user not found")) //NOTE: 404 is better?
-      case Some(x) => IO(x)
-    }
-
     for {
       _ <- authorRepository.upsert(data).transact(doobieContext.transactor)
-      a <- author
+      a <- findBy(data.name, InternalServerError("user not found"))(this.findByName)
     } yield a
   }
 

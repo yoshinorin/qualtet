@@ -12,7 +12,7 @@ class ContentTypeService(
   cache: Cache[String, ContentType]
 )(
   implicit doobieContext: DoobieContext
-) {
+) extends ServiceBase {
 
   /**
    * create a contentType
@@ -22,19 +22,15 @@ class ContentTypeService(
    */
   def create(data: ContentType): IO[ContentType] = {
 
-    def contentType: IO[ContentType] = this.findByName(data.name).flatMap {
-      case None => IO.raiseError(InternalServerError("contentType not found")) //NOTE: 404 is better?
-      case Some(x: ContentType) => IO(x)
-    }
-
     this.findByName(data.name).flatMap {
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
           _ <- contentTypeRepository.create(data).transact(doobieContext.transactor)
-          c <- contentType
+          c <- findBy(data.name, InternalServerError("contentType not found"))(this.findByName)
         } yield c
     }
+
   }
 
   /**

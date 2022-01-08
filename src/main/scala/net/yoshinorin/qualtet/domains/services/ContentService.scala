@@ -4,8 +4,7 @@ import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.{InternalServerError, NotFound}
-import net.yoshinorin.qualtet.domains.models.authors.{AuthorName, ResponseAuthor}
-import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
+import net.yoshinorin.qualtet.domains.models.authors.AuthorName
 import net.yoshinorin.qualtet.domains.models.contents.{
   Content,
   ContentId,
@@ -21,7 +20,6 @@ import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResource
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
 import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
-import net.yoshinorin.qualtet.utils.Converters
 import net.yoshinorin.qualtet.utils.Markdown.renderHtml
 import wvlet.airframe.ulid.ULID
 
@@ -35,7 +33,7 @@ class ContentService(
   contentTypeService: ContentTypeService
 )(
   implicit doobieContext: DoobieContext
-) {
+) extends ServiceBase {
 
   /**
    * create a content from RequestContent case class
@@ -45,16 +43,6 @@ class ContentService(
    */
   def createContentFromRequest(authorName: AuthorName, request: RequestContent): IO[Content] = {
 
-    def author: IO[ResponseAuthor] = authorService.findByName(authorName).flatMap {
-      case None => IO.raiseError(NotFound(s"user not found: ${authorName}"))
-      case Some(x) => IO(x)
-    }
-
-    def contentType: IO[ContentType] = contentTypeService.findByName(request.contentType).flatMap {
-      case None => IO.raiseError(NotFound(s"content-type not found: ${request.contentType}"))
-      case Some(x) => IO(x)
-    }
-
     def createContentTagging(contentId: ContentId, tags: Option[List[Tag]]): IO[Option[List[ContentTagging]]] = {
       tags match {
         case None => IO(None)
@@ -63,8 +51,8 @@ class ContentService(
     }
 
     for {
-      a <- author
-      c <- contentType
+      a <- findBy(authorName, NotFound(s"user not found: ${request.contentType}"))(authorService.findByName)
+      c <- findBy(request.contentType, NotFound(s"content-type not found: ${request.contentType}"))(contentTypeService.findByName)
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
         case None => ContentId(ULID.newULIDString.toLowerCase)
