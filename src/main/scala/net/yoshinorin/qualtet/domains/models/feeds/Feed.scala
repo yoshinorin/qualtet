@@ -4,6 +4,7 @@ import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import net.yoshinorin.qualtet.domains.models.contents.Path
 
+// https://validator.w3.org/feed/docs/atom.html
 final case class ResponseFeed(
   title: String,
   link: Path,

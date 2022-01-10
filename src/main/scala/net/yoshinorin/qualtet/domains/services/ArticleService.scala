@@ -40,6 +40,7 @@ class ArticleService(
   }
 
   def getFeeds(queryParam: ArticlesQueryParameter): IO[Seq[ResponseFeed]] = {
+    // TODO: Cache
     for {
       articles <- this.get((), queryParam)(articleRepository.getWithCount)
     } yield articles.articles.map(a => {

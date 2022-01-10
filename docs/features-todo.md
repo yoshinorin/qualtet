@@ -46,6 +46,9 @@
 
 - [x] Create
 - [x] Select
+    - [x] List
+        - [ ] Number of Contents by tag
+    - [x] by TagName
 - [x] Update
 - [ ] Delete
 
@@ -65,7 +68,7 @@
 
 ## Others
 
-- [ ] RSS
+- [x] RSS
 - [x] Sitemap
 - [ ] Robots.txt
     - implement with front end?
