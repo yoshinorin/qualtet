@@ -155,9 +155,9 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/tag'
-  /tags/{tagId}:
+  /tags/{tagName}:
     get:
-      summary: Get an articles by tag
+      summary: Get an articles by tagName
       responses:
         200:
           description: Response when Success

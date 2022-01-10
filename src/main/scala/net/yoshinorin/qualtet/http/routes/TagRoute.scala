@@ -5,7 +5,7 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import io.circe.syntax.EncoderOps
-import net.yoshinorin.qualtet.domains.models.tags.{ResponseTag, TagId}
+import net.yoshinorin.qualtet.domains.models.tags.{ResponseTag, TagId, TagName}
 import net.yoshinorin.qualtet.domains.services.{ArticleService, TagService}
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
 
@@ -23,10 +23,30 @@ class TagRoute(
           }
         }
       } ~ {
+        /*
+        NOTE:
+          The Next.js can not pass custom argument with <Link> component.
+          So, I want to belows, but can not...
+
+          Front-end visible URL: https://example.com/tags/{tagName}
+          API call (when transition with <Link>):  https://example.com/tags/{tagId}
+
+          But, it can not. So, I have to find the tagging contents with tagName.
+
         pathPrefix(".+".r) { tagId =>
           get {
             parameters("page".as[Int].?, "limit".as[Int].?) { (page, limit) =>
               onSuccess(articleService.getByTagIdWithCount(TagId(tagId), ArticlesQueryParameter(page, limit)).unsafeToFuture()) { result =>
+                httpResponse(OK, result)
+              }
+            }
+          }
+        }
+         */
+        pathPrefix(".+".r) { tagName =>
+          get {
+            parameters("page".as[Int].?, "limit".as[Int].?) { (page, limit) =>
+              onSuccess(articleService.getByTagNameWithCount(TagName(tagName), ArticlesQueryParameter(page, limit)).unsafeToFuture()) { result =>
                 httpResponse(OK, result)
               }
             }
