@@ -202,6 +202,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/sitemaps'
+  /feed/{feedName}:
+    get:
+      summary: Get a feeds
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/feed'
 components:
   schemas:
     idToken:
@@ -288,6 +300,28 @@ components:
           description: Unix time
           example: 1625065509
         updatedAt:
+          type: long
+          description: Unix time
+          example: 1625065592
+    feed:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Post Title"
+        link:
+          type: string
+          format: url(excludes domain part)
+          example: "/post/test-article"
+        id:
+          type: string
+          format: url(excludes domain part)
+          example: "/post/test-article"
+        published:
+          type: long
+          description: Unix time
+          example: 1625065509
+        updated:
           type: long
           description: Unix time
           example: 1625065592

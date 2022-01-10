@@ -6,6 +6,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.NotFound
 import net.yoshinorin.qualtet.domains.models.articles.{ArticleRepository, ResponseArticle, ResponseArticleWithCount}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.models.feeds.ResponseFeed
 import net.yoshinorin.qualtet.domains.models.tags.{TagId, TagName}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
@@ -36,6 +37,21 @@ class ArticleService(
 
   def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
     this.get(tagName, queryParam)(articleRepository.findByTagNameWithCount)
+  }
+
+  def getFeeds(queryParam: ArticlesQueryParameter): IO[Seq[ResponseFeed]] = {
+    for {
+      articles <- this.get((), queryParam)(articleRepository.getWithCount)
+    } yield articles.articles.map(a => {
+      new ResponseFeed(
+        title = a.title,
+        link = a.path,
+        id = a.path,
+        published = a.publishedAt,
+        updated = a.updatedAt
+      )
+    })
+
   }
 
 }

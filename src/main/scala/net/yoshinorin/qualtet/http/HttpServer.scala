@@ -13,6 +13,7 @@ import net.yoshinorin.qualtet.http.routes.{
   AuthorRoute,
   ContentRoute,
   ContentTypeRoute,
+  FeedRoute,
   HomeRoute,
   SitemapRoute,
   TagRoute
@@ -30,7 +31,8 @@ class HttpServer(
   articleRoute: ArticleRoute,
   archiveRoute: ArchiveRoute,
   contentTypeRoute: ContentTypeRoute,
-  sitemapRoute: SitemapRoute
+  sitemapRoute: SitemapRoute,
+  feedRoute: FeedRoute
 )(implicit actorSystem: ActorSystem)
     extends HttpLogger {
 
@@ -52,7 +54,8 @@ class HttpServer(
           articleRoute.route ~
           archiveRoute.route ~
           contentTypeRoute.route ~
-          sitemapRoute.route
+          sitemapRoute.route ~
+          feedRoute.route
       }
     }
 }

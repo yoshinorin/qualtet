@@ -24,6 +24,7 @@ import net.yoshinorin.qualtet.http.routes.{
   AuthorRoute,
   ContentRoute,
   ContentTypeRoute,
+  FeedRoute,
   HomeRoute,
   SitemapRoute,
   TagRoute
@@ -107,11 +108,24 @@ object BootStrap extends App {
   val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
   val sitemapRoute: SitemapRoute = new SitemapRoute(sitemapService)
+  val feedRoute: FeedRoute = new FeedRoute(articleService)
 
   Migration.migrate(contentTypeService)
 
   val httpServer: HttpServer =
-    new HttpServer(homeRoute, apiStatusRoute, authRoute, authorRoute, contentRoute, tagRoute, articleRoute, archiveRoute, contentTypeRoute, sitemapRoute)
+    new HttpServer(
+      homeRoute,
+      apiStatusRoute,
+      authRoute,
+      authorRoute,
+      contentRoute,
+      tagRoute,
+      articleRoute,
+      archiveRoute,
+      contentTypeRoute,
+      sitemapRoute,
+      feedRoute
+    )
 
   httpServer.start(Config.httpHost, Config.httpPort).onComplete {
     case Success(binding) =>
