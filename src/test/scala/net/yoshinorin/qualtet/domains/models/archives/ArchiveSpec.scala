@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.models.archives
 
 import io.circe.syntax._
-import net.yoshinorin.qualtet.domains.models.contents.Path
+import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.models.archives.ArchiveSpec
@@ -18,11 +18,7 @@ class ArchiveSpec extends AnyWordSpec {
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      val json = ResponseArchive(
-        path = Path("/test"),
-        title = "title",
-        publishedAt = 1567814290
-      ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
+      val json = responseArchive.asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
       //NOTE: failed equally compare
       assert(json.contains(expectJson))
@@ -45,18 +41,7 @@ class ArchiveSpec extends AnyWordSpec {
           |]
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      val json = Seq(
-        ResponseArchive(
-          path = Path("/test/path1"),
-          title = "title1",
-          publishedAt = 1567814290
-        ),
-        ResponseArchive(
-          path = Path("/test/path2"),
-          title = "title2",
-          publishedAt = 1567814391
-        )
-      ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
+      val json = Seq(responseArchive2, responseArchive3).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
       //NOTE: failed equally compare
       assert(json.contains(expectJson))

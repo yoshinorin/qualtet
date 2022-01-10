@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.models.robots
 
 import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
-import net.yoshinorin.qualtet.domains.models.contents.ContentId
+import net.yoshinorin.qualtet.fixture.Fixture.{contentId, fullRobotsAttributes}
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.models.robots.RobotsSpec
@@ -10,7 +10,7 @@ class RobotsSpec extends AnyWordSpec {
 
   "Robots" should {
     "create instance" in {
-      val robots = Robots(ContentId("01febb1333pd3431q1a1e00fbt"), Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex"))
+      val robots = Robots(contentId, fullRobotsAttributes)
       assert(robots.contentId.value == "01febb1333pd3431q1a1e00fbt")
       assert(robots.attributes.value == "all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate")
     }
@@ -25,7 +25,7 @@ class RobotsSpec extends AnyWordSpec {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       val json = Robots(
-        ContentId("01febb1333pd3431q1a1e00fbt"),
+        contentId,
         Attributes("all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate")
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
@@ -41,7 +41,7 @@ class RobotsSpec extends AnyWordSpec {
 
     "create instance with all valid attributes and result are sorted" in {
       assert(
-        Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex").value == "all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate"
+        fullRobotsAttributes.value == "all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate"
       )
     }
 

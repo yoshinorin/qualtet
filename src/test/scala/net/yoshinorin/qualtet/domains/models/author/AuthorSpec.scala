@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.models.author
 import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.models.Fail.{Unauthorized, UnprocessableEntity}
 import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword, ResponseAuthor}
+import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
@@ -12,7 +13,7 @@ class AuthorSpec extends AnyWordSpec {
 
   "AuthorId" should {
     "valid value" in {
-      assert(AuthorId("01febb8az5t42m2h68xj8c754a").value == "01febb8az5t42m2h68xj8c754a")
+      assert(authorId.value == "01febb8az5t42m2h68xj8c754a")
     }
     "invalid value" in {
       assertThrows[IllegalArgumentException] {
@@ -52,7 +53,7 @@ class AuthorSpec extends AnyWordSpec {
   "BCryptPassword" should {
     "valid value" in {
       assert(
-        BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O").value == "$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O"
+        validBCryptPassword.value == "$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O"
       )
     }
     "invalid value" in {
@@ -71,7 +72,7 @@ class AuthorSpec extends AnyWordSpec {
       val author = Author(
         name = AuthorName("JhonDue"),
         displayName = AuthorDisplayName("JD"),
-        password = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
+        password = validBCryptPassword
       )
       val instanceUTCDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(author.createdAt), ZoneOffset.UTC)
 
@@ -86,10 +87,10 @@ class AuthorSpec extends AnyWordSpec {
 
     "specific values" in {
       val author = Author(
-        AuthorId("01febb8az5t42m2h68xj8c754a"),
+        authorId,
         AuthorName("JhonDue"),
         AuthorDisplayName("JD"),
-        BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O"),
+        validBCryptPassword,
         1625065592
       )
 
@@ -113,7 +114,7 @@ class AuthorSpec extends AnyWordSpec {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       val json = ResponseAuthor(
-        id = AuthorId("01febb8az5t42m2h68xj8c754a"),
+        id = authorId,
         name = AuthorName("JhonDue"),
         displayName = AuthorDisplayName("JD"),
         createdAt = 1567814290
@@ -144,13 +145,13 @@ class AuthorSpec extends AnyWordSpec {
 
       val json = Seq(
         ResponseAuthor(
-          id = AuthorId("01febb8az5t42m2h68xj8c754a"),
+          id = authorId,
           name = AuthorName("JhonDue"),
           displayName = AuthorDisplayName("JD"),
           createdAt = 1567814290
         ),
         ResponseAuthor(
-          id = AuthorId("01febb8az5t42m2h68xj8c754b"),
+          id = authorId2,
           name = AuthorName("JhonDue2"),
           displayName = AuthorDisplayName("JD2"),
           createdAt = 1567814291

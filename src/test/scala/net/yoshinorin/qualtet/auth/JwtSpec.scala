@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.auth
 
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword}
+import net.yoshinorin.qualtet.fixture.Fixture.validBCryptPassword
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.JwtAlgorithm
 import pdi.jwt.exceptions.JwtValidationException
@@ -25,7 +26,7 @@ class JwtSpec extends AnyWordSpec {
           id = AuthorId(id),
           name = AuthorName("Jhon"),
           displayName = AuthorDisplayName("JD"),
-          password = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
+          password = validBCryptPassword
         )
       )
 

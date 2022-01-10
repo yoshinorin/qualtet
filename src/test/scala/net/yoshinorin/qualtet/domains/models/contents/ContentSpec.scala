@@ -6,6 +6,7 @@ import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}
+import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
@@ -15,7 +16,7 @@ class ContentSpec extends AnyWordSpec {
 
   "ContentId" should {
     "create instance with specific id" in {
-      assert(ContentId("01febb1333pd3431q1a1e00fbt").value == "01febb1333pd3431q1a1e00fbt")
+      assert(contentId.value == "01febb1333pd3431q1a1e00fbt")
     }
 
     "can not create instance" in {
@@ -40,7 +41,7 @@ class ContentSpec extends AnyWordSpec {
       val currentUTCDateTime = ZonedDateTime.now(ZoneOffset.UTC)
       val content = Content(
         authorId = new AuthorId,
-        contentTypeId = ContentTypeId("01febb1333pd3431q1a1e00fbt"),
+        contentTypeId = contentTypeId,
         path = Path("/path"),
         title = "",
         rawContent = "",

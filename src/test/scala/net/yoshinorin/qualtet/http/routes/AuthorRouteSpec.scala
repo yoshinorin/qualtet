@@ -5,6 +5,7 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.models.authors.{AuthorDisplayName, AuthorId, AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.services.AuthorService
+import net.yoshinorin.qualtet.fixture.Fixture.{authorId, authorId2}
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.wordspec.AnyWordSpec
@@ -19,13 +20,13 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     IO(
       Seq(
         ResponseAuthor(
-          id = AuthorId("01febb8az5t42m2h68xj8c754a"),
+          id = authorId,
           name = AuthorName("jhondue"),
           displayName = AuthorDisplayName("JD"),
           createdAt = 1567814290
         ),
         ResponseAuthor(
-          id = AuthorId("01febb8az5t42m2h68xj8c754b"),
+          id = authorId2,
           name = AuthorName("JhonDue2"),
           displayName = AuthorDisplayName("JD2"),
           createdAt = 1567814291
@@ -38,7 +39,7 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     IO(
       Option(
         ResponseAuthor(
-          id = AuthorId("01febb8az5t42m2h68xj8c754a"),
+          id = authorId,
           name = AuthorName("jhondue"),
           displayName = AuthorDisplayName("JD"),
           createdAt = 1567814290

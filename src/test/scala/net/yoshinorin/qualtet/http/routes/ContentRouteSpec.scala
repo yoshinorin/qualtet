@@ -13,6 +13,7 @@ import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestCon
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import net.yoshinorin.qualtet.domains.services.{AuthorService, ContentService}
+import net.yoshinorin.qualtet.fixture.Fixture.{authorId, authorId2, validBCryptPassword}
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.wordspec.AnyWordSpec
@@ -30,27 +31,27 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   val mockAuthorService: AuthorService = Mockito.mock(classOf[AuthorService])
 
   // Correct user
-  when(mockAuthorService.findByIdWithPassword(AuthorId("01febb8az5t42m2h68xj8c754a")))
+  when(mockAuthorService.findByIdWithPassword(authorId))
     .thenReturn(
       IO(
         Some(
           Author(
-            id = AuthorId("01febb8az5t42m2h68xj8c754a"),
+            id = authorId,
             name = AuthorName("JhonDue"),
             displayName = AuthorDisplayName("JD"),
-            password = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
+            password = validBCryptPassword
           )
         )
       )
     )
 
   // Correct user
-  when(mockAuthorService.findById(AuthorId("01febb8az5t42m2h68xj8c754a")))
+  when(mockAuthorService.findById(authorId))
     .thenReturn(
       IO(
         Some(
           ResponseAuthor(
-            id = AuthorId("01febb8az5t42m2h68xj8c754a"),
+            id = authorId,
             name = AuthorName("JhonDue"),
             displayName = AuthorDisplayName("JD")
           )
@@ -59,29 +60,29 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     )
 
   // user not found
-  when(mockAuthorService.findByIdWithPassword(AuthorId("01febb8az5t42m2h68xj8c754b")))
+  when(mockAuthorService.findByIdWithPassword(authorId2))
     .thenReturn(
       IO(
         Some(
           Author(
-            id = AuthorId("01febb8az5t42m2h68xj8c754b"),
+            id = authorId2,
             name = AuthorName("notfound"),
             displayName = AuthorDisplayName("NF"),
-            password = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
+            password = validBCryptPassword
           )
         )
       )
     )
 
   // user not found
-  when(mockAuthorService.findById(AuthorId("01febb8az5t42m2h68xj8c754b")))
+  when(mockAuthorService.findById(authorId2))
     .thenReturn(
       IO(None)
     )
 
   val authService = new AuthService(mockAuthorService, jwtInstance)
-  val validToken: String = authService.generateToken(RequestToken(AuthorId("01febb8az5t42m2h68xj8c754a"), "pass")).unsafeRunSync().token
-  val notFoundUserToken: String = authService.generateToken(RequestToken(AuthorId("01febb8az5t42m2h68xj8c754b"), "pass")).unsafeRunSync().token
+  val validToken: String = authService.generateToken(RequestToken(authorId, "pass")).unsafeRunSync().token
+  val notFoundUserToken: String = authService.generateToken(RequestToken(authorId2, "pass")).unsafeRunSync().token
   val mockContentService: ContentService = Mockito.mock(classOf[ContentService])
   val contentRoute: ContentRoute = new ContentRoute(authService, mockContentService)
 
