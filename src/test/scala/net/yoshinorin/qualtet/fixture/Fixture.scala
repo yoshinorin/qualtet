@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.fixture
 
 import net.yoshinorin.qualtet.domains.models.archives.ResponseArchive
 import net.yoshinorin.qualtet.domains.models.articles.ResponseArticle
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword}
-import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.models.authors._
+import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentTypeId}
 import net.yoshinorin.qualtet.domains.models.contents.{ContentId, Path}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 
@@ -23,6 +23,9 @@ object Fixture {
 
   val contentId: ContentId = ContentId("01febb1333pd3431q1a1e00fbt")
   val contentTypeId: ContentTypeId = ContentTypeId("01febb1333pd3431q1a1e01fbc")
+  val articleContentType: ContentType = ContentType(contentTypeId, "articles")
+
+  val tagId: TagId = TagId("01frdbe1g83533h92rkhy8ctkw")
 
   val fullRobotsAttributes: Attributes = Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex")
 

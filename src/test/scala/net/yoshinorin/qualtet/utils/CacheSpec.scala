@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.utils
 
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
 import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentTypeId}
-import net.yoshinorin.qualtet.fixture.Fixture.contentTypeId
+import net.yoshinorin.qualtet.fixture.Fixture.{articleContentType, contentTypeId}
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.util.concurrent.TimeUnit
@@ -14,15 +14,14 @@ class CacheSpec extends AnyWordSpec {
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
 
   val contentTypeCache = new Cache[String, ContentType](contentTypeCaffeinCache)
-  val contentType: ContentType = ContentType(contentTypeId, "article")
-  contentTypeCache.put(contentType.name, contentType)
+  contentTypeCache.put(articleContentType.name, articleContentType)
 
   val caffeinCache: CaffeineCache[Int, String] =
     Caffeine.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build[Int, String]
 
   "Cache" should {
     "hit" in {
-      assert(contentTypeCache.get(contentType.name).get.id == contentTypeId)
+      assert(contentTypeCache.get(articleContentType.name).get.id == contentTypeId)
     }
 
     "miss" in {
