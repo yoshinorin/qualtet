@@ -3,9 +3,9 @@ package net.yoshinorin.qualtet.domains.models.contents
 import doobie.ConnectionIO
 import doobie.util.update.Update
 import io.getquill.{idiom => _}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.{ConnectionIOFaker, DoobieContext}
+import net.yoshinorin.qualtet.infrastructure.db.doobie.{ConnectionIOFaker, DoobieContextBase}
 
-class DoobieContentTaggingRepository(doobie: DoobieContext) extends ContentTaggingRepository with ConnectionIOFaker {
+class DoobieContentTaggingRepository(doobie: DoobieContextBase) extends ContentTaggingRepository with ConnectionIOFaker {
 
   import doobie.ctx._
 

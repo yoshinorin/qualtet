@@ -3,9 +3,9 @@ package net.yoshinorin.qualtet.domains.models.contentTypes
 import doobie.ConnectionIO
 import doobie.implicits._
 import io.getquill.{idiom => _}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class DoobieContentTypeRepository(doobie: DoobieContext) extends ContentTypeRepository {
+class DoobieContentTypeRepository(doobie: DoobieContextBase) extends ContentTypeRepository {
 
   import doobie.ctx._
 

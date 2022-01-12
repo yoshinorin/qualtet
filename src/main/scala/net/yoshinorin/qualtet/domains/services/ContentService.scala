@@ -19,7 +19,7 @@ import net.yoshinorin.qualtet.domains.models.contents.{
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceRepository, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
 import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.utils.Markdown.renderHtml
 import wvlet.airframe.ulid.ULID
 
@@ -32,7 +32,7 @@ class ContentService(
   authorService: AuthorService,
   contentTypeService: ContentTypeService
 )(
-  implicit doobieContext: DoobieContext
+  implicit doobieContext: DoobieContextBase
 ) extends ServiceBase {
 
   /**

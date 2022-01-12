@@ -9,13 +9,13 @@ import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.feeds.ResponseFeed
 import net.yoshinorin.qualtet.domains.models.tags.{TagId, TagName}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class ArticleService(
   articleRepository: ArticleRepository,
   contentTypeService: ContentTypeService
 )(
-  implicit doobieContext: DoobieContext
+  implicit doobieContext: DoobieContextBase
 ) extends ServiceBase {
 
   def get[A](

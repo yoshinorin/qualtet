@@ -4,9 +4,9 @@ import doobie.ConnectionIO
 import doobie.implicits._
 import io.getquill.{idiom => _}
 import net.yoshinorin.qualtet.domains.models.contents.ContentId
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class DoobieRobotsRepository(doobie: DoobieContext) extends RobotsRepository {
+class DoobieRobotsRepository(doobie: DoobieContextBase) extends RobotsRepository {
 
   import doobie.ctx._
 

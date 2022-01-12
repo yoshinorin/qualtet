@@ -5,9 +5,9 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.tags.{TagId, TagName}
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class DoobieArticleRepository(doobie: DoobieContext) extends ArticleRepository {
+class DoobieArticleRepository(doobie: DoobieContextBase) extends ArticleRepository {
 
   import doobie.ctx._
 

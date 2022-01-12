@@ -5,12 +5,12 @@ import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.tags.{ResponseTag, Tag, TagId, TagName, TagRepository}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class TagService(
   tagRepository: TagRepository
 )(
-  implicit doobieContext: DoobieContext
+  implicit doobieContext: DoobieContextBase
 ) {
 
   /**

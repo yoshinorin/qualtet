@@ -4,9 +4,9 @@ import cats.effect.IO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.InternalServerError
 import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorId, AuthorName, AuthorRepository, ResponseAuthor}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: DoobieContext) extends ServiceBase {
+class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: DoobieContextBase) extends ServiceBase {
 
   /**
    * create an authorName

@@ -4,13 +4,13 @@ import cats.effect.IO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.Fail.NotFound
 import net.yoshinorin.qualtet.domains.models.archives.{ArchiveRepository, ResponseArchive}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class ArchiveService(
   archiveRepository: ArchiveRepository,
   contentTypeService: ContentTypeService
 )(
-  implicit doobieContext: DoobieContext
+  implicit doobieContext: DoobieContextBase
 ) extends ServiceBase {
 
   def get: IO[Seq[ResponseArchive]] = {

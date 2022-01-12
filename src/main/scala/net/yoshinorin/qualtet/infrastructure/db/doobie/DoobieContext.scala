@@ -9,13 +9,13 @@ import cats.effect._
 import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.config.Config
 
-class DoobieContext {
+// TODO: refactor
+trait DoobieContextBase {
 
   val executors: ExecutorService = Executors.newCachedThreadPool()
   val executionContexts: ExecutionContextExecutor = scala.concurrent.ExecutionContext.fromExecutor(executors)
 
   implicit val cs: ContextShift[IO] = IO.contextShift(executionContexts)
-
   val ctx: DoobieContext.MySQL[SnakeCase] = new DoobieContext.MySQL(SnakeCase)
 
   val transactor: Aux[IO, Unit] = Transactor.fromDriverManager[IO](
@@ -24,4 +24,8 @@ class DoobieContext {
     Config.dbUser,
     Config.dbPassword
   )
+
 }
+
+// TODO: refactor
+class DoobieContext extends DoobieContextBase {}
