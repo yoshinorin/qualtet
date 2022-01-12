@@ -1,10 +1,10 @@
-package net.yoshinorin.qualtet.domains.models.article
+package net.yoshinorin.qualtet.domains.models.articles
 
 import io.circe.syntax._
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 
-// testOnly net.yoshinorin.qualtet.domains.models.article.ArticleSpec
+// testOnly net.yoshinorin.qualtet.domains.models.articles.ArticleSpec
 class ArticleSpec extends AnyWordSpec {
 
   "ResponseArticle" should {
