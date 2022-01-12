@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.domains.models.author
+package net.yoshinorin.qualtet.domains.models.authors
 
 import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.models.Fail.{Unauthorized, UnprocessableEntity}
