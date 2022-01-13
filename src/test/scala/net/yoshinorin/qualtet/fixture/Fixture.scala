@@ -6,6 +6,7 @@ import net.yoshinorin.qualtet.domains.models.authors._
 import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentTypeId}
 import net.yoshinorin.qualtet.domains.models.contents.{ContentId, Path}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
+import net.yoshinorin.qualtet.domains.models.tags.TagId
 
 // Just test data
 object Fixture {
