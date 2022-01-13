@@ -8,9 +8,9 @@ trait AuthorRepository {
    * create a authorName
    *
    * @param data Instance of Author
-   * @return dummy long id (Doobie return Long)
+   * @return dummy long id (Doobie return Int)
    */
-  def upsert(data: Author): ConnectionIO[Long]
+  def upsert(data: Author): ConnectionIO[Int]
 
   /**
    * get all Author

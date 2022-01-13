@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.models.sitemaps
 
 import doobie.ConnectionIO
 import doobie.implicits._
-import io.getquill.{idiom => _}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class DoobieSitemapsRepository(doobie: DoobieContextBase) extends SitemapsRepository {

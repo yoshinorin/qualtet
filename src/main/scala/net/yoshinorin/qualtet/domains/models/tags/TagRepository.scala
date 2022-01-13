@@ -22,14 +22,6 @@ trait TagRepository {
   /**
    * create a Tag
    *
-   * @param data Instance of ExternalResource
-   * @return dummy long id (Doobie return Long)
-   */
-  def upsert(data: Tag): ConnectionIO[Long]
-
-  /**
-   * create a Tag
-   *
    * @param data List of Tag
    * @return dummy long id (Doobie return Int)
    *

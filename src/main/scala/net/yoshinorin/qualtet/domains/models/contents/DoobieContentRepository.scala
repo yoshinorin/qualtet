@@ -2,14 +2,10 @@ package net.yoshinorin.qualtet.domains.models.contents
 
 import doobie.ConnectionIO
 import doobie.implicits._
-import io.getquill.{idiom => _}
+import doobie.util.update.Update
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class DoobieContentRepository(doobie: DoobieContextBase) extends ContentRepository {
-
-  import doobie.ctx._
-
-  private val contents = quote(querySchema[Content]("contents"))
 
   /**
    * create a content
@@ -17,21 +13,19 @@ class DoobieContentRepository(doobie: DoobieContextBase) extends ContentReposito
    * @param data Instance of Content
    * @return created Content with ConnectionIO
    */
-  def upsert(data: Content): ConnectionIO[Long] = {
-    val q = quote(
-      contents
-        .insert(lift(data))
-        .onConflictUpdate(
-          (existingRow, newRow) => existingRow.path -> (newRow.path),
-          (existingRow, newRow) => existingRow.title -> (newRow.title),
-          (existingRow, newRow) => existingRow.contentTypeId -> (newRow.contentTypeId),
-          (existingRow, newRow) => existingRow.rawContent -> (newRow.rawContent),
-          (existingRow, newRow) => existingRow.htmlContent -> (newRow.htmlContent),
-          (existingRow, newRow) => existingRow.publishedAt -> (newRow.publishedAt),
-          (existingRow, newRow) => existingRow.updatedAt -> (newRow.updatedAt)
-        )
-    )
-    run(q)
+  def upsert(data: Content): ConnectionIO[Int] = {
+    val q = s"""
+          INSERT INTO contents (id, author_id, content_type_id, path, title, raw_content, html_content, published_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          ON DUPLICATE KEY UPDATE
+            content_type_id = VALUES(content_type_id),
+            title = VALUES(title),
+            raw_content = VALUES(raw_content),
+            html_content = VALUES(html_content),
+            published_at = VALUES(published_at),
+            updated_at = VALUES(updated_at)
+        """
+    Update[Content](q).run(data)
   }
 
   /**

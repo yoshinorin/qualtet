@@ -34,7 +34,6 @@ libraryDependencies ++= Seq(
   "com.github.jwt-scala" %% "jwt-circe" % jwtScalaVersion,
   "org.mariadb.jdbc" % "mariadb-java-client" % "2.7.4",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
-  "org.tpolecat" %% "doobie-quill" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
   "org.wvlet.airframe" %% "airframe-ulid" % "21.12.1",
   "com.github.ben-manes.caffeine" % "caffeine" % "3.0.5",

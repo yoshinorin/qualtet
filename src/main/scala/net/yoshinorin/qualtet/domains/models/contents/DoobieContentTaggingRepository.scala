@@ -2,32 +2,9 @@ package net.yoshinorin.qualtet.domains.models.contents
 
 import doobie.ConnectionIO
 import doobie.util.update.Update
-import io.getquill.{idiom => _}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.{ConnectionIOFaker, DoobieContextBase}
 
 class DoobieContentTaggingRepository(doobie: DoobieContextBase) extends ContentTaggingRepository with ConnectionIOFaker {
-
-  import doobie.ctx._
-
-  private val contentsTagging = quote(querySchema[ContentTagging]("contents_tagging"))
-
-  /**
-   * create a ContentTagging
-   *
-   * @param data Instance of ContentTagging
-   * @return dummy long id (Doobie return Long)
-   */
-  def upsert(data: ContentTagging): ConnectionIO[Long] = {
-    val q = quote(
-      contentsTagging
-        .insert(lift(data))
-        .onConflictUpdate(
-          (existingRow, newRow) => existingRow.ContentId -> (newRow.ContentId),
-          (existingRow, newRow) => existingRow.TagId -> (newRow.TagId)
-        )
-    )
-    run(q)
-  }
 
   /**
    * create a ContentTagging bulky

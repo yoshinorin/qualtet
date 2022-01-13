@@ -7,10 +7,6 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.{ConnectionIOFaker, Doobi
 
 class DoobieTagRepository(doobie: DoobieContextBase) extends TagRepository with ConnectionIOFaker {
 
-  import doobie.ctx._
-
-  private val tags = quote(querySchema[Tag]("tags"))
-
   def getAll: ConnectionIO[Seq[ResponseTag]] = {
     sql"SELECT * FROM tags"
       .query[ResponseTag]
@@ -21,27 +17,12 @@ class DoobieTagRepository(doobie: DoobieContextBase) extends TagRepository with 
    * find a Tag by Name
    *
    * @param data Instance of ExternalResource
-   * @return dummy long id (Doobie return Long)
+   * @return dummy long id (Doobie return Int)
    */
   def findByName(data: TagName): ConnectionIO[Option[Tag]] = {
     sql"SELECT * FROM tags WHERE name = $data"
       .query[Tag]
       .option
-  }
-
-  /**
-   * create a Tag
-   *
-   * @param data Instance of ExternalResource
-   * @return dummy long id (Doobie return Long)
-   */
-  def upsert(data: Tag): ConnectionIO[Long] = {
-    val q = quote(
-      tags
-        .insert(lift(data))
-        .onConflictUpdate((existingRow, newRow) => existingRow.name -> (newRow.name))
-    )
-    run(q)
   }
 
   /**

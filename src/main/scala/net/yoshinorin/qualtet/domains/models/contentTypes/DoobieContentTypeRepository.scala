@@ -1,15 +1,10 @@
 package net.yoshinorin.qualtet.domains.models.contentTypes
 
-import doobie.ConnectionIO
+import doobie.{ConnectionIO, Update}
 import doobie.implicits._
-import io.getquill.{idiom => _}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class DoobieContentTypeRepository(doobie: DoobieContextBase) extends ContentTypeRepository {
-
-  import doobie.ctx._
-
-  private val contentTypes = quote(querySchema[ContentType]("content_types"))
 
   /**
    * create a ContentType
@@ -17,12 +12,14 @@ class DoobieContentTypeRepository(doobie: DoobieContextBase) extends ContentType
    * @param data Instance of ContentType
    * @return created Content with ConnectionIO
    */
-  def create(data: ContentType): ConnectionIO[Long] = {
-    val q = quote(
-      contentTypes
-        .insert(lift(data))
-    )
-    run(q)
+  def upsert(data: ContentType): ConnectionIO[Int] = {
+    val q = s"""
+          INSERT INTO content_types (id, name)
+            VALUES (?, ?)
+          ON DUPLICATE KEY UPDATE
+            name = VALUES(name)
+        """
+    Update[ContentType](q).run(data)
   }
 
   /**

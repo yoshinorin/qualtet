@@ -26,7 +26,7 @@ class ContentTypeService(
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
-          _ <- contentTypeRepository.create(data).transact(doobieContext.transactor)
+          _ <- contentTypeRepository.upsert(data).transact(doobieContext.transactor)
           c <- findBy(data.name, InternalServerError("contentType not found"))(this.findByName)
         } yield c
     }

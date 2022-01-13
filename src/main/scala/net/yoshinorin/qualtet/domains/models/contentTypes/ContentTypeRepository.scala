@@ -5,12 +5,12 @@ import doobie.ConnectionIO
 trait ContentTypeRepository {
 
   /**
-   * create a contentType
+   * upsert a contentType
    *
    * @param data Instance of contentType
-   * @return dummy long id (Doobie return Long)
+   * @return dummy int id (Doobie return Int)
    */
-  def create(data: ContentType): ConnectionIO[Long]
+  def upsert(data: ContentType): ConnectionIO[Int]
 
   /**
    * find a ContentType by name

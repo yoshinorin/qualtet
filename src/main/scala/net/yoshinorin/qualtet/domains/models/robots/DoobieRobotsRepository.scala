@@ -2,29 +2,26 @@ package net.yoshinorin.qualtet.domains.models.robots
 
 import doobie.ConnectionIO
 import doobie.implicits._
-import io.getquill.{idiom => _}
+import doobie.util.update.Update
 import net.yoshinorin.qualtet.domains.models.contents.ContentId
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class DoobieRobotsRepository(doobie: DoobieContextBase) extends RobotsRepository {
 
-  import doobie.ctx._
-
-  private val robots = quote(querySchema[Robots]("robots"))
-
   /**
    * create a robots (for meta)
    *
    * @param data Instance of Robots (for meta)
-   * @return dummy long id (Doobie return Long)
+   * @return dummy long id (Doobie return Int)
    */
-  def upsert(data: Robots): ConnectionIO[Long] = {
-    val q = quote(
-      robots
-        .insert(lift(data))
-        .onConflictUpdate((existingRow, newRow) => existingRow.attributes -> (newRow.attributes))
-    )
-    run(q)
+  def upsert(data: Robots): ConnectionIO[Int] = {
+    val q = s"""
+          INSERT INTO robots (content_id, attributes)
+            VALUES (?, ?)
+          ON DUPLICATE KEY UPDATE
+            attributes = VALUES(attributes)
+        """
+    Update[Robots](q).run(data)
   }
 
   /**

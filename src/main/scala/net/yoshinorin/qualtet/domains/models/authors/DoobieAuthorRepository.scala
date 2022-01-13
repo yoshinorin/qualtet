@@ -2,14 +2,10 @@ package net.yoshinorin.qualtet.domains.models.authors
 
 import doobie.ConnectionIO
 import doobie.implicits._
-import io.getquill.{idiom => _}
+import doobie.util.update.Update
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class DoobieAuthorRepository(doobie: DoobieContextBase) extends AuthorRepository {
-
-  import doobie.ctx._
-
-  private val authors = quote(querySchema[Author]("authors"))
 
   /**
    * create a authorName
@@ -17,16 +13,15 @@ class DoobieAuthorRepository(doobie: DoobieContextBase) extends AuthorRepository
    * @param data Instance of Author
    * @return created Author
    */
-  override def upsert(data: Author): ConnectionIO[Long] = {
-    val q = quote(
-      authors
-        .insert(lift(data))
-        .onConflictUpdate(
-          (existingRow, newRow) => existingRow.displayName -> (newRow.displayName),
-          (existingRow, newRow) => existingRow.password -> (newRow.password)
-        )
-    )
-    run(q)
+  override def upsert(data: Author): ConnectionIO[Int] = {
+    val q = s"""
+          INSERT INTO authors (id, name, display_name, password, created_at)
+            VALUES (?, ?, ?, ?, ?)
+          ON DUPLICATE KEY UPDATE
+            display_name = VALUES(display_name),
+            password = VALUES(password)
+        """
+    Update[Author](q).run(data)
   }
 
   /**

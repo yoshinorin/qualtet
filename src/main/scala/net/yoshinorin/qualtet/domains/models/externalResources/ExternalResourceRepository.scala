@@ -5,14 +5,6 @@ import doobie.ConnectionIO
 trait ExternalResourceRepository {
 
   /**
-   * create a externalResource (for meta)
-   *
-   * @param data Instance of ExternalResource
-   * @return dummy long id (Doobie return Long)
-   */
-  def upsert(data: ExternalResource): ConnectionIO[Long]
-
-  /**
    * create a externalResources (for meta)
    *
    * @param data List of ExternalResources

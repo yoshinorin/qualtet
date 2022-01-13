@@ -8,11 +8,9 @@ trait ContentRepository {
    * create a content
    *
    * @param data Instance of Content
-   * @return dummy long id (Doobie return Long)
+   * @return dummy long id (Doobie return Int)
    */
-  def upsert(data: Content): ConnectionIO[Long]
-
-  def find = ???
+  def upsert(data: Content): ConnectionIO[Int]
 
   /**
    * find content by path

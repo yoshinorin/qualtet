@@ -2,32 +2,9 @@ package net.yoshinorin.qualtet.domains.models.externalResources
 
 import doobie.ConnectionIO
 import doobie.util.update.Update
-import io.getquill.{idiom => _}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.{ConnectionIOFaker, DoobieContextBase}
 
 class DoobieExternalResourceRepository(doobie: DoobieContextBase) extends ExternalResourceRepository with ConnectionIOFaker {
-
-  import doobie.ctx._
-
-  private val externalResources = quote(querySchema[ExternalResource]("external_resources"))
-
-  /**
-   * create a externalResource (for meta)
-   *
-   * @param data Instance of ExternalResource
-   * @return dummy long id (Doobie return Long)
-   */
-  def upsert(data: ExternalResource): ConnectionIO[Long] = {
-    val q = quote(
-      externalResources
-        .insert(lift(data))
-        .onConflictUpdate(
-          (existingRow, newRow) => existingRow.kind -> (newRow.kind),
-          (existingRow, newRow) => existingRow.name -> (newRow.name)
-        )
-    )
-    run(q)
-  }
 
   /**
    * create a externalResources (for meta)
