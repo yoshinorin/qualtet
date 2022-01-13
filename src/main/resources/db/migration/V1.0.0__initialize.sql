@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS authors (
     id CHAR(26) CHARACTER SET ascii PRIMARY KEY NOT NULL,
     name VARCHAR(32) UNIQUE NOT NULL,
-    display_name VARCHAR(32),
+    display_name VARCHAR(32) NOT NULL,
     password VARCHAR(72) NOT NULL,
     created_at BIGINT UNSIGNED DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
