@@ -85,7 +85,14 @@ shutDownTestDbContainer := {
   println("=====stopped db container")
 }
 // TODO: The DB container does not seems to shutdown if the tests are fails.
-addCommandAlias("testWithDb", ";runTestDbContainer; test; shutDownTestDbContainer")
+val testCommands = {
+  """;runTestDbContainer
+    |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigrationSpec
+    |;test
+    |;shutDownTestDbContainer
+    |""".stripMargin
+}
+addCommandAlias("testWithDb", testCommands)
 
 coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration; net.yoshinorin.qualtet.http.HttpServer;"
 //org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
