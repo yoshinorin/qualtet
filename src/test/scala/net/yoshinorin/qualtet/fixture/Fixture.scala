@@ -10,8 +10,8 @@ import net.yoshinorin.qualtet.domains.models.archives.{DoobieArchiveRepository, 
 import net.yoshinorin.qualtet.domains.models.articles.{DoobieArticleRepository, ResponseArticle}
 import net.yoshinorin.qualtet.domains.models.authors._
 import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentTypeId, DoobieContentTypeRepository}
-import net.yoshinorin.qualtet.domains.models.contents.{ContentId, DoobieContentRepository, DoobieContentTaggingRepository, Path}
-import net.yoshinorin.qualtet.domains.models.externalResources.DoobieExternalResourceRepository
+import net.yoshinorin.qualtet.domains.models.contents.{ContentId, DoobieContentRepository, DoobieContentTaggingRepository, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.models.externalResources.{DoobieExternalResourceRepository, ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, DoobieRobotsRepository}
 import net.yoshinorin.qualtet.domains.models.sitemaps.{DoobieSitemapsRepository, Url}
 import net.yoshinorin.qualtet.domains.models.tags.{DoobieTagRepository, TagId}
@@ -126,6 +126,23 @@ object Fixture {
   val tagId: TagId = TagId("01frdbe1g83533h92rkhy8ctkw")
 
   val fullRobotsAttributes: Attributes = Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex")
+
+  val requestContent1: RequestContent = RequestContent(
+    contentType = "article",
+    path = Path("/test/path"),
+    title = "this is a title",
+    rawContent = "this is a raw content",
+    robotsAttributes = Attributes("noarchive, noimageindex"),
+    tags = Option(List("Scala", "Akka")),
+    externalResources = Option(
+      List(
+        ExternalResources(
+          ExternalResourceKind("js"),
+          values = List("test", "foo", "bar")
+        )
+      )
+    )
+  )
 
   val responseArchive: ResponseArchive = ResponseArchive(
     path = Path("/test"),
