@@ -4,9 +4,8 @@ import doobie.ConnectionIO
 import doobie.implicits._
 import doobie.util.update.Update
 import net.yoshinorin.qualtet.domains.models.contents.ContentId
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class DoobieRobotsRepository(doobie: DoobieContextBase) extends RobotsRepository {
+class DoobieRobotsRepository extends RobotsRepository {
 
   /**
    * create a robots (for meta)

@@ -52,28 +52,28 @@ object BootStrap extends App {
   val signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
   val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
 
-  val authorRepository = new DoobieAuthorRepository(doobieContext)
+  val authorRepository = new DoobieAuthorRepository
   val authorService: AuthorService = new AuthorService(authorRepository)
 
   val authService = new AuthService(authorService, jwtInstance)
 
-  val contentTypeRepository = new DoobieContentTypeRepository(doobieContext)
+  val contentTypeRepository = new DoobieContentTypeRepository
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache = new Cache[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)
 
-  val tagRepository = new DoobieTagRepository(doobieContext)
+  val tagRepository = new DoobieTagRepository
   val tagService = new TagService(tagRepository)
 
-  val contentTaggingRepository = new DoobieContentTaggingRepository(doobieContext)
+  val contentTaggingRepository = new DoobieContentTaggingRepository
 
-  val robotsRepository = new DoobieRobotsRepository(doobieContext)
+  val robotsRepository = new DoobieRobotsRepository
 
-  val externalResourceRepository = new DoobieExternalResourceRepository(doobieContext)
+  val externalResourceRepository = new DoobieExternalResourceRepository
 
-  val contentRepository = new DoobieContentRepository(doobieContext)
+  val contentRepository = new DoobieContentRepository
   val contentService: ContentService =
     new ContentService(
       contentRepository,
@@ -85,13 +85,13 @@ object BootStrap extends App {
       contentTypeService
     )
 
-  val articleRepository = new DoobieArticleRepository(doobieContext)
+  val articleRepository = new DoobieArticleRepository
   val articleService: ArticleService = new ArticleService(articleRepository, contentTypeService)
 
-  val archiveRepository = new DoobieArchiveRepository(doobieContext)
+  val archiveRepository = new DoobieArchiveRepository
   val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)
 
-  val sitemapRepository = new DoobieSitemapsRepository(doobieContext)
+  val sitemapRepository = new DoobieSitemapsRepository
   // TODO: from inf cache
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]

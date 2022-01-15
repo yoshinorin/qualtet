@@ -3,9 +3,9 @@ package net.yoshinorin.qualtet.domains.models.tags
 import doobie.ConnectionIO
 import doobie.implicits._
 import doobie.util.update.Update
-import net.yoshinorin.qualtet.infrastructure.db.doobie.{ConnectionIOFaker, DoobieContextBase}
+import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
-class DoobieTagRepository(doobie: DoobieContextBase) extends TagRepository with ConnectionIOFaker {
+class DoobieTagRepository extends TagRepository with ConnectionIOFaker {
 
   def getAll: ConnectionIO[Seq[ResponseTag]] = {
     sql"SELECT * FROM tags"

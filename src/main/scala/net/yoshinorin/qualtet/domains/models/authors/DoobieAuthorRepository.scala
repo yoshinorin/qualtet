@@ -3,9 +3,8 @@ package net.yoshinorin.qualtet.domains.models.authors
 import doobie.ConnectionIO
 import doobie.implicits._
 import doobie.util.update.Update
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class DoobieAuthorRepository(doobie: DoobieContextBase) extends AuthorRepository {
+class DoobieAuthorRepository extends AuthorRepository {
 
   /**
    * create a authorName

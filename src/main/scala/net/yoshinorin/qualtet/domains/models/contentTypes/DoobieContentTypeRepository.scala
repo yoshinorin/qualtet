@@ -2,9 +2,8 @@ package net.yoshinorin.qualtet.domains.models.contentTypes
 
 import doobie.{ConnectionIO, Update}
 import doobie.implicits._
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class DoobieContentTypeRepository(doobie: DoobieContextBase) extends ContentTypeRepository {
+class DoobieContentTypeRepository extends ContentTypeRepository {
 
   /**
    * create a ContentType

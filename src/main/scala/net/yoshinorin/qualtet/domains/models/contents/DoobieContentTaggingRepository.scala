@@ -2,9 +2,9 @@ package net.yoshinorin.qualtet.domains.models.contents
 
 import doobie.ConnectionIO
 import doobie.util.update.Update
-import net.yoshinorin.qualtet.infrastructure.db.doobie.{ConnectionIOFaker, DoobieContextBase}
+import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
-class DoobieContentTaggingRepository(doobie: DoobieContextBase) extends ContentTaggingRepository with ConnectionIOFaker {
+class DoobieContentTaggingRepository extends ContentTaggingRepository with ConnectionIOFaker {
 
   /**
    * create a ContentTagging bulky

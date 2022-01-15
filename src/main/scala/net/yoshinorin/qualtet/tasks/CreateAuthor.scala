@@ -19,7 +19,7 @@ object CreateAuthor {
   implicit val executionContextExecutor: ExecutionContextExecutor = actorSystem.dispatcher
 
   implicit val doobieContext: DoobieContext = new DoobieContext()
-  val authorRepository = new DoobieAuthorRepository(doobieContext)
+  val authorRepository = new DoobieAuthorRepository
   val authorService: AuthorService = new AuthorService(authorRepository)
 
   def main(args: Array[String]): Unit = {

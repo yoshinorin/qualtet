@@ -4,9 +4,8 @@ import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.tags.{TagId, TagName}
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class DoobieArticleRepository(doobie: DoobieContextBase) extends ArticleRepository {
+class DoobieArticleRepository extends ArticleRepository {
 
   // TOOD: delete none argument. Maybe lift is effective.
   def getWithCount(contentTypeId: ContentTypeId, none: Unit = (), sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]] = {

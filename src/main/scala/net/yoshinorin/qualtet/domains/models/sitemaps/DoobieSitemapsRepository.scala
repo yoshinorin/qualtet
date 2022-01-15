@@ -2,9 +2,8 @@ package net.yoshinorin.qualtet.domains.models.sitemaps
 
 import doobie.ConnectionIO
 import doobie.implicits._
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class DoobieSitemapsRepository(doobie: DoobieContextBase) extends SitemapsRepository {
+class DoobieSitemapsRepository extends SitemapsRepository {
 
   def get: ConnectionIO[Seq[Url]] = {
     sql"""

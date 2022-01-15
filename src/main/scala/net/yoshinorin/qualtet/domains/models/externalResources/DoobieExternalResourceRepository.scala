@@ -2,9 +2,9 @@ package net.yoshinorin.qualtet.domains.models.externalResources
 
 import doobie.ConnectionIO
 import doobie.util.update.Update
-import net.yoshinorin.qualtet.infrastructure.db.doobie.{ConnectionIOFaker, DoobieContextBase}
+import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
-class DoobieExternalResourceRepository(doobie: DoobieContextBase) extends ExternalResourceRepository with ConnectionIOFaker {
+class DoobieExternalResourceRepository extends ExternalResourceRepository with ConnectionIOFaker {
 
   /**
    * create a externalResources (for meta)

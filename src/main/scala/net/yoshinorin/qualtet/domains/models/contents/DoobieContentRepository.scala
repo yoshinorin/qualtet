@@ -3,9 +3,8 @@ package net.yoshinorin.qualtet.domains.models.contents
 import doobie.ConnectionIO
 import doobie.implicits._
 import doobie.util.update.Update
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class DoobieContentRepository(doobie: DoobieContextBase) extends ContentRepository {
+class DoobieContentRepository extends ContentRepository {
 
   /**
    * create a content
