@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.auth
 
 import net.yoshinorin.qualtet.config.Config
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword}
+import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.fixture.Fixture.validBCryptPassword
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.JwtAlgorithm
