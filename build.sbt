@@ -94,6 +94,16 @@ val testCommands = {
     |""".stripMargin
 }
 addCommandAlias("testWithDb", testCommands)
+addCommandAlias("testWithDB", testCommands)
+
+// NOTE: Sometimes I want to run testOnly xyz manually.
+val testEnvCommands = {
+  """;runTestDbContainer
+    |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigrationSpec
+    |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
+    |""".stripMargin
+}
+addCommandAlias("testEnvUp", testEnvCommands)
 
 coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration; net.yoshinorin.qualtet.http.HttpServer;"
 //org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
