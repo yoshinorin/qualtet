@@ -88,6 +88,7 @@ shutDownTestDbContainer := {
 val testCommands = {
   """;runTestDbContainer
     |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigrationSpec
+    |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
     |;test
     |;shutDownTestDbContainer
     |""".stripMargin
