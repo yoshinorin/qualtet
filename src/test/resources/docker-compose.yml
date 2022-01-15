@@ -1,0 +1,15 @@
+version: '3'
+services:
+  qualtet_test_db:
+    image: yoshinorin/docker-mariadb:10.6.3
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_USER: root
+      MYSQL_PASSWORD: pass
+      MYSQL_DATABASE: qualtet
+    expose:
+      - "33066"
+    ports:
+      - "33066:3306"
+    command: ["mysqld", "--character-set-server=utf8mb4"]
+    restart: unless-stopped

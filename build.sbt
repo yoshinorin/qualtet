@@ -1,3 +1,6 @@
+import java.io.File
+import scala.sys.process.Process
+
 organization := "net.yoshinorin"
 name := "qualtet"
 version := "0.0.1"
@@ -18,6 +21,7 @@ val akkaHttpVersion = "10.2.7"
 val circeVersion = "0.14.1"
 val doobieVersion = "0.13.4"
 val jwtScalaVersion = "9.0.2"
+
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.1",
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
@@ -58,6 +62,30 @@ lazy val root = (project in file("."))
   )
 
 reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
+
+// NOTE: testcontiners does not works well...
+// https://stackoverflow.com/questions/22321500/how-to-run-task-before-all-tests-from-all-modules-in-sbt
+val runTestDbContainer = TaskKey[Unit]("runTestDbContainer", "Run DB container for testing.")
+val dockerComposeFilePath = new File("src/test/resources/docker-compose.yml")
+runTestDbContainer := {
+  println("=====starting db container")
+  val dockerCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} up -d")
+  dockerCommand.run
+
+  // workaround
+  Thread.sleep(20000)
+  println("=====started db container")
+}
+
+val shutDownTestDbContainer = TaskKey[Unit]("shutDownTestDbContainer", "Shut down DB container for testing.")
+shutDownTestDbContainer := {
+  println("=====stopping db container")
+  val dockerDownCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} down")
+  dockerDownCommand.run
+  println("=====stopped db container")
+}
+// TODO: The DB container does not seems to shutdown if the tests are fails.
+addCommandAlias("testWithDb", ";runTestDbContainer; test; shutDownTestDbContainer")
 
 coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration; net.yoshinorin.qualtet.http.HttpServer;"
 //org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")

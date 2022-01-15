@@ -16,12 +16,14 @@
 ## Documentation
 
 * [API](https://yoshinorin.github.io/qualtet/)
+
 ## Requirements
 
 * sbt 1.6.x
 * Scala 2.13.x
 * JVM 11.x
 * MariaDB 10.5.x
+* docker & docker-compose 3.x (for test)
 
 ## Features & Implementations todo
 
@@ -143,6 +145,12 @@ Run specific test
 ```sh
 $ sbt
 $ testOnly *xxxxxSpec
+```
+
+Run test with db (docker container)
+
+```
+$ sbt testWithDb
 ```
 
 Generate Coverage report
