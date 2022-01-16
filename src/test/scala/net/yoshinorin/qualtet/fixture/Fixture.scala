@@ -5,6 +5,7 @@ import cats.implicits.catsSyntaxApplicativeId
 import com.github.benmanes.caffeine.cache.Caffeine
 import doobie.ConnectionIO
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
+import net.bytebuddy.dynamic.scaffold.TypeInitializer.None
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.domains.models.archives.{DoobieArchiveRepository, ResponseArchive}
 import net.yoshinorin.qualtet.domains.models.articles.{DoobieArticleRepository, ResponseArticle}
@@ -142,6 +143,17 @@ object Fixture {
         )
       )
     )
+  )
+
+  val requestContentNoMetas: RequestContent = RequestContent(
+    contentType = "article",
+    path = Path("/test/no-metas"),
+    title = "this is a title",
+    rawContent = "",
+    htmlContent = Option("this is a html content"),
+    robotsAttributes = Attributes("noarchive, noimageindex"),
+    tags = Option(List()),
+    externalResources = Option(List())
   )
 
   val responseArchive: ResponseArchive = ResponseArchive(

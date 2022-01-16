@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.services
 
 import net.yoshinorin.qualtet.domains.models.Fail.NotFound
 import net.yoshinorin.qualtet.domains.models.authors.AuthorName
-import net.yoshinorin.qualtet.domains.models.contents.ContentId
+import net.yoshinorin.qualtet.domains.models.contents.{ContentId, Path}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
@@ -61,6 +61,14 @@ class ContentServiceSpec extends AnyWordSpec {
 
       // TODO: check clean up deleted tags & externalResources
 
+    }
+
+    "be create with none meta values" in {
+      contentService.createContentFromRequest(AuthorName("testuser"), requestContentNoMetas).unsafeRunSync()
+      val createdContent = contentService.findByPathWithMeta(requestContentNoMetas.path).unsafeRunSync().get
+      assert(createdContent.externalResources.isEmpty)
+      assert(createdContent.tags.isEmpty)
+      assert(createdContent.content == "this is a html content")
     }
 
     "be return htmlContent if include its field when request create" in {
