@@ -57,9 +57,7 @@ class DoobieContentRepository extends ContentRepository {
          GROUP_CONCAT(tags.id) AS tagId,
          GROUP_CONCAT(tags.name) AS tagName,
          html_content AS content,
-         published_at,
-         external_resources.kind,
-         external_resources.name
+         published_at
        FROM
          contents
        INNER JOIN robots ON
