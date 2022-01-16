@@ -164,9 +164,9 @@ class ContentService(
             ResponseContent(
               title = x.title,
               robotsAttributes = x.robotsAttributes,
-              externalResources =
-                (x.externalResourceKindKeys, x.externalResourceKindValues).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2))),
-              tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(new TagId(x), new TagName(y))),
+              externalResources = (x.externalResourceKindKeys, x.externalResourceKindValues)
+                .zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2).distinct)),
+              tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(new TagId(x), new TagName(y))).map(x => x.distinct),
               content = x.content,
               publishedAt = x.publishedAt
             )
