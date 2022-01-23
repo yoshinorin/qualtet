@@ -3,7 +3,7 @@ import scala.sys.process.Process
 
 organization := "net.yoshinorin"
 name := "qualtet"
-version := "0.0.1"
+version := "1.0.0-SNAPSHOT"
 scalaVersion := "2.13.5"
 
 scalacOptions ++= Seq(
@@ -61,8 +61,8 @@ lazy val root = (project in file("."))
     }.evaluated
   )
   .settings(
-    assembly / mainClass := Some("net.yoshinorin.qualtet.BootStrap"),
-    assembly /assemblyJarName := "qualtet.jar"
+    assembly / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
+    //assembly /assemblyJarName := "qualtet.jar"
   )
 
 reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
