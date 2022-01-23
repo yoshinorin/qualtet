@@ -4,6 +4,7 @@ import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import akka.actor.ActorSystem
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
+import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.archives.DoobieArchiveRepository
@@ -40,6 +41,10 @@ import java.util.concurrent.TimeUnit
 import scala.io.StdIn
 
 object BootStrap extends App {
+
+  private[this] val logger = LoggerFactory.getLogger(this.getClass)
+
+  logger.info("booting...")
 
   implicit val actorSystem: ActorSystem = ActorSystem("qualtet")
   implicit val executionContextExecutor: ExecutionContextExecutor = actorSystem.dispatcher
@@ -110,6 +115,8 @@ object BootStrap extends App {
   val sitemapRoute: SitemapRoute = new SitemapRoute(sitemapService)
   val feedRoute: FeedRoute = new FeedRoute(articleService)
 
+  logger.info("created all instances")
+
   Migration.migrate(contentTypeService)
 
   val httpServer: HttpServer =
@@ -127,10 +134,12 @@ object BootStrap extends App {
       feedRoute
     )
 
+  logger.info("starting http server...")
+
   httpServer.start(Config.httpHost, Config.httpPort).onComplete {
     case Success(binding) =>
       val address = binding.localAddress
-      println(s"Server online at http://${address.getHostString}:${address.getPort}/")
+      logger.info(s"http server online at http://${address.getHostString}:${address.getPort}/")
     // NOTE: docker & sbt-revolver does not work if below codes are enabled.
     //       If do not user sbt-revolver when development below codes should be enable vice versa.
     /*
