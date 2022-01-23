@@ -5,7 +5,7 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import io.circe.syntax.EncoderOps
-import net.yoshinorin.qualtet.domains.models.tags.{ResponseTag, TagId, TagName}
+import net.yoshinorin.qualtet.domains.models.tags.TagName
 import net.yoshinorin.qualtet.domains.services.{ArticleService, TagService}
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
 
