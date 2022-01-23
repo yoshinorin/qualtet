@@ -68,7 +68,7 @@ lazy val root = (project in file("."))
 reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
 
 // skip test when create assembly (because sometimes test fails)
-test / assembly := {}
+assembly / test := {}
 
 // NOTE: testcontiners does not works well...
 // https://stackoverflow.com/questions/22321500/how-to-run-task-before-all-tests-from-all-modules-in-sbt
