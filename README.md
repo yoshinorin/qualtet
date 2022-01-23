@@ -117,6 +117,12 @@ $ sbt
 $ ~reStart
 ```
 
+### Assembly
+
+```
+$ sbt assembly
+```
+
 ### API Document
 
 ```sh

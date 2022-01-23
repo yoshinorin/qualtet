@@ -44,7 +44,7 @@ libraryDependencies ++= Seq(
   "org.flywaydb" % "flyway-core" % "7.8.2",
   "com.vladsch.flexmark" % "flexmark-all" % "0.62.2",
   "ch.qos.logback" % "logback-classic" % "1.2.10",
-  "org.springframework.security" % "spring-security-core" % "5.6.1",
+  "org.springframework.security" % "spring-security-core" % "5.6.1" % "provided",
   "org.slf4j" % "slf4j-api" % "1.7.32",
   "org.scalatest" %% "scalatest" % "3.2.10" % "test",
   "org.mockito" % "mockito-core" % "4.2.0" % "test"
@@ -60,8 +60,15 @@ lazy val root = (project in file("."))
       task
     }.evaluated
   )
+  .settings(
+    assembly / mainClass := Some("net.yoshinorin.qualtet.BootStrap"),
+    assembly /assemblyJarName := "qualtet.jar"
+  )
 
 reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
+
+// skip test when create assembly (because sometimes test fails)
+test in assembly := {}
 
 // NOTE: testcontiners does not works well...
 // https://stackoverflow.com/questions/22321500/how-to-run-task-before-all-tests-from-all-modules-in-sbt
