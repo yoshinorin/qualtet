@@ -44,7 +44,7 @@ libraryDependencies ++= Seq(
   "org.flywaydb" % "flyway-core" % "7.8.2",
   "com.vladsch.flexmark" % "flexmark-all" % "0.62.2",
   "ch.qos.logback" % "logback-classic" % "1.2.10",
-  "org.springframework.security" % "spring-security-core" % "5.6.1" % "provided",
+  "org.springframework.security" % "spring-security-core" % "5.6.1",
   "org.slf4j" % "slf4j-api" % "1.7.32",
   "org.scalatest" %% "scalatest" % "3.2.10" % "test",
   "org.mockito" % "mockito-core" % "4.2.0" % "test"
@@ -69,6 +69,33 @@ reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
 
 // skip test when create assembly (because sometimes test fails)
 assembly / test := {}
+
+// https://github.com/sbt/sbt-assembly#merge-strategy
+// https://github.com/sbt/sbt-assembly/issues/146#issuecomment-601134577
+assembly / assemblyMergeStrategy := {
+  //case PathList("spring-beans-5.3.14.jar", xs @ _*) => MergeStrategy.last
+  //case PathList("spring-context-5.3.14.jar", xs @ _*) => MergeStrategy.last
+  case x if Assembly.isConfigFile(x) =>
+    MergeStrategy.concat
+  case PathList(ps @ _*) if Assembly.isReadme(ps.last) || Assembly.isLicenseFile(ps.last) =>
+    MergeStrategy.rename
+  case PathList("META-INF", xs @ _*) =>
+    (xs map { _.toLowerCase }) match {
+      case ("manifest.mf" :: Nil) | ("index.list" :: Nil) | ("dependencies" :: Nil) =>
+        MergeStrategy.discard
+      case ps @ (x :: xs) if ps.last.endsWith(".sf") || ps.last.endsWith(".dsa") =>
+        MergeStrategy.discard
+      case "plexus" :: xs =>
+        MergeStrategy.discard
+      case "services" :: xs =>
+        MergeStrategy.filterDistinctLines
+      case ("spring.schemas" :: Nil) | ("spring.handlers" :: Nil) =>
+        MergeStrategy.filterDistinctLines
+
+      case _ => MergeStrategy.last
+    }
+  case _ => MergeStrategy.first
+}
 
 // NOTE: testcontiners does not works well...
 // https://stackoverflow.com/questions/22321500/how-to-run-task-before-all-tests-from-all-modules-in-sbt
