@@ -1,5 +1,7 @@
 # [WIP] Qualtet
 
+*Qualtet is the API-based blogging system (server-side).*
+
 |Build|Coverage|API Doc|
 |---|---|---|
 |[![CI](https://img.shields.io/github/workflow/status/yoshinorin/qualtet/CI/master?label=CI)](https://github.com/yoshinorin/qualtet/actions)|[![Coverage Status](https://coveralls.io/repos/github/yoshinorin/qualtet/badge.svg?branch=master)](https://coveralls.io/github/yoshinorin/qualtet?branch=master)|[![](https://img.shields.io/badge/Doc-Swagger-blue.svg)](https://yoshinorin.github.io/qualtet/)|
@@ -8,11 +10,23 @@
 
 |||
 |---|---|
-|[Hexo](https://github.com/hexojs/hexo)|CLI for my blog.|
-|[Conmas](https://github.com/yoshinorin/conmas)|Assistant CLI tool for POST the Hexo content to Qualtet.|
-|[Qualtet](https://github.com/yoshinorin/qualtet)|Server side of blogging system.|
+|[Hexo](https://github.com/hexojs)|Local content management CLI.|
+|[Conmas](https://github.com/yoshinorin/conmas)|Support CLI for POST the Hexo content to Qualtet.|
+|[Qualtet](https://github.com/yoshinorin/qualtet)|API-based blogging system (server-side).|
 |[Quintet](https://github.com/yoshinorin/quintet)|The front end for Qualtet.|
 
+## Table of contents
+
+* [Documentation](#documentation)
+* [Requirements](#requirements)
+* [Features & Implementations todo](#features--implementations-todo)
+* [Set up](#set-up)
+    * [Create an author](#create-an-author)
+* [Remarks](#remarks)
+* [Examples](#examples)
+* [Development](#development)
+    * [Compile](#compile)
+    * [Start Server](#start-server)
 ## Documentation
 
 * [API](https://yoshinorin.github.io/qualtet/)
