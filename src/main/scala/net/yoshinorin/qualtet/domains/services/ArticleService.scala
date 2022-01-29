@@ -25,6 +25,7 @@ class ArticleService(
     for {
       c <- findBy("article", NotFound(s"content-type not found: article"))(contentTypeService.findByName)
       articlesWithCount <- f(c.id, data, queryParam).transact(doobieContext.transactor)
+      // TODO: throw 404 if head not exists
     } yield ResponseArticleWithCount(articlesWithCount.unzip._1.head, articlesWithCount.unzip._2)
 
   def getWithCount(queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
