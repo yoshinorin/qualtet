@@ -1,8 +1,6 @@
 package net.yoshinorin.qualtet.domains.models.authors
 
 import doobie.ConnectionIO
-import doobie.implicits._
-import doobie.util.update.Update
 
 class DoobieAuthorRepository extends AuthorRepository {
 
@@ -13,14 +11,7 @@ class DoobieAuthorRepository extends AuthorRepository {
    * @return created Author
    */
   override def upsert(data: Author): ConnectionIO[Int] = {
-    val q = s"""
-          INSERT INTO authors (id, name, display_name, password, created_at)
-            VALUES (?, ?, ?, ?, ?)
-          ON DUPLICATE KEY UPDATE
-            display_name = VALUES(display_name),
-            password = VALUES(password)
-        """
-    Update[Author](q).run(data)
+    DoobieAuthorQuery.upsert(data).run(data)
   }
 
   /**
@@ -29,9 +20,7 @@ class DoobieAuthorRepository extends AuthorRepository {
    * @return Authors
    */
   override def getAll: ConnectionIO[Seq[ResponseAuthor]] = {
-    sql"SELECT id, name, display_name, created_at FROM authors"
-      .query[ResponseAuthor]
-      .to[Seq]
+    DoobieAuthorQuery.getAll.to[Seq]
   }
 
   /**
@@ -41,9 +30,7 @@ class DoobieAuthorRepository extends AuthorRepository {
    * @return Author
    */
   override def findById(id: AuthorId): ConnectionIO[Option[ResponseAuthor]] = {
-    sql"SELECT id, name, display_name, created_at FROM authors where id = $id"
-      .query[ResponseAuthor]
-      .option
+    DoobieAuthorQuery.findById(id).option
   }
 
   /**
@@ -53,9 +40,7 @@ class DoobieAuthorRepository extends AuthorRepository {
    * @return Author
    */
   override def findByIdWithPassword(id: AuthorId): ConnectionIO[Option[Author]] = {
-    sql"SELECT id, name, display_name, password, created_at FROM authors where id = $id"
-      .query[Author]
-      .option
+    DoobieAuthorQuery.findByIdWithPassword(id).option
   }
 
   /**
@@ -65,8 +50,6 @@ class DoobieAuthorRepository extends AuthorRepository {
    * @return Author
    */
   override def findByName(name: AuthorName): ConnectionIO[Option[ResponseAuthor]] = {
-    sql"SELECT id, name, display_name, created_at FROM authors where name = $name"
-      .query[ResponseAuthor]
-      .option
+    DoobieAuthorQuery.findByName(name).option
   }
 }
