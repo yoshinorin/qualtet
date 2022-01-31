@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.http.routes
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import cats.effect.IO
-import net.yoshinorin.qualtet.domains.models.authors.{AuthorDisplayName, AuthorId, AuthorName, ResponseAuthor}
+import net.yoshinorin.qualtet.domains.models.authors.{AuthorDisplayName, AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.services.AuthorService
 import net.yoshinorin.qualtet.fixture.Fixture.{authorId, authorId2}
 import org.mockito.Mockito

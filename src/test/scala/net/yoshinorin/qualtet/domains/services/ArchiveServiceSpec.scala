@@ -3,9 +3,7 @@ package net.yoshinorin.qualtet.domains.services
 import net.yoshinorin.qualtet.domains.models.authors.AuthorName
 import net.yoshinorin.qualtet.domains.models.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
-import net.yoshinorin.qualtet.domains.models.tags.TagName
 import net.yoshinorin.qualtet.fixture.Fixture._
-import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.services.ArchiveServiceSpec

@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.models.contents
 
 import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.models.authors.AuthorId
-import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}

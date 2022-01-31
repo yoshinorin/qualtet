@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.utils
 
-import net.yoshinorin.qualtet.utils.StringOps.StringOps
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.wordspec.AnyWordSpec
 
