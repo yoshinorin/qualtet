@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.models.contentTypes
 
-import doobie.{ConnectionIO, Update}
-import doobie.implicits._
+import doobie.ConnectionIO
 
 class DoobieContentTypeRepository extends ContentTypeRepository {
 
@@ -12,13 +11,7 @@ class DoobieContentTypeRepository extends ContentTypeRepository {
    * @return created Content with ConnectionIO
    */
   def upsert(data: ContentType): ConnectionIO[Int] = {
-    val q = s"""
-          INSERT INTO content_types (id, name)
-            VALUES (?, ?)
-          ON DUPLICATE KEY UPDATE
-            name = VALUES(name)
-        """
-    Update[ContentType](q).run(data)
+    DoobieContentTypeQuery.upsert(data).run(data)
   }
 
   /**
@@ -27,9 +20,7 @@ class DoobieContentTypeRepository extends ContentTypeRepository {
    * @return ContentTypes
    */
   override def getAll: ConnectionIO[Seq[ContentType]] = {
-    sql"SELECT * FROM content_types"
-      .query[ContentType]
-      .to[Seq]
+    DoobieContentTypeQuery.getAll.to[Seq]
   }
 
   /**
@@ -39,8 +30,6 @@ class DoobieContentTypeRepository extends ContentTypeRepository {
    * @return ContentType
    */
   override def findByName(name: String): ConnectionIO[Option[ContentType]] = {
-    sql"SELECT * FROM content_types WHERE name = $name"
-      .query[ContentType]
-      .option
+    DoobieContentTypeQuery.findByName(name).option
   }
 }

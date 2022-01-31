@@ -8,9 +8,7 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 class DoobieTagRepository extends TagRepository with ConnectionIOFaker {
 
   def getAll: ConnectionIO[Seq[ResponseTag]] = {
-    sql"SELECT * FROM tags"
-      .query[ResponseTag]
-      .to[Seq]
+    DoobieTagQuery.getAll.to[Seq]
   }
 
   /**
@@ -20,9 +18,7 @@ class DoobieTagRepository extends TagRepository with ConnectionIOFaker {
    * @return dummy long id (Doobie return Int)
    */
   def findByName(data: TagName): ConnectionIO[Option[Tag]] = {
-    sql"SELECT * FROM tags WHERE name = $data"
-      .query[Tag]
-      .option
+    DoobieTagQuery.findByName(data).option
   }
 
   /**
@@ -38,13 +34,8 @@ class DoobieTagRepository extends TagRepository with ConnectionIOFaker {
     data match {
       case None => ConnectionIOWithInt
       case Some(x) =>
-        val q = s"""
-          INSERT INTO tags (id, name)
-            VALUES (?, ?)
-          ON DUPLICATE KEY UPDATE
-            name = VALUES(name)
-        """
-        Update[Tag](q)
+        DoobieTagQuery
+          .bulkUpsert(data)
           .updateMany(x)
     }
   }

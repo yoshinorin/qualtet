@@ -20,15 +20,8 @@ class DoobieExternalResourceRepository extends ExternalResourceRepository with C
     data match {
       case None => ConnectionIOWithInt
       case Some(x) =>
-        val q = s"""
-          INSERT INTO external_resources (content_id, kind, name)
-            VALUES (?, ?, ?)
-          ON DUPLICATE KEY UPDATE
-            content_id = VALUES(content_id),
-            kind = VALUES(kind),
-            name = VALUES(name)
-        """
-        Update[ExternalResource](q)
+        DoobieExternalResourceQuery
+          .bulkUpsert(x)
           .updateMany(x)
     }
   }

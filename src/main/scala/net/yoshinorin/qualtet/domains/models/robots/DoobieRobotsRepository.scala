@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.models.robots
 
 import doobie.ConnectionIO
-import doobie.util.update.Update
 
 class DoobieRobotsRepository extends RobotsRepository {
 
@@ -12,13 +11,7 @@ class DoobieRobotsRepository extends RobotsRepository {
    * @return dummy long id (Doobie return Int)
    */
   def upsert(data: Robots): ConnectionIO[Int] = {
-    val q = s"""
-          INSERT INTO robots (content_id, attributes)
-            VALUES (?, ?)
-          ON DUPLICATE KEY UPDATE
-            attributes = VALUES(attributes)
-        """
-    Update[Robots](q).run(data)
+    DoobieRobotsQuery.upsert(data).run(data)
   }
 
 }
