@@ -20,7 +20,7 @@ val akkaVersion = "2.6.18"
 val akkaHttpVersion = "10.2.7"
 val circeVersion = "0.14.1"
 val doobieVersion = "0.13.4"
-val jwtScalaVersion = "9.0.2"
+val jwtScalaVersion = "9.0.3"
 
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.1",
@@ -36,7 +36,7 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic-extras" % circeVersion,
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.jwt-scala" %% "jwt-circe" % jwtScalaVersion,
-  "org.mariadb.jdbc" % "mariadb-java-client" % "2.7.4",
+  "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.3",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
   "org.wvlet.airframe" %% "airframe-ulid" % "21.12.1",
@@ -45,9 +45,9 @@ libraryDependencies ++= Seq(
   "com.vladsch.flexmark" % "flexmark-all" % "0.62.2",
   "ch.qos.logback" % "logback-classic" % "1.2.10",
   "org.springframework.security" % "spring-security-core" % "5.6.1",
-  "org.slf4j" % "slf4j-api" % "1.7.32",
-  "org.scalatest" %% "scalatest" % "3.2.10" % "test",
-  "org.mockito" % "mockito-core" % "4.2.0" % "test"
+  "org.slf4j" % "slf4j-api" % "1.7.35",
+  "org.scalatest" %% "scalatest" % "3.2.11" % "test",
+  "org.mockito" % "mockito-core" % "4.3.1" % "test"
 )
 
 val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
