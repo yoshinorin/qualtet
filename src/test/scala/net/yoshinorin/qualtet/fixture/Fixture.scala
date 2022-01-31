@@ -1,11 +1,7 @@
 package net.yoshinorin.qualtet.fixture
 
-import doobie.implicits._
-import cats.implicits.catsSyntaxApplicativeId
 import com.github.benmanes.caffeine.cache.Caffeine
-import doobie.ConnectionIO
-import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
-import net.bytebuddy.dynamic.scaffold.TypeInitializer.None
+import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.domains.models.archives.{DoobieArchiveRepository, ResponseArchive}
 import net.yoshinorin.qualtet.domains.models.articles.{DoobieArticleRepository, ResponseArticle}
