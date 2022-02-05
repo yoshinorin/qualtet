@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.models.articles
 
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
+import net.yoshinorin.qualtet.domains.models.authors.AuthorName
 import net.yoshinorin.qualtet.domains.models.contents.Path
 import net.yoshinorin.qualtet.utils.StringOps.StringOps
 

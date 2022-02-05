@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestCon
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
 import net.yoshinorin.qualtet.domains.services.{AuthorService, ContentService}
-import net.yoshinorin.qualtet.fixture.Fixture.{authorId, authorId2, validBCryptPassword}
+import net.yoshinorin.qualtet.fixture.Fixture.{author, authorId, authorId2, validBCryptPassword}
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.wordspec.AnyWordSpec
@@ -129,8 +129,11 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         ResponseContent(
           title = "this is a title",
           robotsAttributes = Attributes("noarchive, noimageindex"),
+          description = "description",
           content = "html content",
-          publishedAt = 1567814290
+          authorName = author.name,
+          publishedAt = 1567814290,
+          updatedAt = 1567814291
         )
       )
     )
@@ -234,8 +237,11 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
           |  "robotsAttributes" : "noarchive, noimageindex",
           |  "externalResources" : null,
           |  "tags" : null,
+          |  "description" : "description",
           |  "content" : "html content",
-          |  "publishedAt" : 1567814290
+          |  "authorName" : "jhondue",
+          |  "publishedAt" : 1567814290,
+          |  "updatedAt": 1567814291
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 

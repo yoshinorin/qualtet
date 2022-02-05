@@ -384,13 +384,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/tag'
+        description:
+          type: string
+          example: "Post description... not HTML strings"
         content:
           type: string
           example: "Post Content.... HTML strings"
+        authorName:
+          type: string
+          description: "This field return from `authors.display_name` coloumn value."
+          example: "Jhon Due"
         publishedAt:
           type: long
           description: Unix time
           example: 1625065509
+        updatedAt:
+          type: long
+          description: Unix time
+          example: 1627095819
     sitemaps:
       type: object
       properties:

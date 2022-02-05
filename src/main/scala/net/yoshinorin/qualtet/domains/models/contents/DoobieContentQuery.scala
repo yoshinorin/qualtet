@@ -38,11 +38,15 @@ object DoobieContentQuery {
          GROUP_CONCAT(tags.id) AS tagId,
          GROUP_CONCAT(tags.name) AS tagName,
          html_content AS content,
-         published_at
+         authors.display_name as authorName,
+         published_at,
+         updated_at
        FROM
          contents
        INNER JOIN robots ON
          contents.id = robots.content_id
+       INNER JOIN authors ON
+       	 contents.author_id = authors.id
        LEFT JOIN external_resources ON
          contents.id = external_resources.content_id
        LEFT JOIN contents_tagging ON

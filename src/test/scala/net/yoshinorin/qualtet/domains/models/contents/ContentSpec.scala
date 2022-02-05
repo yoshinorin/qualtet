@@ -65,16 +65,22 @@ class ContentSpec extends AnyWordSpec {
           |  "robotsAttributes" : "noarchive, noimageindex",
           |  "externalResources" : null,
           |  "tags" : null,
+          |  "description" : "this is a description",
           |  "content" : "this is a content",
-          |  "publishedAt" : 1567814290
+          |  "authorName" : "jhondue",
+          |  "publishedAt" : 1567814290,
+          |  "updatedAt" : 1567814291
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       val json = ResponseContent(
         title = "title",
         robotsAttributes = Attributes("noarchive, noimageindex"),
+        description = "this is a description",
         content = "this is a content",
-        publishedAt = 1567814290
+        authorName = author.name,
+        publishedAt = 1567814290,
+        updatedAt = 1567814291
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
       //NOTE: failed equally compare
@@ -108,16 +114,22 @@ class ContentSpec extends AnyWordSpec {
           |        "name": "DEF"
           |      }
           |    ],
+          |    "description" : "this is a description1",
           |    "content" : "this is a content1",
-          |    "publishedAt" : 1567814290
+          |    "authorName" : "jhondue",
+          |    "publishedAt" : 1567814290,
+          |    "updatedAt" : 1567814299
           |  },
           |  {
           |    "title" : "title2",
           |    "robotsAttributes" : "all",
           |    "externalResources" : null,
           |    "tags" : null,
+          |    "description" : "this is a description2",
           |    "content" : "this is a content2",
-          |    "publishedAt" : 1567814291
+          |    "authorName" : "jhondue",
+          |    "publishedAt" : 1567814291,
+          |    "updatedAt" : 1567814391
           |  }
           |]
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
@@ -144,15 +156,21 @@ class ContentSpec extends AnyWordSpec {
               Tag(TagId("01frdbe1g83533h92rkhy8ctkw"), TagName("DEF"))
             )
           ),
+          description = "this is a description1",
           content = "this is a content1",
-          publishedAt = 1567814290
+          authorName = author.name,
+          publishedAt = 1567814290,
+          updatedAt = 1567814299
         ),
         ResponseContent(
           title = "title2",
           robotsAttributes = Attributes("all"),
           externalResources = None,
+          description = "this is a description2",
           content = "this is a content2",
-          publishedAt = 1567814291
+          authorName = author.name,
+          publishedAt = 1567814291,
+          updatedAt = 1567814391
         )
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 

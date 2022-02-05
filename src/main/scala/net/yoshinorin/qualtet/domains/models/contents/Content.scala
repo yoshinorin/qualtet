@@ -7,7 +7,7 @@ import io.circe.Encoder
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.generic.semiauto.deriveEncoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
-import net.yoshinorin.qualtet.domains.models.authors.AuthorId
+import net.yoshinorin.qualtet.domains.models.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.models.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
@@ -95,8 +95,11 @@ final case class ResponseContent(
   robotsAttributes: Attributes,
   externalResources: Option[List[ExternalResources]] = None,
   tags: Option[List[Tag]] = None,
+  description: String,
   content: String,
-  publishedAt: Long
+  authorName: AuthorName,
+  publishedAt: Long,
+  updatedAt: Long
 )
 
 object ResponseContent {
@@ -112,5 +115,7 @@ final case class ResponseContentDbRow(
   tagIds: Option[String],
   tagNames: Option[String],
   content: String,
-  publishedAt: Long
+  authorName: AuthorName,
+  publishedAt: Long,
+  updatedAt: Long
 )

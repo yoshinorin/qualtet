@@ -155,10 +155,16 @@ class ContentService(
   def findBy[A](data: A)(f: A => ConnectionIO[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 
     import net.yoshinorin.qualtet.utils.Converters.KeyValueCommaSeparatedString
+    import net.yoshinorin.qualtet.utils.StringOps.StringOps
 
     f(data).transact(doobieContext.transactor).flatMap {
       case None => IO(None)
       case Some(x) =>
+        val stripedContent = x.content.stripHtmlTags
+        // TODO: Configurable
+        // TODO: remove \n
+        val stripedContentLen = if (stripedContent.length > 50) 50 else stripedContent.length
+
         IO(
           Some(
             ResponseContent(
@@ -167,8 +173,11 @@ class ContentService(
               externalResources = (x.externalResourceKindKeys, x.externalResourceKindValues)
                 .zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2).distinct)),
               tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(new TagId(x), new TagName(y))).map(x => x.distinct),
+              description = stripedContent.substring(0, stripedContentLen),
               content = x.content,
-              publishedAt = x.publishedAt
+              authorName = x.authorName,
+              publishedAt = x.publishedAt,
+              updatedAt = x.updatedAt
             )
           )
         )
