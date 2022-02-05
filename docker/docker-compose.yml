@@ -20,7 +20,7 @@ services:
     command: ["mysqld", "--character-set-server=utf8mb4"]
     restart: unless-stopped
   qualtet:
-    image: ghcr.io/yoshinorin/docker-qualtet:v1.0.0-SNAPSHOT-3
+    image: ghcr.io/yoshinorin/docker-qualtet:v1.0.0-SNAPSHOT-4
     # NOTE: these values are examples. Please fill by yourself.
     environment:
       QUALTET_DB_DATASOURCE_URL: jdbc:mariadb://qualtet-mariadb:3306/qualtet?useUnicode=true&characterEncoding=utf8mb4
