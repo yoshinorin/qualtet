@@ -60,15 +60,16 @@
 
 ## Tests
 
-- [ ] Use DB
+- [x] Use DB
 
 ## Infrastracture
 
-- [ ] Publish Docker Image
+- [x] Publish Docker Image
 
 ## Others
 
 - [x] RSS
 - [x] Sitemap
+- [ ] GraphQL
 - [ ] Robots.txt
     - implement with front end?

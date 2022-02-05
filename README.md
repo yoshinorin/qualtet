@@ -19,7 +19,7 @@
 
 * [Documentation](#documentation)
 * [Requirements](#requirements)
-* [Features & Implementations todo](#features--implementations-todo)
+* [Features](#features)
 * [Set up](#set-up)
     * [Create an author](#create-an-author)
 * [Remarks](#remarks)
@@ -39,9 +39,9 @@
 * MariaDB 10.5.x
 * docker & docker-compose 3.x (for test)
 
-## Features & Implementations todo
+## Features
 
-* [List](./docs/features-todo.md)
+* [List](./docs/features.md)
 
 ## Set up
 
@@ -76,7 +76,7 @@ $ sbt:qualtet>createAuthor jhonDue JD pass
 
 ## Remarks
 
-Qualtet **does not escape HTML** when creating or updating a content if you POST a content with `htmlContent` field. Please escape it your self before POST.
+Qualtet **does not escape HTML** when creating or updating a content if you POST a content with `htmlContent` field. Please escape it yourself before POST.
 
 ## Examples
 
