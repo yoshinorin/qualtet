@@ -1,4 +1,4 @@
-# Features & Implementations todo
+# Features
 
 ## TypeSafe
 
