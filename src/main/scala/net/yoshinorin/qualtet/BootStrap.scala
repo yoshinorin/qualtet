@@ -63,9 +63,8 @@ object BootStrap extends App {
   val authService = new AuthService(authorService, jwtInstance)
 
   val contentTypeRepository = new DoobieContentTypeRepository
-  // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
-    Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
+    Caffeine.newBuilder().expireAfterAccess(Config.cacheContentType, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache = new Cache[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)
 
@@ -97,9 +96,8 @@ object BootStrap extends App {
   val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)
 
   val sitemapRepository = new DoobieSitemapsRepository
-  // TODO: from inf cache
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
-    Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
+    Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache = new Cache[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService = new SitemapService(sitemapRepository, sitemapCache)
 

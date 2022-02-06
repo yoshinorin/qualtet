@@ -20,6 +20,12 @@ class ConfigSpec extends AnyWordSpec {
     "jwt configuration gettable from application.conf" in {
       assert(Config.jwtIss == "http://localhost:9001")
       assert(Config.jwtAud == "qualtet_dev_1111")
+      assert(Config.jwtExpiration == 3600)
+    }
+
+    "cache configuration gettable from application.conf" in {
+      assert(Config.cacheContentType == 604800)
+      assert(Config.cacheSitemap == 3601)
     }
   }
 

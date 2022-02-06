@@ -15,5 +15,9 @@ object Config {
 
   val jwtIss: String = config.getString("jwt.iss")
   val jwtAud: String = config.getString("jwt.aud")
+  val jwtExpiration: Long = config.getLong("jwt.expiration")
+
+  val cacheContentType: Long = config.getLong("cache.content-type")
+  val cacheSitemap: Long = config.getLong("cache.sitemap")
 
 }

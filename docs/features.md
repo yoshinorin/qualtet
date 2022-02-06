@@ -12,7 +12,7 @@
 - [x] Key pair
 - [ ] Logging
 - [x] Generate JWT
-    - [ ] Configurable expireation
+    - [x] Configurable expiration
 - [x] Validate JWT
 
 ## Protection
@@ -26,9 +26,9 @@
 
 - [ ] Cache Flash API
 - [x] Sitemap Caching
-    - [ ] Configurable
+    - [x] Configurable
 - [x] ContentTypes Caching
-    - [ ] Configurable
+    - [x] Configurable
 - Maybe I need others...
 
 ## Contents
