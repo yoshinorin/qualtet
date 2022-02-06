@@ -160,9 +160,8 @@ class ContentService(
     f(data).transact(doobieContext.transactor).flatMap {
       case None => IO(None)
       case Some(x) =>
-        val stripedContent = x.content.stripHtmlTags
+        val stripedContent = x.content.stripHtmlTags.replaceAll("\n", "")
         // TODO: Configurable
-        // TODO: remove \n
         val stripedContentLen = if (stripedContent.length > 50) 50 else stripedContent.length
 
         IO(
