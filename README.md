@@ -1,6 +1,6 @@
 # [WIP] Qualtet
 
-*Qualtet is the API-based blogging system (server-side).*
+*Qualtet is an API-based blogging system (server-side).*
 
 |Build|Coverage|API Doc|
 |---|---|---|
@@ -36,7 +36,7 @@
 * sbt 1.6.x
 * Scala 2.13.x
 * JVM 11.x
-* MariaDB 10.5.x
+* MariaDB 10.6.x
 * docker & docker-compose 3.x (for test)
 
 ## Features
