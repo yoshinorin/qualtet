@@ -49,13 +49,19 @@ object BootStrap extends App {
   implicit val actorSystem: ActorSystem = ActorSystem("qualtet")
   implicit val executionContextExecutor: ExecutionContextExecutor = actorSystem.dispatcher
 
+  logger.info("dispatched: actorSystem")
+
   implicit val doobieContext: DoobieContext = new DoobieContext()
+
+  logger.info("created: doobieContext")
 
   // NOTE: for generate JWT. They are reset when re-boot application.
   val keyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
   val message: Array[Byte] = SecureRandom.getInstanceStrong.toString.getBytes
   val signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
   val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
+
+  logger.info("created: keyPair, signature and jwt instances")
 
   val authorRepository = new DoobieAuthorRepository
   val authorService: AuthorService = new AuthorService(authorRepository)

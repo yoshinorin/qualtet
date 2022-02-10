@@ -12,10 +12,12 @@ class KeyPair(algorithm: String, length: Int, secureRandom: SecureRandom) {
 
   keyPairGenerator.initialize(length, secureRandom)
 
+  logger.info("created: keyPair generator")
+
   lazy val keyPair: security.KeyPair = keyPairGenerator.generateKeyPair()
   lazy val publicKey: PublicKey = keyPair.getPublic
   lazy val privateKey: PrivateKey = keyPair.getPrivate
 
-  logger.info(s"key pair generated: ${keyPair.getPublic.getAlgorithm}")
+  logger.info(s"generated: keyPair - ${keyPair.getPublic.getAlgorithm}")
 
 }
