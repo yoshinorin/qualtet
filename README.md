@@ -10,8 +10,7 @@
 
 |||
 |---|---|
-|[Hexo](https://github.com/hexojs)|Local content management CLI.|
-|[Conmas](https://github.com/yoshinorin/conmas)|Support CLI for POST the Hexo content to Qualtet.|
+|[Hexo](https://github.com/hexojs)|Local content manager.|
 |[Qualtet](https://github.com/yoshinorin/qualtet)|API-based blogging system (server-side).|
 |[Quintet](https://github.com/yoshinorin/quintet)|The front end for Qualtet.|
 
@@ -27,6 +26,7 @@
 * [Development](#development)
     * [Compile](#compile)
     * [Start Server](#start-server)
+
 ## Documentation
 
 * [API](https://yoshinorin.github.io/qualtet/)
