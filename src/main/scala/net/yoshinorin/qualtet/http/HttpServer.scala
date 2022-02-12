@@ -20,6 +20,7 @@ import net.yoshinorin.qualtet.http.routes.{
 }
 
 import scala.concurrent.Future
+import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 
 class HttpServer(
   homeRoute: HomeRoute,
@@ -42,7 +43,7 @@ class HttpServer(
     Http().newServerAt(host, port).bind(routes)
   }
 
-  def routes: Route =
+  def routes: Route = cors() {
     extractClientIP { ip =>
       httpLogging(ip) {
         homeRoute.route ~
@@ -58,4 +59,5 @@ class HttpServer(
           feedRoute.route
       }
     }
+  }
 }
