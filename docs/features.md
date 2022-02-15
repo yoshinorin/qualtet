@@ -71,5 +71,3 @@
 - [x] RSS
 - [x] Sitemap
 - [ ] GraphQL
-- [ ] Robots.txt
-    - implement with front end?
