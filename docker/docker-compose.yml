@@ -37,8 +37,6 @@ services:
     networks:
       - qualtet
     container_name: qualtet
-    expose:
-      - "9001"
     ports:
       - "9001:9001"
     depends_on:
