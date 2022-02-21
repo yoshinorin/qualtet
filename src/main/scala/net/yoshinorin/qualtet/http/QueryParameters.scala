@@ -14,7 +14,7 @@ object ArticlesQueryParameter {
     new ArticlesQueryParameter(
       page.getOrElse(1) - 1,
       if (limit.getOrElse(10) > 10) 10 else limit.getOrElse(10),
-      if (page.getOrElse(1) == 1) 0 else page.getOrElse(1) * 10
+      if (page.getOrElse(1) == 1) 0 else (page.getOrElse(1) - 1) * 10
     )
   }
 
