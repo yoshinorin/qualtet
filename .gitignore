@@ -42,6 +42,7 @@ tmpdata
 # Others
 memo/
 sandbox/
+null/
 
 # Artifacts
 *.jar
