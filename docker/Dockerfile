@@ -1,4 +1,4 @@
-FROM ghcr.io/yoshinorin/docker-sbt:v1.6.1
+FROM ghcr.io/yoshinorin/docker-sbt:v1.6.2
 
 MAINTAINER yoshinorin
 
