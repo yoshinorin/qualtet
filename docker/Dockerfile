@@ -1,6 +1,6 @@
 FROM ghcr.io/yoshinorin/docker-sbt:v1.6.2
 
-MAINTAINER yoshinorin
+LABEL maintainer="yoshinorin"
 
 RUN apt-get update -y \
   && apt-get upgrade -y \
