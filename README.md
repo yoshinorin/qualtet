@@ -27,6 +27,12 @@
     * [Compile](#compile)
     * [Start Server](#start-server)
 
+## Architecture (Example)
+
+An example of architecture.
+
+![](./docs/arch.svg)
+
 ## Documentation
 
 * [API](https://yoshinorin.github.io/qualtet/)
