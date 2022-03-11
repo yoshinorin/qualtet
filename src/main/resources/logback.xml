@@ -1,4 +1,9 @@
 <configuration>
+
+    <!--
+    <property name="QUALTET_ENV" value="${QUALTET_ENV}" />
+    -->
+
     <appender name="APPLICATION_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${application.home:-.}/logs/application.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -29,25 +34,28 @@
         </filter>
     </appender>
 
-    <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${application.home:-.}/logs/debug.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover with compression -->
-            <fileNamePattern>${application.home:-.}/logs/debug.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <!-- keep 1 week worth of history -->
-            <maxHistory>7</maxHistory>
-            <cleanHistoryOnStart>true</cleanHistoryOnStart>
-        </rollingPolicy>
-        <encoder>
-            <charset>UTF-8</charset>
-            <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} %message%n</pattern>
-            <!-- this quadruples logging throughput -->
-            <immediateFlush>false</immediateFlush>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
-        </filter>
-    </appender>
+    <!-- NOTE
+         Is the if-condition with env variables not working???
+         Anyway no-need `debug.log` evenif in the development.
+    <if condition='property("QUALTET_ENV").contains("dev")'>
+        <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${application.home:-.}/logs/debug.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${application.home:-.}/logs/debug.%d{yyyy-MM-dd}.gz</fileNamePattern>
+                <maxHistory>7</maxHistory>
+                <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            </rollingPolicy>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} %message%n</pattern>
+                <immediateFlush>false</immediateFlush>
+            </encoder>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>DEBUG</level>
+            </filter>
+        </appender>
+    </if>
+    -->
 
     <logger name="error" level="ERROR" additivity="false">
         <appender-ref ref="STDOUT" />
