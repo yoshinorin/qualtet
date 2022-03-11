@@ -3,7 +3,7 @@
         <file>${application.home:-.}/logs/application.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- Daily rollover with compression -->
-            <fileNamePattern>${file}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>${application.home:-.}/logs/application.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <!-- keep 30 days worth of history -->
             <maxHistory>30</maxHistory>
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
@@ -33,7 +33,7 @@
         <file>${application.home:-.}/logs/debug.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover with compression -->
-            <fileNamePattern>${file}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>${application.home:-.}/logs/debug.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <!-- keep 1 week worth of history -->
             <maxHistory>7</maxHistory>
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
