@@ -2,103 +2,63 @@ package net.yoshinorin.qualtet.http.routes
 
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import cats.effect.IO
-import net.yoshinorin.qualtet.domains.models.authors.{AuthorDisplayName, AuthorName, ResponseAuthor}
-import net.yoshinorin.qualtet.domains.services.AuthorService
-import net.yoshinorin.qualtet.fixture.Fixture.{authorId, authorId2}
-import org.mockito.Mockito
-import org.mockito.Mockito.when
+import net.yoshinorin.qualtet.domains.models.authors.{AuthorName, ResponseAuthor}
+import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, authorService}
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.http.routes.AuthorRouteSpec
 class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
-  val mockAuthorService: AuthorService = Mockito.mock(classOf[AuthorService])
-  val authorRoute: AuthorRoute = new AuthorRoute(mockAuthorService)
+  val authorRoute: AuthorRoute = new AuthorRoute(authorService)
 
-  when(mockAuthorService.getAll).thenReturn(
-    IO(
-      Seq(
-        ResponseAuthor(
-          id = authorId,
-          name = AuthorName("jhondue"),
-          displayName = AuthorDisplayName("JD"),
-          createdAt = 1567814290
-        ),
-        ResponseAuthor(
-          id = authorId2,
-          name = AuthorName("JhonDue2"),
-          displayName = AuthorDisplayName("JD2"),
-          createdAt = 1567814291
-        )
-      )
-    )
-  )
-
-  when(mockAuthorService.findByName(AuthorName("jhondue"))).thenReturn(
-    IO(
-      Option(
-        ResponseAuthor(
-          id = authorId,
-          name = AuthorName("jhondue"),
-          displayName = AuthorDisplayName("JD"),
-          createdAt = 1567814290
-        )
-      )
-    )
-  )
-
-  when(mockAuthorService.findByName(AuthorName("jhondue2"))).thenReturn(
-    IO(None)
-  )
+  val a: ResponseAuthor = authorService.findByName(AuthorName(author.name.value)).unsafeRunSync().get
+  val a2: ResponseAuthor = authorService.findByName(AuthorName(author2.name.value)).unsafeRunSync().get
 
   "AuthorRoute" should {
-    "return all authors" in {
+    "be return two authors" in {
       val expectJson =
-        """
-          |[
-          |  {
-          |    "id" : "01febb8az5t42m2h68xj8c754a",
-          |    "name" : "jhondue",
-          |    "displayName": "JD",
-          |    "createdAt" : 1567814290
-          |  },
-          |  {
-          |    "id" : "01febb8az5t42m2h68xj8c754b",
-          |    "name" : "jhondue2",
-          |    "displayName": "JD2",
-          |    "createdAt" : 1567814291
-          |  }
-          |]
+        s"""
+          |{
+          |  "id" : "${a.id.value}",
+          |  "name" : "${a.name.value}",
+          |  "displayName": "${a.displayName.value}",
+          |  "createdAt": ${a.createdAt}
+          |},
+          |{
+          |  "id" : "${a2.id.value}",
+          |  "name" : "${a2.name.value}",
+          |  "displayName": "${a2.displayName.value}",
+          |  "createdAt": ${a2.createdAt}
+          |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       Get("/authors/") ~> authorRoute.route ~> check {
         assert(status == StatusCodes.OK)
         assert(contentType == ContentTypes.`application/json`)
-        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "") == expectJson)
+        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
       }
     }
 
-    "return specific author" in {
+    "be return specific author" in {
       val expectJson =
-        """
+        s"""
           |{
-          |  "id" : "01febb8az5t42m2h68xj8c754a",
-          |  "name" : "jhondue",
-          |  "displayName": "JD",
-          |  "createdAt" : 1567814290
+          |  "id": "${a.id.value}",
+          |  "name": "${a.name.value}",
+          |  "displayName": "${a.displayName.value}",
+          |  "createdAt": ${a.createdAt}
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       Get("/authors/jhondue") ~> authorRoute.route ~> check {
         assert(status == StatusCodes.OK)
         assert(contentType == ContentTypes.`application/json`)
-        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "") == expectJson)
+        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
       }
     }
 
-    "return 404" in {
-      Get("/authors/jhondue2") ~> authorRoute.route ~> check {
+    "be return 404" in {
+      Get("/authors/jhondue-not-exists") ~> authorRoute.route ~> check {
         assert(status == StatusCodes.NotFound)
         assert(contentType == ContentTypes.`application/json`)
       }
