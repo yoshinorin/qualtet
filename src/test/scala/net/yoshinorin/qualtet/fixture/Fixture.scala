@@ -116,6 +116,13 @@ object Fixture {
     password = validBCryptPassword
   )
 
+  val author2: Author = Author(
+    id = authorId2,
+    name = AuthorName("JhonDue2"),
+    displayName = AuthorDisplayName("JD2"),
+    password = validBCryptPassword
+  )
+
   val contentId: ContentId = ContentId("01febb1333pd3431q1a1e00fbt")
   val contentTypeId: ContentTypeId = ContentTypeId("01febb1333pd3431q1a1e01fbc")
   val articleContentType: ContentType = ContentType(contentTypeId, "articles")

@@ -25,7 +25,7 @@ class ArchiveServiceSpec extends AnyWordSpec {
   }
 
   // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName("testuser"), rc).unsafeRunSync() }
+  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
 
   "ArchiveService" should {
 

@@ -14,7 +14,7 @@ class ContentServiceSpec extends AnyWordSpec {
 
     "create content and related data" in {
 
-      val result = contentService.createContentFromRequest(AuthorName("testuser"), requestContent1).unsafeRunSync()
+      val result = contentService.createContentFromRequest(AuthorName(author.name.value), requestContent1).unsafeRunSync()
       assert(result.id.isInstanceOf[ContentId])
       // TODO: check authorId, ContentTypeId
       assert(result.path.value == requestContent1.path.value)
@@ -43,7 +43,7 @@ class ContentServiceSpec extends AnyWordSpec {
         tags = Option(List("Scala", "Scala3")),
         robotsAttributes = Attributes("noarchive")
       )
-      contentService.createContentFromRequest(AuthorName("testuser"), updatedRequestContent).unsafeRunSync()
+      contentService.createContentFromRequest(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
       val updatedContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync().get
 
       // TODO: add id to response field
@@ -64,7 +64,7 @@ class ContentServiceSpec extends AnyWordSpec {
     }
 
     "be create with none meta values" in {
-      contentService.createContentFromRequest(AuthorName("testuser"), requestContentNoMetas).unsafeRunSync()
+      contentService.createContentFromRequest(AuthorName(author.name.value), requestContentNoMetas).unsafeRunSync()
       val createdContent = contentService.findByPathWithMeta(requestContentNoMetas.path).unsafeRunSync().get
       assert(createdContent.externalResources.isEmpty)
       assert(createdContent.tags.isEmpty)
@@ -75,7 +75,7 @@ class ContentServiceSpec extends AnyWordSpec {
       val updatedRequestContent = requestContent1.copy(
         htmlContent = Option("<h1>this is a html content<h1>")
       )
-      contentService.createContentFromRequest(AuthorName("testuser"), updatedRequestContent).unsafeRunSync()
+      contentService.createContentFromRequest(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
       val updatedContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync().get
       assert(updatedContent.content == updatedRequestContent.htmlContent.get)
     }
