@@ -10,9 +10,15 @@
 
 |||
 |---|---|
-|[Hexo](https://github.com/hexojs)|Local content manager.|
 |[Qualtet](https://github.com/yoshinorin/qualtet)|API-based blogging system (server-side).|
 |[Quintet](https://github.com/yoshinorin/quintet)|The front end for the Qualtet.|
+|[Hexo](https://github.com/hexojs)|Hexo is SSG, but I'm using it for just local content management. (markdown, images, etc...) |
+
+## Architecture (Example)
+
+An example of architecture.
+
+![](./docs/arch.svg)
 
 ## Table of contents
 
@@ -26,12 +32,6 @@
 * [Development](#development)
     * [Compile](#compile)
     * [Start Server](#start-server)
-
-## Architecture (Example)
-
-An example of architecture.
-
-![](./docs/arch.svg)
 
 ## Documentation
 
