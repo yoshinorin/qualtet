@@ -33,6 +33,12 @@ class ContentTypeRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("page"))
       }
     }
+
+    "be return content-type:not-exists" in {
+      Get("/content-types/not-exists") ~> contentTypeRoute.route ~> check {
+        assert(status == StatusCodes.NotFound)
+      }
+    }
   }
 
 }
