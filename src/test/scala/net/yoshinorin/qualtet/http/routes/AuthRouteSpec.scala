@@ -2,13 +2,14 @@ package net.yoshinorin.qualtet.http.routes
 
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
+import net.yoshinorin.qualtet.domains.models.authors.ResponseAuthor
 import net.yoshinorin.qualtet.fixture.Fixture.{authRoute, author, authorService}
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.http.routes.AuthRouteSpec
 class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
-  val a = authorService.findByName(author.name).unsafeRunSync().get
+  val a: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
 
   "ApiStatusRoute" should {
 
@@ -73,7 +74,36 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       }
     }
 
-    // TODO: 404 and 401
+    "be reject with wrong-password" in {
+      val json =
+        s"""
+           |{
+           |  "authorId" : "${a.id.value}",
+           |  "password" : "wrong-pass"
+           |}
+        """.stripMargin
+
+      Post("/token/")
+        .withEntity(ContentTypes.`application/json`, json) ~> authRoute.route ~> check {
+        assert(status == StatusCodes.Unauthorized)
+      }
+    }
+
+    "be return if user not exists" in {
+      val json =
+        s"""
+           |{
+           |  "authorId" : "not-exists-user",
+           |  "password" : "pass"
+           |}
+        """.stripMargin
+
+      // TODO: fix response to 404
+      Post("/token/")
+        .withEntity(ContentTypes.`application/json`, json) ~> authRoute.route ~> check {
+        assert(status == StatusCodes.InternalServerError)
+      }
+    }
 
   }
 
