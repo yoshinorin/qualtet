@@ -21,7 +21,7 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
 
     def verifyPassword(password: BCryptPassword): IO[Unit] = {
       if (bcryptPasswordEncoder.matches(tokenRequest.password, password.value)) {
-        IO()
+        IO(())
       } else {
         logger.error(s"authorId: ${tokenRequest.authorId} - wrong password")
         IO.raiseError(Unauthorized("unauthorized"))
