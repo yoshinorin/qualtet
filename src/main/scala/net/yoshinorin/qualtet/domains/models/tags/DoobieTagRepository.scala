@@ -1,8 +1,6 @@
 package net.yoshinorin.qualtet.domains.models.tags
 
 import doobie.ConnectionIO
-import doobie.implicits._
-import doobie.util.update.Update
 import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
 class DoobieTagRepository extends TagRepository with ConnectionIOFaker {
