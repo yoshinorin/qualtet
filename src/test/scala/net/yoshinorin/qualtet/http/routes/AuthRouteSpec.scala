@@ -26,7 +26,6 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         .withEntity(ContentTypes.`application/json`, json) ~> authRoute.route ~> check {
         assert(status == StatusCodes.Created)
         assert(contentType == ContentTypes.`application/json`)
-        println(responseAs[String])
         assert(responseAs[String].contains("."))
       }
     }
