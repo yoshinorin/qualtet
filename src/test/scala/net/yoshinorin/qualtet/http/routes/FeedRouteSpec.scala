@@ -2,9 +2,10 @@ package net.yoshinorin.qualtet.http.routes
 
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
+import net.yoshinorin.qualtet.domains.models.authors.AuthorName
 import net.yoshinorin.qualtet.domains.models.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
-import net.yoshinorin.qualtet.fixture.Fixture.feedRoute
+import net.yoshinorin.qualtet.fixture.Fixture.{author, contentService, feedRoute}
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.http.routes.FeedRouteSpec
@@ -24,6 +25,9 @@ class FeedRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       )
     )
   }
+
+  // NOTE: create content and related data for test
+  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
 
   "FeedRoute" should {
     "be return feeds" in {
