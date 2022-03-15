@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.models.contents
 
 import doobie.ConnectionIO
-import doobie.util.update.Update
 import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
 class DoobieContentTaggingRepository extends ContentTaggingRepository with ConnectionIOFaker {
@@ -19,9 +18,7 @@ class DoobieContentTaggingRepository extends ContentTaggingRepository with Conne
     data match {
       case None => ConnectionIOWithInt
       case Some(x) =>
-        DoobieContentTaggingQuery
-          .bulkUpsert(x)
-          .updateMany(x)
+        DoobieContentTaggingQuery.bulkUpsert.updateMany(x)
     }
   }
 

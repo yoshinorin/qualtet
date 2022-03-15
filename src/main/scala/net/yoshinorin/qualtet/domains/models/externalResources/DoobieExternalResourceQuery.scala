@@ -4,7 +4,7 @@ import doobie.util.update.Update
 
 object DoobieExternalResourceQuery {
 
-  def bulkUpsert(data: List[ExternalResource]): Update[ExternalResource] = {
+  def bulkUpsert: Update[ExternalResource] = {
     val q = s"""
           INSERT INTO external_resources (content_id, kind, name)
             VALUES (?, ?, ?)

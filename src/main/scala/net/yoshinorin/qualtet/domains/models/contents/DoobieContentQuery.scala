@@ -6,7 +6,7 @@ import doobie.util.update.Update
 
 object DoobieContentQuery {
 
-  def upsert(data: Content): Update[Content] = {
+  def upsert: Update[Content] = {
     val q = s"""
           INSERT INTO contents (id, author_id, content_type_id, path, title, raw_content, html_content, published_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)

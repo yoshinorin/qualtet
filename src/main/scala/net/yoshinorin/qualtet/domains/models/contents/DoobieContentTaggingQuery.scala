@@ -4,7 +4,7 @@ import doobie.util.update.Update
 
 object DoobieContentTaggingQuery {
 
-  def bulkUpsert(data: List[ContentTagging]): Update[ContentTagging] = {
+  def bulkUpsert: Update[ContentTagging] = {
     val q = s"""
           INSERT INTO contents_tagging (content_id, tag_id)
             VALUES (?, ?)

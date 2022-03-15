@@ -11,7 +11,7 @@ class DoobieAuthorRepository extends AuthorRepository {
    * @return created Author
    */
   override def upsert(data: Author): ConnectionIO[Int] = {
-    DoobieAuthorQuery.upsert(data).run(data)
+    DoobieAuthorQuery.upsert.run(data)
   }
 
   /**

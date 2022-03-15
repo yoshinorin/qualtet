@@ -32,9 +32,7 @@ class DoobieTagRepository extends TagRepository with ConnectionIOFaker {
     data match {
       case None => ConnectionIOWithInt
       case Some(x) =>
-        DoobieTagQuery
-          .bulkUpsert(data)
-          .updateMany(x)
+        DoobieTagQuery.bulkUpsert.updateMany(x)
     }
   }
 

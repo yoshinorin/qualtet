@@ -11,7 +11,7 @@ class DoobieRobotsRepository extends RobotsRepository {
    * @return dummy long id (Doobie return Int)
    */
   def upsert(data: Robots): ConnectionIO[Int] = {
-    DoobieRobotsQuery.upsert(data).run(data)
+    DoobieRobotsQuery.upsert.run(data)
   }
 
 }

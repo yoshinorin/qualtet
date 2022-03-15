@@ -6,7 +6,7 @@ import doobie.util.update.Update
 
 object DoobieContentTypeQuery {
 
-  def upsert(data: ContentType): Update[ContentType] = {
+  def upsert: Update[ContentType] = {
     val q = s"""
           INSERT INTO content_types (id, name)
             VALUES (?, ?)

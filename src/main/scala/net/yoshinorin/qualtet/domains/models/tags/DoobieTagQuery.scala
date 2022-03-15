@@ -16,7 +16,7 @@ object DoobieTagQuery {
       .query[Tag]
   }
 
-  def bulkUpsert(data: Option[List[Tag]]): Update[Tag] = {
+  def bulkUpsert: Update[Tag] = {
     val q = s"""
           INSERT INTO tags (id, name)
             VALUES (?, ?)

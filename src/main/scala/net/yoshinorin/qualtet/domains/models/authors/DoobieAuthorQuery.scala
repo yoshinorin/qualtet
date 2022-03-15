@@ -6,7 +6,7 @@ import doobie.util.update.Update
 
 object DoobieAuthorQuery {
 
-  def upsert(data: Author): Update[Author] = {
+  def upsert: Update[Author] = {
     val q = s"""
           INSERT INTO authors (id, name, display_name, password, created_at)
             VALUES (?, ?, ?, ?, ?)

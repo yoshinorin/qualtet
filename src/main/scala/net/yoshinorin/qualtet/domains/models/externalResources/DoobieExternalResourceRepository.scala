@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.models.externalResources
 
 import doobie.ConnectionIO
-import doobie.util.update.Update
 import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
 class DoobieExternalResourceRepository extends ExternalResourceRepository with ConnectionIOFaker {
@@ -20,9 +19,7 @@ class DoobieExternalResourceRepository extends ExternalResourceRepository with C
     data match {
       case None => ConnectionIOWithInt
       case Some(x) =>
-        DoobieExternalResourceQuery
-          .bulkUpsert(x)
-          .updateMany(x)
+        DoobieExternalResourceQuery.bulkUpsert.updateMany(x)
     }
   }
 }

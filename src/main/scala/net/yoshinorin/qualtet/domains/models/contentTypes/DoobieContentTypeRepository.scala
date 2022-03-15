@@ -11,7 +11,7 @@ class DoobieContentTypeRepository extends ContentTypeRepository {
    * @return created Content with ConnectionIO
    */
   def upsert(data: ContentType): ConnectionIO[Int] = {
-    DoobieContentTypeQuery.upsert(data).run(data)
+    DoobieContentTypeQuery.upsert.run(data)
   }
 
   /**
