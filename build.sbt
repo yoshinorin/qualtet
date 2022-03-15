@@ -17,13 +17,13 @@ scalacOptions ++= Seq(
 )
 
 val akkaVersion = "2.6.18"
-val akkaHttpVersion = "10.2.7"
+val akkaHttpVersion = "10.2.9"
 val circeVersion = "0.14.1"
 val doobieVersion = "0.13.4"
-val jwtScalaVersion = "9.0.3"
+val jwtScalaVersion = "9.0.4"
 
 libraryDependencies ++= Seq(
-  "com.typesafe" % "config" % "1.4.1",
+  "com.typesafe" % "config" % "1.4.2",
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
@@ -40,13 +40,13 @@ libraryDependencies ++= Seq(
   "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.3",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-  "org.wvlet.airframe" %% "airframe-ulid" % "21.12.1",
+  "org.wvlet.airframe" %% "airframe-ulid" % "22.2.0",
   "com.github.ben-manes.caffeine" % "caffeine" % "3.0.5",
   "org.flywaydb" % "flyway-core" % "7.8.2",
   "com.vladsch.flexmark" % "flexmark-all" % "0.62.2",
   "ch.qos.logback" % "logback-classic" % "1.2.10",
   "org.springframework.security" % "spring-security-core" % "5.6.1",
-  "org.slf4j" % "slf4j-api" % "1.7.35",
+  "org.slf4j" % "slf4j-api" % "1.7.36",
   "org.scalatest" %% "scalatest" % "3.2.11" % "test",
   "org.mockito" % "mockito-core" % "4.3.1" % "test"
 )
