@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.models.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.models.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.models.robots.Attributes
-import net.yoshinorin.qualtet.fixture.Fixture.{authService, author, authorService, contentRoute, contentService, nonExistsUserToken}
+import net.yoshinorin.qualtet.fixture.Fixture.{authService, author, authorService, contentRoute, contentService, expiredToken, nonExistsUserToken}
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.http.routes.ContentRouteSpec
@@ -38,6 +38,28 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         .withEntity(ContentTypes.`application/json`, json) ~> addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
         assert(status == StatusCodes.Created)
         assert(contentType == ContentTypes.`application/json`)
+      }
+    }
+
+    "be reject caused by expired token" in {
+      val json =
+        """
+          |{
+          |  "contentType" : "article",
+          |  "path" : "/test/ContentRouteSpecExpiredToken",
+          |  "title" : "this is a ContentRouteSpecExpiredToken title",
+          |  "robotsAttributes": "noarchive, noimageindex",
+          |  "rawContent" : "this is a raw ContentRouteSpecExpiredToken",
+          |  "htmlContent" : "<p>this is a html ContentRouteSpecExpiredToken<p>",
+          |  "publishedAt" : 1644075206,
+          |  "updatedAt" : 1644075206
+          |}
+        """.stripMargin
+
+      Post("/contents/")
+        .withEntity(ContentTypes.`application/json`, json) ~> addCredentials(OAuth2BearerToken(expiredToken)) ~> contentRoute.route ~> check {
+        // TODO: fix status code
+        assert(status == StatusCodes.InternalServerError)
       }
     }
 
