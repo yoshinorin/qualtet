@@ -38,7 +38,7 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
   }
 
   def findAuthorFromJwtString(jwtString: String): IO[Option[ResponseAuthor]] = {
-    jwt.decode(jwtString) match {
+    jwt.decode(jwtString).flatMap {
       case Right(jwtClaim: JwtClaim) =>
         authorService.findById(AuthorId(jwtClaim.sub))
       case Left(t) =>

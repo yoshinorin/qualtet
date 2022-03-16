@@ -18,7 +18,7 @@ class AuthServiceSpec extends AnyWordSpec {
 
     "be generate token" in {
       val token = authService.generateToken(RequestToken(a.id, "pass")).unsafeRunSync().token
-      assert(jwtInstance.decode(token).isRight)
+      assert(jwtInstance.decode(token).unsafeRunSync().isRight)
     }
 
     "be find an author from JWT string" in {

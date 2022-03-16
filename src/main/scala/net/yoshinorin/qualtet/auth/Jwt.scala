@@ -1,5 +1,7 @@
 package net.yoshinorin.qualtet.auth
 
+import cats.data.EitherT
+import cats.effect.IO
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 import net.yoshinorin.qualtet.config.Config
@@ -68,7 +70,7 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
    * @param jwtString String of JWT
    * @return JwtClaim
    */
-  def decode(jwtString: String): Either[Throwable, JwtClaim] = {
+  def decode(jwtString: String): IO[Either[Throwable, JwtClaim]] = {
     (for {
       _ <- verify(jwtString)
       jsonString <- JwtCirce.decodeJson(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
@@ -76,23 +78,34 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
     } yield maybeJwtClaim) match {
       case Left(t) =>
         logger.error(t.getMessage)
-        Left(t)
-      case Right(x) => {
-        // TODO: clean up
-        if (x.aud != Config.jwtAud) {
-          logger.error("invalid aud")
-          return Left(Unauthorized())
-        }
-        if (x.iss != Config.jwtIss) {
-          logger.error("invalid iss")
-          return Left(Unauthorized())
-        }
-        if (Instant.now.getEpochSecond > x.exp) {
-          logger.error("token is expired")
-          return Left(Unauthorized())
-        }
-        Right(x)
+        IO(Left(t))
+      case Right(jc) => {
+        (for {
+          _ <- claimValidator(jc)(x => x.aud == Config.jwtAud)("invalid aud")
+          _ <- claimValidator(jc)(x => x.iss == Config.jwtIss)("invalid iss")
+          result <- claimValidator(jc)(x => x.exp > Instant.now.getEpochSecond)("token is expired")
+        } yield result).value
       }
+    }
+  }
+
+  /**
+   * validate JWT claim
+   *
+   * @param jwtClaim JwtClaim case class
+   * @param f function for validate condition
+   * @param errorMsg error message for logging
+   * @return validation result with EitherT
+   *
+   * TODO: move utility functions
+   */
+  def claimValidator(jwtClaim: JwtClaim)(f: JwtClaim => Boolean)(errorMsg: String): EitherT[IO, Throwable, JwtClaim] = {
+    if (f(jwtClaim)) {
+      EitherT.right(IO(jwtClaim))
+    } else {
+      // TODO: Maybe should not logging here
+      logger.error(errorMsg)
+      EitherT.left(IO(Unauthorized()))
     }
   }
 
