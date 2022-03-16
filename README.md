@@ -41,7 +41,7 @@ An example of architecture.
 
 * sbt 1.6.x
 * Scala 2.13.x
-* JVM 11.x
+* Java 11.x, 17.x
 * MariaDB 10.6.x
 * docker & docker-compose 3.x (for test)
 
@@ -159,24 +159,18 @@ $ scalafmt
 
 ### Test
 
-Run all tests
+Run all tests with db (docker container)
 
-```sh
-$ sbt test
+```
+$ sbt testWithDb
 ```
 
 Run specific test
 
-
 ```sh
+# NOTE: Many of test depends on DB. This command may not works well...
 $ sbt
 $ testOnly *xxxxxSpec
-```
-
-Run test with db (docker container)
-
-```
-$ sbt testWithDb
 ```
 
 Generate Coverage report
@@ -186,5 +180,5 @@ $ sbt coverageReport
 
 or
 
-$ sbt clean coverage test coverageReport
+$ sbt clean coverage testWithDb coverageReport
 ```
