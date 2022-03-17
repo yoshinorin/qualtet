@@ -10,8 +10,7 @@ trait HttpLogger {
   private[this] def requestAndResponseLogging(loggingAdapter: LoggingAdapter, requestTimestamp: Long, ip: RemoteAddress)(
     request: HttpRequest
   )(response: RouteResult): Unit = {
-    val responseTimestamp: Long = System.nanoTime
-    val elapsedTime: Long = (responseTimestamp - requestTimestamp) / 1000000
+    val elapsedTime: Long = (System.nanoTime - requestTimestamp) / 1000000
     val entry = response match {
       case RouteResult.Complete(response) =>
         LogEntry(
@@ -32,8 +31,7 @@ trait HttpLogger {
   }
 
   private[this] def loggingFunction(log: LoggingAdapter, ip: RemoteAddress): HttpRequest => RouteResult => Unit = {
-    val requestTimestamp = System.nanoTime
-    requestAndResponseLogging(log, requestTimestamp, ip)
+    requestAndResponseLogging(log, System.nanoTime, ip)
   }
 
   def httpLogging(ip: RemoteAddress): Directive0 = DebuggingDirectives.logRequestResult(LoggingMagnet(loggingFunction(_, ip)))
