@@ -21,11 +21,17 @@ class ArticleService(
   def get[A](
     data: A,
     queryParam: ArticlesQueryParameter
-  )(f: (ContentTypeId, A, ArticlesQueryParameter) => ConnectionIO[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] =
+  )(f: (ContentTypeId, A, ArticlesQueryParameter) => ConnectionIO[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
       c <- findBy("article", NotFound(s"content-type not found: article"))(contentTypeService.findByName)
       articlesWithCount <- f(c.id, data, queryParam).transact(doobieContext.transactor)
-    } yield ResponseArticleWithCount(articlesWithCount.map(_._1).head, articlesWithCount.map(_._2))
+    } yield
+      if (articlesWithCount.nonEmpty) {
+        ResponseArticleWithCount(articlesWithCount.map(_._1).head, articlesWithCount.map(_._2))
+      } else {
+        throw NotFound("articles not found")
+      }
+  }
 
   def getWithCount(queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
     this.get((), queryParam)(articleRepository.getWithCount)

@@ -61,12 +61,7 @@ class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
     "not be return articles with query params" in {
       Get("/articles/?page=99999&limit=10") ~> articleRoute.route ~> check {
-        // TODO: fix status code
-        assert(status == StatusCodes.InternalServerError)
-        // assert(contentType == ContentTypes.`application/json`)
-        // TODO: assert json
-        // assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("count"))
-        // TODO: assert json count is 0
+        assert(status == StatusCodes.NotFound)
       }
     }
 
