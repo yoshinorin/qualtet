@@ -4,7 +4,10 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse}
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import cats.effect.IO
 import io.circe.syntax.EncoderOps
+import net.yoshinorin.qualtet.domains.models.Fail
+import net.yoshinorin.qualtet.domains.models.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.domains.models.tags.TagName
 import net.yoshinorin.qualtet.domains.services.{ArticleService, TagService}
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
@@ -46,8 +49,18 @@ class TagRoute(
         pathPrefix(".+".r) { tagName =>
           get {
             parameters("page".as[Int].?, "limit".as[Int].?) { (page, limit) =>
-              onSuccess(articleService.getByTagNameWithCount(TagName(tagName), ArticlesQueryParameter(page, limit)).unsafeToFuture()) { result =>
-                httpResponse(OK, result)
+              onSuccess(
+                articleService
+                  .getByTagNameWithCount(TagName(tagName), ArticlesQueryParameter(page, limit))
+                  .handleErrorWith { e => IO.pure(e) }
+                  .unsafeToFuture()
+              ) {
+                case r: ResponseArticleWithCount =>
+                  httpResponse(OK, r)
+                case e: Exception =>
+                  httpResponse(e)
+                case _ =>
+                  httpResponse(Fail.InternalServerError("Internal server error"))
               }
             }
           }

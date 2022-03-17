@@ -92,9 +92,7 @@ class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
     "be return 500" in {
       Get("/tags/not-exists") ~> tagRoute.route ~> check {
-        // TODO: fix response
-        assert(status == StatusCodes.InternalServerError)
-        //assert(contentType == ContentTypes.`application/json`)
+        assert(status == StatusCodes.NotFound)
       }
     }
 
