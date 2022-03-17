@@ -12,7 +12,14 @@ import java.time.Instant
 // testOnly net.yoshinorin.qualtet.auth.JwtSpec
 class JwtSpec extends AnyWordSpec {
 
-  val jc: JwtClaim = JwtClaim("http://localhost:9001", "qualtet_dev_1111", "01fy9g4m9wsg7frfct8m5rtxz0", "01fy9g4n10sf2vxmhmxq7h9x42", 1647442477, 1647438877)
+  val jc: JwtClaim = JwtClaim(
+    iss = Config.jwtIss,
+    aud = Config.jwtAud,
+    sub = "01fy9g4m9wsg7frfct8m5rtxz0",
+    jti = "01fy9g4n10sf2vxmhmxq7h9x42",
+    exp = Instant.now.getEpochSecond,
+    iat = Instant.now.getEpochSecond
+  )
 
   "Jwt" should {
     "be encode and decode" in {
@@ -48,9 +55,9 @@ class JwtSpec extends AnyWordSpec {
     }
 
     "be return Right if JWT is correct" in {
-      assert(jwtInstance.claimValidator(jc)(x => x.aud == "qualtet_dev_1111")("").value.unsafeRunSync().isRight)
-      assert(jwtInstance.claimValidator(jc)(x => x.iss == "http://localhost:9001")("").value.unsafeRunSync().isRight)
-      assert(jwtInstance.claimValidator(jc)(x => x.exp > Instant.now.getEpochSecond)("").value.unsafeRunSync().isRight)
+      assert(jwtInstance.claimValidator(jc)(x => x.aud == Config.jwtAud)("").value.unsafeRunSync().isRight)
+      assert(jwtInstance.claimValidator(jc)(x => x.iss == Config.jwtIss)("").value.unsafeRunSync().isRight)
+      assert(jwtInstance.claimValidator(jc)(x => x.exp > Instant.now.getEpochSecond - 1000)("").value.unsafeRunSync().isRight)
     }
 
     "be return Left if JWT is incorrect" in {
@@ -63,7 +70,7 @@ class JwtSpec extends AnyWordSpec {
       val r = for {
         _ <- jwtInstance.claimValidator(jc)(x => x.aud == Config.jwtAud)("")
         _ <- jwtInstance.claimValidator(jc)(x => x.iss == Config.jwtIss)("")
-        result <- jwtInstance.claimValidator(jc)(x => x.exp > x.exp + 1)("")
+        result <- jwtInstance.claimValidator(jc)(x => x.exp > (x.exp + Config.jwtExpiration + 1))("")
       } yield result
 
       assert(r.value.unsafeRunSync().isLeft)
@@ -71,7 +78,7 @@ class JwtSpec extends AnyWordSpec {
 
     "be return Left if JWT is incorrect in for-comprehension: pattern-two" in {
       val r = for {
-        _ <- jwtInstance.claimValidator(jc)(x => x.aud == "qualtet_dev_1111")("")
+        _ <- jwtInstance.claimValidator(jc)(x => x.aud == Config.jwtAud)("")
         _ <- jwtInstance.claimValidator(jc)(x => x.iss == "incorrect iss")("")
         result <- jwtInstance.claimValidator(jc)(x => x.exp > Instant.now.getEpochSecond)("")
       } yield result
@@ -82,7 +89,7 @@ class JwtSpec extends AnyWordSpec {
     "be return Left if JWT is incorrect in for-comprehension: pattern-three" in {
       val r = for {
         _ <- jwtInstance.claimValidator(jc)(x => x.aud == "incorrect aud")("")
-        _ <- jwtInstance.claimValidator(jc)(x => x.iss == "http://localhost:9001")("")
+        _ <- jwtInstance.claimValidator(jc)(x => x.iss == Config.jwtIss)("")
         result <- jwtInstance.claimValidator(jc)(x => x.exp > Instant.now.getEpochSecond)("")
       } yield result
 
