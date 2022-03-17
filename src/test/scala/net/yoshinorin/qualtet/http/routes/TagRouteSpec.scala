@@ -71,6 +71,25 @@ class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       }
     }
 
+    "be return specific tag contents with query params" in {
+      Get(s"/tags/${t(0).name.value}/?page=1&limit=10") ~> tagRoute.route ~> check {
+        assert(status == StatusCodes.OK)
+        assert(contentType == ContentTypes.`application/json`)
+        // TODO: assert json
+        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("/test/tagRoute-0"))
+      }
+    }
+
+    "be return 10 specific tag contents with query params" in {
+      Get(s"/tags/${t(0).name.value}/?page=1&limit=50") ~> tagRoute.route ~> check {
+        assert(status == StatusCodes.OK)
+        assert(contentType == ContentTypes.`application/json`)
+        // TODO: assert json
+        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("/test/tagRoute-0"))
+        // TODO: assert json count
+      }
+    }
+
     "be return 500" in {
       Get("/tags/not-exists") ~> tagRoute.route ~> check {
         // TODO: fix response
