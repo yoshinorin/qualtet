@@ -23,7 +23,7 @@ class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         rawContent = s"this is a tagRoute raw content ${i}",
         htmlContent = Option(s"this is a tagRoute html content ${i}"),
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = Option(List(s"tagRoute${i}")),
+        tags = Option(List(s"tagRoute-${i}")),
         externalResources = Option(List())
       )
     )
@@ -32,7 +32,7 @@ class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   // NOTE: create content and related data for test
   requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
 
-  val t: Seq[ResponseTag] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.contains("tagRoute"))
+  val t: Seq[ResponseTag] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.contains("tagRoute-"))
 
   "TagRoute" should {
     "be return tags" in {
@@ -52,6 +52,22 @@ class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         assert(status == StatusCodes.OK)
         assert(contentType == ContentTypes.`application/json`)
         assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+      }
+    }
+
+    "be return specific tag" in {
+      Get(s"/tags/${t(0).name.value}") ~> tagRoute.route ~> check {
+        assert(status == StatusCodes.OK)
+        assert(contentType == ContentTypes.`application/json`)
+        // TODO: assert json
+        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("/test/tagRoute-0"))
+      }
+
+      Get(s"/tags/${t(1).name.value}") ~> tagRoute.route ~> check {
+        assert(status == StatusCodes.OK)
+        assert(contentType == ContentTypes.`application/json`)
+        // TODO: assert json
+        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("/test/tagRoute-1"))
       }
     }
 
