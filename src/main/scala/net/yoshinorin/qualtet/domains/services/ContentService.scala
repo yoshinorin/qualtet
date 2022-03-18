@@ -147,10 +147,12 @@ class ContentService(
     this.findBy(path)(contentRepository.findByPathWithMeta)
   }
 
+  /*
   def findByIdWithMeta(id: ContentId): IO[Option[ResponseContent]] = {
     ???
     // TODO:  this.findBy(id)(contentRepository.findById)
   }
+   */
 
   def findBy[A](data: A)(f: A => ConnectionIO[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 

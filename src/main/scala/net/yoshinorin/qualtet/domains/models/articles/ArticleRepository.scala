@@ -27,7 +27,7 @@ trait ArticleRepository {
    * @param sqlParams sql parameters for limit, offset
    * @return Articles & it's count with ConnectionIO
    */
-  def findByTagIdWithCount(contentTypeId: ContentTypeId, tagId: TagId, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]]
+  // def findByTagIdWithCount(contentTypeId: ContentTypeId, tagId: TagId, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]]
 
   /**
    * get Articles by TagName

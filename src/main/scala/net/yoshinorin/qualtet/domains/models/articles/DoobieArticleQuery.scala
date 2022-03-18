@@ -32,6 +32,7 @@ object DoobieArticleQuery {
       .query[(Int, ResponseArticle)]
   }
 
+  /*
   def findByTagIdWithCount(contentTypeId: ContentTypeId, tagId: TagId, sqlParams: SqlParams): Query0[(Int, ResponseArticle)] = {
     sql"""
       SELECT
@@ -60,6 +61,7 @@ object DoobieArticleQuery {
     """
       .query[(Int, ResponseArticle)]
   }
+   */
 
   def findByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, sqlParams: SqlParams): Query0[(Int, ResponseArticle)] = {
     sql"""
