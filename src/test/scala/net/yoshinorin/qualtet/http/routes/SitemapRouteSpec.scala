@@ -2,48 +2,40 @@ package net.yoshinorin.qualtet.http.routes
 
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import cats.effect.IO
-import net.yoshinorin.qualtet.domains.models.sitemaps.{LastMod, Loc, Url}
-import net.yoshinorin.qualtet.domains.services.SitemapService
-import org.mockito.Mockito
-import org.mockito.Mockito.when
+import net.yoshinorin.qualtet.domains.models.authors.AuthorName
+import net.yoshinorin.qualtet.domains.models.contents.{Path, RequestContent}
+import net.yoshinorin.qualtet.domains.models.robots.Attributes
+import net.yoshinorin.qualtet.fixture.Fixture.{author, contentService, sitemapRoute}
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.http.routes.SitemapRouteSpec
 class SitemapRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
-  val mockSitemapService: SitemapService = Mockito.mock(classOf[SitemapService])
-  val sitemapRoute: SitemapRoute = new SitemapRoute(mockSitemapService)
-
-  when(mockSitemapService.get()).thenReturn(
-    IO(
-      Seq(
-        Url(Loc("https://example.com/aaa/bbb"), LastMod("1620738897")),
-        Url(Loc("https://example.com/ccc/ddd"), LastMod("1620938897"))
+  val requestContents: List[RequestContent] = {
+    (0 until 2).toList.map(i =>
+      RequestContent(
+        contentType = "article",
+        path = Path(s"/test/sitemapRoute-${i}"),
+        title = s"this is a sitemapRoute title ${i}",
+        rawContent = s"this is a sitemapRoute raw content ${i}",
+        htmlContent = Option(s"this is a sitemapRoute html content ${i}"),
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = Option(List(s"sitemapRoute-${i}")),
+        externalResources = Option(List())
       )
     )
-  )
+  }
+
+  // NOTE: create content and related data for test
+  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
 
   "SitemapRoute" should {
-    "return json for sitemap.xml" in {
-      val expectJson =
-        """
-          |[
-          |  {
-          |    "loc" : "https://example.com/aaa/bbb",
-          |    "lastMod" : "2021-05-11"
-          |  },
-          |  {
-          |    "loc" : "https://example.com/ccc/ddd",
-          |    "lastMod" : "2021-05-13"
-          |  }
-          |]
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
-
+    "be return json for sitemap.xml" in {
       Get("/sitemaps/") ~> sitemapRoute.route ~> check {
         assert(status == StatusCodes.OK)
         assert(contentType == ContentTypes.`application/json`)
-        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "") == expectJson)
+        // TODO: assert JSON and count
+        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("loc"))
       }
     }
   }
