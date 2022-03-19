@@ -1,7 +1,6 @@
-package net.yoshinorin.qualtet.utils
+package net.yoshinorin.qualtet.cache
 
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
-import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentType
 import net.yoshinorin.qualtet.fixture.Fixture.{articleContentType, contentTypeId}
 import org.scalatest.wordspec.AnyWordSpec
