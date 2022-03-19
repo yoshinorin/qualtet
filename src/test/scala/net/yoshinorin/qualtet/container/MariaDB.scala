@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeId, doobieContext}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
-import net.yoshinorin.qualtet.utils.Cache
+import net.yoshinorin.qualtet.cache.Cache
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.util.concurrent.TimeUnit

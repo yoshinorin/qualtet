@@ -2,14 +2,14 @@ package net.yoshinorin.qualtet.domains.services
 
 import cats.effect.IO
 import doobie.implicits._
+import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.models.Fail.InternalServerError
 import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentTypeRepository}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
-import net.yoshinorin.qualtet.utils.Cache
 
 class ContentTypeService(
   contentTypeRepository: ContentTypeRepository,
-  cache: Cache[String, ContentType]
+  cache: CacheModule[String, ContentType]
 )(
   implicit doobieContext: DoobieContextBase
 ) extends ServiceBase {

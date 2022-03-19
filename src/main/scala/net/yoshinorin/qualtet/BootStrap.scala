@@ -6,6 +6,7 @@ import akka.actor.ActorSystem
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
+import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.archives.DoobieArchiveRepository
 import net.yoshinorin.qualtet.domains.models.articles.DoobieArticleRepository
@@ -33,7 +34,6 @@ import net.yoshinorin.qualtet.http.routes.{
 import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
-import net.yoshinorin.qualtet.utils.Cache
 import pdi.jwt.JwtAlgorithm
 
 import java.security.SecureRandom
@@ -71,7 +71,7 @@ object BootStrap extends App {
   val contentTypeRepository = new DoobieContentTypeRepository
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheContentType, TimeUnit.SECONDS).build[String, ContentType]
-  val contentTypeCache = new Cache[String, ContentType](contentTypeCaffeinCache)
+  val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)
 
   val tagRepository = new DoobieTagRepository
@@ -104,7 +104,7 @@ object BootStrap extends App {
   val sitemapRepository = new DoobieSitemapsRepository
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
-  val sitemapCache = new Cache[String, Seq[Url]](sitemapCaffeinCache)
+  val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService = new SitemapService(sitemapRepository, sitemapCache)
 
   val homeRoute: HomeRoute = new HomeRoute()

@@ -1,8 +1,8 @@
-package net.yoshinorin.qualtet.utils
+package net.yoshinorin.qualtet.cache
 
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 
-class Cache[T1, T2](caffeineCache: CaffeineCache[T1, T2]) {
+class CacheModule[T1, T2](caffeineCache: CaffeineCache[T1, T2]) {
 
   def get(k: T1): Option[T2] = {
     Option(caffeineCache.getIfPresent(k))

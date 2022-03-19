@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.fixture
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
+import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.models.archives.{DoobieArchiveRepository, ResponseArchive}
 import net.yoshinorin.qualtet.domains.models.articles.{DoobieArticleRepository, ResponseArticle}
 import net.yoshinorin.qualtet.domains.models.authors._
@@ -28,7 +29,6 @@ import net.yoshinorin.qualtet.http.routes.{
 }
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.stub.DoobieStubContext
-import net.yoshinorin.qualtet.utils.Cache
 import pdi.jwt.JwtAlgorithm
 
 import java.security.SecureRandom
@@ -56,7 +56,7 @@ object Fixture {
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
-  val contentTypeCache = new Cache[String, ContentType](contentTypeCaffeinCache)
+  val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)(doobieContext)
 
   val tagRepository = new DoobieTagRepository
@@ -90,7 +90,7 @@ object Fixture {
   // TODO: from inf cache
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
-  val sitemapCache = new Cache[String, Seq[Url]](sitemapCaffeinCache)
+  val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService = new SitemapService(sitemapRepository, sitemapCache)(doobieContext)
 
   val homeRoute: HomeRoute = new HomeRoute()
