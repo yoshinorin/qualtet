@@ -7,7 +7,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import java.util.concurrent.TimeUnit
 
-// testOnly net.yoshinorin.qualtet.utils.CacheSpec
+// testOnly net.yoshinorin.qualtet.cache.CacheModuleSpec
 class CacheModuleSpec extends AnyWordSpec {
 
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
