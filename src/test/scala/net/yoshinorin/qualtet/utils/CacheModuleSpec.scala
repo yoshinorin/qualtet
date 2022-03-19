@@ -55,7 +55,7 @@ class CacheModuleSpec extends AnyWordSpec {
       cache.put(5, "hoge")
       assert(cache.get(4).get == "bar")
       assert(cache.get(5).get == "hoge")
-      cache.flush()
+      cache.invalidate()
       assert(cache.get(4).isEmpty)
       assert(cache.get(5).isEmpty)
     }

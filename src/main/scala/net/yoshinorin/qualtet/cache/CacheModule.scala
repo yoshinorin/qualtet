@@ -19,7 +19,7 @@ class CacheModule[T1, T2](caffeineCache: CaffeineCache[T1, T2]) {
     }
   }
 
-  def flush(): Unit = {
+  def invalidate(): Unit = {
     caffeineCache.invalidateAll()
   }
 
