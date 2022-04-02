@@ -1,8 +1,10 @@
 package net.yoshinorin.qualtet.auth
 
 import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.domains.models.Fail.Unauthorized
 import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.fixture.Fixture.{jwtInstance, validBCryptPassword}
+import net.yoshinorin.qualtet.utils.Validator
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.exceptions.JwtValidationException
 import wvlet.airframe.ulid.ULID
@@ -55,22 +57,22 @@ class JwtSpec extends AnyWordSpec {
     }
 
     "be return Right if JWT is correct" in {
-      assert(jwtInstance.claimValidator(jc)(x => x.aud == Config.jwtAud)("").value.unsafeRunSync().isRight)
-      assert(jwtInstance.claimValidator(jc)(x => x.iss == Config.jwtIss)("").value.unsafeRunSync().isRight)
-      assert(jwtInstance.claimValidator(jc)(x => x.exp > Instant.now.getEpochSecond - 1000)("").value.unsafeRunSync().isRight)
+      assert(Validator.validate(jc)(x => x.aud == Config.jwtAud)(Unauthorized()).value.unsafeRunSync().isRight)
+      assert(Validator.validate(jc)(x => x.iss == Config.jwtIss)(Unauthorized()).value.unsafeRunSync().isRight)
+      assert(Validator.validate(jc)(x => x.exp > Instant.now.getEpochSecond - 1000)(Unauthorized()).value.unsafeRunSync().isRight)
     }
 
     "be return Left if JWT is incorrect" in {
-      assert(jwtInstance.claimValidator(jc)(x => x.aud == "incorrect aud")("").value.unsafeRunSync().isLeft)
-      assert(jwtInstance.claimValidator(jc)(x => x.iss == "incorrect iss")("").value.unsafeRunSync().isLeft)
-      assert(jwtInstance.claimValidator(jc)(x => x.exp > x.exp + 1)("").value.unsafeRunSync().isLeft)
+      assert(Validator.validate(jc)(x => x.aud == "incorrect aud")(Unauthorized()).value.unsafeRunSync().isLeft)
+      assert(Validator.validate(jc)(x => x.iss == "incorrect iss")(Unauthorized()).value.unsafeRunSync().isLeft)
+      assert(Validator.validate(jc)(x => x.exp > x.exp + 1)(Unauthorized()).value.unsafeRunSync().isLeft)
     }
 
     "be return Left if JWT is incorrect in for-comprehension: pattern-one" in {
       val r = for {
-        _ <- jwtInstance.claimValidator(jc)(x => x.aud == Config.jwtAud)("")
-        _ <- jwtInstance.claimValidator(jc)(x => x.iss == Config.jwtIss)("")
-        result <- jwtInstance.claimValidator(jc)(x => x.exp > (x.exp + Config.jwtExpiration + 1))("")
+        _ <- Validator.validate(jc)(x => x.aud == Config.jwtAud)(Unauthorized())
+        _ <- Validator.validate(jc)(x => x.iss == Config.jwtIss)(Unauthorized())
+        result <- Validator.validate(jc)(x => x.exp > (x.exp + Config.jwtExpiration + 1))(Unauthorized())
       } yield result
 
       assert(r.value.unsafeRunSync().isLeft)
@@ -78,9 +80,9 @@ class JwtSpec extends AnyWordSpec {
 
     "be return Left if JWT is incorrect in for-comprehension: pattern-two" in {
       val r = for {
-        _ <- jwtInstance.claimValidator(jc)(x => x.aud == Config.jwtAud)("")
-        _ <- jwtInstance.claimValidator(jc)(x => x.iss == "incorrect iss")("")
-        result <- jwtInstance.claimValidator(jc)(x => x.exp > Instant.now.getEpochSecond)("")
+        _ <- Validator.validate(jc)(x => x.aud == Config.jwtAud)(Unauthorized())
+        _ <- Validator.validate(jc)(x => x.iss == "incorrect iss")(Unauthorized())
+        result <- Validator.validate(jc)(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
       } yield result
 
       assert(r.value.unsafeRunSync().isLeft)
@@ -88,9 +90,9 @@ class JwtSpec extends AnyWordSpec {
 
     "be return Left if JWT is incorrect in for-comprehension: pattern-three" in {
       val r = for {
-        _ <- jwtInstance.claimValidator(jc)(x => x.aud == "incorrect aud")("")
-        _ <- jwtInstance.claimValidator(jc)(x => x.iss == Config.jwtIss)("")
-        result <- jwtInstance.claimValidator(jc)(x => x.exp > Instant.now.getEpochSecond)("")
+        _ <- Validator.validate(jc)(x => x.aud == "incorrect aud")(Unauthorized())
+        _ <- Validator.validate(jc)(x => x.iss == Config.jwtIss)(Unauthorized())
+        result <- Validator.validate(jc)(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
       } yield result
 
       assert(r.value.unsafeRunSync().isLeft)

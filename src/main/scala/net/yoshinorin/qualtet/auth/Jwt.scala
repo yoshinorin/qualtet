@@ -1,12 +1,12 @@
 package net.yoshinorin.qualtet.auth
 
-import cats.data.EitherT
 import cats.effect.IO
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.Fail.Unauthorized
 import net.yoshinorin.qualtet.domains.models.authors.Author
+import net.yoshinorin.qualtet.utils.Validator
 import org.slf4j.LoggerFactory
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
 import pdi.jwt.{JwtCirce, JwtOptions}
@@ -81,31 +81,11 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
         IO(Left(t))
       case Right(jc) => {
         (for {
-          _ <- claimValidator(jc)(x => x.aud == Config.jwtAud)("invalid aud")
-          _ <- claimValidator(jc)(x => x.iss == Config.jwtIss)("invalid iss")
-          result <- claimValidator(jc)(x => x.exp > Instant.now.getEpochSecond)("token is expired")
+          _ <- Validator.validate(jc)(x => x.aud == Config.jwtAud)(Unauthorized())
+          _ <- Validator.validate(jc)(x => x.iss == Config.jwtIss)(Unauthorized())
+          result <- Validator.validate(jc)(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
         } yield result).value
       }
-    }
-  }
-
-  /**
-   * validate JWT claim
-   *
-   * @param jwtClaim JwtClaim case class
-   * @param f function for validate condition
-   * @param errorMsg error message for logging
-   * @return validation result with EitherT
-   *
-   * TODO: move utility functions
-   */
-  def claimValidator(jwtClaim: JwtClaim)(f: JwtClaim => Boolean)(errorMsg: String): EitherT[IO, Throwable, JwtClaim] = {
-    if (f(jwtClaim)) {
-      EitherT.right(IO(jwtClaim))
-    } else {
-      // TODO: Maybe should not logging here
-      logger.error(errorMsg)
-      EitherT.left(IO(Unauthorized()))
     }
   }
 
