@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.models.Fail.Unauthorized
 import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.fixture.Fixture.{jwtInstance, validBCryptPassword}
-import net.yoshinorin.qualtet.utils.Validator
+import net.yoshinorin.qualtet.validator.Validator
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.exceptions.JwtValidationException
 import wvlet.airframe.ulid.ULID

@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.utils
+package net.yoshinorin.qualtet.validator
 
 import cats.data.EitherT
 import cats.effect.IO
