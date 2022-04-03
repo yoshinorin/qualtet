@@ -1,10 +1,9 @@
-package net.yoshinorin.qualtet.utils
+package net.yoshinorin.qualtet.validator
 
 import net.yoshinorin.qualtet.domains.models.Fail.{Unauthorized, UnprocessableEntity}
-import net.yoshinorin.qualtet.validator.Validator
 import org.scalatest.wordspec.AnyWordSpec
 
-// testOnly net.yoshinorin.qualtet.utils.ValidatorSpec
+// testOnly net.yoshinorin.qualtet.validator.ValidatorSpec
 class ValidatorSpec extends AnyWordSpec {
 
   "validate" should {
