@@ -36,4 +36,33 @@ class ValidatorSpec extends AnyWordSpec {
     }
   }
 
+  "validateUnless" should {
+    "be return right" in {
+      assert(Validator.validateUnless("a")(x => x != "a")(UnprocessableEntity("unprocessable!!")).value.unsafeRunSync().isRight)
+      assert(Validator.validateUnless(1)(x => x != 1)(UnprocessableEntity("unprocessable!!")).value.unsafeRunSync().isRight)
+    }
+
+    "not be throw if isRight" in {
+      val s = Validator.validateUnless("a")(x => x != "a")(UnprocessableEntity("unprocessable!!")).andThrow.unsafeRunSync()
+      assert(s == "a")
+      val i = Validator.validateUnless(1)(x => x != 1)(UnprocessableEntity("unprocessable!!")).andThrow.unsafeRunSync()
+      assert(i == 1)
+    }
+
+    "be return left" in {
+      assert(Validator.validateUnless("a")(x => x == "a")(Unauthorized()).value.unsafeRunSync().isLeft)
+      assert(Validator.validateUnless(1)(x => x == 1)(UnprocessableEntity("unprocessable!!")).value.unsafeRunSync().isLeft)
+    }
+
+    "be throw if isLeft" in {
+      assertThrows[Unauthorized] {
+        Validator.validateUnless("a")(x => x == "a")(Unauthorized()).andThrow.unsafeRunSync()
+      }
+
+      assertThrows[UnprocessableEntity] {
+        Validator.validateUnless(1)(x => x == 1)(UnprocessableEntity("unprocessable!!")).andThrow.unsafeRunSync()
+      }
+    }
+  }
+
 }

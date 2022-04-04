@@ -25,4 +25,22 @@ object Validator {
     }
   }
 
+  /**
+   * Opposite of validate function
+   *
+   * @param a value
+   * @param f function for validate condition
+   * @param fail Instance of Fail
+   * @return validation result with EitherT
+   */
+  def validateUnless[A](a: A)(f: A => Boolean)(fail: Fail): EitherT[IO, Throwable, A] = {
+    if (f(a)) {
+      // TODO: Maybe should not logging here
+      logger.error(fail.getMessage)
+      EitherT.left(IO(fail))
+    } else {
+      EitherT.right(IO(a))
+    }
+  }
+
 }
