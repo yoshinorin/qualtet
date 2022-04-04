@@ -2,11 +2,8 @@ package net.yoshinorin.qualtet.validator
 
 import cats.data.EitherT
 import cats.effect.IO
-import org.slf4j.LoggerFactory
 
 object Validator {
-
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
   /**
    * @param a value
@@ -18,8 +15,6 @@ object Validator {
     if (f(a)) {
       EitherT.right(IO(a))
     } else {
-      // TODO: Maybe should not logging here
-      logger.error(throwable.getMessage)
       EitherT.left(IO(throwable))
     }
   }
@@ -34,8 +29,6 @@ object Validator {
    */
   def validateUnless[A](a: A)(f: A => Boolean)(throwable: Throwable): EitherT[IO, Throwable, A] = {
     if (f(a)) {
-      // TODO: Maybe should not logging here
-      logger.error(throwable.getMessage)
       EitherT.left(IO(throwable))
     } else {
       EitherT.right(IO(a))
