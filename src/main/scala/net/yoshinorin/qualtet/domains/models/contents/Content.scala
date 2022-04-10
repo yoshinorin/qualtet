@@ -68,7 +68,6 @@ final case class RequestContent(
   contentType: String,
   robotsAttributes: Attributes, // TODO: change to Option[Attributes]
   externalResources: Option[List[ExternalResources]] = None,
-  //tags: Option[List[TagName]] = None,
   tags: Option[List[String]] = None,
   path: Path,
   title: String,
