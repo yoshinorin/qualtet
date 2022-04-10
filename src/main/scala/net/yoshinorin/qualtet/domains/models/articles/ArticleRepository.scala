@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.models.articles
 
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.models.tags.{TagId, TagName}
+import net.yoshinorin.qualtet.domains.models.tags.TagName
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
 trait ArticleRepository {

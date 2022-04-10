@@ -49,7 +49,7 @@ class ContentTypeService(
 
     val maybeContentType = cache.get(name)
     maybeContentType match {
-      case Some(x: ContentType) => IO(maybeContentType)
+      case Some(_: ContentType) => IO(maybeContentType)
       case _ => fromDB(name)
     }
   }
