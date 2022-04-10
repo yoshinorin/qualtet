@@ -18,7 +18,7 @@ class ArticleServiceSpec extends AnyWordSpec {
         path = Path(s"/test/path-${i}"),
         title = s"this is a title ${i}",
         rawContent = s"this is a raw content ${i}",
-        htmlContent = Option(s"this is a html content ${i}"),
+        htmlContent = s"this is a html content ${i}",
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = Option(List(s"testTag${i}")),
         externalResources = Option(List())
@@ -33,7 +33,7 @@ class ArticleServiceSpec extends AnyWordSpec {
         path = Path(s"/test/same/tags/${i}"),
         title = s"this is a same tag title ${i}",
         rawContent = s"this is a same tag raw content ${i}",
-        htmlContent = Option(s"this is a html content ${i}"),
+        htmlContent = s"this is a html content ${i}",
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = Option(List("SameTag")),
         externalResources = Option(List())

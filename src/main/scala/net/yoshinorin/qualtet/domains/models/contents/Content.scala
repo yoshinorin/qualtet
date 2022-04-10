@@ -72,7 +72,7 @@ final case class RequestContent(
   path: Path,
   title: String,
   rawContent: String,
-  htmlContent: Option[String] = None,
+  htmlContent: String,
   publishedAt: Long = ZonedDateTime.now.toEpochSecond,
   updatedAt: Long = ZonedDateTime.now.toEpochSecond
 )

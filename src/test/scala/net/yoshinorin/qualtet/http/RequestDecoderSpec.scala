@@ -21,6 +21,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |  "path" : "/test/path",
           |  "title" : "this is a title",
           |  "rawContent" : "this is a raw content",
+          |  "htmlContent" : "this is a html content",
           |  "robotsAttributes" : "noindex, noarchive, noimageindex, nofollow"
           |}
         """.stripMargin
@@ -35,6 +36,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           assert(r.path.value == "/test/path")
           assert(r.title == "this is a title")
           assert(r.rawContent == "this is a raw content")
+          assert(r.htmlContent == "this is a html content")
           assert(r.externalResources.isEmpty)
           assert(r.publishedAt <= ZonedDateTime.now.toEpochSecond)
           assert(r.updatedAt <= ZonedDateTime.now.toEpochSecond)
@@ -50,6 +52,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |  "path" : "/test/path",
           |  "title" : "this is a title",
           |  "rawContent" : "this is a raw content",
+          |  "htmlContent" : "this is a html content",
           |  "robotsAttributes" : "noindex, noarchive, noimageindex, nofollow",
           |  "publishedAt" : 1537974000,
           |  "updatedAt" : 1621098091
@@ -66,6 +69,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           assert(r.path.value == "/test/path")
           assert(r.title == "this is a title")
           assert(r.rawContent == "this is a raw content")
+          assert(r.htmlContent == "this is a html content")
           assert(r.publishedAt == 1537974000)
           assert(r.updatedAt == 1621098091)
         }
@@ -98,7 +102,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           assert(r.path.value == "/test/path")
           assert(r.title == "this is a title")
           assert(r.rawContent == "this is a raw content")
-          assert(r.htmlContent.get == "this is a html content")
+          assert(r.htmlContent == "this is a html content")
           assert(r.robotsAttributes == Attributes("noindex, noarchive, noimageindex, nofollow"))
           assert(r.publishedAt == 1537974000)
           assert(r.updatedAt == 1621098091)

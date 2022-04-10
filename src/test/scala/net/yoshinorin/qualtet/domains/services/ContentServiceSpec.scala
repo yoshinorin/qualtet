@@ -73,11 +73,11 @@ class ContentServiceSpec extends AnyWordSpec {
 
     "be return htmlContent if include its field when request create" in {
       val updatedRequestContent = requestContent1.copy(
-        htmlContent = Option("<h1>this is a html content<h1>")
+        htmlContent = "<h1>this is a html content<h1>"
       )
       contentService.createContentFromRequest(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
       val updatedContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync().get
-      assert(updatedContent.content == updatedRequestContent.htmlContent.get)
+      assert(updatedContent.content == updatedRequestContent.htmlContent)
     }
 
     "be throw Author NotFound Exception" in {

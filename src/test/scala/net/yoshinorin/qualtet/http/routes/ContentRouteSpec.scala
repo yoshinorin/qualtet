@@ -135,7 +135,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
             path = Path("/test/content/route/spec/2"),
             title = "this is a ContentRouteSpec2 title",
             rawContent = "this is a raw ContentRouteSpec2",
-            htmlContent = Option("<p>this is a html ContentRouteSpec2<p>"),
+            htmlContent = "<p>this is a html ContentRouteSpec2<p>",
             robotsAttributes = Attributes("noarchive, noimageindex"),
             tags = Option(List("ContentRoute")),
             externalResources = Option(List())

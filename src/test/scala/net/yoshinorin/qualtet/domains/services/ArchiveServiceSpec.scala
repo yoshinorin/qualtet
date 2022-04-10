@@ -16,7 +16,7 @@ class ArchiveServiceSpec extends AnyWordSpec {
         path = Path(s"/test/archives-${i}"),
         title = s"this is a archives title ${i}",
         rawContent = s"this is a archives raw content ${i}",
-        htmlContent = Option(s"this is a archives html content ${i}"),
+        htmlContent = s"this is a archives html content ${i}",
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = Option(List(s"archivesTag${i}")),
         externalResources = Option(List())

@@ -43,7 +43,6 @@ libraryDependencies ++= Seq(
   "org.wvlet.airframe" %% "airframe-ulid" % "22.2.0",
   "com.github.ben-manes.caffeine" % "caffeine" % "3.0.5",
   "org.flywaydb" % "flyway-core" % "7.8.2",
-  "com.vladsch.flexmark" % "flexmark-all" % "0.62.2",
   "ch.qos.logback" % "logback-classic" % "1.2.10",
   "org.springframework.security" % "spring-security-core" % "5.6.1",
   "org.slf4j" % "slf4j-api" % "1.7.36",

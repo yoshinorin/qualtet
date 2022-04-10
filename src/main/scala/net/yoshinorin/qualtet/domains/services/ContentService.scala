@@ -20,7 +20,6 @@ import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResource
 import net.yoshinorin.qualtet.domains.models.robots.{Attributes, Robots, RobotsRepository}
 import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
-import net.yoshinorin.qualtet.utils.Markdown.renderHtml
 import wvlet.airframe.ulid.ULID
 
 class ContentService(
@@ -68,11 +67,7 @@ class ContentService(
           path = request.path,
           title = request.title,
           rawContent = request.rawContent,
-          // TODO: render html with apply
-          htmlContent = request.htmlContent match {
-            case Some(h) => h
-            case None => renderHtml(request.rawContent)
-          },
+          htmlContent = request.htmlContent,
           publishedAt = request.publishedAt,
           updatedAt = request.updatedAt
         ),

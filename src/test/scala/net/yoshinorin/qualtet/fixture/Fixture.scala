@@ -144,6 +144,7 @@ object Fixture {
     path = Path("/test/path"),
     title = "this is a title",
     rawContent = "this is a raw content",
+    htmlContent = "this is a html content",
     robotsAttributes = Attributes("noarchive, noimageindex"),
     tags = Option(List("Scala", "Akka")),
     externalResources = Option(
@@ -161,7 +162,7 @@ object Fixture {
     path = Path("/test/no-metas"),
     title = "this is a title",
     rawContent = "",
-    htmlContent = Option("this is a html content"),
+    htmlContent = "this is a html content",
     robotsAttributes = Attributes("noarchive, noimageindex"),
     tags = Option(List()),
     externalResources = Option(List())

@@ -18,7 +18,7 @@ class FeedRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         path = Path(s"/feeds/feedsRoute-${i}"),
         title = s"this is a feedsRoute title ${i}",
         rawContent = s"this is a feedsRoute raw content ${i}",
-        htmlContent = Option(s"this is a feedsRoute html content ${i}"),
+        htmlContent = s"this is a feedsRoute html content ${i}",
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = Option(List(s"feedsRoute${i}")),
         externalResources = Option(List())
