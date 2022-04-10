@@ -5,6 +5,9 @@
 *.gz
 **/node_modules/*
 .env
+.bloop
+.metals
+metals.sbt
 
 # sbt specific
 dist/*
