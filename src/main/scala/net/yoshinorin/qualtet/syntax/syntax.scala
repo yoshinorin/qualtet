@@ -1,11 +1,11 @@
-package net.yoshinorin.qualtet.validator
+package net.yoshinorin.qualtet
 
 import cats.data.EitherT
 import cats.effect.IO
 
-object Compositions {
+package object syntax {
 
-  implicit class Optional[A](v: EitherT[IO, Throwable, A]) {
+  implicit final class ValidationCompositions[A](v: EitherT[IO, Throwable, A]) {
 
     def andThrow: IO[A] = {
       v.value.flatMap {

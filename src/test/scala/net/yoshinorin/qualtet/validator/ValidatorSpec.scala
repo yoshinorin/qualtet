@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.validator
 
 import net.yoshinorin.qualtet.domains.models.Fail.{Unauthorized, UnprocessableEntity}
-import net.yoshinorin.qualtet.validator.Compositions._
+import net.yoshinorin.qualtet.syntax._
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.validator.ValidatorSpec
