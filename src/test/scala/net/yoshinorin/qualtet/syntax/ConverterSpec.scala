@@ -1,8 +1,8 @@
-package net.yoshinorin.qualtet.utils
+package net.yoshinorin.qualtet.syntax
 
 import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}
-import net.yoshinorin.qualtet.utils.Converters.KeyValueCommaSeparatedString
+import net.yoshinorin.qualtet.syntax._
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.utils.ConvertersSpec
