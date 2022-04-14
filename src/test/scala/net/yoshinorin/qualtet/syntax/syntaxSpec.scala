@@ -1,12 +1,11 @@
-package net.yoshinorin.qualtet.utils
+package net.yoshinorin.qualtet.syntax
 
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.wordspec.AnyWordSpec
+import net.yoshinorin.qualtet.syntax._
 
 // testOnly net.yoshinorin.qualtet.utils.StringOpsSpec
 class StringOpsSpec extends AnyWordSpec {
-
-  import net.yoshinorin.qualtet.utils.StringOps._
 
   "StringOps - stripHtmlTags" should {
 
