@@ -16,6 +16,15 @@ scalacOptions ++= Seq(
   "UTF-8"
 )
 
+// https://scalacenter.github.io/scalafix/docs/users/installation.html
+inThisBuild(
+  List(
+    scalaVersion := scalaVersion.value,
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision
+  )
+)
+
 val akkaVersion = "2.6.18"
 val akkaHttpVersion = "10.2.9"
 val circeVersion = "0.14.1"
