@@ -25,6 +25,9 @@ inThisBuild(
   )
 )
 
+// https://www.wartremover.org/
+wartremoverWarnings ++= Warts.all
+
 val akkaVersion = "2.6.18"
 val akkaHttpVersion = "10.2.9"
 val circeVersion = "0.14.1"
