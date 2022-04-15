@@ -151,7 +151,6 @@ class ContentService(
 
   def findBy[A](data: A)(f: A => ConnectionIO[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 
-    import net.yoshinorin.qualtet.utils.Converters.KeyValueCommaSeparatedString
     import net.yoshinorin.qualtet.syntax._
 
     f(data).transact(doobieContext.transactor).flatMap {
