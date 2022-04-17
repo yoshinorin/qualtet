@@ -1,7 +1,8 @@
 rules = [
   OrganizeImports,
   ExplicitResultTypes,
-  RemoveUnused
+  RemoveUnused,
+  ProcedureSyntax
 ]
 
 RemoveUnused.imports = true

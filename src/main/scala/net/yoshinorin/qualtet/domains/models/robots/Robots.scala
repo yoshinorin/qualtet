@@ -15,7 +15,7 @@ object Attributes {
 
   // https://developers.google.com/search/docs/advanced/robots/robots_meta_tag
   // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
-  val allowedAttributes = List("all", "noindex", "nofollow", "none", "noarchive", "nosnippet", "notranslate", "noimageindex")
+  val allowedAttributes: List[String] = List("all", "noindex", "nofollow", "none", "noarchive", "nosnippet", "notranslate", "noimageindex")
 
   def apply(value: String): Attributes = {
     if (value.endsWith(",")) {

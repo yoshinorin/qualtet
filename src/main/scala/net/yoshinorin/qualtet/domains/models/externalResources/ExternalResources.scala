@@ -10,7 +10,7 @@ object ExternalResourceKind {
   implicit val encodeExternalResourceKind: Encoder[ExternalResourceKind] = Encoder[String].contramap(_.value)
   implicit val decodeExternalResourceKind: Decoder[ExternalResourceKind] = Decoder[String].map(ExternalResourceKind.apply)
 
-  val allowedKinds = List("js", "css")
+  val allowedKinds: List[String] = List("js", "css")
   def apply(value: String): ExternalResourceKind = {
     if (!allowedKinds.contains(value)) {
       throw UnprocessableEntity("The field externalResource.kind allowed only js or css.")

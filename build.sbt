@@ -17,6 +17,7 @@ scalacOptions ++= Seq(
 )
 
 // https://scalacenter.github.io/scalafix/docs/users/installation.html
+ThisBuild / scalafixScalaBinaryVersion := "2.13"
 inThisBuild(
   List(
     scalaVersion := scalaVersion.value,
