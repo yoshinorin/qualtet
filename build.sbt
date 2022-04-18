@@ -18,6 +18,8 @@ scalacOptions ++= Seq(
 
 // https://scalacenter.github.io/scalafix/docs/users/installation.html
 ThisBuild / scalafixScalaBinaryVersion := "2.13"
+// TODO: AggressiveMerge or Merge not working
+// ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 inThisBuild(
   List(
     scalaVersion := scalaVersion.value,
