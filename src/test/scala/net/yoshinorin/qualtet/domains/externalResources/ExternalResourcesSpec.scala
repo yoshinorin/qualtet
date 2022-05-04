@@ -14,8 +14,8 @@ class ExternalResourcesSpec extends AnyWordSpec {
         ExternalResourceKind("js"),
         values = List("test", "foo", "bar")
       )
-      assert(externalResources.kind.value == "js")
-      assert(externalResources.values == List("test", "foo", "bar"))
+      assert(externalResources.kind.value === "js")
+      assert(externalResources.values === List("test", "foo", "bar"))
     }
 
     "as JSON" in {
@@ -39,12 +39,12 @@ class ExternalResourcesSpec extends AnyWordSpec {
   "ExternalResourceKind" should {
     "create instance if specify js" in {
       val externalResourceKind = ExternalResourceKind("js")
-      assert(externalResourceKind.value == "js")
+      assert(externalResourceKind.value === "js")
     }
 
     "create instance if specify css" in {
       val externalResourceKind = ExternalResourceKind("css")
-      assert(externalResourceKind.value == "css")
+      assert(externalResourceKind.value === "css")
     }
 
     "can not create instance with invalid value" in {

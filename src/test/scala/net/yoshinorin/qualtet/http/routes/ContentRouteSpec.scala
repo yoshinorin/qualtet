@@ -36,8 +36,8 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
       Post("/contents/")
         .withEntity(ContentTypes.`application/json`, json) ~> addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
-        assert(status == StatusCodes.Created)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.Created)
+        assert(contentType === ContentTypes.`application/json`)
       }
     }
 
@@ -59,14 +59,14 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       Post("/contents/")
         .withEntity(ContentTypes.`application/json`, json) ~> addCredentials(OAuth2BearerToken(expiredToken)) ~> contentRoute.route ~> check {
         // TODO: fix status code
-        assert(status == StatusCodes.InternalServerError)
+        assert(status === StatusCodes.InternalServerError)
       }
     }
 
     "be reject caused by the authorization header is empty" in {
       Post("/contents/")
         .withEntity(ContentTypes.`application/json`, """{}""") ~> contentRoute.route ~> check {
-        assert(rejection.asInstanceOf[AuthenticationFailedRejection].cause == CredentialsMissing)
+        assert(rejection.asInstanceOf[AuthenticationFailedRejection].cause === CredentialsMissing)
       }
     }
 
@@ -74,7 +74,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       Post("/contents/")
         .withEntity(ContentTypes.`application/json`, """{}""") ~> addCredentials(OAuth2BearerToken("invalid token")) ~> contentRoute.route ~> check {
         // TODO: fix status code
-        assert(status == StatusCodes.InternalServerError)
+        assert(status === StatusCodes.InternalServerError)
       }
     }
 
@@ -82,7 +82,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       Post("/contents/")
         .withEntity(ContentTypes.`application/json`, """{}""") ~> addCredentials(OAuth2BearerToken(nonExistsUserToken)) ~> contentRoute.route ~> check {
         // TODO: fix status code
-        assert(status == StatusCodes.InternalServerError)
+        assert(status === StatusCodes.InternalServerError)
       }
     }
 
@@ -103,7 +103,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
       Post("/contents/")
         .withEntity(ContentTypes.`application/json`, wrongJsonFormat) ~> addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
-        assert(status == StatusCodes.BadRequest)
+        assert(status === StatusCodes.BadRequest)
         // TODO: assert response json
       }
     }
@@ -120,7 +120,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
       Post("/contents/")
         .withEntity(ContentTypes.`application/json`, wrongJsonFormat) ~> addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
-        assert(status == StatusCodes.BadRequest)
+        assert(status === StatusCodes.BadRequest)
         // TODO: assert response json
       }
     }
@@ -144,16 +144,16 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         .unsafeRunSync()
 
       Get("/contents/test/content/route/spec/2") ~> contentRoute.route ~> check {
-        assert(status == StatusCodes.OK)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.OK)
+        assert(contentType === ContentTypes.`application/json`)
         // TODO: assert json
       }
 
       /*
       TODO: should be pass with trailing slash
       Get("/contents/test/content/route/spec/2/") ~> contentRoute.route ~> check {
-        assert(status == StatusCodes.OK)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.OK)
+        assert(contentType === ContentTypes.`application/json`)
         // TODO: assert json
       }
      */
@@ -163,15 +163,15 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
     "be return 404 with non-trailing slash" in {
       Get("/contents/this/is/a/404") ~> contentRoute.route ~> check {
-        assert(status == StatusCodes.NotFound)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.NotFound)
+        assert(contentType === ContentTypes.`application/json`)
       }
     }
 
     "be return 404 with trailing slash" in {
       Get("/contents/this/is/a/404/") ~> contentRoute.route ~> check {
-        assert(status == StatusCodes.NotFound)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.NotFound)
+        assert(contentType === ContentTypes.`application/json`)
       }
     }
 

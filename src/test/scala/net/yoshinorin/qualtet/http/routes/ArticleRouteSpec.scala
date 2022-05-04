@@ -32,8 +32,8 @@ class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   "ArticleRoute" should {
     "be return articles with default query params" in {
       Get("/articles/") ~> articleRoute.route ~> check {
-        assert(status == StatusCodes.OK)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.OK)
+        assert(contentType === ContentTypes.`application/json`)
         // TODO: assert json
         assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("count"))
       }
@@ -41,8 +41,8 @@ class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
     "be return articles with query params" in {
       Get("/articles/?page=1&limit=5") ~> articleRoute.route ~> check {
-        assert(status == StatusCodes.OK)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.OK)
+        assert(contentType === ContentTypes.`application/json`)
         // TODO: assert json
         assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("count"))
         // TODO: assert json count is 5
@@ -51,8 +51,8 @@ class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
     "be return 10 articles with query params" in {
       Get("/articles/?page=1&limit=50") ~> articleRoute.route ~> check {
-        assert(status == StatusCodes.OK)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.OK)
+        assert(contentType === ContentTypes.`application/json`)
         // TODO: assert json
         assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("count"))
         // TODO: assert json count is 10
@@ -61,7 +61,7 @@ class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
     "not be return articles with query params" in {
       Get("/articles/?page=99999&limit=10") ~> articleRoute.route ~> check {
-        assert(status == StatusCodes.NotFound)
+        assert(status === StatusCodes.NotFound)
       }
     }
 

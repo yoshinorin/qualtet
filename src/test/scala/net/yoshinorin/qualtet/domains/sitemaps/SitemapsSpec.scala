@@ -9,7 +9,7 @@ class SitemapsSpec extends AnyWordSpec {
 
   "Loc" should {
     "valid value" in {
-      assert(Loc("https://example.com/test/post").value == "https://example.com/test/post")
+      assert(Loc("https://example.com/test/post").value === "https://example.com/test/post")
     }
     "invalid value" in {
       // TODO: write test
@@ -18,11 +18,11 @@ class SitemapsSpec extends AnyWordSpec {
 
   "LastMod" should {
     "valid value" in {
-      assert(LastMod("1620738897").value == "2021-05-11")
+      assert(LastMod("1620738897").value === "2021-05-11")
     }
     "invalid value (NOT a unixtime)" in {
       // TODO: throw exception
-      assert(LastMod("1620738").value == "1970-01-19")
+      assert(LastMod("1620738").value === "1970-01-19")
     }
     "invalid value (can not toLong)" in {
       // TODO: throw exception
@@ -54,7 +54,7 @@ class SitemapsSpec extends AnyWordSpec {
         Url(Loc("https://example.com/ccc/ddd"), LastMod("1620938897"))
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
-      assert(expectJson == urls)
+      assert(expectJson === urls)
     }
   }
 

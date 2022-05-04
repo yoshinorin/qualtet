@@ -15,12 +15,12 @@ class ConvertersSpec extends AnyWordSpec {
         Option("Z, X, Y")
       ).zip((x, y) => new Tag(new TagId(x), new TagName(y)))
 
-      assert(maybeTags.get(0).id.value == "A")
-      assert(maybeTags.get(0).name.value == "Z")
-      assert(maybeTags.get(1).id.value == "B")
-      assert(maybeTags.get(1).name.value == "X")
-      assert(maybeTags.get(2).id.value == "C")
-      assert(maybeTags.get(2).name.value == "Y")
+      assert(maybeTags.get(0).id.value === "A")
+      assert(maybeTags.get(0).name.value === "Z")
+      assert(maybeTags.get(1).id.value === "B")
+      assert(maybeTags.get(1).name.value === "X")
+      assert(maybeTags.get(2).id.value === "C")
+      assert(maybeTags.get(2).name.value === "Y")
     }
 
     "return None if first arg is None" in {
@@ -55,10 +55,10 @@ class ConvertersSpec extends AnyWordSpec {
         Option("js1, css1, js2, js3, css2")
       ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
 
-      assert(maybeExternalResource.get(0).kind.value == "css")
-      assert(maybeExternalResource.get(1).kind.value == "js")
-      assert(maybeExternalResource.get(0).values == List("css1", "css2"))
-      assert(maybeExternalResource.get(1).values == List("js1", "js2", "js3"))
+      assert(maybeExternalResource.get(0).kind.value === "css")
+      assert(maybeExternalResource.get(1).kind.value === "js")
+      assert(maybeExternalResource.get(0).values === List("css1", "css2"))
+      assert(maybeExternalResource.get(1).values === List("js1", "js2", "js3"))
 
     }
 

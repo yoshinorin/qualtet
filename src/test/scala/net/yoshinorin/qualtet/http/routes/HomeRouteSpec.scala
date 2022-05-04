@@ -13,8 +13,8 @@ class HomeRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
     "hello Qualtet!!" in {
       Get("/") ~> homeRoute.route ~> check {
-        assert(status == StatusCodes.OK)
-        assert(contentType == ContentTypes.`text/plain(UTF-8)`)
+        assert(status === StatusCodes.OK)
+        assert(contentType === ContentTypes.`text/plain(UTF-8)`)
         assert(responseAs[String].contains("Hello Qualtet!!"))
       }
     }

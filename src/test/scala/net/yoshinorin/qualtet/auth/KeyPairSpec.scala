@@ -11,10 +11,10 @@ class KeyPairSpec extends AnyWordSpec {
     "generate keypair" in {
 
       val keyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
-      assert(keyPair.publicKey.getAlgorithm == "RSA")
-      assert(keyPair.publicKey.getFormat == "X.509")
-      assert(keyPair.privateKey.getAlgorithm == "RSA")
-      assert(keyPair.privateKey.getFormat == "PKCS#8")
+      assert(keyPair.publicKey.getAlgorithm === "RSA")
+      assert(keyPair.publicKey.getFormat === "X.509")
+      assert(keyPair.privateKey.getAlgorithm === "RSA")
+      assert(keyPair.privateKey.getFormat === "PKCS#8")
 
     }
   }

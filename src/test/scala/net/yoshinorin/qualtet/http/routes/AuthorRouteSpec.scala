@@ -33,8 +33,8 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       Get("/authors/") ~> authorRoute.route ~> check {
-        assert(status == StatusCodes.OK)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.OK)
+        assert(contentType === ContentTypes.`application/json`)
         assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
       }
     }
@@ -51,16 +51,16 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       Get("/authors/jhondue") ~> authorRoute.route ~> check {
-        assert(status == StatusCodes.OK)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.OK)
+        assert(contentType === ContentTypes.`application/json`)
         assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
       }
     }
 
     "be return 404" in {
       Get("/authors/jhondue-not-exists") ~> authorRoute.route ~> check {
-        assert(status == StatusCodes.NotFound)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.NotFound)
+        assert(contentType === ContentTypes.`application/json`)
       }
     }
 

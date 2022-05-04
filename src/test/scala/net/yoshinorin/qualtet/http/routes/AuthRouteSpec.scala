@@ -24,8 +24,8 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
       Post("/token/")
         .withEntity(ContentTypes.`application/json`, json) ~> authRoute.route ~> check {
-        assert(status == StatusCodes.Created)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.Created)
+        assert(contentType === ContentTypes.`application/json`)
         // TODO: fix test case
         assert(responseAs[String].contains("."))
       }
@@ -42,7 +42,7 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
       Post("/token/")
         .withEntity(ContentTypes.`application/json`, wrongJsonFormat) ~> authRoute.route ~> check {
-        assert(status == StatusCodes.BadRequest)
+        assert(status === StatusCodes.BadRequest)
       }
     }
 
@@ -56,7 +56,7 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
       Post("/token/")
         .withEntity(ContentTypes.`application/json`, wrongJson) ~> authRoute.route ~> check {
-        assert(status == StatusCodes.BadRequest)
+        assert(status === StatusCodes.BadRequest)
       }
     }
 
@@ -70,7 +70,7 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
       Post("/token/")
         .withEntity(ContentTypes.`application/json`, wrongJson) ~> authRoute.route ~> check {
-        assert(status == StatusCodes.BadRequest)
+        assert(status === StatusCodes.BadRequest)
       }
     }
 
@@ -85,7 +85,7 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
       Post("/token/")
         .withEntity(ContentTypes.`application/json`, json) ~> authRoute.route ~> check {
-        assert(status == StatusCodes.Unauthorized)
+        assert(status === StatusCodes.Unauthorized)
       }
     }
 
@@ -101,7 +101,7 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       // TODO: fix response to 404
       Post("/token/")
         .withEntity(ContentTypes.`application/json`, json) ~> authRoute.route ~> check {
-        assert(status == StatusCodes.InternalServerError)
+        assert(status === StatusCodes.InternalServerError)
       }
     }
 

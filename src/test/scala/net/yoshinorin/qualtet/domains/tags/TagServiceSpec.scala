@@ -31,19 +31,19 @@ class TagServiceSpec extends AnyWordSpec {
 
     "be get all tags" in {
       val result = tagService.getAll.unsafeRunSync().filter(t => t.name.value.contains("tagService"))
-      assert(result.size == 10)
+      assert(result.size === 10)
     }
 
     "be findByName" in {
       val result = tagService.findByName(TagName("tagService1")).unsafeRunSync()
-      assert(result.size == 1)
-      assert(result.get.name.value == "tagService1")
+      assert(result.size === 1)
+      assert(result.get.name.value === "tagService1")
     }
 
     "be getTags" in {
       val result = tagService.getTags(Option(List("tagService1", "tagService2"))).unsafeRunSync()
-      assert(result.get(0).name.value == "tagService1")
-      assert(result.get(1).name.value == "tagService2")
+      assert(result.get(0).name.value === "tagService1")
+      assert(result.get(1).name.value === "tagService2")
     }
 
   }

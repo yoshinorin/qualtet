@@ -14,12 +14,12 @@ class CreateAuthorSpec extends AnyWordSpec {
 
       // TODO: Need assertion. Sometimes return `None` after change 9817e9fc7a57cb1e8eac1c168a715f9486ed0dc7
       // val a = authorService.findByName(AuthorName(author.name.value)).unsafeRunSync()
-      // assert(a.get.name.value == author.name.value)
+      // assert(a.get.name.value === author.name.value)
 
       // NOTE: just for create test data
       CreateAuthor.main(Array(author2.name.value, author2.displayName.value, "pass"))
       // NOTE: avoid test failure. This is a just test data no need assert.
-      // assert(a2.get.name.value == author2.name.value)
+      // assert(a2.get.name.value === author2.name.value)
 
       // CreateAuthor.main(Array("notexistsuser", "NA", "pass"))
     }

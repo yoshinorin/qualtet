@@ -24,7 +24,7 @@ class AuthServiceSpec extends AnyWordSpec {
     "be find an author from JWT string" in {
       val token = authService.generateToken(RequestToken(a.id, "pass")).unsafeRunSync().token
       val author = authService.findAuthorFromJwtString(token).unsafeRunSync().get
-      assert(author.id.value == a.id.value)
+      assert(author.id.value === a.id.value)
     }
 
     "be throw exception if JWT is expired" in {

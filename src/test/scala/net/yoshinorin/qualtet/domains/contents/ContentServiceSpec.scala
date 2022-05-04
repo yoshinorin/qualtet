@@ -16,9 +16,9 @@ class ContentServiceSpec extends AnyWordSpec {
       val result = contentService.createContentFromRequest(AuthorName(author.name.value), requestContent1).unsafeRunSync()
       assert(result.id.isInstanceOf[ContentId])
       // TODO: check authorId, ContentTypeId
-      assert(result.path.value == requestContent1.path.value)
-      assert(result.title == requestContent1.title)
-      assert(result.rawContent == requestContent1.rawContent)
+      assert(result.path.value === requestContent1.path.value)
+      assert(result.title === requestContent1.title)
+      assert(result.rawContent === requestContent1.rawContent)
 
       val createdContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync()
       val createdTagNames = createdContent.get.tags.get.map(x => x.name.value)
@@ -26,11 +26,11 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(createdTagNames.contains("Akka"))
 
       val createdAttributes = createdContent.get.robotsAttributes
-      assert(createdAttributes.value == requestContent1.robotsAttributes.value)
+      assert(createdAttributes.value === requestContent1.robotsAttributes.value)
 
       val createdExternalResources = createdContent.get.externalResources.get.head
-      assert(createdExternalResources.kind == requestContent1.externalResources.get.head.kind)
-      assert(createdExternalResources.values.sorted == requestContent1.externalResources.get.head.values.sorted)
+      assert(createdExternalResources.kind === requestContent1.externalResources.get.head.kind)
+      assert(createdExternalResources.values.sorted === requestContent1.externalResources.get.head.values.sorted)
 
     }
 
@@ -46,12 +46,12 @@ class ContentServiceSpec extends AnyWordSpec {
       val updatedContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync().get
 
       // TODO: add id to response field
-      //assert(currentContent.id == updatedContent.id)
+      //assert(currentContent.id === updatedContent.id)
       // TODO: check authorId, ContentTypeId
 
-      assert(updatedContent.title == updatedRequestContent.title)
-      assert(currentContent.publishedAt == updatedContent.publishedAt)
-      assert(updatedContent.robotsAttributes == updatedRequestContent.robotsAttributes)
+      assert(updatedContent.title === updatedRequestContent.title)
+      assert(currentContent.publishedAt === updatedContent.publishedAt)
+      assert(updatedContent.robotsAttributes === updatedRequestContent.robotsAttributes)
 
       val updatedTagNames = updatedContent.tags.get.map(x => x.name.value)
       assert(updatedTagNames.contains("Scala"))
@@ -67,7 +67,7 @@ class ContentServiceSpec extends AnyWordSpec {
       val createdContent = contentService.findByPathWithMeta(requestContentNoMetas.path).unsafeRunSync().get
       assert(createdContent.externalResources.isEmpty)
       assert(createdContent.tags.isEmpty)
-      assert(createdContent.content == "this is a html content")
+      assert(createdContent.content === "this is a html content")
     }
 
     "be return htmlContent if include its field when request create" in {
@@ -76,7 +76,7 @@ class ContentServiceSpec extends AnyWordSpec {
       )
       contentService.createContentFromRequest(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
       val updatedContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync().get
-      assert(updatedContent.content == updatedRequestContent.htmlContent)
+      assert(updatedContent.content === updatedRequestContent.htmlContent)
     }
 
     "be throw Author NotFound Exception" in {

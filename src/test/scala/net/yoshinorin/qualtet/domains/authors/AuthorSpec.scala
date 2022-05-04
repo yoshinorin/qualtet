@@ -13,7 +13,7 @@ class AuthorSpec extends AnyWordSpec {
 
   "AuthorId" should {
     "valid value" in {
-      assert(authorId.value == "01febb8az5t42m2h68xj8c754a")
+      assert(authorId.value === "01febb8az5t42m2h68xj8c754a")
     }
     "invalid value" in {
       assertThrows[IllegalArgumentException] {
@@ -24,7 +24,7 @@ class AuthorSpec extends AnyWordSpec {
 
   "AuthorName" should {
     "valid value" in {
-      assert(AuthorName("123AbcDef_-").value == "123abcdef_-")
+      assert(AuthorName("123AbcDef_-").value === "123abcdef_-")
     }
     "invalid value" in {
       assertThrows[UnprocessableEntity] {
@@ -38,7 +38,7 @@ class AuthorSpec extends AnyWordSpec {
 
   "AuthorDisplayName" should {
     "valid value" in {
-      assert(AuthorDisplayName("123AbcDef_-").value == "123AbcDef_-")
+      assert(AuthorDisplayName("123AbcDef_-").value === "123AbcDef_-")
     }
     "invalid value" in {
       assertThrows[UnprocessableEntity] {
@@ -53,7 +53,7 @@ class AuthorSpec extends AnyWordSpec {
   "BCryptPassword" should {
     "valid value" in {
       assert(
-        validBCryptPassword.value == "$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O"
+        validBCryptPassword.value === "$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O"
       )
     }
     "invalid value" in {
@@ -77,12 +77,12 @@ class AuthorSpec extends AnyWordSpec {
       val instanceUTCDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(author.createdAt), ZoneOffset.UTC)
 
       assert(author.id.isInstanceOf[AuthorId])
-      assert(author.name.value == "jhondue")
-      assert(author.displayName.value == "JD")
-      assert(instanceUTCDateTime.getYear == currentUTCDateTime.getYear)
-      assert(instanceUTCDateTime.getMonth == currentUTCDateTime.getMonth)
-      assert(instanceUTCDateTime.getDayOfMonth == currentUTCDateTime.getDayOfMonth)
-      assert(instanceUTCDateTime.getHour == currentUTCDateTime.getHour)
+      assert(author.name.value === "jhondue")
+      assert(author.displayName.value === "JD")
+      assert(instanceUTCDateTime.getYear === currentUTCDateTime.getYear)
+      assert(instanceUTCDateTime.getMonth === currentUTCDateTime.getMonth)
+      assert(instanceUTCDateTime.getDayOfMonth === currentUTCDateTime.getDayOfMonth)
+      assert(instanceUTCDateTime.getHour === currentUTCDateTime.getHour)
     }
 
     "specific values" in {
@@ -94,10 +94,10 @@ class AuthorSpec extends AnyWordSpec {
         1625065592
       )
 
-      assert(author.id.value == "01febb8az5t42m2h68xj8c754a")
-      assert(author.name.value == "jhondue")
-      assert(author.displayName.value == "JD")
-      assert(author.createdAt == 1625065592)
+      assert(author.id.value === "01febb8az5t42m2h68xj8c754a")
+      assert(author.name.value === "jhondue")
+      assert(author.displayName.value === "JD")
+      assert(author.createdAt === 1625065592)
     }
   }
 

@@ -21,7 +21,7 @@ class CacheModuleSpec extends AnyWordSpec {
 
   "Cache" should {
     "hit" in {
-      assert(contentTypeCache.get(articleContentType.name).get.id == contentTypeId)
+      assert(contentTypeCache.get(articleContentType.name).get.id === contentTypeId)
     }
 
     "miss" in {
@@ -31,7 +31,7 @@ class CacheModuleSpec extends AnyWordSpec {
     "hit optional" in {
       val cache = new CacheModule[Int, String](caffeinCache)
       cache.put(1, Option("foo"))
-      assert(cache.get(1).get == "foo")
+      assert(cache.get(1).get === "foo")
     }
 
     "miss optional" in {
@@ -43,7 +43,7 @@ class CacheModuleSpec extends AnyWordSpec {
     "miss after expire" in {
       val cache = new CacheModule[Int, String](caffeinCache)
       cache.put(3, "foo")
-      assert(cache.get(1).get == "foo")
+      assert(cache.get(1).get === "foo")
       Thread.sleep(4000)
       assert(cache.get(3).isEmpty)
     }
@@ -52,8 +52,8 @@ class CacheModuleSpec extends AnyWordSpec {
       val cache = new CacheModule[Int, String](caffeinCache)
       cache.put(4, "bar")
       cache.put(5, "hoge")
-      assert(cache.get(4).get == "bar")
-      assert(cache.get(5).get == "hoge")
+      assert(cache.get(4).get === "bar")
+      assert(cache.get(5).get === "hoge")
       cache.invalidate()
       assert(cache.get(4).isEmpty)
       assert(cache.get(5).isEmpty)

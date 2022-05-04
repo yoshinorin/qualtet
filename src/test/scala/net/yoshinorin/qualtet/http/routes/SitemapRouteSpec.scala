@@ -32,8 +32,8 @@ class SitemapRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   "SitemapRoute" should {
     "be return json for sitemap.xml" in {
       Get("/sitemaps/") ~> sitemapRoute.route ~> check {
-        assert(status == StatusCodes.OK)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.OK)
+        assert(contentType === ContentTypes.`application/json`)
         // TODO: assert JSON and count
         assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("loc"))
       }

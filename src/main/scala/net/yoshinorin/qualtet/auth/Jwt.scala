@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
+import cats.implicits.catsSyntaxEq
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 import net.yoshinorin.qualtet.config.Config
@@ -81,8 +82,8 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
         IO(Left(t))
       case Right(jc) => {
         (for {
-          _ <- Validator.validate(jc)(x => x.aud == Config.jwtAud)(Unauthorized())
-          _ <- Validator.validate(jc)(x => x.iss == Config.jwtIss)(Unauthorized())
+          _ <- Validator.validate(jc)(x => x.aud === Config.jwtAud)(Unauthorized())
+          _ <- Validator.validate(jc)(x => x.iss === Config.jwtIss)(Unauthorized())
           result <- Validator.validate(jc)(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
         } yield result).value
       }

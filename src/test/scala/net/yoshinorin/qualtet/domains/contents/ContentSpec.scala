@@ -16,7 +16,7 @@ class ContentSpec extends AnyWordSpec {
 
   "ContentId" should {
     "create instance with specific id" in {
-      assert(contentId.value == "01febb1333pd3431q1a1e00fbt")
+      assert(contentId.value === "01febb1333pd3431q1a1e00fbt")
     }
 
     "can not create instance" in {
@@ -28,11 +28,11 @@ class ContentSpec extends AnyWordSpec {
 
   "Path" should {
     "can create instance" in {
-      assert(Path("/test/path").value == "/test/path")
+      assert(Path("/test/path").value === "/test/path")
     }
 
     "add slash on the top" in {
-      assert(Path("test/path").value == "/test/path")
+      assert(Path("test/path").value === "/test/path")
     }
   }
 
@@ -50,10 +50,10 @@ class ContentSpec extends AnyWordSpec {
       val instanceUTCDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(content.publishedAt), ZoneOffset.UTC)
 
       assert(content.id.isInstanceOf[ContentId])
-      assert(instanceUTCDateTime.getYear == currentUTCDateTime.getYear)
-      assert(instanceUTCDateTime.getMonth == currentUTCDateTime.getMonth)
-      assert(instanceUTCDateTime.getDayOfMonth == currentUTCDateTime.getDayOfMonth)
-      assert(instanceUTCDateTime.getHour == currentUTCDateTime.getHour)
+      assert(instanceUTCDateTime.getYear === currentUTCDateTime.getYear)
+      assert(instanceUTCDateTime.getMonth === currentUTCDateTime.getMonth)
+      assert(instanceUTCDateTime.getDayOfMonth === currentUTCDateTime.getDayOfMonth)
+      assert(instanceUTCDateTime.getHour === currentUTCDateTime.getHour)
     }
   }
 

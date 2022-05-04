@@ -50,28 +50,28 @@ class ArticleServiceSpec extends AnyWordSpec {
     "getWithCount return ResponseArticleWithCount instances" in {
       val result = articleService.getWithCount(ArticlesQueryParameter(1, 5)).unsafeRunSync()
       assert(result.count > result.articles.size)
-      assert(result.articles.size == 5)
-      assert(result.articles == result.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
+      assert(result.articles.size === 5)
+      assert(result.articles === result.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
 
       val result2 = articleService.getWithCount(ArticlesQueryParameter(1, 3)).unsafeRunSync()
       assert(result.count > result.articles.size)
-      assert(result2.articles.size == 3)
-      assert(result2.articles == result2.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
+      assert(result2.articles.size === 3)
+      assert(result2.articles === result2.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
     }
 
     "getByTagNameWithCount return ResponseArticleWithCount instances" in {
       val result = articleService.getByTagNameWithCount(TagName("SameTag"), ArticlesQueryParameter(1, 5)).unsafeRunSync()
       assert(result.count > result.articles.size)
-      assert(result.articles.size == 5)
-      assert(result.articles == result.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
+      assert(result.articles.size === 5)
+      assert(result.articles === result.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
 
       result.articles.map(a => a.path.value).foreach { p => assert(p.startsWith("/test/same/tags/")) }
     }
 
     "getFeeds return ResponseFeed instances" in {
       val result = articleService.getFeeds(ArticlesQueryParameter(1, 5)).unsafeRunSync()
-      assert(result.size == 5)
-      assert(result == result.sortWith((x, y) => x.published > y.published))
+      assert(result.size === 5)
+      assert(result === result.sortWith((x, y) => x.published > y.published))
     }
 
   }

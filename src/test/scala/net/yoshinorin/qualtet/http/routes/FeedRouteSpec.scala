@@ -32,8 +32,8 @@ class FeedRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   "FeedRoute" should {
     "be return feeds" in {
       Get("/feeds/index") ~> feedRoute.route ~> check {
-        assert(status == StatusCodes.OK)
-        assert(contentType == ContentTypes.`application/json`)
+        assert(status === StatusCodes.OK)
+        assert(contentType === ContentTypes.`application/json`)
         // TODO: assert response contents count
       }
     }

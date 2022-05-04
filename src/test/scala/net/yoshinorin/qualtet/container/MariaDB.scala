@@ -24,38 +24,38 @@ object MariaDBSpec {
   val dockerComposeFilePath = new File("src/test/resources/docker-compose.yml")
 
   def run(): Unit = {
-    println("=====starting db container")
+    println("=======starting db container")
     val dockerCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} up -d")
     dockerCommand.run
 
     // workaround
     Thread.sleep(25000)
-    println("=====started db container")
+    println("=======started db container")
   }
 
   def shutDown(): Unit = {
-    println("=====stopping db container")
+    println("=======stopping db container")
     val dockerDownCommand = s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} down"
     dockerDownCommand.!!
-    println("=====stopped db container")
+    println("=======stopped db container")
   }
 
   /*
   override def beforeAll(): Unit = {
-    println("=====starting db container")
+    println("=======starting db container")
     val dockerCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} up -d")
     dockerCommand.run
 
     // workaround
     Thread.sleep(25000)
-    println("=====started db container")
+    println("=======started db container")
   }
 
   override def afterAll(): Unit = {
-    println("=====stopping db container")
+    println("=======stopping db container")
     val dockerDownCommand = s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} down"
     dockerDownCommand.!!
-    println("=====stopped db container")
+    println("=======stopped db container")
   }
  */
 
