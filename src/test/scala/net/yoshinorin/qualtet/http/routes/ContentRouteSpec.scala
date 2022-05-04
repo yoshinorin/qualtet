@@ -6,9 +6,9 @@ import akka.http.scaladsl.server.AuthenticationFailedRejection
 import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsMissing
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import net.yoshinorin.qualtet.auth.RequestToken
-import net.yoshinorin.qualtet.domains.models.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.models.contents.{Path, RequestContent}
-import net.yoshinorin.qualtet.domains.models.robots.Attributes
+import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
+import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
+import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.{authService, author, authorService, contentRoute, contentService, expiredToken, nonExistsUserToken}
 import org.scalatest.wordspec.AnyWordSpec
 

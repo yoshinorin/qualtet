@@ -3,9 +3,8 @@ package net.yoshinorin.qualtet.http.routes
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import cats.effect.IO
-import net.yoshinorin.qualtet.domains.models.archives.ResponseArchive
-import net.yoshinorin.qualtet.domains.models.contents.Path
-import net.yoshinorin.qualtet.domains.services.ArchiveService
+import net.yoshinorin.qualtet.domains.archives.{ArchiveService, ResponseArchive}
+import net.yoshinorin.qualtet.domains.contents.Path
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.wordspec.AnyWordSpec

@@ -1,10 +1,9 @@
 package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
+import net.yoshinorin.qualtet.domains.authors.{Author, AuthorId, AuthorService, BCryptPassword, ResponseAuthor}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.models.Fail.{NotFound, Unauthorized}
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorId, BCryptPassword, ResponseAuthor}
-import net.yoshinorin.qualtet.domains.services.AuthorService
 import org.slf4j.LoggerFactory
 
 class AuthService(authorService: AuthorService, jwt: Jwt) {

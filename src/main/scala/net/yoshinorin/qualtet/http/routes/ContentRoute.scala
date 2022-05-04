@@ -1,13 +1,12 @@
 package net.yoshinorin.qualtet.http.routes
 
 import akka.http.scaladsl.model.StatusCodes._
-import akka.http.scaladsl.server.Directives.{path, _}
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import net.yoshinorin.qualtet.auth.AuthService
+import net.yoshinorin.qualtet.domains.contents.{Content, ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.models.Fail
-import net.yoshinorin.qualtet.domains.models.contents.{Content, Path, RequestContent}
-import net.yoshinorin.qualtet.domains.services.ContentService
 import net.yoshinorin.qualtet.http.{Authentication, RequestDecoder, ResponseHandler}
 
 class ContentRoute(

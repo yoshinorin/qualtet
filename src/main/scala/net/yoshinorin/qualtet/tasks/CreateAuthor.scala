@@ -5,9 +5,8 @@ import akka.actor.ActorSystem
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import io.circe.syntax._
+import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, AuthorService, BCryptPassword, DoobieAuthorRepository}
 import org.slf4j.LoggerFactory
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorName, BCryptPassword, DoobieAuthorRepository}
-import net.yoshinorin.qualtet.domains.services.AuthorService
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 

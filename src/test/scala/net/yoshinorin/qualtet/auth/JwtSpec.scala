@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.auth
 
 import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.models.Fail.Unauthorized
-import net.yoshinorin.qualtet.domains.models.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.fixture.Fixture.{jwtInstance, validBCryptPassword}
 import net.yoshinorin.qualtet.validator.Validator
 import org.scalatest.wordspec.AnyWordSpec

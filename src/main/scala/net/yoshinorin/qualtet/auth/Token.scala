@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.auth
 
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
-import net.yoshinorin.qualtet.domains.models.authors.AuthorId
+import net.yoshinorin.qualtet.domains.authors.AuthorId
 
 final case class RequestToken(
   authorId: AuthorId,

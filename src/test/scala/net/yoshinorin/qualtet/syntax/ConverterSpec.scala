@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
-import net.yoshinorin.qualtet.domains.models.externalResources.{ExternalResourceKind, ExternalResources}
-import net.yoshinorin.qualtet.domains.models.tags.{Tag, TagId, TagName}
+import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName}
 import net.yoshinorin.qualtet.syntax._
 import org.scalatest.wordspec.AnyWordSpec
 

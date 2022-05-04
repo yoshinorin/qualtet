@@ -4,16 +4,15 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.domains.models.archives.{DoobieArchiveRepository, ResponseArchive}
-import net.yoshinorin.qualtet.domains.models.articles.{DoobieArticleRepository, ResponseArticle}
-import net.yoshinorin.qualtet.domains.models.authors._
-import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentTypeId, DoobieContentTypeRepository}
-import net.yoshinorin.qualtet.domains.models.contents.{ContentId, DoobieContentRepository, DoobieContentTaggingRepository, Path, RequestContent}
-import net.yoshinorin.qualtet.domains.models.externalResources.{DoobieExternalResourceRepository, ExternalResourceKind, ExternalResources}
-import net.yoshinorin.qualtet.domains.models.robots.{Attributes, DoobieRobotsRepository}
-import net.yoshinorin.qualtet.domains.models.sitemaps.{DoobieSitemapsRepository, Url}
-import net.yoshinorin.qualtet.domains.models.tags.{DoobieTagRepository, TagId}
-import net.yoshinorin.qualtet.domains.services.{ArchiveService, ArticleService, AuthorService, ContentService, ContentTypeService, SitemapService, TagService}
+import net.yoshinorin.qualtet.domains.archives.{ArchiveService, DoobieArchiveRepository, ResponseArchive}
+import net.yoshinorin.qualtet.domains.articles.{ArticleService, DoobieArticleRepository, ResponseArticle}
+import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, AuthorService, BCryptPassword, DoobieAuthorRepository}
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService, DoobieContentTypeRepository}
+import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, DoobieContentRepository, DoobieContentTaggingRepository, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.externalResources.{DoobieExternalResourceRepository, ExternalResourceKind, ExternalResources}
+import net.yoshinorin.qualtet.domains.robots.{Attributes, DoobieRobotsRepository}
+import net.yoshinorin.qualtet.domains.sitemaps.{DoobieSitemapsRepository, SitemapService, Url}
+import net.yoshinorin.qualtet.domains.tags.{DoobieTagRepository, TagId, TagService}
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,

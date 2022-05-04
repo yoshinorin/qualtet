@@ -1,10 +1,10 @@
 package net.yoshinorin.qualtet.http
 
 import net.yoshinorin.qualtet.auth.RequestToken
+import net.yoshinorin.qualtet.domains.authors.AuthorId
+import net.yoshinorin.qualtet.domains.contents.RequestContent
 import net.yoshinorin.qualtet.domains.models.Fail.BadRequest
-import net.yoshinorin.qualtet.domains.models.authors.AuthorId
-import net.yoshinorin.qualtet.domains.models.contents.RequestContent
-import net.yoshinorin.qualtet.domains.models.robots.Attributes
+import net.yoshinorin.qualtet.domains.robots.Attributes
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.ZonedDateTime

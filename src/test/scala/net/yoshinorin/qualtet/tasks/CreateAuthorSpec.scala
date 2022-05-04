@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.tasks
 
-import net.yoshinorin.qualtet.domains.models.authors.AuthorName
+import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, authorService}
 import org.scalatest.wordspec.AnyWordSpec
 

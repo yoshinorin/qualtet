@@ -5,8 +5,8 @@ import akka.http.scaladsl.server.Directives.authenticateOrRejectWithChallenge
 import akka.http.scaladsl.server.directives.{AuthenticationDirective, AuthenticationResult}
 import cats.effect.IO
 import net.yoshinorin.qualtet.auth.AuthService
+import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.models.Fail.NotFound
-import net.yoshinorin.qualtet.domains.models.authors.ResponseAuthor
 
 import scala.concurrent.Future
 

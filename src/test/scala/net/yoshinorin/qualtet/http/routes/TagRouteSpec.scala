@@ -2,10 +2,10 @@ package net.yoshinorin.qualtet.http.routes
 
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import net.yoshinorin.qualtet.domains.models.authors.AuthorName
-import net.yoshinorin.qualtet.domains.models.contents.{Path, RequestContent}
-import net.yoshinorin.qualtet.domains.models.robots.Attributes
-import net.yoshinorin.qualtet.domains.models.tags.ResponseTag
+import net.yoshinorin.qualtet.domains.authors.AuthorName
+import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
+import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.tags.ResponseTag
 import net.yoshinorin.qualtet.fixture.Fixture.{articleService, author, contentService, tagService}
 import org.scalatest.wordspec.AnyWordSpec
 

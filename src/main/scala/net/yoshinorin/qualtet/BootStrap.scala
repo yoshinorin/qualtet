@@ -8,16 +8,15 @@ import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.Config
-import net.yoshinorin.qualtet.domains.models.archives.DoobieArchiveRepository
-import net.yoshinorin.qualtet.domains.models.articles.DoobieArticleRepository
-import net.yoshinorin.qualtet.domains.models.authors.DoobieAuthorRepository
-import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, DoobieContentTypeRepository}
-import net.yoshinorin.qualtet.domains.models.contents.{DoobieContentRepository, DoobieContentTaggingRepository}
-import net.yoshinorin.qualtet.domains.models.externalResources.DoobieExternalResourceRepository
-import net.yoshinorin.qualtet.domains.models.robots.DoobieRobotsRepository
-import net.yoshinorin.qualtet.domains.models.sitemaps.{DoobieSitemapsRepository, Url}
-import net.yoshinorin.qualtet.domains.models.tags.DoobieTagRepository
-import net.yoshinorin.qualtet.domains.services.{ArchiveService, ArticleService, AuthorService, ContentService, ContentTypeService, SitemapService, TagService}
+import net.yoshinorin.qualtet.domains.archives.{ArchiveService, DoobieArchiveRepository}
+import net.yoshinorin.qualtet.domains.articles.{ArticleService, DoobieArticleRepository}
+import net.yoshinorin.qualtet.domains.authors.{AuthorService, DoobieAuthorRepository}
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService, DoobieContentTypeRepository}
+import net.yoshinorin.qualtet.domains.contents.{ContentService, DoobieContentRepository, DoobieContentTaggingRepository}
+import net.yoshinorin.qualtet.domains.externalResources.DoobieExternalResourceRepository
+import net.yoshinorin.qualtet.domains.robots.DoobieRobotsRepository
+import net.yoshinorin.qualtet.domains.sitemaps.{DoobieSitemapsRepository, SitemapService, Url}
+import net.yoshinorin.qualtet.domains.tags.{DoobieTagRepository, TagService}
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,

@@ -6,10 +6,9 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import io.circe.syntax.EncoderOps
+import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticleWithCount}
 import net.yoshinorin.qualtet.domains.models.Fail
-import net.yoshinorin.qualtet.domains.models.articles.ResponseArticleWithCount
-import net.yoshinorin.qualtet.domains.models.tags.TagName
-import net.yoshinorin.qualtet.domains.services.{ArticleService, TagService}
+import net.yoshinorin.qualtet.domains.tags.{TagName, TagService}
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
 
 class TagRoute(
