@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.tasks
 
 import akka.actor.ActorSystem
+import cats.implicits.catsSyntaxEq
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
@@ -22,7 +23,7 @@ object CreateAuthor {
   val authorService: AuthorService = new AuthorService(authorRepository)
 
   def main(args: Array[String]): Unit = {
-    if (args.length != 3) {
+    if (args.length =!= 3) {
       logger.error("args must be three length.")
       logger.info("shutting down...")
       return
