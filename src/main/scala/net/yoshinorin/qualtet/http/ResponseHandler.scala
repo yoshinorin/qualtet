@@ -1,12 +1,13 @@
 package net.yoshinorin.qualtet.http
 
 import io.circe.syntax._
-import akka.http.scaladsl.model.StatusCodes.{BadRequest, _}
+import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCode}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.StandardRoute
 import io.circe.Encoder
-import net.yoshinorin.qualtet.domains.models.{Fail, Message}
+import net.yoshinorin.qualtet.error.Fail
+import net.yoshinorin.qualtet.message.Message
 import org.slf4j.LoggerFactory
 
 trait ResponseHandler {

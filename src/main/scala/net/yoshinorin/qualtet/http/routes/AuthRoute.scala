@@ -5,7 +5,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken, ResponseToken}
-import net.yoshinorin.qualtet.domains.models.Fail
+import net.yoshinorin.qualtet.error.Fail
 import net.yoshinorin.qualtet.http.{RequestDecoder, ResponseHandler}
 
 class AuthRoute(authService: AuthService) extends RequestDecoder with ResponseHandler {

@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.robots
 
 import io.circe.syntax._
-import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.error.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots}
 import net.yoshinorin.qualtet.fixture.Fixture.{contentId, fullRobotsAttributes}
 import org.scalatest.wordspec.AnyWordSpec

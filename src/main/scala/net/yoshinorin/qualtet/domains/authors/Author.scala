@@ -4,7 +4,7 @@ import java.time.ZonedDateTime
 import wvlet.airframe.ulid.ULID
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.deriveEncoder
-import net.yoshinorin.qualtet.domains.models.Fail.{Unauthorized, UnprocessableEntity}
+import net.yoshinorin.qualtet.error.Fail.{Unauthorized, UnprocessableEntity}
 
 import scala.util.matching.Regex
 

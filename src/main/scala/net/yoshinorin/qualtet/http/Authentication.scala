@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.directives.{AuthenticationDirective, Authentica
 import cats.effect.IO
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.models.Fail.NotFound
+import net.yoshinorin.qualtet.error.Fail.NotFound
 
 import scala.concurrent.Future
 

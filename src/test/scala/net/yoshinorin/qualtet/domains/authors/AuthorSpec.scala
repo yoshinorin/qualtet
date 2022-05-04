@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.authors
 
 import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword, ResponseAuthor}
-import net.yoshinorin.qualtet.domains.models.Fail.{Unauthorized, UnprocessableEntity}
+import net.yoshinorin.qualtet.error.Fail.{Unauthorized, UnprocessableEntity}
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 

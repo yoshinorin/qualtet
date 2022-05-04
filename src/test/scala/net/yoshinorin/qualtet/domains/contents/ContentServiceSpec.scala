@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contents
 
 import net.yoshinorin.qualtet.domains.authors.AuthorName
-import net.yoshinorin.qualtet.domains.models.Fail.NotFound
+import net.yoshinorin.qualtet.error.Fail.NotFound
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec

@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceRepository, ExternalResources}
-import net.yoshinorin.qualtet.domains.models.Fail.{InternalServerError, NotFound}
+import net.yoshinorin.qualtet.error.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsRepository}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase

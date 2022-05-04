@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.externalResources
 
 import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
-import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.error.Fail.UnprocessableEntity
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.models.externalResources.ExternalResourcesSpec

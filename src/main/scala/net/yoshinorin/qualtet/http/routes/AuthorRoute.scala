@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
-import net.yoshinorin.qualtet.domains.models.Fail
+import net.yoshinorin.qualtet.error.Fail
 import net.yoshinorin.qualtet.http.ResponseHandler
 
 class AuthorRoute(

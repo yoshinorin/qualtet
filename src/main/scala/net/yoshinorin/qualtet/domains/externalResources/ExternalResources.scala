@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.externalResources
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
 import net.yoshinorin.qualtet.domains.contents.ContentId
-import net.yoshinorin.qualtet.domains.models.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.error.Fail.UnprocessableEntity
 
 final case class ExternalResourceKind(value: String) extends AnyVal
 object ExternalResourceKind {
