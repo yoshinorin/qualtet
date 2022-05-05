@@ -1,33 +1,34 @@
 package net.yoshinorin.qualtet.domains.tags
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.tags.RepositoryRequests.{BulkUpsert, FindByName, GetAll}
 
 trait TagRepository {
 
   /**
    * get all tags
    *
+   * @param request GetAll request object
    * @return Tags
    */
-  def getAll: ConnectionIO[Seq[ResponseTag]]
+  def dispatch(request: GetAll): ConnectionIO[Seq[ResponseTag]]
 
   /**
    * find a Tag by Name
    *
-   * @param data tag name
+   * @param request FindByName request object
    * @return Instance of Tag
    */
-  def findByName(data: TagName): ConnectionIO[Option[Tag]]
+  def dispatch(request: FindByName): ConnectionIO[Option[Tag]]
 
   /**
    * create a Tag
    *
-   * @param data List of Tag
+   * @param request BulkUpsert request object
    * @return dummy long id (Doobie return Int)
    *
-   * TODO: remove Option
    * TODO: return ConnectionIO[Long]
    */
-  def bulkUpsert(data: Option[List[Tag]]): ConnectionIO[Int]
+  def dispatch(request: BulkUpsert): ConnectionIO[Int]
 
 }

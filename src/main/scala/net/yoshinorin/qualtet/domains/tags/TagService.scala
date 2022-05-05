@@ -4,6 +4,7 @@ import cats.effect.IO
 import cats.implicits._
 import doobie.ConnectionIO
 import doobie.implicits._
+import net.yoshinorin.qualtet.domains.tags.RepositoryRequests.{BulkUpsert, FindByName, GetAll}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class TagService(
@@ -18,7 +19,17 @@ class TagService(
    * @return tags
    */
   def getAll: IO[Seq[ResponseTag]] = {
-    tagRepository.getAll.transact(doobieContext.transactor)
+
+    def makeRequest(): (GetAll, Seq[ResponseTag] => Seq[ResponseTag]) = {
+      (GetAll(), Seq[ResponseTag])
+    }
+
+    def run(): IO[Seq[ResponseTag]] = {
+      val (request, cont) = makeRequest()
+      tagRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
+    run()
   }
 
   /**
@@ -28,7 +39,19 @@ class TagService(
    * @return maybe Tag
    */
   def findByName(tagName: TagName): IO[Option[Tag]] = {
-    tagRepository.findByName(tagName).transact(doobieContext.transactor)
+
+    def makeRequest(tagName: TagName): (FindByName, Option[Tag] => Option[Tag]) = {
+      val request = FindByName(tagName)
+      val cont: Option[Tag] => Option[Tag] = (maybeTag: Option[Tag]) => { maybeTag }
+      (request, cont)
+    }
+
+    def run(tagName: TagName): IO[Option[Tag]] = {
+      val (request, cont) = makeRequest(tagName)
+      tagRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
+    run(tagName)
   }
 
   /**
@@ -66,6 +89,18 @@ class TagService(
    * TODO: avoid using ConnectionIO
    */
   def bulkUpsertWithoutTaransact(data: Option[List[Tag]]): ConnectionIO[Int] = {
-    tagRepository.bulkUpsert(data)
+
+    def makeRequest(data: Option[List[Tag]]): (BulkUpsert, ConnectionIO[Int] => ConnectionIO[Int]) = {
+      val request = BulkUpsert(data)
+      val cont: ConnectionIO[Int] => ConnectionIO[Int] = (connectionIO: ConnectionIO[Int]) => { connectionIO }
+      (request, cont)
+    }
+
+    def run(data: Option[List[Tag]]): ConnectionIO[Int] = {
+      val (request, cont) = makeRequest(data)
+      tagRepository.dispatch(request)
+    }
+
+    run(data)
   }
 }
