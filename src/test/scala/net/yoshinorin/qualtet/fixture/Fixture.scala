@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, Author
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService, DoobieContentTypeRepository}
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, DoobieContentRepository, DoobieContentTaggingRepository, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.externalResources.{DoobieExternalResourceRepository, ExternalResourceKind, ExternalResources}
-import net.yoshinorin.qualtet.domains.robots.{Attributes, DoobieRobotsRepository}
+import net.yoshinorin.qualtet.domains.robots.{Attributes, DoobieRobotsRepository, RobotsService}
 import net.yoshinorin.qualtet.domains.sitemaps.{DoobieSitemapsRepository, SitemapService, Url}
 import net.yoshinorin.qualtet.domains.tags.{DoobieTagRepository, TagId, TagService}
 import net.yoshinorin.qualtet.http.routes.{
@@ -64,6 +64,7 @@ object Fixture {
   val contentTaggingRepository = new DoobieContentTaggingRepository
 
   val robotsRepository = new DoobieRobotsRepository
+  val robotsService = new RobotsService(robotsRepository)
 
   val externalResourceRepository = new DoobieExternalResourceRepository
 
@@ -73,7 +74,7 @@ object Fixture {
       contentRepository,
       tagService,
       contentTaggingRepository,
-      robotsRepository,
+      robotsService,
       externalResourceRepository,
       authorService,
       contentTypeService

@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceRepository, ExternalResources}
 import net.yoshinorin.qualtet.error.Fail.{InternalServerError, NotFound}
-import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsRepository}
+import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import wvlet.airframe.ulid.ULID
@@ -17,7 +17,7 @@ class ContentService(
   contentRepository: ContentRepository,
   tagService: TagService,
   contentTaggingRepository: ContentTaggingRepository,
-  robotsRepository: RobotsRepository,
+  robotsService: RobotsService,
   externalResourceRepository: ExternalResourceRepository,
   authorService: AuthorService,
   contentTypeService: ContentTypeService
@@ -96,7 +96,7 @@ class ContentService(
 
     val queries = for {
       contentUpsert <- contentRepository.upsert(data)
-      robotsUpsert <- robotsRepository.upsert(Robots(data.id, robotsAttributes))
+      robotsUpsert <- robotsService.upsertWithoutTaransact(Robots(data.id, robotsAttributes))
       // TODO: check diff and clean up tags before upsert
       tagsBulkUpsert <- tagService.bulkUpsertWithoutTaransact(tags)
       // TODO: check diff and clean up contentTagging before upsert
