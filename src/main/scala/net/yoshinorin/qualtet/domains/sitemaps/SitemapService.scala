@@ -15,17 +15,18 @@ class SitemapService(
 
   private val cacheKey = "sitemaps-full-cache"
 
-  private def makeRequest(): (Get, Seq[Url] => Seq[Url]) = {
-    val requests = Get()
-    (requests, Seq[Url])
-  }
-
-  private def fromDb(): IO[Seq[Url]] = {
-    val (request, condition) = this.makeRequest()
-    sitemapRepository.dispatch(request).transact(doobieContext.transactor)
-  }
-
   def get(): IO[Seq[Url]] = {
+
+    def makeRequest(): (Get, Seq[Url] => Seq[Url]) = {
+      val requests = Get()
+      (requests, Seq[Url])
+    }
+
+    def fromDb(): IO[Seq[Url]] = {
+      val (request, _) = makeRequest()
+      sitemapRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
     cache.get(cacheKey) match {
       case Some(x: Seq[Url]) => IO(x)
       case _ =>
