@@ -1,9 +1,11 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
 import cats.effect.IO
+import doobie.ConnectionIO
 import doobie.implicits._
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.ServiceBase
+import net.yoshinorin.qualtet.domains.contentTypes.RepositoryRequests._
 import net.yoshinorin.qualtet.error.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
@@ -22,11 +24,22 @@ class ContentTypeService(
    */
   def create(data: ContentType): IO[ContentType] = {
 
+    def makeRequest(data: ContentType): (Upsert, ConnectionIO[Int] => ConnectionIO[Int]) = {
+      val request = Upsert(data)
+      val resultHandler: ConnectionIO[Int] => ConnectionIO[Int] = (connectionIO: ConnectionIO[Int]) => { connectionIO }
+      (request, resultHandler)
+    }
+
+    def run(data: ContentType): IO[Int] = {
+      val (request, resultHandler) = makeRequest(data)
+      contentTypeRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
     this.findByName(data.name).flatMap {
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
-          _ <- contentTypeRepository.upsert(data).transact(doobieContext.transactor)
+          _ <- run(data)
           c <- findBy(data.name, InternalServerError("contentType not found"))(this.findByName)
         } yield c
     }
@@ -41,9 +54,22 @@ class ContentTypeService(
    */
   def findByName(name: String): IO[Option[ContentType]] = {
 
+    def makeRequest(name: String): (FindByName, ConnectionIO[Option[ContentType]] => ConnectionIO[Option[ContentType]]) = {
+      val request = FindByName(name)
+      val resultHandler: ConnectionIO[Option[ContentType]] => ConnectionIO[Option[ContentType]] = (connectionIO: ConnectionIO[Option[ContentType]]) => {
+        connectionIO
+      }
+      (request, resultHandler)
+    }
+
+    def run(name: String): IO[Option[ContentType]] = {
+      val (request, resultHandler) = makeRequest(name)
+      contentTypeRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
     def fromDB(name: String): IO[Option[ContentType]] = {
       for {
-        x <- contentTypeRepository.findByName(name).transact(doobieContext.transactor)
+        x <- run(name)
       } yield (x, cache.put(name, x))._1
     }
 
@@ -60,7 +86,19 @@ class ContentTypeService(
    * @return ContentTypes
    */
   def getAll: IO[Seq[ContentType]] = {
-    contentTypeRepository.getAll.transact(doobieContext.transactor)
+
+    def makeRequest(): (GetAll, ConnectionIO[Seq[ContentType]] => ConnectionIO[Seq[ContentType]]) = {
+      val request = GetAll()
+      val resultHandler: ConnectionIO[Seq[ContentType]] => ConnectionIO[Seq[ContentType]] = (connectionIO: ConnectionIO[Seq[ContentType]]) => { connectionIO }
+      (request, resultHandler)
+    }
+
+    def run(): IO[Seq[ContentType]] = {
+      val (request, resultHandler) = makeRequest()
+      contentTypeRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
+    run()
   }
 
 }

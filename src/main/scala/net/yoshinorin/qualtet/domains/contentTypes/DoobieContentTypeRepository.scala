@@ -1,35 +1,37 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.contentTypes.RepositoryRequests._
 
 class DoobieContentTypeRepository extends ContentTypeRepository {
 
   /**
    * create a ContentType
    *
-   * @param data Instance of ContentType
+   * @param request Upsert case class
    * @return created Content with ConnectionIO
    */
-  def upsert(data: ContentType): ConnectionIO[Int] = {
-    DoobieContentTypeQuery.upsert.run(data)
+  def dispatch(request: Upsert): ConnectionIO[Int] = {
+    DoobieContentTypeQuery.upsert.run(request.data)
   }
 
   /**
    * get all ContentTypes
    *
+   * @param request GetAll case class
    * @return ContentTypes
    */
-  override def getAll: ConnectionIO[Seq[ContentType]] = {
+  override def dispatch(request: GetAll): ConnectionIO[Seq[ContentType]] = {
     DoobieContentTypeQuery.getAll.to[Seq]
   }
 
   /**
    * find a ContentType by name
    *
-   * @param name name of ContentType
+   * @param request FindByName case class
    * @return ContentType
    */
-  override def findByName(name: String): ConnectionIO[Option[ContentType]] = {
-    DoobieContentTypeQuery.findByName(name).option
+  override def dispatch(request: FindByName): ConnectionIO[Option[ContentType]] = {
+    DoobieContentTypeQuery.findByName(request.name).option
   }
 }

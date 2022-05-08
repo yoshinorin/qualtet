@@ -1,30 +1,32 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.contentTypes.RepositoryRequests._
 
 trait ContentTypeRepository {
 
   /**
    * upsert a contentType
    *
-   * @param data Instance of contentType
+   * @param request Upsert case class
    * @return dummy int id (Doobie return Int)
    */
-  def upsert(data: ContentType): ConnectionIO[Int]
+  def dispatch(request: Upsert): ConnectionIO[Int]
 
   /**
    * find a ContentType by name
    *
-   * @param name name of ContentType
+   * @param request FindByName case class
    * @return ContentType
    */
-  def findByName(name: String): ConnectionIO[Option[ContentType]]
+  def dispatch(request: FindByName): ConnectionIO[Option[ContentType]]
 
   /**
    * get all ContentTypes
    *
+   * @param request GetAll case class
    * @return
    */
-  def getAll: ConnectionIO[Seq[ContentType]]
+  def dispatch(request: GetAll): ConnectionIO[Seq[ContentType]]
 
 }
