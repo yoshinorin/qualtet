@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.domains.articles.{ArticleService, DoobieArticleRep
 import net.yoshinorin.qualtet.domains.authors.{AuthorService, DoobieAuthorRepository}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService, DoobieContentTypeRepository}
 import net.yoshinorin.qualtet.domains.contents.{ContentService, DoobieContentRepository, DoobieContentTaggingRepository}
-import net.yoshinorin.qualtet.domains.externalResources.DoobieExternalResourceRepository
+import net.yoshinorin.qualtet.domains.externalResources.{DoobieExternalResourceRepository, ExternalResourceService}
 import net.yoshinorin.qualtet.domains.robots.{DoobieRobotsRepository, RobotsService}
 import net.yoshinorin.qualtet.domains.sitemaps.{DoobieSitemapsRepository, SitemapService, Url}
 import net.yoshinorin.qualtet.domains.tags.{DoobieTagRepository, TagService}
@@ -82,6 +82,7 @@ object BootStrap extends App {
   val robotsService = new RobotsService(robotsRepository)
 
   val externalResourceRepository = new DoobieExternalResourceRepository
+  val externalResourceService = new ExternalResourceService(externalResourceRepository)
 
   val contentRepository = new DoobieContentRepository
   val contentService: ContentService =
@@ -90,7 +91,7 @@ object BootStrap extends App {
       tagService,
       contentTaggingRepository,
       robotsService,
-      externalResourceRepository,
+      externalResourceService,
       authorService,
       contentTypeService
     )

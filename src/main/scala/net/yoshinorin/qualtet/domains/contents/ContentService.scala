@@ -6,7 +6,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceRepository, ExternalResources}
+import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
 import net.yoshinorin.qualtet.error.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
@@ -18,7 +18,7 @@ class ContentService(
   tagService: TagService,
   contentTaggingRepository: ContentTaggingRepository,
   robotsService: RobotsService,
-  externalResourceRepository: ExternalResourceRepository,
+  externalResourceService: ExternalResourceService,
   authorService: AuthorService,
   contentTypeService: ContentTypeService
 )(
@@ -102,7 +102,7 @@ class ContentService(
       // TODO: check diff and clean up contentTagging before upsert
       contentTaggingBulkUpsert <- contentTaggingRepository.bulkUpsert(contentTagging)
       // TODO: check diff and clean up external_resources before upsert
-      externalResourceBulkUpsert <- externalResourceRepository.bulkUpsert(maybeExternalResources)
+      externalResourceBulkUpsert <- externalResourceService.bulkUpsertWithoutTaransact(maybeExternalResources)
     } yield (contentUpsert, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
 
     for {
