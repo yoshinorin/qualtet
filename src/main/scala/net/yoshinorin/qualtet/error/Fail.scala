@@ -9,11 +9,11 @@ object Fail {
 
   implicit val encodeFail: Encoder[Fail] = deriveEncoder[Fail]
 
-  case class NotFound(message: String) extends Fail
-  case class Unauthorized(message: String = "Unauthorized") extends Fail
-  case class UnprocessableEntity(message: String) extends Fail
-  case class BadRequest(message: String) extends Fail
-  case class Forbidden(message: String = "Forbidden") extends Fail
-  case class InternalServerError(message: String = "Internal Server Error") extends Fail
+  final case class NotFound(message: String) extends Fail
+  final case class Unauthorized(message: String = "Unauthorized") extends Fail
+  final case class UnprocessableEntity(message: String) extends Fail
+  final case class BadRequest(message: String) extends Fail
+  final case class Forbidden(message: String = "Forbidden") extends Fail
+  final case class InternalServerError(message: String = "Internal Server Error") extends Fail
 
 }
