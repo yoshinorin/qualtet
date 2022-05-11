@@ -1,55 +1,57 @@
 package net.yoshinorin.qualtet.domains.authors
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.authors.RepositoryReqiests._
 
 class DoobieAuthorRepository extends AuthorRepository {
 
   /**
    * create a authorName
    *
-   * @param data Instance of Author
+   * @param request Upsert case class
    * @return created Author
    */
-  override def upsert(data: Author): ConnectionIO[Int] = {
-    DoobieAuthorQuery.upsert.run(data)
+  override def dispatch(request: Upsert): ConnectionIO[Int] = {
+    DoobieAuthorQuery.upsert.run(request.data)
   }
 
   /**
    * get all Author
    *
+   * @param request GetAll case class
    * @return Authors
    */
-  override def getAll: ConnectionIO[Seq[ResponseAuthor]] = {
+  override def dispatch(request: GetAll): ConnectionIO[Seq[ResponseAuthor]] = {
     DoobieAuthorQuery.getAll.to[Seq]
   }
 
   /**
    * find a Author by id
    *
-   * @param id authorName's id
+   * @param request FindById case class
    * @return Author
    */
-  override def findById(id: AuthorId): ConnectionIO[Option[ResponseAuthor]] = {
-    DoobieAuthorQuery.findById(id).option
+  override def dispatch(request: FindById): ConnectionIO[Option[ResponseAuthor]] = {
+    DoobieAuthorQuery.findById(request.id).option
   }
 
   /**
    * find a Author by id
    *
-   * @param id authorName's id
+   * @param request FindByIdWithPassword case class
    * @return Author
    */
-  override def findByIdWithPassword(id: AuthorId): ConnectionIO[Option[Author]] = {
-    DoobieAuthorQuery.findByIdWithPassword(id).option
+  override def dispatch(request: FindByIdWithPassword): ConnectionIO[Option[Author]] = {
+    DoobieAuthorQuery.findByIdWithPassword(request.id).option
   }
 
   /**
    * find a Author by name
    *
-   * @param name authorName's name
+   * @param request FindByName case class
    * @return Author
    */
-  override def findByName(name: AuthorName): ConnectionIO[Option[ResponseAuthor]] = {
-    DoobieAuthorQuery.findByName(name).option
+  override def dispatch(request: FindByName): ConnectionIO[Option[ResponseAuthor]] = {
+    DoobieAuthorQuery.findByName(request.name).option
   }
 }

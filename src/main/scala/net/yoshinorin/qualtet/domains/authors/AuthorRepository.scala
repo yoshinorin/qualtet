@@ -1,46 +1,47 @@
 package net.yoshinorin.qualtet.domains.authors
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.authors.RepositoryReqiests._
 
 trait AuthorRepository {
 
   /**
    * create a authorName
    *
-   * @param data Instance of Author
+   * @param request Upsert case class
    * @return dummy long id (Doobie return Int)
    */
-  def upsert(data: Author): ConnectionIO[Int]
+  def dispatch(request: Upsert): ConnectionIO[Int]
 
   /**
    * get all Author
    *
-   *
+   * @param request GetAll case class
    * @return Authors
    */
-  def getAll: ConnectionIO[Seq[ResponseAuthor]]
+  def dispatch(request: GetAll): ConnectionIO[Seq[ResponseAuthor]]
 
   /**
    * find a Author by id
    *
-   * @param id authorName's id
+   * @param request FindById case class
    * @return Author
    */
-  def findById(id: AuthorId): ConnectionIO[Option[ResponseAuthor]]
+  def dispatch(request: FindById): ConnectionIO[Option[ResponseAuthor]]
 
   /**
    * find a Author by id
    *
-   * @param id authorName's id
+   * @param request FindByIdWithPassword case class
    * @return Author
    */
-  def findByIdWithPassword(id: AuthorId): ConnectionIO[Option[Author]]
+  def dispatch(request: FindByIdWithPassword): ConnectionIO[Option[Author]]
 
   /**
    * find a Author by name
    *
-   * @param name authorName's name
+   * @param request FindByName case class
    * @return Author
    */
-  def findByName(name: AuthorName): ConnectionIO[Option[ResponseAuthor]]
+  def dispatch(request: FindByName): ConnectionIO[Option[ResponseAuthor]]
 }

@@ -2,9 +2,11 @@ package net.yoshinorin.qualtet.domains.authors
 
 import cats.effect.IO
 import doobie.implicits._
+import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.domains.authors.RepositoryReqiests._
 
 class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: DoobieContextBase) extends ServiceBase {
 
@@ -15,8 +17,20 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
    * @return Instance of created Author with IO
    */
   def create(data: Author): IO[ResponseAuthor] = {
+
+    def makeRequest(data: Author): (Upsert, ConnectionIO[Int] => ConnectionIO[Int]) = {
+      val request = Upsert(data)
+      val resultHandler: ConnectionIO[Int] => ConnectionIO[Int] = (connectionIO: ConnectionIO[Int]) => { connectionIO }
+      (request, resultHandler)
+    }
+
+    def run(data: Author): IO[Int] = {
+      val (request, _) = makeRequest(data)
+      authorRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
     for {
-      _ <- authorRepository.upsert(data).transact(doobieContext.transactor)
+      _ <- run(data)
       a <- findBy(data.name, InternalServerError("user not found"))(this.findByName)
     } yield a
   }
@@ -27,7 +41,21 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
    * @return Authors
    */
   def getAll: IO[Seq[ResponseAuthor]] = {
-    authorRepository.getAll.transact(doobieContext.transactor)
+
+    def makeRequest(): (GetAll, ConnectionIO[Seq[ResponseAuthor]] => ConnectionIO[Seq[ResponseAuthor]]) = {
+      val request = GetAll()
+      val resultHandler: ConnectionIO[Seq[ResponseAuthor]] => ConnectionIO[Seq[ResponseAuthor]] = (connectionIO: ConnectionIO[Seq[ResponseAuthor]]) => {
+        connectionIO
+      }
+      (request, resultHandler)
+    }
+
+    def run(): IO[Seq[ResponseAuthor]] = {
+      val (request, _) = makeRequest()
+      authorRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
+    run()
   }
 
   /**
@@ -37,7 +65,22 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
    * @return Author
    */
   def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
-    authorRepository.findById(id).transact(doobieContext.transactor)
+
+    def makeRequest(id: AuthorId): (FindById, ConnectionIO[Option[ResponseAuthor]] => ConnectionIO[Option[ResponseAuthor]]) = {
+      val request = FindById(id)
+      val resultHandler: ConnectionIO[Option[ResponseAuthor]] => ConnectionIO[Option[ResponseAuthor]] = (connectionIO: ConnectionIO[Option[ResponseAuthor]]) =>
+        {
+          connectionIO
+        }
+      (request, resultHandler)
+    }
+
+    def run(id: AuthorId): IO[Option[ResponseAuthor]] = {
+      val (request, _) = makeRequest(id)
+      authorRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
+    run(id)
   }
 
   /**
@@ -47,7 +90,21 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
    * @return Author
    */
   def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
-    authorRepository.findByIdWithPassword(id).transact(doobieContext.transactor)
+
+    def makeRequest(id: AuthorId): (FindByIdWithPassword, ConnectionIO[Option[Author]] => ConnectionIO[Option[Author]]) = {
+      val request = FindByIdWithPassword(id)
+      val resultHandler: ConnectionIO[Option[Author]] => ConnectionIO[Option[Author]] = (connectionIO: ConnectionIO[Option[Author]]) => {
+        connectionIO
+      }
+      (request, resultHandler)
+    }
+
+    def run(id: AuthorId): IO[Option[Author]] = {
+      val (request, _) = makeRequest(id)
+      authorRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
+    run(id)
   }
 
   /**
@@ -57,7 +114,22 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
    * @return Author
    */
   def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
-    authorRepository.findByName(name).transact(doobieContext.transactor)
+
+    def makeRequest(name: AuthorName): (FindByName, ConnectionIO[Option[ResponseAuthor]] => ConnectionIO[Option[ResponseAuthor]]) = {
+      val request = FindByName(name)
+      val resultHandler: ConnectionIO[Option[ResponseAuthor]] => ConnectionIO[Option[ResponseAuthor]] = (connectionIO: ConnectionIO[Option[ResponseAuthor]]) =>
+        {
+          connectionIO
+        }
+      (request, resultHandler)
+    }
+
+    def run(name: AuthorName): IO[Option[ResponseAuthor]] = {
+      val (request, _) = makeRequest(name)
+      authorRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
+    run(name)
   }
 
 }
