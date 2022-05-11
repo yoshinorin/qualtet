@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.validator
 
 import cats.implicits.catsSyntaxEq
-import net.yoshinorin.qualtet.error.Fail.{Unauthorized, UnprocessableEntity}
+import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
 import net.yoshinorin.qualtet.syntax._
 import org.scalatest.wordspec.AnyWordSpec
 

@@ -6,7 +6,7 @@ import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.authors.Author
-import net.yoshinorin.qualtet.error.Fail.Unauthorized
+import net.yoshinorin.qualtet.message.Fail.Unauthorized
 import net.yoshinorin.qualtet.validator.Validator
 import org.slf4j.LoggerFactory
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm

@@ -4,7 +4,7 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.error.Fail
+import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.ResponseHandler
 
 class ContentTypeRoute(

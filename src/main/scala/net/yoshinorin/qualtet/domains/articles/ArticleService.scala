@@ -6,7 +6,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
-import net.yoshinorin.qualtet.error.Fail.NotFound
+import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase

@@ -8,7 +8,7 @@ import cats.effect.IO
 import io.circe.syntax.EncoderOps
 import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticleWithCount}
 import net.yoshinorin.qualtet.domains.tags.{TagName, TagService}
-import net.yoshinorin.qualtet.error.Fail
+import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
 
 class TagRoute(

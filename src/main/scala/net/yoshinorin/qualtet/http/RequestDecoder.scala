@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.http
 
 import io.circe.Decoder
-import net.yoshinorin.qualtet.error.Fail.{BadRequest, InternalServerError}
-import net.yoshinorin.qualtet.error.Fail
+import net.yoshinorin.qualtet.message.Fail.{BadRequest, InternalServerError}
+import net.yoshinorin.qualtet.message.Fail
 import org.slf4j.LoggerFactory
 
 import scala.util.control.NonFatal

@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.auth
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorId, AuthorService, BCryptPassword, ResponseAuthor}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import net.yoshinorin.qualtet.error.Fail.{NotFound, Unauthorized}
+import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
 import org.slf4j.LoggerFactory
 
 class AuthService(authorService: AuthorService, jwt: Jwt) {

@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.error
+package net.yoshinorin.qualtet.message
 
 import io.circe.Encoder
 import io.circe.generic.semiauto._

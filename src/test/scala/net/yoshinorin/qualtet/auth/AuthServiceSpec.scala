@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.auth
 
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.error.Fail.{NotFound, Unauthorized}
+import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
 import net.yoshinorin.qualtet.fixture.Fixture._
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import org.scalatest.wordspec.AnyWordSpec

@@ -6,7 +6,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusC
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.StandardRoute
 import io.circe.Encoder
-import net.yoshinorin.qualtet.error.Fail
+import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.message.Message
 import org.slf4j.LoggerFactory
 

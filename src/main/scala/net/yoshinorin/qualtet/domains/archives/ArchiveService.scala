@@ -4,7 +4,7 @@ import cats.effect.IO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.error.Fail.NotFound
+import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class ArchiveService(

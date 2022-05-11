@@ -6,7 +6,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.domains.contentTypes.RepositoryRequests._
-import net.yoshinorin.qualtet.error.Fail.InternalServerError
+import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class ContentTypeService(

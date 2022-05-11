@@ -5,7 +5,7 @@ import io.circe.Encoder
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.generic.semiauto.deriveEncoder
 import net.yoshinorin.qualtet.domains.contents.ContentId
-import net.yoshinorin.qualtet.error.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 
 final case class Attributes(value: String) extends AnyVal
 object Attributes {
