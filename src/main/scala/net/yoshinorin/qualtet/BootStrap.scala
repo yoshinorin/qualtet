@@ -37,7 +37,7 @@ import pdi.jwt.JwtAlgorithm
 
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
-import scala.io.StdIn
+// import scala.io.StdIn
 
 object BootStrap extends App {
 
