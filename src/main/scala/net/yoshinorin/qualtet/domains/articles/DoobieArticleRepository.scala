@@ -1,15 +1,13 @@
 package net.yoshinorin.qualtet.domains.articles
 
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.tags.TagName
-import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
+import net.yoshinorin.qualtet.domains.articles.RepositoryReqiests._
 
 class DoobieArticleRepository extends ArticleRepository {
 
   // TOOD: delete none argument. Maybe lift is effective.
-  def getWithCount(contentTypeId: ContentTypeId, none: Unit = (), sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
-    DoobieArticleQuery.getWithCount(contentTypeId, none, sqlParams).to[Seq]
+  def dispatch(request: GetWithCount): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
+    DoobieArticleQuery.getWithCount(request.contentTypeId, request.none, request.sqlParams).to[Seq]
   }
 
   /*
@@ -18,7 +16,7 @@ class DoobieArticleRepository extends ArticleRepository {
   }
    */
 
-  def findByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
-    DoobieArticleQuery.findByTagNameWithCount(contentTypeId, tagName, sqlParams).to[Seq]
+  def dispatch(request: FindByTagNameWithCount): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
+    DoobieArticleQuery.findByTagNameWithCount(request.contentTypeId, request.tagName, request.sqlParams).to[Seq]
   }
 }
