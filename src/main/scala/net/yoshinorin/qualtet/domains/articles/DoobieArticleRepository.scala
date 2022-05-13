@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.domains.articles.RepositoryReqiests._
 class DoobieArticleRepository extends ArticleRepository {
 
   // TOOD: delete none argument. Maybe lift is effective.
-  def dispatch(request: GetWithCount): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
+  override def dispatch(request: GetWithCount): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
     DoobieArticleQuery.getWithCount(request.contentTypeId, request.none, request.sqlParams).to[Seq]
   }
 
@@ -16,7 +16,7 @@ class DoobieArticleRepository extends ArticleRepository {
   }
    */
 
-  def dispatch(request: FindByTagNameWithCount): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
+  override def dispatch(request: FindByTagNameWithCount): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
     DoobieArticleQuery.findByTagNameWithCount(request.contentTypeId, request.tagName, request.sqlParams).to[Seq]
   }
 }

@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
 class DoobieTagRepository extends TagRepository with ConnectionIOFaker {
 
-  def dispatch(requests: GetAll): ConnectionIO[Seq[ResponseTag]] = {
+  override def dispatch(requests: GetAll): ConnectionIO[Seq[ResponseTag]] = {
     DoobieTagQuery.getAll.to[Seq]
   }
 
@@ -16,7 +16,7 @@ class DoobieTagRepository extends TagRepository with ConnectionIOFaker {
    * @param request FindByName request
    * @return dummy long id (Doobie return Int)
    */
-  def dispatch(request: FindByName): ConnectionIO[Option[Tag]] = {
+  override def dispatch(request: FindByName): ConnectionIO[Option[Tag]] = {
     DoobieTagQuery.findByName(request.data).option
   }
 
@@ -28,7 +28,7 @@ class DoobieTagRepository extends TagRepository with ConnectionIOFaker {
    *
    * TODO: return ConnectionIO[Long]
    */
-  def dispatch(request: BulkUpsert): ConnectionIO[Int] = {
+  override def dispatch(request: BulkUpsert): ConnectionIO[Int] = {
     request.data match {
       case None => ConnectionIOWithInt
       case Some(x) =>

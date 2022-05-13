@@ -11,7 +11,7 @@ class DoobieRobotsRepository extends RobotsRepository {
    * @param Upsert request object
    * @return dummy long id (Doobie return Int)
    */
-  def dispatch(request: Upsert): ConnectionIO[Int] = {
+  override def dispatch(request: Upsert): ConnectionIO[Int] = {
     DoobieRobotsQuery.upsert.run(request.data)
   }
 

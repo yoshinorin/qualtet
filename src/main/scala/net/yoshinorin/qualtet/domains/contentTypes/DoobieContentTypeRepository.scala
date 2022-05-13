@@ -11,7 +11,7 @@ class DoobieContentTypeRepository extends ContentTypeRepository {
    * @param request Upsert case class
    * @return created Content with ConnectionIO
    */
-  def dispatch(request: Upsert): ConnectionIO[Int] = {
+  override def dispatch(request: Upsert): ConnectionIO[Int] = {
     DoobieContentTypeQuery.upsert.run(request.data)
   }
 

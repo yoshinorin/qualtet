@@ -14,7 +14,7 @@ class DoobieExternalResourceRepository extends ExternalResourceRepository with C
    *
    * TODO: return ConnectionIO[Long]
    */
-  def dispatch(request: BulkUpsert): ConnectionIO[Int] = {
+  override def dispatch(request: BulkUpsert): ConnectionIO[Int] = {
     request.data match {
       case None => ConnectionIOWithInt
       case Some(x) =>
