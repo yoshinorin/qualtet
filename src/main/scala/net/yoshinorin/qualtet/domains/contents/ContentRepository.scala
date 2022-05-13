@@ -1,30 +1,31 @@
 package net.yoshinorin.qualtet.domains.contents
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.contents.RepositoryReqiests._
 
 trait ContentRepository {
 
   /**
    * create a content
    *
-   * @param data Instance of Content
+   * @param Upsert case class
    * @return dummy long id (Doobie return Int)
    */
-  def upsert(data: Content): ConnectionIO[Int]
+  def dispatch(request: Upsert): ConnectionIO[Int]
 
   /**
    * find content by path
    *
-   * @param path path of content
+   * @param FindByPath case class
    * @return content
    */
-  def findByPath(path: Path): ConnectionIO[Option[Content]]
+  def dispatch(request: FindByPath): ConnectionIO[Option[Content]]
 
   /**
    * find content by path
    *
-   * @param path path of content
+   * @param FindByPathWithMeta case class
    * @return content
    */
-  def findByPathWithMeta(path: Path): ConnectionIO[Option[ResponseContentDbRow]]
+  def dispatch(request: FindByPathWithMeta): ConnectionIO[Option[ResponseContentDbRow]]
 }

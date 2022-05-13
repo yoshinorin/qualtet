@@ -11,6 +11,7 @@ import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.domains.contents.RepositoryReqiests._
 import wvlet.airframe.ulid.ULID
 
 class ContentService(
@@ -89,13 +90,25 @@ class ContentService(
       case Some(x) => IO(x)
     }
 
+    def makeRequest(data: Content): (Upsert, ConnectionIO[Int] => ConnectionIO[Int]) = {
+      val request = Upsert(data)
+      val resultHandler: ConnectionIO[Int] => ConnectionIO[Int] =
+        (connectionIO: ConnectionIO[Int]) => { connectionIO }
+      (request, resultHandler)
+    }
+
+    def run(data: Content): ConnectionIO[Int] = {
+      val (request, _) = makeRequest(data: Content)
+      contentRepository.dispatch(request)
+    }
+
     val maybeExternalResources = externalResources match {
       case None => None
       case Some(x) => Option(x.flatMap(a => a.values.map(v => ExternalResource(data.id, a.kind, v))))
     }
 
     val queries = for {
-      contentUpsert <- contentRepository.upsert(data)
+      contentUpsert <- run(data)
       robotsUpsert <- robotsService.upsertWithoutTaransact(Robots(data.id, robotsAttributes))
       // TODO: check diff and clean up tags before upsert
       tagsBulkUpsert <- tagService.bulkUpsertWithoutTaransact(tags)
@@ -118,7 +131,20 @@ class ContentService(
    * @return ResponseContent instance
    */
   def findByPath(path: Path): IO[Option[Content]] = {
-    contentRepository.findByPath(path).transact(doobieContext.transactor)
+
+    def makeRequest(path: Path): (FindByPath, ConnectionIO[Option[Content]] => ConnectionIO[Option[Content]]) = {
+      val request = FindByPath(path)
+      val resultHandler: ConnectionIO[Option[Content]] => ConnectionIO[Option[Content]] =
+        (connectionIO: ConnectionIO[Option[Content]]) => { connectionIO }
+      (request, resultHandler)
+    }
+
+    def run(path: Path): IO[Option[Content]] = {
+      val (request, _) = makeRequest(path)
+      contentRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
+    run(path)
   }
 
   /**
@@ -130,7 +156,20 @@ class ContentService(
    * @deprecated should replace findByIdWithMeta
    */
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
-    this.findBy(path)(contentRepository.findByPathWithMeta)
+
+    def makeRequest(path: Path): (FindByPathWithMeta, ConnectionIO[Option[ResponseContentDbRow]] => ConnectionIO[Option[ResponseContentDbRow]]) = {
+      val request = FindByPathWithMeta(path)
+      val resultHandler: ConnectionIO[Option[ResponseContentDbRow]] => ConnectionIO[Option[ResponseContentDbRow]] =
+        (connectionIO: ConnectionIO[Option[ResponseContentDbRow]]) => { connectionIO }
+      (request, resultHandler)
+    }
+
+    def run(path: Path): ConnectionIO[Option[ResponseContentDbRow]] = {
+      val (request, _) = makeRequest(path)
+      contentRepository.dispatch(request)
+    }
+
+    this.findBy(path)(run)
   }
 
   /*
