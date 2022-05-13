@@ -18,8 +18,8 @@ class SitemapService(
   def get(): IO[Seq[Url]] = {
 
     def makeRequest(): (Get, Seq[Url] => Seq[Url]) = {
-      val requests = Get()
-      (requests, Seq[Url])
+      val request = Get()
+      (request, Seq[Url])
     }
 
     def fromDb(): IO[Seq[Url]] = {

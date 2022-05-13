@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
 class DoobieTagRepository extends TagRepository with ConnectionIOFaker {
 
-  override def dispatch(requests: GetAll): ConnectionIO[Seq[ResponseTag]] = {
+  override def dispatch(request: GetAll): ConnectionIO[Seq[ResponseTag]] = {
     DoobieTagQuery.getAll.to[Seq]
   }
 
