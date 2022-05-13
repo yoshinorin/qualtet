@@ -2,10 +2,13 @@ package net.yoshinorin.qualtet.domains.archives
 
 import cats.effect.IO
 import doobie.implicits._
+import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.archives.RepositoryReqiests._
 
 class ArchiveService(
   archiveRepository: ArchiveRepository,
@@ -15,9 +18,22 @@ class ArchiveService(
 ) extends ServiceBase {
 
   def get: IO[Seq[ResponseArchive]] = {
+
+    def makeRequest(contentTypeId: ContentTypeId): (GetByContentTypeId, ConnectionIO[Seq[ResponseArchive]] => ConnectionIO[Seq[ResponseArchive]]) = {
+      val request = GetByContentTypeId(contentTypeId)
+      val resultHandler: ConnectionIO[Seq[ResponseArchive]] => ConnectionIO[Seq[ResponseArchive]] =
+        (connectionIO: ConnectionIO[Seq[ResponseArchive]]) => { connectionIO }
+      (request, resultHandler)
+    }
+
+    def run(contentTypeId: ContentTypeId): IO[Seq[ResponseArchive]] = {
+      val (request, _) = makeRequest(contentTypeId)
+      archiveRepository.dispatch(request).transact(doobieContext.transactor)
+    }
+
     for {
       c <- findBy("article", NotFound(s"content-type not found: article"))(contentTypeService.findByName)
-      articles <- archiveRepository.get(c.id).transact(doobieContext.transactor)
+      articles <- run(c.id)
     } yield articles
   }
 
