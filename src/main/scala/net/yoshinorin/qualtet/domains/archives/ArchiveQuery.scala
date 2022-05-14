@@ -4,7 +4,7 @@ import doobie.implicits._
 import doobie.util.query.Query0
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 
-object DoobieArchiveQuery {
+object ArchiveQuery {
 
   def get(contentTypeId: ContentTypeId): Query0[ResponseArchive] = {
     sql"""

@@ -15,9 +15,7 @@ import net.yoshinorin.qualtet.domains.contents.RepositoryReqiests._
 import wvlet.airframe.ulid.ULID
 
 class ContentService(
-  contentRepository: ContentRepository,
   tagService: TagService,
-  contentTaggingRepository: ContentTaggingRepository,
   robotsService: RobotsService,
   externalResourceService: ExternalResourceService,
   authorService: AuthorService,
@@ -99,7 +97,7 @@ class ContentService(
 
     def run(data: Content): ConnectionIO[Int] = {
       val (request, _) = makeRequest(data: Content)
-      contentRepository.dispatch(request)
+      ContentRepository.dispatch(request)
     }
 
     val maybeExternalResources = externalResources match {
@@ -113,7 +111,7 @@ class ContentService(
       // TODO: check diff and clean up tags before upsert
       tagsBulkUpsert <- tagService.bulkUpsertWithoutTaransact(tags)
       // TODO: check diff and clean up contentTagging before upsert
-      contentTaggingBulkUpsert <- contentTaggingRepository.bulkUpsert(contentTagging)
+      contentTaggingBulkUpsert <- ContentTaggingRepository.bulkUpsert(contentTagging)
       // TODO: check diff and clean up external_resources before upsert
       externalResourceBulkUpsert <- externalResourceService.bulkUpsertWithoutTaransact(maybeExternalResources)
     } yield (contentUpsert, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
@@ -141,7 +139,7 @@ class ContentService(
 
     def run(path: Path): IO[Option[Content]] = {
       val (request, _) = makeRequest(path)
-      contentRepository.dispatch(request).transact(doobieContext.transactor)
+      ContentRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run(path)
@@ -166,7 +164,7 @@ class ContentService(
 
     def run(path: Path): ConnectionIO[Option[ResponseContentDbRow]] = {
       val (request, _) = makeRequest(path)
-      contentRepository.dispatch(request)
+      ContentRepository.dispatch(request)
     }
 
     this.findBy(path)(run)

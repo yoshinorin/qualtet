@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.articles
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.articles.RepositoryReqiests._
 
-trait ArticleRepository {
+object ArticleRepository {
 
   /**
    * get all Articles
@@ -11,7 +11,10 @@ trait ArticleRepository {
    * @param request GetWithCount case class
    * @return Articles & it's count with ConnectionIO
    */
-  def dispatch(request: GetWithCount): ConnectionIO[Seq[(Int, ResponseArticle)]]
+  // TOOD: delete none argument. Maybe lift is effective.
+  def dispatch(request: GetWithCount): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
+    ArticleQuery.getWithCount(request.contentTypeId, request.none, request.sqlParams).to[Seq]
+  }
 
   /**
    * get Articles by TagId
@@ -21,7 +24,11 @@ trait ArticleRepository {
    * @param sqlParams sql parameters for limit, offset
    * @return Articles & it's count with ConnectionIO
    */
-  // def findByTagIdWithCount(contentTypeId: ContentTypeId, tagId: TagId, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]]
+  /*
+  def findByTagIdWithCount(contentTypeId: ContentTypeId, tagId: TagId, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
+    ArticleQuery.findByTagIdWithCount(contentTypeId, tagId, sqlParams).to[Seq]
+  }
+   */
 
   /**
    * get Articles by TagName
@@ -29,5 +36,7 @@ trait ArticleRepository {
    * @param request FindByTagNameWithCount case class
    * @return Articles & it's count with ConnectionIO
    */
-  def dispatch(request: FindByTagNameWithCount): ConnectionIO[Seq[(Int, ResponseArticle)]]
+  def dispatch(request: FindByTagNameWithCount): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
+    ArticleQuery.findByTagNameWithCount(request.contentTypeId, request.tagName, request.sqlParams).to[Seq]
+  }
 }

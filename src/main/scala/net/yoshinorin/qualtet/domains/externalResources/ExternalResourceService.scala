@@ -7,9 +7,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.externalResources.RepositoryRequests._
 
-class ExternalResourceService(
-  externalResourceRepository: ExternalResourceRepository
-) {
+class ExternalResourceService() {
 
   /**
    * create are ExternalResources bulky without transaction
@@ -28,7 +26,7 @@ class ExternalResourceService(
 
     def run(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
       val (request, resultHandler) = makeRequest(data)
-      externalResourceRepository.dispatch(request)
+      ExternalResourceRepository.dispatch(request)
     }
 
     run(data)

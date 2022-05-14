@@ -7,9 +7,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.robots.RepositoryRequests._
 
-class RobotsService(
-  robotsRepository: RobotsRepository
-) {
+class RobotsService() {
 
   /**
    * create a Robots without transaction
@@ -28,7 +26,7 @@ class RobotsService(
 
     def run(data: Robots): ConnectionIO[Int] = {
       val (request, resultHandler) = makeRequest(data)
-      robotsRepository.dispatch(request)
+      RobotsRepository.dispatch(request)
     }
 
     run(data)

@@ -4,7 +4,7 @@ import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
 import doobie.util.update.Update
 
-object DoobieTagQuery {
+object TagQuery {
 
   def getAll: Query0[ResponseTag] = {
     sql"SELECT * FROM tags"

@@ -4,7 +4,7 @@ import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
 import doobie.util.update.Update
 
-object DoobieContentQuery {
+object ContentQuery {
 
   def upsert: Update[Content] = {
     val q = s"""

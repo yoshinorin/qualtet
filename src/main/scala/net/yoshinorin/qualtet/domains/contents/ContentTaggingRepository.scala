@@ -1,8 +1,9 @@
 package net.yoshinorin.qualtet.domains.contents
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
-trait ContentTaggingRepository {
+object ContentTaggingRepository extends ConnectionIOFaker {
 
   /**
    * create a ContentTagging bulky
@@ -13,6 +14,12 @@ trait ContentTaggingRepository {
    * TODO: remove Option
    * TODO: return ConnectionIO[Long]
    */
-  def bulkUpsert(data: Option[List[ContentTagging]]): ConnectionIO[Int]
+  def bulkUpsert(data: Option[List[ContentTagging]]): ConnectionIO[Int] = {
+    data match {
+      case None => ConnectionIOWithInt
+      case Some(x) =>
+        ContentTaggingQuery.bulkUpsert.updateMany(x)
+    }
+  }
 
 }

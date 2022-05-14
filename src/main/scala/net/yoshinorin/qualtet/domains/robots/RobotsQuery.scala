@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.robots
 
 import doobie.util.update.Update
 
-object DoobieRobotsQuery {
+object RobotsQuery {
 
   def upsert: Update[Robots] = {
     val q = s"""

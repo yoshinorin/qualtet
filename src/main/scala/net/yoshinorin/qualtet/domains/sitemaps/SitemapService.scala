@@ -6,12 +6,7 @@ import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import RepositoryRequests.Get
 
-class SitemapService(
-  sitemapRepository: SitemapsRepository,
-  cache: CacheModule[String, Seq[Url]]
-)(
-  implicit doobieContext: DoobieContextBase
-) {
+class SitemapService(cache: CacheModule[String, Seq[Url]])(implicit doobieContext: DoobieContextBase) {
 
   private val cacheKey = "sitemaps-full-cache"
 
@@ -24,7 +19,7 @@ class SitemapService(
 
     def fromDb(): IO[Seq[Url]] = {
       val (request, _) = makeRequest()
-      sitemapRepository.dispatch(request).transact(doobieContext.transactor)
+      SitemapsRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     cache.get(cacheKey) match {

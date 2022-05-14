@@ -7,11 +7,7 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.tags.RepositoryRequests.{BulkUpsert, FindByName, GetAll}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class TagService(
-  tagRepository: TagRepository
-)(
-  implicit doobieContext: DoobieContextBase
-) {
+class TagService()(implicit doobieContext: DoobieContextBase) {
 
   /**
    * get all tags
@@ -26,7 +22,7 @@ class TagService(
 
     def run(): IO[Seq[ResponseTag]] = {
       val (request, cont) = makeRequest()
-      tagRepository.dispatch(request).transact(doobieContext.transactor)
+      TagRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run()
@@ -48,7 +44,7 @@ class TagService(
 
     def run(tagName: TagName): IO[Option[Tag]] = {
       val (request, cont) = makeRequest(tagName)
-      tagRepository.dispatch(request).transact(doobieContext.transactor)
+      TagRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run(tagName)
@@ -98,7 +94,7 @@ class TagService(
 
     def run(data: Option[List[Tag]]): ConnectionIO[Int] = {
       val (request, cont) = makeRequest(data)
-      tagRepository.dispatch(request)
+      TagRepository.dispatch(request)
     }
 
     run(data)

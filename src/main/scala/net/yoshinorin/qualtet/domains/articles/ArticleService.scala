@@ -13,7 +13,6 @@ import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class ArticleService(
-  articleRepository: ArticleRepository,
   contentTypeService: ContentTypeService
 )(
   implicit doobieContext: DoobieContextBase
@@ -49,7 +48,7 @@ class ArticleService(
 
     def run(contentTypeId: ContentTypeId, none: Unit = (), queryParams: ArticlesQueryParameter): IO[Seq[(Int, ResponseArticle)]] = {
       val (request, _) = makeRequest(contentTypeId, none, queryParams)
-      articleRepository.dispatch(request).transact(doobieContext.transactor)
+      ArticleRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     this.get((), queryParam)(run)
@@ -76,7 +75,7 @@ class ArticleService(
 
     def run(contentTypeId: ContentTypeId, tagName: TagName, queryParams: ArticlesQueryParameter): IO[Seq[(Int, ResponseArticle)]] = {
       val (request, _) = makeRequest(contentTypeId, tagName, queryParams)
-      articleRepository.dispatch(request).transact(doobieContext.transactor)
+      ArticleRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     this.get(tagName, queryParam)(run)

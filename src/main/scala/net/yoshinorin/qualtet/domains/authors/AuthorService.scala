@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.authors.RepositoryReqiests._
 
-class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: DoobieContextBase) extends ServiceBase {
+class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBase {
 
   /**
    * create an authorName
@@ -26,7 +26,7 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
 
     def run(data: Author): IO[Int] = {
       val (request, _) = makeRequest(data)
-      authorRepository.dispatch(request).transact(doobieContext.transactor)
+      AuthorRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     for {
@@ -52,7 +52,7 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
 
     def run(): IO[Seq[ResponseAuthor]] = {
       val (request, _) = makeRequest()
-      authorRepository.dispatch(request).transact(doobieContext.transactor)
+      AuthorRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run()
@@ -77,7 +77,7 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
 
     def run(id: AuthorId): IO[Option[ResponseAuthor]] = {
       val (request, _) = makeRequest(id)
-      authorRepository.dispatch(request).transact(doobieContext.transactor)
+      AuthorRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run(id)
@@ -101,7 +101,7 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
 
     def run(id: AuthorId): IO[Option[Author]] = {
       val (request, _) = makeRequest(id)
-      authorRepository.dispatch(request).transact(doobieContext.transactor)
+      AuthorRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run(id)
@@ -126,7 +126,7 @@ class AuthorService(authorRepository: AuthorRepository)(implicit doobieContext: 
 
     def run(name: AuthorName): IO[Option[ResponseAuthor]] = {
       val (request, _) = makeRequest(name)
-      authorRepository.dispatch(request).transact(doobieContext.transactor)
+      AuthorRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run(name)

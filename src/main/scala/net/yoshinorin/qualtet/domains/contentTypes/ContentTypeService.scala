@@ -9,12 +9,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.RepositoryRequests._
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class ContentTypeService(
-  contentTypeRepository: ContentTypeRepository,
-  cache: CacheModule[String, ContentType]
-)(
-  implicit doobieContext: DoobieContextBase
-) extends ServiceBase {
+class ContentTypeService(cache: CacheModule[String, ContentType])(implicit doobieContext: DoobieContextBase) extends ServiceBase {
 
   /**
    * create a contentType
@@ -32,7 +27,7 @@ class ContentTypeService(
 
     def run(data: ContentType): IO[Int] = {
       val (request, resultHandler) = makeRequest(data)
-      contentTypeRepository.dispatch(request).transact(doobieContext.transactor)
+      ContentTypeRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     this.findByName(data.name).flatMap {
@@ -64,7 +59,7 @@ class ContentTypeService(
 
     def run(name: String): IO[Option[ContentType]] = {
       val (request, resultHandler) = makeRequest(name)
-      contentTypeRepository.dispatch(request).transact(doobieContext.transactor)
+      ContentTypeRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     def fromDB(name: String): IO[Option[ContentType]] = {
@@ -95,7 +90,7 @@ class ContentTypeService(
 
     def run(): IO[Seq[ContentType]] = {
       val (request, resultHandler) = makeRequest()
-      contentTypeRepository.dispatch(request).transact(doobieContext.transactor)
+      ContentTypeRepository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run()

@@ -4,15 +4,15 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.domains.archives.{ArchiveService, DoobieArchiveRepository, ResponseArchive}
-import net.yoshinorin.qualtet.domains.articles.{ArticleService, DoobieArticleRepository, ResponseArticle}
-import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, AuthorService, BCryptPassword, DoobieAuthorRepository}
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService, DoobieContentTypeRepository}
-import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, DoobieContentRepository, DoobieContentTaggingRepository, Path, RequestContent}
-import net.yoshinorin.qualtet.domains.externalResources.{DoobieExternalResourceRepository, ExternalResourceService, ExternalResourceKind, ExternalResources}
-import net.yoshinorin.qualtet.domains.robots.{Attributes, DoobieRobotsRepository, RobotsService}
-import net.yoshinorin.qualtet.domains.sitemaps.{DoobieSitemapsRepository, SitemapService, Url}
-import net.yoshinorin.qualtet.domains.tags.{DoobieTagRepository, TagId, TagService}
+import net.yoshinorin.qualtet.domains.archives.{ArchiveService, ResponseArchive}
+import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticle}
+import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, AuthorService, BCryptPassword}
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceService, ExternalResourceKind, ExternalResources}
+import net.yoshinorin.qualtet.domains.robots.{Attributes, RobotsService}
+import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, Url}
+import net.yoshinorin.qualtet.domains.tags.{TagId, TagService}
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,
@@ -46,53 +46,38 @@ object Fixture {
   val signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
   val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
 
-  val authorRepository = new DoobieAuthorRepository
-  val authorService: AuthorService = new AuthorService(authorRepository)(doobieContext)
+  val authorService: AuthorService = new AuthorService()(doobieContext)
 
   val authService = new AuthService(authorService, jwtInstance)
 
-  val contentTypeRepository = new DoobieContentTypeRepository
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)(doobieContext)
+  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeCache)(doobieContext)
 
-  val tagRepository = new DoobieTagRepository
-  val tagService = new TagService(tagRepository)(doobieContext)
+  val tagService = new TagService()(doobieContext)
+  val robotsService = new RobotsService()
+  val externalResourceService = new ExternalResourceService()
 
-  val contentTaggingRepository = new DoobieContentTaggingRepository
-
-  val robotsRepository = new DoobieRobotsRepository
-  val robotsService = new RobotsService(robotsRepository)
-
-  val externalResourceRepository = new DoobieExternalResourceRepository
-  val externalResourceService = new ExternalResourceService(externalResourceRepository)
-
-  val contentRepository = new DoobieContentRepository
   val contentService: ContentService =
     new ContentService(
-      contentRepository,
       tagService,
-      contentTaggingRepository,
       robotsService,
       externalResourceService,
       authorService,
       contentTypeService
     )(doobieContext)
 
-  val articleRepository = new DoobieArticleRepository
-  val articleService: ArticleService = new ArticleService(articleRepository, contentTypeService)(doobieContext)
+  val articleService: ArticleService = new ArticleService(contentTypeService)(doobieContext)
 
-  val archiveRepository = new DoobieArchiveRepository
-  val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)(doobieContext)
+  val archiveService: ArchiveService = new ArchiveService(contentTypeService)(doobieContext)
 
-  val sitemapRepository = new DoobieSitemapsRepository
   // TODO: from inf cache
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService = new SitemapService(sitemapRepository, sitemapCache)(doobieContext)
+  val sitemapService = new SitemapService(sitemapCache)(doobieContext)
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()

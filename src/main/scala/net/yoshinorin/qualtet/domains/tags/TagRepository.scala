@@ -2,8 +2,9 @@ package net.yoshinorin.qualtet.domains.tags
 
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.tags.RepositoryRequests.{BulkUpsert, FindByName, GetAll}
+import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
-trait TagRepository {
+object TagRepository extends ConnectionIOFaker {
 
   /**
    * get all tags
@@ -11,15 +12,19 @@ trait TagRepository {
    * @param request GetAll request object
    * @return Tags
    */
-  def dispatch(request: GetAll): ConnectionIO[Seq[ResponseTag]]
+  def dispatch(request: GetAll): ConnectionIO[Seq[ResponseTag]] = {
+    TagQuery.getAll.to[Seq]
+  }
 
   /**
    * find a Tag by Name
    *
-   * @param request FindByName request object
-   * @return Instance of Tag
+   * @param request FindByName request
+   * @return dummy long id (Doobie return Int)
    */
-  def dispatch(request: FindByName): ConnectionIO[Option[Tag]]
+  def dispatch(request: FindByName): ConnectionIO[Option[Tag]] = {
+    TagQuery.findByName(request.data).option
+  }
 
   /**
    * create a Tag
@@ -29,6 +34,12 @@ trait TagRepository {
    *
    * TODO: return ConnectionIO[Long]
    */
-  def dispatch(request: BulkUpsert): ConnectionIO[Int]
+  def dispatch(request: BulkUpsert): ConnectionIO[Int] = {
+    request.data match {
+      case None => ConnectionIOWithInt
+      case Some(x) =>
+        TagQuery.bulkUpsert.updateMany(x)
+    }
+  }
 
 }

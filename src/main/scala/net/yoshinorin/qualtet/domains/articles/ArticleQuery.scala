@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
-object DoobieArticleQuery {
+object ArticleQuery {
 
   // TOOD: delete none argument. Maybe lift is effective.
   def getWithCount(contentTypeId: ContentTypeId, none: Unit = (), sqlParams: SqlParams): Query0[(Int, ResponseArticle)] = {

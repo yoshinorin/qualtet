@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.contents
 
 import doobie.util.update.Update
 
-object DoobieContentTaggingQuery {
+object ContentTaggingQuery {
 
   def bulkUpsert: Update[ContentTagging] = {
     val q = s"""

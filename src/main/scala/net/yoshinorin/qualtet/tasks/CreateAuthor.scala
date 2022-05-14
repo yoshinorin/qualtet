@@ -6,7 +6,7 @@ import cats.implicits.catsSyntaxEq
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import io.circe.syntax._
-import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, AuthorService, BCryptPassword, DoobieAuthorRepository}
+import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, AuthorService, BCryptPassword}
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -19,8 +19,7 @@ object CreateAuthor {
   implicit val executionContextExecutor: ExecutionContextExecutor = actorSystem.dispatcher
 
   implicit val doobieContext: DoobieContext = new DoobieContext()
-  val authorRepository = new DoobieAuthorRepository
-  val authorService: AuthorService = new AuthorService(authorRepository)
+  val authorService: AuthorService = new AuthorService()
 
   def main(args: Array[String]): Unit = {
     if (args.length =!= 3) {

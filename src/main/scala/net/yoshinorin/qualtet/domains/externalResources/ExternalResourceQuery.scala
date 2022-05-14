@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.util.update.Update
 
-object DoobieExternalResourceQuery {
+object ExternalResourceQuery {
 
   def bulkUpsert: Update[ExternalResource] = {
     val q = s"""

@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.sitemaps
 import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
 
-object DoobieSitemapsQuery {
+object SitemapsQuery {
 
   def get: Query0[Url] = {
     sql"""

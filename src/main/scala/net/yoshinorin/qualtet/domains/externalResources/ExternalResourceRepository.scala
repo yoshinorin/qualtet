@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 import net.yoshinorin.qualtet.domains.externalResources.RepositoryRequests._
 
-trait ExternalResourceRepository {
+object ExternalResourceRepository extends ConnectionIOFaker {
 
   /**
    * create a externalResources (for meta)
@@ -13,6 +14,11 @@ trait ExternalResourceRepository {
    *
    * TODO: return ConnectionIO[Long]
    */
-  def dispatch(request: BulkUpsert): ConnectionIO[Int]
-
+  def dispatch(request: BulkUpsert): ConnectionIO[Int] = {
+    request.data match {
+      case None => ConnectionIOWithInt
+      case Some(x) =>
+        ExternalResourceQuery.bulkUpsert.updateMany(x)
+    }
+  }
 }
