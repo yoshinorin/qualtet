@@ -1,10 +1,6 @@
 package net.yoshinorin.qualtet.domains.robots
 
-import cats.effect.IO
-import cats.implicits._
 import doobie.ConnectionIO
-import doobie.implicits._
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.robots.RepositoryRequests._
 
 class RobotsService() {

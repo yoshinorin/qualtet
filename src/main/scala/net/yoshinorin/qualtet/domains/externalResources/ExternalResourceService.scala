@@ -1,10 +1,6 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
-import cats.effect.IO
-import cats.implicits._
 import doobie.ConnectionIO
-import doobie.implicits._
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.externalResources.RepositoryRequests._
 
 class ExternalResourceService() {
