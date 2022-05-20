@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.robots
 
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.robots.RepositoryRequests._
 
 class RobotsService() {
 
@@ -14,7 +13,7 @@ class RobotsService() {
    */
   def upsertWithoutTaransact(data: Robots): ConnectionIO[Int] = {
 
-    def makeRequest(data: Robots): (RepositoryRequests.Upsert, ConnectionIO[Int] => ConnectionIO[Int]) = {
+    def makeRequest(data: Robots): (Upsert, ConnectionIO[Int] => ConnectionIO[Int]) = {
       val request = Upsert(data)
       val resultHandler: ConnectionIO[Int] => ConnectionIO[Int] = (connectionIO: ConnectionIO[Int]) => { connectionIO }
       (request, resultHandler)

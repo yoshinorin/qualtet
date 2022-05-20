@@ -4,7 +4,6 @@ import cats.effect.IO
 import cats.implicits._
 import doobie.ConnectionIO
 import doobie.implicits._
-import net.yoshinorin.qualtet.domains.tags.RepositoryRequests.{BulkUpsert, FindByName, GetAll}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class TagService()(implicit doobieContext: DoobieContextBase) {

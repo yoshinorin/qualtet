@@ -6,7 +6,6 @@ import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
-import net.yoshinorin.qualtet.domains.authors.RepositoryReqiests._
 
 class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBase {
 

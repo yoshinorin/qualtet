@@ -4,7 +4,6 @@ import cats.effect.IO
 import doobie.implicits._
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
-import RepositoryRequests.Get
 
 class SitemapService(cache: CacheModule[String, Seq[Url]])(implicit doobieContext: DoobieContextBase) {
 

@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-object RepositoryRequests {
-  final case class GetAll()
-  final case class FindByName(name: String)
-  final case class Upsert(data: ContentType)
-}
+import net.yoshinorin.qualtet.domains.repository.requests._
+
+trait ContentTypeRepositoryRequest[T] extends RepositoryRequest[T]
+final case class GetAll() extends ContentTypeRepositoryRequest[Seq[ContentType]]
+final case class FindByName(name: String) extends ContentTypeRepositoryRequest[Option[ContentType]]
+final case class Upsert(data: ContentType) extends ContentTypeRepositoryRequest[Int]

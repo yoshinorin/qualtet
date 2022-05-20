@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.domains.tags
 
-object RepositoryRequests {
-  final case class GetAll()
-  final case class FindByName(data: TagName)
-  final case class BulkUpsert(data: Option[List[Tag]])
-}
+import net.yoshinorin.qualtet.domains.repository.requests._
+
+trait TagRepositoryRequest[T] extends RepositoryRequest[T]
+final case class GetAll() extends TagRepositoryRequest[Seq[ResponseTag]]
+final case class FindByName(data: TagName) extends TagRepositoryRequest[Option[Tag]]
+final case class BulkUpsert(data: Option[List[Tag]]) extends TagRepositoryRequest[Int]

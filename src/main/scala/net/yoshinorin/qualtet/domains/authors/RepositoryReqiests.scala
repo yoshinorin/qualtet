@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.authors
 
-object RepositoryReqiests {
-  final case class Upsert(data: Author)
-  final case class GetAll()
-  final case class FindById(id: AuthorId)
-  final case class FindByIdWithPassword(id: AuthorId)
-  final case class FindByName(name: AuthorName)
-}
+import net.yoshinorin.qualtet.domains.repository.requests._
+
+trait AuthorRepositoryRequest[T] extends RepositoryRequest[T]
+final case class GetAll() extends AuthorRepositoryRequest[Seq[ResponseAuthor]]
+final case class FindById(id: AuthorId) extends AuthorRepositoryRequest[Option[ResponseAuthor]]
+final case class FindByIdWithPassword(id: AuthorId) extends AuthorRepositoryRequest[Option[Author]]
+final case class FindByName(name: AuthorName) extends AuthorRepositoryRequest[Option[ResponseAuthor]]
+final case class Upsert(data: Author) extends AuthorRepositoryRequest[Int]

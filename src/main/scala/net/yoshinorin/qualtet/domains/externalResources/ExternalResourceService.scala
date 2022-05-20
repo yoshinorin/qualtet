@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.externalResources.RepositoryRequests._
 
 class ExternalResourceService() {
 

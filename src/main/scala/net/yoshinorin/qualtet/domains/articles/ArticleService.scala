@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.domains.articles
 import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.implicits._
-import net.yoshinorin.qualtet.domains.articles.RepositoryReqiests._
 import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.domains.feeds.ResponseFeed

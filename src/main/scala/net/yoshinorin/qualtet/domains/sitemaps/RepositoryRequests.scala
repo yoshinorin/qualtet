@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-object RepositoryRequests {
-  final case class Get()
-}
+import net.yoshinorin.qualtet.domains.repository.requests._
+
+trait SitemapRepositoryRequest[T] extends RepositoryRequest[T]
+final case class Get() extends SitemapRepositoryRequest[Seq[Url]]
