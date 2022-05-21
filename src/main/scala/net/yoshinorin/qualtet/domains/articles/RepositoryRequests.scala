@@ -7,5 +7,5 @@ import net.yoshinorin.qualtet.domains.repository.requests._
 
 trait ArticleRepositoryRequest[T] extends RepositoryRequest[T]
 final case class GetWithCount(contentTypeId: ContentTypeId, none: Unit, sqlParams: SqlParams) extends ArticleRepositoryRequest[Seq[(Int, ResponseArticle)]]
-final case class FindByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, sqlParams: SqlParams) extends ArticleRepositoryRequest[Seq[(Int, ResponseArticle)]]
-
+final case class FindByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, sqlParams: SqlParams)
+    extends ArticleRepositoryRequest[Seq[(Int, ResponseArticle)]]
