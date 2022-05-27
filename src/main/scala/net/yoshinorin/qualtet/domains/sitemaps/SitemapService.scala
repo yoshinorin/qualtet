@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.sitemaps
 
 import cats.effect.IO
 import doobie.implicits._
+import net.yoshinorin.qualtet.domains.repository.Repository
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
@@ -18,7 +19,7 @@ class SitemapService(cache: CacheModule[String, Seq[Url]])(implicit doobieContex
 
     def fromDb(): IO[Seq[Url]] = {
       val (request, _) = makeRequest()
-      SitemapsRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     cache.get(cacheKey) match {

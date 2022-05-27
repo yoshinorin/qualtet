@@ -5,6 +5,7 @@ import doobie.ConnectionIO
 import doobie.implicits._
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.ServiceBase
+import net.yoshinorin.qualtet.domains.repository.Repository
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
@@ -26,7 +27,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(implicit doobi
 
     def run(data: ContentType): IO[Int] = {
       val (request, resultHandler) = makeRequest(data)
-      ContentTypeRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     this.findByName(data.name).flatMap {
@@ -58,7 +59,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(implicit doobi
 
     def run(name: String): IO[Option[ContentType]] = {
       val (request, resultHandler) = makeRequest(name)
-      ContentTypeRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     def fromDB(name: String): IO[Option[ContentType]] = {
@@ -89,7 +90,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(implicit doobi
 
     def run(): IO[Seq[ContentType]] = {
       val (request, resultHandler) = makeRequest()
-      ContentTypeRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run()

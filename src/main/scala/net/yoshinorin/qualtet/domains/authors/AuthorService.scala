@@ -4,6 +4,7 @@ import cats.effect.IO
 import doobie.implicits._
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.ServiceBase
+import net.yoshinorin.qualtet.domains.repository.Repository
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
@@ -25,7 +26,7 @@ class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBa
 
     def run(data: Author): IO[Int] = {
       val (request, _) = makeRequest(data)
-      AuthorRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     for {
@@ -51,7 +52,7 @@ class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBa
 
     def run(): IO[Seq[ResponseAuthor]] = {
       val (request, _) = makeRequest()
-      AuthorRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run()
@@ -76,7 +77,7 @@ class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBa
 
     def run(id: AuthorId): IO[Option[ResponseAuthor]] = {
       val (request, _) = makeRequest(id)
-      AuthorRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run(id)
@@ -100,7 +101,7 @@ class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBa
 
     def run(id: AuthorId): IO[Option[Author]] = {
       val (request, _) = makeRequest(id)
-      AuthorRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run(id)
@@ -125,7 +126,7 @@ class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBa
 
     def run(name: AuthorName): IO[Option[ResponseAuthor]] = {
       val (request, _) = makeRequest(name)
-      AuthorRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run(name)

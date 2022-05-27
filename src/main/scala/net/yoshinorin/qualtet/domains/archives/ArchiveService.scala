@@ -8,6 +8,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.repository.Repository
 
 class ArchiveService(
   contentTypeService: ContentTypeService
@@ -26,7 +27,7 @@ class ArchiveService(
 
     def run(contentTypeId: ContentTypeId): IO[Seq[ResponseArchive]] = {
       val (request, _) = makeRequest(contentTypeId)
-      ArchiveRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     for {

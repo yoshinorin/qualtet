@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.repository.Repository
 
 class ExternalResourceService() {
 
@@ -21,7 +22,7 @@ class ExternalResourceService() {
 
     def run(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
       val (request, resultHandler) = makeRequest(data)
-      ExternalResourceRepository.dispatch(request)
+      Repository.dispatch(request)
     }
 
     run(data)

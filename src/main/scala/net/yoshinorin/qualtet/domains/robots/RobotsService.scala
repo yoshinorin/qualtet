@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.robots
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.repository.Repository
 
 class RobotsService() {
 
@@ -21,7 +22,7 @@ class RobotsService() {
 
     def run(data: Robots): ConnectionIO[Int] = {
       val (request, resultHandler) = makeRequest(data)
-      RobotsRepository.dispatch(request)
+      Repository.dispatch(request)
     }
 
     run(data)

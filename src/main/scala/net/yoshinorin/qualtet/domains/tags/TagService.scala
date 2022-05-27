@@ -4,6 +4,7 @@ import cats.effect.IO
 import cats.implicits._
 import doobie.ConnectionIO
 import doobie.implicits._
+import net.yoshinorin.qualtet.domains.repository.Repository
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class TagService()(implicit doobieContext: DoobieContextBase) {
@@ -21,7 +22,7 @@ class TagService()(implicit doobieContext: DoobieContextBase) {
 
     def run(): IO[Seq[ResponseTag]] = {
       val (request, cont) = makeRequest()
-      TagRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run()
@@ -43,7 +44,7 @@ class TagService()(implicit doobieContext: DoobieContextBase) {
 
     def run(tagName: TagName): IO[Option[Tag]] = {
       val (request, cont) = makeRequest(tagName)
-      TagRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run(tagName)
@@ -93,7 +94,7 @@ class TagService()(implicit doobieContext: DoobieContextBase) {
 
     def run(data: Option[List[Tag]]): ConnectionIO[Int] = {
       val (request, cont) = makeRequest(data)
-      TagRepository.dispatch(request)
+      Repository.dispatch(request)
     }
 
     run(data)

@@ -4,6 +4,7 @@ import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.ServiceBase
+import net.yoshinorin.qualtet.domains.repository.Repository
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
@@ -96,7 +97,7 @@ class ContentService(
 
     def run(data: Content): ConnectionIO[Int] = {
       val (request, _) = makeRequest(data: Content)
-      ContentRepository.dispatch(request)
+      Repository.dispatch(request)
     }
 
     val maybeExternalResources = externalResources match {
@@ -138,7 +139,7 @@ class ContentService(
 
     def run(path: Path): IO[Option[Content]] = {
       val (request, _) = makeRequest(path)
-      ContentRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     run(path)
@@ -163,7 +164,7 @@ class ContentService(
 
     def run(path: Path): ConnectionIO[Option[ResponseContentDbRow]] = {
       val (request, _) = makeRequest(path)
-      ContentRepository.dispatch(request)
+      Repository.dispatch(request)
     }
 
     this.findBy(path)(run)

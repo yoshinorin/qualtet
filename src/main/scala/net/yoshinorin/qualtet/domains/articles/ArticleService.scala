@@ -10,6 +10,7 @@ import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.domains.repository.Repository
 
 class ArticleService(
   contentTypeService: ContentTypeService
@@ -47,7 +48,7 @@ class ArticleService(
 
     def run(contentTypeId: ContentTypeId, none: Unit = (), queryParams: ArticlesQueryParameter): IO[Seq[(Int, ResponseArticle)]] = {
       val (request, _) = makeRequest(contentTypeId, none, queryParams)
-      ArticleRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     this.get((), queryParam)(run)
@@ -74,7 +75,7 @@ class ArticleService(
 
     def run(contentTypeId: ContentTypeId, tagName: TagName, queryParams: ArticlesQueryParameter): IO[Seq[(Int, ResponseArticle)]] = {
       val (request, _) = makeRequest(contentTypeId, tagName, queryParams)
-      ArticleRepository.dispatch(request).transact(doobieContext.transactor)
+      Repository.dispatch(request).transact(doobieContext.transactor)
     }
 
     this.get(tagName, queryParam)(run)
