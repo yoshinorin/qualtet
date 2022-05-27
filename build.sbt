@@ -31,11 +31,11 @@ inThisBuild(
 // https://www.wartremover.org/
 wartremoverWarnings ++= Warts.all
 
-val akkaVersion = "2.6.18"
+val akkaVersion = "2.6.19"
 val akkaHttpVersion = "10.2.9"
-val circeVersion = "0.14.1"
+val circeVersion = "0.14.2"
 val doobieVersion = "0.13.4"
-val jwtScalaVersion = "9.0.4"
+val jwtScalaVersion = "9.0.5"
 
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.2",
@@ -52,17 +52,17 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic-extras" % circeVersion,
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.jwt-scala" %% "jwt-circe" % jwtScalaVersion,
-  "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.3",
+  "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.5",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-  "org.wvlet.airframe" %% "airframe-ulid" % "22.2.0",
-  "com.github.ben-manes.caffeine" % "caffeine" % "3.0.5",
+  "org.wvlet.airframe" %% "airframe-ulid" % "22.5.0",
+  "com.github.ben-manes.caffeine" % "caffeine" % "3.1.0",
   "org.flywaydb" % "flyway-core" % "7.8.2",
-  "ch.qos.logback" % "logback-classic" % "1.2.10",
-  "org.springframework.security" % "spring-security-core" % "5.6.1",
+  "ch.qos.logback" % "logback-classic" % "1.2.11",
+  "org.springframework.security" % "spring-security-core" % "5.7.1",
   "org.slf4j" % "slf4j-api" % "1.7.36",
-  "org.scalatest" %% "scalatest" % "3.2.11" % "test",
-  "org.mockito" % "mockito-core" % "4.4.0" % "test"
+  "org.scalatest" %% "scalatest" % "3.2.12" % "test",
+  "org.mockito" % "mockito-core" % "4.5.1" % "test"
 )
 
 val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
