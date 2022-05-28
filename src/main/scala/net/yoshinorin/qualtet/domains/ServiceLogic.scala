@@ -19,9 +19,6 @@ object ServiceLogic {
   }
 
   private def runContinue[T, R](continue: Continue[T, R])(implicit doobieContext: DoobieContextBase): IO[R] = {
-    Repository.dispatch(continue.request).transact(doobieContext.transactor).flatMap {
-      t => run(continue.next(t))
-    }
+    Repository.dispatch(continue.request).transact(doobieContext.transactor).flatMap { t => run(continue.next(t)) }
   }
 }
-
