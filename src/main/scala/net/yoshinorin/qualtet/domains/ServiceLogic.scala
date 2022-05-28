@@ -7,20 +7,20 @@ import net.yoshinorin.qualtet.domains.repository.requests._
 import net.yoshinorin.qualtet.domains.repository.Repository
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-sealed trait ServiceLogic[H]
-case class Continue[T, H](request: RepositoryRequest[T], resultHandler: T => ServiceLogic[H]) extends ServiceLogic[H]
-case class Done[H](value: H) extends ServiceLogic[H]
+sealed trait ServiceLogic[R]
+case class Continue[T, R](request: RepositoryRequest[T], next: T => ServiceLogic[R]) extends ServiceLogic[R]
+case class Done[R](value: R) extends ServiceLogic[R]
 
 object ServiceLogic {
 
-  def runServiceLogic[H](serviceLogic: ServiceLogic[H])(implicit doobieContext: DoobieContextBase): IO[H] = serviceLogic match {
-    case continue: Continue[_, H] => runHandler(continue)
+  def run[R](serviceLogic: ServiceLogic[R])(implicit doobieContext: DoobieContextBase): IO[R] = serviceLogic match {
+    case continue: Continue[_, R] => runContinue(continue)
     case Done(value) => IO(value)
   }
 
-  private def runHandler[T, H](continue: Continue[T, H])(implicit doobieContext: DoobieContextBase): IO[H] = {
+  private def runContinue[T, R](continue: Continue[T, R])(implicit doobieContext: DoobieContextBase): IO[R] = {
     Repository.dispatch(continue.request).transact(doobieContext.transactor).flatMap {
-      t => runServiceLogic(continue.resultHandler(t))
+      t => run(continue.next(t))
     }
   }
 }
