@@ -1,16 +1,15 @@
 package net.yoshinorin.qualtet.domains.articles
 
 import cats.effect.IO
-import doobie.ConnectionIO
-import doobie.implicits._
 import net.yoshinorin.qualtet.domains.ServiceBase
+import net.yoshinorin.qualtet.domains.ServiceLogic._
+import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
-import net.yoshinorin.qualtet.domains.repository.Repository
 
 class ArticleService(
   contentTypeService: ContentTypeService
@@ -21,10 +20,10 @@ class ArticleService(
   def get[A](
     data: A,
     queryParam: ArticlesQueryParameter
-  )(f: (ContentTypeId, A, ArticlesQueryParameter) => IO[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
+  )(f: (ContentTypeId, A, ArticlesQueryParameter) => ServiceLogic[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
       c <- findBy("article", NotFound(s"content-type not found: article"))(contentTypeService.findByName)
-      articlesWithCount <- f(c.id, data, queryParam)
+      articlesWithCount <- runWithTransaction(f(c.id, data, queryParam))(doobieContext)
     } yield
       if (articlesWithCount.nonEmpty) {
         ResponseArticleWithCount(articlesWithCount.map(_._1).head, articlesWithCount.map(_._2))
@@ -35,23 +34,19 @@ class ArticleService(
 
   def getWithCount(queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
 
-    def makeRequest(
+    def execute(
       contentTypeId: ContentTypeId,
-      none: Unit,
+      none: Unit = (),
       queryParams: ArticlesQueryParameter
-    ): (GetWithCount, ConnectionIO[Seq[(Int, ResponseArticle)]] => ConnectionIO[Seq[(Int, ResponseArticle)]]) = {
+    ): ServiceLogic[Seq[(Int, ResponseArticle)]] = {
       val request = GetWithCount(contentTypeId, none, queryParams)
-      val resultHandler: ConnectionIO[Seq[(Int, ResponseArticle)]] => ConnectionIO[Seq[(Int, ResponseArticle)]] =
-        (connectionIO: ConnectionIO[Seq[(Int, ResponseArticle)]]) => { connectionIO }
-      (request, resultHandler)
+      val resultHandler: Seq[(Int, ResponseArticle)] => ServiceLogic[Seq[(Int, ResponseArticle)]] = (resultHandler: Seq[(Int, ResponseArticle)]) => {
+        Done(resultHandler)
+      }
+      Continue(request, resultHandler)
     }
 
-    def run(contentTypeId: ContentTypeId, none: Unit = (), queryParams: ArticlesQueryParameter): IO[Seq[(Int, ResponseArticle)]] = {
-      val (request, _) = makeRequest(contentTypeId, none, queryParams)
-      Repository.dispatch(request).transact(doobieContext.transactor)
-    }
-
-    this.get((), queryParam)(run)
+    this.get((), queryParam)(execute)
   }
 
   /*
@@ -62,23 +57,19 @@ class ArticleService(
 
   def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
 
-    def makeRequest(
+    def execute(
       contentTypeId: ContentTypeId,
       tagName: TagName,
       queryParams: ArticlesQueryParameter
-    ): (FindByTagNameWithCount, ConnectionIO[Seq[(Int, ResponseArticle)]] => ConnectionIO[Seq[(Int, ResponseArticle)]]) = {
+    ): ServiceLogic[Seq[(Int, ResponseArticle)]] = {
       val request = FindByTagNameWithCount(contentTypeId, tagName, queryParams)
-      val resultHandler: ConnectionIO[Seq[(Int, ResponseArticle)]] => ConnectionIO[Seq[(Int, ResponseArticle)]] =
-        (connectionIO: ConnectionIO[Seq[(Int, ResponseArticle)]]) => { connectionIO }
-      (request, resultHandler)
+      val resultHandler: Seq[(Int, ResponseArticle)] => ServiceLogic[Seq[(Int, ResponseArticle)]] = (resultHandler: Seq[(Int, ResponseArticle)]) => {
+        Done(resultHandler)
+      }
+      Continue(request, resultHandler)
     }
 
-    def run(contentTypeId: ContentTypeId, tagName: TagName, queryParams: ArticlesQueryParameter): IO[Seq[(Int, ResponseArticle)]] = {
-      val (request, _) = makeRequest(contentTypeId, tagName, queryParams)
-      Repository.dispatch(request).transact(doobieContext.transactor)
-    }
-
-    this.get(tagName, queryParam)(run)
+    this.get(tagName, queryParam)(execute)
   }
 
   def getFeeds(queryParam: ArticlesQueryParameter): IO[Seq[ResponseFeed]] = {

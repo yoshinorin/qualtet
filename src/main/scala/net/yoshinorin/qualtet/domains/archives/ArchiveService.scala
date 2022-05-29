@@ -1,14 +1,13 @@
 package net.yoshinorin.qualtet.domains.archives
 
 import cats.effect.IO
-import doobie.implicits._
-import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.ServiceBase
+import net.yoshinorin.qualtet.domains.ServiceLogic._
+import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.repository.Repository
 
 class ArchiveService(
   contentTypeService: ContentTypeService
@@ -18,21 +17,17 @@ class ArchiveService(
 
   def get: IO[Seq[ResponseArchive]] = {
 
-    def makeRequest(contentTypeId: ContentTypeId): (GetByContentTypeId, ConnectionIO[Seq[ResponseArchive]] => ConnectionIO[Seq[ResponseArchive]]) = {
+    def execute(contentTypeId: ContentTypeId): ServiceLogic[Seq[ResponseArchive]] = {
       val request = GetByContentTypeId(contentTypeId)
-      val resultHandler: ConnectionIO[Seq[ResponseArchive]] => ConnectionIO[Seq[ResponseArchive]] =
-        (connectionIO: ConnectionIO[Seq[ResponseArchive]]) => { connectionIO }
-      (request, resultHandler)
-    }
-
-    def run(contentTypeId: ContentTypeId): IO[Seq[ResponseArchive]] = {
-      val (request, _) = makeRequest(contentTypeId)
-      Repository.dispatch(request).transact(doobieContext.transactor)
+      val resultHandler: Seq[ResponseArchive] => ServiceLogic[Seq[ResponseArchive]] = (resultHandler: Seq[ResponseArchive]) => {
+        Done(resultHandler)
+      }
+      Continue(request, resultHandler)
     }
 
     for {
       c <- findBy("article", NotFound(s"content-type not found: article"))(contentTypeService.findByName)
-      articles <- run(c.id)
+      articles <- runWithTransaction(execute(c.id))(doobieContext)
     } yield articles
   }
 

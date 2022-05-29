@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
 import cats.effect.IO
-import doobie.implicits._
-import net.yoshinorin.qualtet.domains.repository.Repository
+import net.yoshinorin.qualtet.domains.ServiceLogic._
+import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
@@ -12,21 +12,17 @@ class SitemapService(cache: CacheModule[String, Seq[Url]])(implicit doobieContex
 
   def get(): IO[Seq[Url]] = {
 
-    def makeRequest(): (Get, Seq[Url] => Seq[Url]) = {
+    def execute(): ServiceLogic[Seq[Url]] = {
       val request = Get()
-      (request, Seq[Url])
-    }
-
-    def fromDb(): IO[Seq[Url]] = {
-      val (request, _) = makeRequest()
-      Repository.dispatch(request).transact(doobieContext.transactor)
+      val resultHandler: Seq[Url] => ServiceLogic[Seq[Url]] = (resultHandler: Seq[Url]) => { Done(resultHandler) }
+      Continue(request, resultHandler)
     }
 
     cache.get(cacheKey) match {
       case Some(x: Seq[Url]) => IO(x)
       case _ =>
         for {
-          x <- fromDb()
+          x <- runWithTransaction(execute())(doobieContext)
         } yield (x, cache.put(cacheKey, x))._1
     }
   }

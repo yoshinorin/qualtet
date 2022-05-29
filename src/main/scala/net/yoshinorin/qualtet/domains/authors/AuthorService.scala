@@ -1,12 +1,11 @@
 package net.yoshinorin.qualtet.domains.authors
 
 import cats.effect.IO
-import doobie.implicits._
-import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.ServiceBase
-import net.yoshinorin.qualtet.domains.repository.Repository
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.domains.ServiceLogic._
+import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 
 class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBase {
 
@@ -18,19 +17,16 @@ class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBa
    */
   def create(data: Author): IO[ResponseAuthor] = {
 
-    def makeRequest(data: Author): (Upsert, ConnectionIO[Int] => ConnectionIO[Int]) = {
+    def execute(data: Author): ServiceLogic[Int] = {
       val request = Upsert(data)
-      val resultHandler: ConnectionIO[Int] => ConnectionIO[Int] = (connectionIO: ConnectionIO[Int]) => { connectionIO }
-      (request, resultHandler)
-    }
-
-    def run(data: Author): IO[Int] = {
-      val (request, _) = makeRequest(data)
-      Repository.dispatch(request).transact(doobieContext.transactor)
+      val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
+        Done(resultHandler)
+      }
+      Continue(request, resultHandler)
     }
 
     for {
-      _ <- run(data)
+      _ <- runWithTransaction(execute(data))(doobieContext)
       a <- findBy(data.name, InternalServerError("user not found"))(this.findByName)
     } yield a
   }
@@ -42,20 +38,15 @@ class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBa
    */
   def getAll: IO[Seq[ResponseAuthor]] = {
 
-    def makeRequest(): (GetAll, ConnectionIO[Seq[ResponseAuthor]] => ConnectionIO[Seq[ResponseAuthor]]) = {
+    def execute(): ServiceLogic[Seq[ResponseAuthor]] = {
       val request = GetAll()
-      val resultHandler: ConnectionIO[Seq[ResponseAuthor]] => ConnectionIO[Seq[ResponseAuthor]] = (connectionIO: ConnectionIO[Seq[ResponseAuthor]]) => {
-        connectionIO
+      val resultHandler: Seq[ResponseAuthor] => ServiceLogic[Seq[ResponseAuthor]] = (resultHandler: Seq[ResponseAuthor]) => {
+        Done(resultHandler)
       }
-      (request, resultHandler)
+      Continue(request, resultHandler)
     }
 
-    def run(): IO[Seq[ResponseAuthor]] = {
-      val (request, _) = makeRequest()
-      Repository.dispatch(request).transact(doobieContext.transactor)
-    }
-
-    run()
+    runWithTransaction(execute())(doobieContext)
   }
 
   /**
@@ -66,21 +57,15 @@ class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBa
    */
   def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
 
-    def makeRequest(id: AuthorId): (FindById, ConnectionIO[Option[ResponseAuthor]] => ConnectionIO[Option[ResponseAuthor]]) = {
+    def execute(id: AuthorId): ServiceLogic[Option[ResponseAuthor]] = {
       val request = FindById(id)
-      val resultHandler: ConnectionIO[Option[ResponseAuthor]] => ConnectionIO[Option[ResponseAuthor]] = (connectionIO: ConnectionIO[Option[ResponseAuthor]]) =>
-        {
-          connectionIO
-        }
-      (request, resultHandler)
+      val resultHandler: Option[ResponseAuthor] => ServiceLogic[Option[ResponseAuthor]] = (resultHandler: Option[ResponseAuthor]) => {
+        Done(resultHandler)
+      }
+      Continue(request, resultHandler)
     }
 
-    def run(id: AuthorId): IO[Option[ResponseAuthor]] = {
-      val (request, _) = makeRequest(id)
-      Repository.dispatch(request).transact(doobieContext.transactor)
-    }
-
-    run(id)
+    runWithTransaction(execute(id))(doobieContext)
   }
 
   /**
@@ -91,20 +76,15 @@ class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBa
    */
   def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
 
-    def makeRequest(id: AuthorId): (FindByIdWithPassword, ConnectionIO[Option[Author]] => ConnectionIO[Option[Author]]) = {
+    def execute(id: AuthorId): ServiceLogic[Option[Author]] = {
       val request = FindByIdWithPassword(id)
-      val resultHandler: ConnectionIO[Option[Author]] => ConnectionIO[Option[Author]] = (connectionIO: ConnectionIO[Option[Author]]) => {
-        connectionIO
+      val resultHandler: Option[Author] => ServiceLogic[Option[Author]] = (resultHandler: Option[Author]) => {
+        Done(resultHandler)
       }
-      (request, resultHandler)
+      Continue(request, resultHandler)
     }
 
-    def run(id: AuthorId): IO[Option[Author]] = {
-      val (request, _) = makeRequest(id)
-      Repository.dispatch(request).transact(doobieContext.transactor)
-    }
-
-    run(id)
+    runWithTransaction(execute(id))(doobieContext)
   }
 
   /**
@@ -115,21 +95,13 @@ class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBa
    */
   def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
 
-    def makeRequest(name: AuthorName): (FindByName, ConnectionIO[Option[ResponseAuthor]] => ConnectionIO[Option[ResponseAuthor]]) = {
+    def execute(name: AuthorName): ServiceLogic[Option[ResponseAuthor]] = {
       val request = FindByName(name)
-      val resultHandler: ConnectionIO[Option[ResponseAuthor]] => ConnectionIO[Option[ResponseAuthor]] = (connectionIO: ConnectionIO[Option[ResponseAuthor]]) =>
-        {
-          connectionIO
-        }
-      (request, resultHandler)
+      val resultHandler: Option[ResponseAuthor] => ServiceLogic[Option[ResponseAuthor]] = { resultHandler: Option[ResponseAuthor] => Done(resultHandler) }
+      Continue(request, resultHandler)
     }
 
-    def run(name: AuthorName): IO[Option[ResponseAuthor]] = {
-      val (request, _) = makeRequest(name)
-      Repository.dispatch(request).transact(doobieContext.transactor)
-    }
-
-    run(name)
+    runWithTransaction(execute(name))(doobieContext)
   }
 
 }

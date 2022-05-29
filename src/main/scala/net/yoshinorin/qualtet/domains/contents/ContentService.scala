@@ -1,10 +1,10 @@
 package net.yoshinorin.qualtet.domains.contents
 
 import cats.effect.IO
-import doobie.ConnectionIO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.ServiceBase
-import net.yoshinorin.qualtet.domains.repository.Repository
+import net.yoshinorin.qualtet.domains.ServiceLogic._
+import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
@@ -88,16 +88,12 @@ class ContentService(
       case Some(x) => IO(x)
     }
 
-    def makeRequest(data: Content): (Upsert, ConnectionIO[Int] => ConnectionIO[Int]) = {
+    def execute(data: Content): ServiceLogic[Int] = {
       val request = Upsert(data)
-      val resultHandler: ConnectionIO[Int] => ConnectionIO[Int] =
-        (connectionIO: ConnectionIO[Int]) => { connectionIO }
-      (request, resultHandler)
-    }
-
-    def run(data: Content): ConnectionIO[Int] = {
-      val (request, _) = makeRequest(data: Content)
-      Repository.dispatch(request)
+      val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
+        Done(resultHandler)
+      }
+      Continue(request, resultHandler)
     }
 
     val maybeExternalResources = externalResources match {
@@ -106,7 +102,7 @@ class ContentService(
     }
 
     val queries = for {
-      contentUpsert <- run(data)
+      contentUpsert <- runWithoutTransaction(execute(data))
       robotsUpsert <- robotsService.upsertWithoutTaransact(Robots(data.id, robotsAttributes))
       // TODO: check diff and clean up tags before upsert
       tagsBulkUpsert <- tagService.bulkUpsertWithoutTaransact(tags)
@@ -130,19 +126,15 @@ class ContentService(
    */
   def findByPath(path: Path): IO[Option[Content]] = {
 
-    def makeRequest(path: Path): (FindByPath, ConnectionIO[Option[Content]] => ConnectionIO[Option[Content]]) = {
+    def execute(path: Path): ServiceLogic[Option[Content]] = {
       val request = FindByPath(path)
-      val resultHandler: ConnectionIO[Option[Content]] => ConnectionIO[Option[Content]] =
-        (connectionIO: ConnectionIO[Option[Content]]) => { connectionIO }
-      (request, resultHandler)
+      val resultHandler: Option[Content] => ServiceLogic[Option[Content]] = (resultHandler: Option[Content]) => {
+        Done(resultHandler)
+      }
+      Continue(request, resultHandler)
     }
 
-    def run(path: Path): IO[Option[Content]] = {
-      val (request, _) = makeRequest(path)
-      Repository.dispatch(request).transact(doobieContext.transactor)
-    }
-
-    run(path)
+    runWithTransaction(execute(path))(doobieContext)
   }
 
   /**
@@ -155,19 +147,15 @@ class ContentService(
    */
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
 
-    def makeRequest(path: Path): (FindByPathWithMeta, ConnectionIO[Option[ResponseContentDbRow]] => ConnectionIO[Option[ResponseContentDbRow]]) = {
+    def execute(path: Path): ServiceLogic[Option[ResponseContentDbRow]] = {
       val request = FindByPathWithMeta(path)
-      val resultHandler: ConnectionIO[Option[ResponseContentDbRow]] => ConnectionIO[Option[ResponseContentDbRow]] =
-        (connectionIO: ConnectionIO[Option[ResponseContentDbRow]]) => { connectionIO }
-      (request, resultHandler)
+      val resultHandler: Option[ResponseContentDbRow] => ServiceLogic[Option[ResponseContentDbRow]] = (resultHandler: Option[ResponseContentDbRow]) => {
+        Done(resultHandler)
+      }
+      Continue(request, resultHandler)
     }
 
-    def run(path: Path): ConnectionIO[Option[ResponseContentDbRow]] = {
-      val (request, _) = makeRequest(path)
-      Repository.dispatch(request)
-    }
-
-    this.findBy(path)(run)
+    this.findBy(path)(execute)
   }
 
   /*
@@ -177,11 +165,11 @@ class ContentService(
   }
    */
 
-  def findBy[A](data: A)(f: A => ConnectionIO[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
+  def findBy[A](data: A)(f: A => ServiceLogic[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 
     import net.yoshinorin.qualtet.syntax._
 
-    f(data).transact(doobieContext.transactor).flatMap {
+    runWithTransaction(f(data))(doobieContext).flatMap {
       case None => IO(None)
       case Some(x) =>
         val stripedContent = x.content.stripHtmlTags.replaceAll("\n", "")

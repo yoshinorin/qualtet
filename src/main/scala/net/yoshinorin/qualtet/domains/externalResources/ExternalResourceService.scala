@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.repository.Repository
+import net.yoshinorin.qualtet.domains.ServiceLogic._
+import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 
 class ExternalResourceService() {
 
@@ -14,17 +15,14 @@ class ExternalResourceService() {
    */
   def bulkUpsertWithoutTaransact(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
 
-    def makeRequest(data: Option[List[ExternalResource]]): (BulkUpsert, ConnectionIO[Int] => ConnectionIO[Int]) = {
+    def execute(data: Option[List[ExternalResource]]): ServiceLogic[Int] = {
       val request = BulkUpsert(data)
-      val resultHandler: ConnectionIO[Int] => ConnectionIO[Int] = (connectionIO: ConnectionIO[Int]) => { connectionIO }
-      (request, resultHandler)
+      val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
+        Done(resultHandler)
+      }
+      Continue(request, resultHandler)
     }
 
-    def run(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
-      val (request, resultHandler) = makeRequest(data)
-      Repository.dispatch(request)
-    }
-
-    run(data)
+    runWithoutTransaction(execute(data))
   }
 }

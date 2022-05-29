@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.domains.tags
 import cats.effect.IO
 import cats.implicits._
 import doobie.ConnectionIO
-import doobie.implicits._
-import net.yoshinorin.qualtet.domains.repository.Repository
+import net.yoshinorin.qualtet.domains.ServiceLogic._
+import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class TagService()(implicit doobieContext: DoobieContextBase) {
@@ -16,16 +16,13 @@ class TagService()(implicit doobieContext: DoobieContextBase) {
    */
   def getAll: IO[Seq[ResponseTag]] = {
 
-    def makeRequest(): (GetAll, Seq[ResponseTag] => Seq[ResponseTag]) = {
-      (GetAll(), Seq[ResponseTag])
+    def execute(): ServiceLogic[Seq[ResponseTag]] = {
+      val request = GetAll()
+      val resultHandler: Seq[ResponseTag] => ServiceLogic[Seq[ResponseTag]] = (resultHandler: Seq[ResponseTag]) => { Done(resultHandler) }
+      Continue(request, resultHandler)
     }
 
-    def run(): IO[Seq[ResponseTag]] = {
-      val (request, cont) = makeRequest()
-      Repository.dispatch(request).transact(doobieContext.transactor)
-    }
-
-    run()
+    runWithTransaction(execute())(doobieContext)
   }
 
   /**
@@ -36,18 +33,15 @@ class TagService()(implicit doobieContext: DoobieContextBase) {
    */
   def findByName(tagName: TagName): IO[Option[Tag]] = {
 
-    def makeRequest(tagName: TagName): (FindByName, Option[Tag] => Option[Tag]) = {
+    def execute(tagName: TagName): ServiceLogic[Option[Tag]] = {
       val request = FindByName(tagName)
-      val cont: Option[Tag] => Option[Tag] = (maybeTag: Option[Tag]) => { maybeTag }
-      (request, cont)
+      val resuleHandler: Option[Tag] => ServiceLogic[Option[Tag]] = (resuleHandler: Option[Tag]) => {
+        Done(resuleHandler)
+      }
+      Continue(request, resuleHandler)
     }
 
-    def run(tagName: TagName): IO[Option[Tag]] = {
-      val (request, cont) = makeRequest(tagName)
-      Repository.dispatch(request).transact(doobieContext.transactor)
-    }
-
-    run(tagName)
+    runWithTransaction(execute(tagName))(doobieContext)
   }
 
   /**
@@ -86,17 +80,14 @@ class TagService()(implicit doobieContext: DoobieContextBase) {
    */
   def bulkUpsertWithoutTaransact(data: Option[List[Tag]]): ConnectionIO[Int] = {
 
-    def makeRequest(data: Option[List[Tag]]): (BulkUpsert, ConnectionIO[Int] => ConnectionIO[Int]) = {
+    def execute(data: Option[List[Tag]]): ServiceLogic[Int] = {
       val request = BulkUpsert(data)
-      val cont: ConnectionIO[Int] => ConnectionIO[Int] = (connectionIO: ConnectionIO[Int]) => { connectionIO }
-      (request, cont)
+      val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
+        Done(resultHandler)
+      }
+      Continue(request, resultHandler)
     }
 
-    def run(data: Option[List[Tag]]): ConnectionIO[Int] = {
-      val (request, cont) = makeRequest(data)
-      Repository.dispatch(request)
-    }
-
-    run(data)
+    runWithoutTransaction(execute(data))
   }
 }
