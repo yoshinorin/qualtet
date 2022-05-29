@@ -182,3 +182,10 @@ or
 
 $ sbt clean coverage testWithDb coverageReport
 ```
+
+### Generate commit log for release note
+
+```sh
+// git log --pretty=format:"* (%h) %s" <tag>..<tag>
+$ git log --pretty=format:"* (%h) %s" v1.2.0..v1.3.0
+```
