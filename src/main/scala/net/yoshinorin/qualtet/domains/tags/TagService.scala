@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.domains.ServiceLogic._
 import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class TagService()(implicit doobieContext: DoobieContextBase) {
+class TagService()(doobieContext: DoobieContextBase) {
 
   /**
    * get all tags

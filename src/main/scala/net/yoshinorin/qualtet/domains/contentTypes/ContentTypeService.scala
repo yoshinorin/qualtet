@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class ContentTypeService(cache: CacheModule[String, ContentType])(implicit doobieContext: DoobieContextBase) extends ServiceBase {
+class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext: DoobieContextBase) extends ServiceBase {
 
   /**
    * create a contentType

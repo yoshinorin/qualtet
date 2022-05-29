@@ -62,16 +62,16 @@ object BootStrap extends App {
 
   logger.info("created: keyPair, signature and jwt instances")
 
-  val authorService: AuthorService = new AuthorService()
+  val authorService: AuthorService = new AuthorService()(doobieContext)
 
   val authService = new AuthService(authorService, jwtInstance)
 
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheContentType, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeCache)
+  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeCache)(doobieContext)
 
-  val tagService = new TagService()
+  val tagService = new TagService()(doobieContext)
   val robotsService = new RobotsService()
   val externalResourceService = new ExternalResourceService()
 
@@ -82,16 +82,16 @@ object BootStrap extends App {
       externalResourceService,
       authorService,
       contentTypeService
-    )
+    )(doobieContext)
 
-  val articleService: ArticleService = new ArticleService(contentTypeService)
+  val articleService: ArticleService = new ArticleService(contentTypeService)(doobieContext)
 
-  val archiveService: ArchiveService = new ArchiveService(contentTypeService)
+  val archiveService: ArchiveService = new ArchiveService(contentTypeService)(doobieContext)
 
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService = new SitemapService(sitemapCache)
+  val sitemapService = new SitemapService(sitemapCache)(doobieContext)
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()

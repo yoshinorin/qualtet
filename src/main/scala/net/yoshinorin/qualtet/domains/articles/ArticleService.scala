@@ -11,11 +11,7 @@ import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class ArticleService(
-  contentTypeService: ContentTypeService
-)(
-  implicit doobieContext: DoobieContextBase
-) extends ServiceBase {
+class ArticleService(contentTypeService: ContentTypeService)(doobieContext: DoobieContextBase) extends ServiceBase {
 
   def get[A](
     data: A,

@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.ServiceLogic._
 import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 
-class AuthorService(implicit doobieContext: DoobieContextBase) extends ServiceBase {
+class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
 
   /**
    * create an authorName

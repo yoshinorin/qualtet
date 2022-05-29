@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-class SitemapService(cache: CacheModule[String, Seq[Url]])(implicit doobieContext: DoobieContextBase) {
+class SitemapService(cache: CacheModule[String, Seq[Url]])(doobieContext: DoobieContextBase) {
 
   private val cacheKey = "sitemaps-full-cache"
 

@@ -21,7 +21,7 @@ class ContentService(
   authorService: AuthorService,
   contentTypeService: ContentTypeService
 )(
-  implicit doobieContext: DoobieContextBase
+  doobieContext: DoobieContextBase
 ) extends ServiceBase {
 
   /**
