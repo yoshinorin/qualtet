@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains
 
 import cats.effect.IO
+import cats.implicits.catsSyntaxApplicativeId
 import doobie.implicits._
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.repository.requests._
@@ -26,6 +27,7 @@ object ServiceLogic {
   // without transaction
   def runWithoutTransaction[R](serviceLogic: ServiceLogic[R]): ConnectionIO[R] = serviceLogic match {
     case continue: Continue[_, R] => runContinueWithoutTransaction(continue)
+    case done: Done[R] => done.value.pure[ConnectionIO] // NOTE: Can I use pure here? I have to investigate what is `pure`.
   }
 
   private def runContinueWithoutTransaction[T, R](continue: Continue[T, R]): ConnectionIO[R] = {
