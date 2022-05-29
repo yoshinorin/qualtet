@@ -13,12 +13,22 @@ case class Done[R](value: R) extends ServiceLogic[R]
 
 object ServiceLogic {
 
-  def run[R](serviceLogic: ServiceLogic[R])(implicit doobieContext: DoobieContextBase): IO[R] = serviceLogic match {
-    case continue: Continue[_, R] => runContinue(continue)
+  // with transaction
+  def runWithTransaction[R](serviceLogic: ServiceLogic[R])(implicit doobieContext: DoobieContextBase): IO[R] = serviceLogic match {
+    case continue: Continue[_, R] => runContinueWithTransaction(continue)
     case Done(value) => IO(value)
   }
 
-  private def runContinue[T, R](continue: Continue[T, R])(implicit doobieContext: DoobieContextBase): IO[R] = {
-    Repository.dispatch(continue.request).transact(doobieContext.transactor).flatMap { t => run(continue.next(t)) }
+  private def runContinueWithTransaction[T, R](continue: Continue[T, R])(implicit doobieContext: DoobieContextBase): IO[R] = {
+    Repository.dispatch(continue.request).transact(doobieContext.transactor).flatMap { t => runWithTransaction(continue.next(t)) }
+  }
+
+  // without transaction
+  def runWithoutTransaction[R](serviceLogic: ServiceLogic[R]): ConnectionIO[R] = serviceLogic match {
+    case continue: Continue[_, R] => runContinueWithoutTransaction(continue)
+  }
+
+  private def runContinueWithoutTransaction[T, R](continue: Continue[T, R]): ConnectionIO[R] = {
+    Repository.dispatch(continue.request).flatMap { t => runWithoutTransaction(continue.next(t)) }
   }
 }
