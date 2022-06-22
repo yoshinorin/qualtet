@@ -24,7 +24,7 @@ package object syntax {
 
   }
 
-  implicit final class ValidationCompositions[A](v: EitherT[IO, Throwable, A]) {
+  implicit final class ValidationOps[A](v: EitherT[IO, Throwable, A]) {
 
     def andThrow: IO[A] = {
       v.value.flatMap {
@@ -49,7 +49,7 @@ package object syntax {
     }
   }
 
-  implicit class KeyValueCommaSeparatedString(kv: (Option[String], Option[String])) {
+  implicit class KeyValueCommaSeparatedStringOps(kv: (Option[String], Option[String])) {
 
     // equally: def zip[A](k: Option[String], v: Option[String])(f: (String, String) => A)
     def zip[A](f: (String, String) => A): Option[List[A]] = {
