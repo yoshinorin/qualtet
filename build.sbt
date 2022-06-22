@@ -57,7 +57,7 @@ libraryDependencies ++= Seq(
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
   "org.wvlet.airframe" %% "airframe-ulid" % "22.6.2",
   "com.github.ben-manes.caffeine" % "caffeine" % "3.1.1",
-  "org.flywaydb" % "flyway-core" % "8.5.13",
+  "org.flywaydb" % "flyway-core" % "7.8.2",
   "ch.qos.logback" % "logback-classic" % "1.2.11",
   "org.springframework.security" % "spring-security-core" % "5.7.2",
   "org.slf4j" % "slf4j-api" % "1.7.36",
