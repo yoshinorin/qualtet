@@ -55,14 +55,14 @@ libraryDependencies ++= Seq(
   "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.5",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-  "org.wvlet.airframe" %% "airframe-ulid" % "22.5.0",
-  "com.github.ben-manes.caffeine" % "caffeine" % "3.1.0",
+  "org.wvlet.airframe" %% "airframe-ulid" % "22.6.2",
+  "com.github.ben-manes.caffeine" % "caffeine" % "3.1.1",
   "org.flywaydb" % "flyway-core" % "7.8.2",
   "ch.qos.logback" % "logback-classic" % "1.2.11",
-  "org.springframework.security" % "spring-security-core" % "5.7.1",
+  "org.springframework.security" % "spring-security-core" % "5.7.2",
   "org.slf4j" % "slf4j-api" % "1.7.36",
   "org.scalatest" %% "scalatest" % "3.2.12" % "test",
-  "org.mockito" % "mockito-core" % "4.5.1" % "test"
+  "org.mockito" % "mockito-core" % "4.6.1" % "test"
 )
 
 val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
