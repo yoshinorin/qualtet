@@ -5,7 +5,6 @@ import cats.implicits.catsSyntaxApplicativeId
 import doobie.implicits._
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.repository.requests._
-import net.yoshinorin.qualtet.domains.repository.Repository
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 sealed trait ServiceLogic[R]
@@ -21,7 +20,7 @@ object ServiceLogic {
   }
 
   private def runContinueWithTransaction[T, R](continue: Continue[T, R])(doobieContext: DoobieContextBase): IO[R] = {
-    Repository.dispatch(continue.request).transact(doobieContext.transactor).flatMap { t => runWithTransaction(continue.next(t))(doobieContext) }
+    continue.request.dispatch.transact(doobieContext.transactor).flatMap { t => runWithTransaction(continue.next(t))(doobieContext) }
   }
 
   // without transaction
@@ -31,6 +30,6 @@ object ServiceLogic {
   }
 
   private def runContinueWithoutTransaction[T, R](continue: Continue[T, R]): ConnectionIO[R] = {
-    Repository.dispatch(continue.request).flatMap { t => runWithoutTransaction(continue.next(t)) }
+    continue.request.dispatch.flatMap { t => runWithoutTransaction(continue.next(t)) }
   }
 }
