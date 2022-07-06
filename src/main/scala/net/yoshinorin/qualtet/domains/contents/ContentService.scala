@@ -88,7 +88,7 @@ class ContentService(
       case Some(x) => IO(x)
     }
 
-    def execute(data: Content): ServiceLogic[Int] = {
+    def perform(data: Content): ServiceLogic[Int] = {
       val request = Upsert(data)
       val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
         Done(resultHandler)
@@ -102,7 +102,7 @@ class ContentService(
     }
 
     val queries = for {
-      contentUpsert <- connect(execute(data))
+      contentUpsert <- connect(perform(data))
       robotsUpsert <- robotsService.upsertWithoutTaransact(Robots(data.id, robotsAttributes))
       // TODO: check diff and clean up tags before upsert
       tagsBulkUpsert <- tagService.bulkUpsertWithoutTaransact(tags)
@@ -126,7 +126,7 @@ class ContentService(
    */
   def findByPath(path: Path): IO[Option[Content]] = {
 
-    def execute(path: Path): ServiceLogic[Option[Content]] = {
+    def perform(path: Path): ServiceLogic[Option[Content]] = {
       val request = FindByPath(path)
       val resultHandler: Option[Content] => ServiceLogic[Option[Content]] = (resultHandler: Option[Content]) => {
         Done(resultHandler)
@@ -134,7 +134,7 @@ class ContentService(
       Continue(request, resultHandler)
     }
 
-    transact(execute(path))(doobieContext)
+    transact(perform(path))(doobieContext)
   }
 
   /**
@@ -147,7 +147,7 @@ class ContentService(
    */
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
 
-    def execute(path: Path): ServiceLogic[Option[ResponseContentDbRow]] = {
+    def perform(path: Path): ServiceLogic[Option[ResponseContentDbRow]] = {
       val request = FindByPathWithMeta(path)
       val resultHandler: Option[ResponseContentDbRow] => ServiceLogic[Option[ResponseContentDbRow]] = (resultHandler: Option[ResponseContentDbRow]) => {
         Done(resultHandler)
@@ -155,7 +155,7 @@ class ContentService(
       Continue(request, resultHandler)
     }
 
-    this.findBy(path)(execute)
+    this.findBy(path)(perform)
   }
 
   /*

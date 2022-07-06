@@ -18,7 +18,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
    */
   def create(data: ContentType): IO[ContentType] = {
 
-    def execute(data: ContentType): ServiceLogic[Int] = {
+    def perform(data: ContentType): ServiceLogic[Int] = {
       val request = Upsert(data)
       val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
         Done(resultHandler)
@@ -30,7 +30,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
-          _ <- transact(execute(data))(doobieContext)
+          _ <- transact(perform(data))(doobieContext)
           c <- findBy(data.name, InternalServerError("contentType not found"))(this.findByName)
         } yield c
     }
@@ -45,7 +45,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
    */
   def findByName(name: String): IO[Option[ContentType]] = {
 
-    def execute(name: String): ServiceLogic[Option[ContentType]] = {
+    def perform(name: String): ServiceLogic[Option[ContentType]] = {
       val request = FindByName(name)
       val resultHandler: Option[ContentType] => ServiceLogic[Option[ContentType]] = (resultHandler: Option[ContentType]) => {
         Done(resultHandler)
@@ -55,7 +55,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
 
     def fromDB(name: String): IO[Option[ContentType]] = {
       for {
-        x <- transact(execute(name))(doobieContext)
+        x <- transact(perform(name))(doobieContext)
       } yield (x, cache.put(name, x))._1
     }
 
@@ -73,7 +73,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
    */
   def getAll: IO[Seq[ContentType]] = {
 
-    def execute(): ServiceLogic[Seq[ContentType]] = {
+    def perform(): ServiceLogic[Seq[ContentType]] = {
       val request = GetAll()
       val resultHandler: Seq[ContentType] => ServiceLogic[Seq[ContentType]] = (resultHandler: Seq[ContentType]) => {
         Done(resultHandler)
@@ -81,7 +81,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
       Continue(request, resultHandler)
     }
 
-    transact(execute())(doobieContext)
+    transact(perform())(doobieContext)
   }
 
 }

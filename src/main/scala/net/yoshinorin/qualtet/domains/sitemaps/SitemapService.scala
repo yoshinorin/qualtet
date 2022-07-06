@@ -12,7 +12,7 @@ class SitemapService(cache: CacheModule[String, Seq[Url]])(doobieContext: Doobie
 
   def get(): IO[Seq[Url]] = {
 
-    def execute(): ServiceLogic[Seq[Url]] = {
+    def perform(): ServiceLogic[Seq[Url]] = {
       val request = Get()
       val resultHandler: Seq[Url] => ServiceLogic[Seq[Url]] = (resultHandler: Seq[Url]) => { Done(resultHandler) }
       Continue(request, resultHandler)
@@ -22,7 +22,7 @@ class SitemapService(cache: CacheModule[String, Seq[Url]])(doobieContext: Doobie
       case Some(x: Seq[Url]) => IO(x)
       case _ =>
         for {
-          x <- transact(execute())(doobieContext)
+          x <- transact(perform())(doobieContext)
         } yield (x, cache.put(cacheKey, x))._1
     }
   }

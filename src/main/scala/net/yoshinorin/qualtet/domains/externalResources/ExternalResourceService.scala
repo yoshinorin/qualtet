@@ -15,7 +15,7 @@ class ExternalResourceService() {
    */
   def bulkUpsertWithoutTaransact(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
 
-    def execute(data: Option[List[ExternalResource]]): ServiceLogic[Int] = {
+    def perform(data: Option[List[ExternalResource]]): ServiceLogic[Int] = {
       val request = BulkUpsert(data)
       val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
         Done(resultHandler)
@@ -23,6 +23,6 @@ class ExternalResourceService() {
       Continue(request, resultHandler)
     }
 
-    connect(execute(data))
+    connect(perform(data))
   }
 }

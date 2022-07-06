@@ -13,7 +13,7 @@ class ArchiveService(contentTypeService: ContentTypeService)(doobieContext: Doob
 
   def get: IO[Seq[ResponseArchive]] = {
 
-    def execute(contentTypeId: ContentTypeId): ServiceLogic[Seq[ResponseArchive]] = {
+    def perform(contentTypeId: ContentTypeId): ServiceLogic[Seq[ResponseArchive]] = {
       val request = GetByContentTypeId(contentTypeId)
       val resultHandler: Seq[ResponseArchive] => ServiceLogic[Seq[ResponseArchive]] = (resultHandler: Seq[ResponseArchive]) => {
         Done(resultHandler)
@@ -23,7 +23,7 @@ class ArchiveService(contentTypeService: ContentTypeService)(doobieContext: Doob
 
     for {
       c <- findBy("article", NotFound(s"content-type not found: article"))(contentTypeService.findByName)
-      articles <- transact(execute(c.id))(doobieContext)
+      articles <- transact(perform(c.id))(doobieContext)
     } yield articles
   }
 

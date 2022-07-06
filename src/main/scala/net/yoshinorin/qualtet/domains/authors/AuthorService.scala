@@ -17,7 +17,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def create(data: Author): IO[ResponseAuthor] = {
 
-    def execute(data: Author): ServiceLogic[Int] = {
+    def perform(data: Author): ServiceLogic[Int] = {
       val request = Upsert(data)
       val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
         Done(resultHandler)
@@ -26,7 +26,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
     }
 
     for {
-      _ <- transact(execute(data))(doobieContext)
+      _ <- transact(perform(data))(doobieContext)
       a <- findBy(data.name, InternalServerError("user not found"))(this.findByName)
     } yield a
   }
@@ -38,7 +38,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def getAll: IO[Seq[ResponseAuthor]] = {
 
-    def execute(): ServiceLogic[Seq[ResponseAuthor]] = {
+    def perform(): ServiceLogic[Seq[ResponseAuthor]] = {
       val request = GetAll()
       val resultHandler: Seq[ResponseAuthor] => ServiceLogic[Seq[ResponseAuthor]] = (resultHandler: Seq[ResponseAuthor]) => {
         Done(resultHandler)
@@ -46,7 +46,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
       Continue(request, resultHandler)
     }
 
-    transact(execute())(doobieContext)
+    transact(perform())(doobieContext)
   }
 
   /**
@@ -57,7 +57,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
 
-    def execute(id: AuthorId): ServiceLogic[Option[ResponseAuthor]] = {
+    def perform(id: AuthorId): ServiceLogic[Option[ResponseAuthor]] = {
       val request = FindById(id)
       val resultHandler: Option[ResponseAuthor] => ServiceLogic[Option[ResponseAuthor]] = (resultHandler: Option[ResponseAuthor]) => {
         Done(resultHandler)
@@ -65,7 +65,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
       Continue(request, resultHandler)
     }
 
-    transact(execute(id))(doobieContext)
+    transact(perform(id))(doobieContext)
   }
 
   /**
@@ -76,7 +76,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
 
-    def execute(id: AuthorId): ServiceLogic[Option[Author]] = {
+    def perform(id: AuthorId): ServiceLogic[Option[Author]] = {
       val request = FindByIdWithPassword(id)
       val resultHandler: Option[Author] => ServiceLogic[Option[Author]] = (resultHandler: Option[Author]) => {
         Done(resultHandler)
@@ -84,7 +84,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
       Continue(request, resultHandler)
     }
 
-    transact(execute(id))(doobieContext)
+    transact(perform(id))(doobieContext)
   }
 
   /**
@@ -95,13 +95,13 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
 
-    def execute(name: AuthorName): ServiceLogic[Option[ResponseAuthor]] = {
+    def perform(name: AuthorName): ServiceLogic[Option[ResponseAuthor]] = {
       val request = FindByName(name)
       val resultHandler: Option[ResponseAuthor] => ServiceLogic[Option[ResponseAuthor]] = { resultHandler: Option[ResponseAuthor] => Done(resultHandler) }
       Continue(request, resultHandler)
     }
 
-    transact(execute(name))(doobieContext)
+    transact(perform(name))(doobieContext)
   }
 
 }
