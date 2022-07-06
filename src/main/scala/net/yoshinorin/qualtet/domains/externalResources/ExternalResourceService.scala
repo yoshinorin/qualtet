@@ -23,6 +23,6 @@ class ExternalResourceService() {
       Continue(request, resultHandler)
     }
 
-    runWithoutTransaction(execute(data))
+    connect(execute(data))
   }
 }
