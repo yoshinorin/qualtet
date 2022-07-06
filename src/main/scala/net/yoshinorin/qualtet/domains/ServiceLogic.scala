@@ -32,4 +32,9 @@ object ServiceLogic {
   private def runContinueWithoutTransaction[T, R](continue: Continue[T, R]): ConnectionIO[R] = {
     continue.request.dispatch.flatMap { t => connect(continue.next(t)) }
   }
+
+  implicit class ServiceLogicOps[R](serviceLogic: ServiceLogic[R]) {
+    def transact()(doobieContext: DoobieContextBase): IO[R] = ServiceLogic.transact(serviceLogic)(doobieContext)
+    def connect(): ConnectionIO[R] = ServiceLogic.connect(serviceLogic)
+  }
 }

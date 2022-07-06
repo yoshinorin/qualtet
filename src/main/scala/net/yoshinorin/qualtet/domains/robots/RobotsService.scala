@@ -23,6 +23,6 @@ class RobotsService() {
       Continue(request, resultHandler)
     }
 
-    connect(perform(data))
+    perform(data).connect()
   }
 }

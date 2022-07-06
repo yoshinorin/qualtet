@@ -23,7 +23,7 @@ class ArchiveService(contentTypeService: ContentTypeService)(doobieContext: Doob
 
     for {
       c <- findBy("article", NotFound(s"content-type not found: article"))(contentTypeService.findByName)
-      articles <- transact(perform(c.id))(doobieContext)
+      articles <- perform(c.id).transact()(doobieContext)
     } yield articles
   }
 

@@ -26,7 +26,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
     }
 
     for {
-      _ <- transact(perform(data))(doobieContext)
+      _ <- perform(data).transact()(doobieContext)
       a <- findBy(data.name, InternalServerError("user not found"))(this.findByName)
     } yield a
   }
@@ -46,7 +46,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
       Continue(request, resultHandler)
     }
 
-    transact(perform())(doobieContext)
+    perform().transact()(doobieContext)
   }
 
   /**
@@ -65,7 +65,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
       Continue(request, resultHandler)
     }
 
-    transact(perform(id))(doobieContext)
+    perform(id).transact()(doobieContext)
   }
 
   /**
@@ -84,7 +84,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
       Continue(request, resultHandler)
     }
 
-    transact(perform(id))(doobieContext)
+    perform(id).transact()(doobieContext)
   }
 
   /**

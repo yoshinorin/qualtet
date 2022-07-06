@@ -19,7 +19,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
   )(f: (ContentTypeId, A, ArticlesQueryParameter) => ServiceLogic[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
       c <- findBy("article", NotFound(s"content-type not found: article"))(contentTypeService.findByName)
-      articlesWithCount <- transact(f(c.id, data, queryParam))(doobieContext)
+      articlesWithCount <- f(c.id, data, queryParam).transact()(doobieContext)
     } yield
       if (articlesWithCount.nonEmpty) {
         ResponseArticleWithCount(articlesWithCount.map(_._1).head, articlesWithCount.map(_._2))
