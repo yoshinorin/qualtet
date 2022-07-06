@@ -30,7 +30,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
 
   def getWithCount(queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
 
-    def perform(
+    def procedures(
       contentTypeId: ContentTypeId,
       none: Unit = (),
       queryParams: ArticlesQueryParameter
@@ -42,7 +42,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
       Continue(request, resultHandler)
     }
 
-    this.get((), queryParam)(perform)
+    this.get((), queryParam)(procedures)
   }
 
   /*
@@ -53,7 +53,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
 
   def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
 
-    def perform(
+    def procedures(
       contentTypeId: ContentTypeId,
       tagName: TagName,
       queryParams: ArticlesQueryParameter
@@ -65,7 +65,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
       Continue(request, resultHandler)
     }
 
-    this.get(tagName, queryParam)(perform)
+    this.get(tagName, queryParam)(procedures)
   }
 
   def getFeeds(queryParam: ArticlesQueryParameter): IO[Seq[ResponseFeed]] = {

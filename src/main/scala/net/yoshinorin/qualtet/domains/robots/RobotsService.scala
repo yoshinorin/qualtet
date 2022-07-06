@@ -15,7 +15,7 @@ class RobotsService() {
    */
   def upsertWithoutTaransact(data: Robots): ConnectionIO[Int] = {
 
-    def perform(data: Robots): ServiceLogic[Int] = {
+    def procedures(data: Robots): ServiceLogic[Int] = {
       val request = Upsert(data)
       val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
         Done(resultHandler)
@@ -23,6 +23,6 @@ class RobotsService() {
       Continue(request, resultHandler)
     }
 
-    perform(data).connect()
+    procedures(data).connect()
   }
 }

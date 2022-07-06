@@ -16,13 +16,13 @@ class TagService()(doobieContext: DoobieContextBase) {
    */
   def getAll: IO[Seq[ResponseTag]] = {
 
-    def perform(): ServiceLogic[Seq[ResponseTag]] = {
+    def procedures(): ServiceLogic[Seq[ResponseTag]] = {
       val request = GetAll()
       val resultHandler: Seq[ResponseTag] => ServiceLogic[Seq[ResponseTag]] = (resultHandler: Seq[ResponseTag]) => { Done(resultHandler) }
       Continue(request, resultHandler)
     }
 
-    perform().transact()(doobieContext)
+    procedures().transact()(doobieContext)
   }
 
   /**
@@ -33,7 +33,7 @@ class TagService()(doobieContext: DoobieContextBase) {
    */
   def findByName(tagName: TagName): IO[Option[Tag]] = {
 
-    def perform(tagName: TagName): ServiceLogic[Option[Tag]] = {
+    def procedures(tagName: TagName): ServiceLogic[Option[Tag]] = {
       val request = FindByName(tagName)
       val resuleHandler: Option[Tag] => ServiceLogic[Option[Tag]] = (resuleHandler: Option[Tag]) => {
         Done(resuleHandler)
@@ -41,7 +41,7 @@ class TagService()(doobieContext: DoobieContextBase) {
       Continue(request, resuleHandler)
     }
 
-    perform(tagName).transact()(doobieContext)
+    procedures(tagName).transact()(doobieContext)
   }
 
   /**
@@ -80,7 +80,7 @@ class TagService()(doobieContext: DoobieContextBase) {
    */
   def bulkUpsertWithoutTaransact(data: Option[List[Tag]]): ConnectionIO[Int] = {
 
-    def perform(data: Option[List[Tag]]): ServiceLogic[Int] = {
+    def procedures(data: Option[List[Tag]]): ServiceLogic[Int] = {
       val request = BulkUpsert(data)
       val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
         Done(resultHandler)
@@ -88,6 +88,6 @@ class TagService()(doobieContext: DoobieContextBase) {
       Continue(request, resultHandler)
     }
 
-    perform(data).connect()
+    procedures(data).connect()
   }
 }
