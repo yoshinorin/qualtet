@@ -37,10 +37,10 @@ object Action {
 
   implicit class ActionOps[R](serviceLogic: Action[R]) {
     // def transact()(doobieContext: DoobieContextBase): IO[R] = Action.performWithTransaction(serviceLogic)(doobieContext)
-    def perform(): ConnectionIO[R] = Action.performWithoutTransaction(serviceLogic)
+    def perform: ConnectionIO[R] = Action.performWithoutTransaction(serviceLogic)
   }
 
   implicit class ConnectionOps[T](connectionIO: ConnectionIO[T]) {
-    def andTransact()(doobieContext: DoobieContextBase): IO[T] = connectionIO.transact(doobieContext.transactor)
+    def andTransact(doobieContext: DoobieContextBase): IO[T] = connectionIO.transact(doobieContext.transactor)
   }
 }

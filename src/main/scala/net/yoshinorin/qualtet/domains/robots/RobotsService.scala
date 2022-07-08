@@ -23,6 +23,6 @@ class RobotsService() {
       Continue(request, resultHandler)
     }
 
-    actions(data).perform()
+    actions(data).perform
   }
 }

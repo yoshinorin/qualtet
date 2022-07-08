@@ -23,6 +23,6 @@ class ExternalResourceService() {
       Continue(request, resultHandler)
     }
 
-    actions(data).perform()
+    actions(data).perform
   }
 }

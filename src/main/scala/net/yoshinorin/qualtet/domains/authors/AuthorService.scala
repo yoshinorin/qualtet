@@ -26,7 +26,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
     }
 
     for {
-      _ <- actions(data).perform().andTransact()(doobieContext)
+      _ <- actions(data).perform.andTransact(doobieContext)
       a <- findBy(data.name, InternalServerError("user not found"))(this.findByName)
     } yield a
   }
@@ -38,7 +38,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def getAll: IO[Seq[ResponseAuthor]] = {
 
-    def actions(): Action[Seq[ResponseAuthor]] = {
+    def actions: Action[Seq[ResponseAuthor]] = {
       val request = GetAll()
       val resultHandler: Seq[ResponseAuthor] => Action[Seq[ResponseAuthor]] = (resultHandler: Seq[ResponseAuthor]) => {
         Done(resultHandler)
@@ -46,7 +46,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
       Continue(request, resultHandler)
     }
 
-    actions().perform().andTransact()(doobieContext)
+    actions.perform.andTransact(doobieContext)
   }
 
   /**
@@ -65,7 +65,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
       Continue(request, resultHandler)
     }
 
-    actions(id).perform().andTransact()(doobieContext)
+    actions(id).perform.andTransact(doobieContext)
   }
 
   /**
@@ -84,7 +84,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
       Continue(request, resultHandler)
     }
 
-    actions(id).perform().andTransact()(doobieContext)
+    actions(id).perform.andTransact(doobieContext)
   }
 
   /**
@@ -101,7 +101,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
       Continue(request, resultHandler)
     }
 
-    actions(name).perform().andTransact()(doobieContext)
+    actions(name).perform.andTransact(doobieContext)
   }
 
 }

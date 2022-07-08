@@ -16,13 +16,13 @@ class TagService()(doobieContext: DoobieContextBase) {
    */
   def getAll: IO[Seq[ResponseTag]] = {
 
-    def actions(): Action[Seq[ResponseTag]] = {
+    def actions: Action[Seq[ResponseTag]] = {
       val request = GetAll()
       val resultHandler: Seq[ResponseTag] => Action[Seq[ResponseTag]] = (resultHandler: Seq[ResponseTag]) => { Done(resultHandler) }
       Continue(request, resultHandler)
     }
 
-    actions().perform().andTransact()(doobieContext)
+    actions.perform.andTransact(doobieContext)
   }
 
   /**
@@ -41,7 +41,7 @@ class TagService()(doobieContext: DoobieContextBase) {
       Continue(request, resuleHandler)
     }
 
-    actions(tagName).perform().andTransact()(doobieContext)
+    actions(tagName).perform.andTransact(doobieContext)
   }
 
   /**
@@ -88,6 +88,6 @@ class TagService()(doobieContext: DoobieContextBase) {
       Continue(request, resultHandler)
     }
 
-    actions(data).perform()
+    actions(data).perform
   }
 }
