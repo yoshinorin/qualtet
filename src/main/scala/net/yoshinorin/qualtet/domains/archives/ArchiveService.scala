@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.domains.archives
 
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.ServiceBase
-import net.yoshinorin.qualtet.domains.ServiceLogic._
-import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
@@ -13,9 +13,9 @@ class ArchiveService(contentTypeService: ContentTypeService)(doobieContext: Doob
 
   def get: IO[Seq[ResponseArchive]] = {
 
-    def procedures(contentTypeId: ContentTypeId): ServiceLogic[Seq[ResponseArchive]] = {
+    def actions(contentTypeId: ContentTypeId): Action[Seq[ResponseArchive]] = {
       val request = GetByContentTypeId(contentTypeId)
-      val resultHandler: Seq[ResponseArchive] => ServiceLogic[Seq[ResponseArchive]] = (resultHandler: Seq[ResponseArchive]) => {
+      val resultHandler: Seq[ResponseArchive] => Action[Seq[ResponseArchive]] = (resultHandler: Seq[ResponseArchive]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
@@ -23,7 +23,7 @@ class ArchiveService(contentTypeService: ContentTypeService)(doobieContext: Doob
 
     for {
       c <- findBy("article", NotFound(s"content-type not found: article"))(contentTypeService.findByName)
-      articles <- procedures(c.id).transact()(doobieContext)
+      articles <- actions(c.id).transact()(doobieContext)
     } yield articles
   }
 

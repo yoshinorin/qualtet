@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.domains.contents
 import cats.effect.IO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.ServiceBase
-import net.yoshinorin.qualtet.domains.ServiceLogic._
-import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
@@ -88,9 +88,9 @@ class ContentService(
       case Some(x) => IO(x)
     }
 
-    def procedures(data: Content): ServiceLogic[Int] = {
+    def actions(data: Content): Action[Int] = {
       val request = Upsert(data)
-      val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
+      val resultHandler: Int => Action[Int] = (resultHandler: Int) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
@@ -102,7 +102,7 @@ class ContentService(
     }
 
     val queries = for {
-      contentUpsert <- procedures(data).connect()
+      contentUpsert <- actions(data).connect()
       robotsUpsert <- robotsService.upsertWithoutTaransact(Robots(data.id, robotsAttributes))
       // TODO: check diff and clean up tags before upsert
       tagsBulkUpsert <- tagService.bulkUpsertWithoutTaransact(tags)
@@ -126,15 +126,15 @@ class ContentService(
    */
   def findByPath(path: Path): IO[Option[Content]] = {
 
-    def procedures(path: Path): ServiceLogic[Option[Content]] = {
+    def actions(path: Path): Action[Option[Content]] = {
       val request = FindByPath(path)
-      val resultHandler: Option[Content] => ServiceLogic[Option[Content]] = (resultHandler: Option[Content]) => {
+      val resultHandler: Option[Content] => Action[Option[Content]] = (resultHandler: Option[Content]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    procedures(path).transact()(doobieContext)
+    actions(path).transact()(doobieContext)
   }
 
   /**
@@ -147,15 +147,15 @@ class ContentService(
    */
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
 
-    def procedures(path: Path): ServiceLogic[Option[ResponseContentDbRow]] = {
+    def actions(path: Path): Action[Option[ResponseContentDbRow]] = {
       val request = FindByPathWithMeta(path)
-      val resultHandler: Option[ResponseContentDbRow] => ServiceLogic[Option[ResponseContentDbRow]] = (resultHandler: Option[ResponseContentDbRow]) => {
+      val resultHandler: Option[ResponseContentDbRow] => Action[Option[ResponseContentDbRow]] = (resultHandler: Option[ResponseContentDbRow]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    this.findBy(path)(procedures)
+    this.findBy(path)(actions)
   }
 
   /*
@@ -165,7 +165,7 @@ class ContentService(
   }
    */
 
-  def findBy[A](data: A)(f: A => ServiceLogic[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
+  def findBy[A](data: A)(f: A => Action[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 
     import net.yoshinorin.qualtet.syntax._
 

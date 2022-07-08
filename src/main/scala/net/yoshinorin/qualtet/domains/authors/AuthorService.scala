@@ -4,8 +4,8 @@ import cats.effect.IO
 import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
-import net.yoshinorin.qualtet.domains.ServiceLogic._
-import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 
 class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
 
@@ -17,16 +17,16 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def create(data: Author): IO[ResponseAuthor] = {
 
-    def procedures(data: Author): ServiceLogic[Int] = {
+    def actions(data: Author): Action[Int] = {
       val request = Upsert(data)
-      val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
+      val resultHandler: Int => Action[Int] = (resultHandler: Int) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
     for {
-      _ <- procedures(data).transact()(doobieContext)
+      _ <- actions(data).transact()(doobieContext)
       a <- findBy(data.name, InternalServerError("user not found"))(this.findByName)
     } yield a
   }
@@ -38,15 +38,15 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def getAll: IO[Seq[ResponseAuthor]] = {
 
-    def procedures(): ServiceLogic[Seq[ResponseAuthor]] = {
+    def actions(): Action[Seq[ResponseAuthor]] = {
       val request = GetAll()
-      val resultHandler: Seq[ResponseAuthor] => ServiceLogic[Seq[ResponseAuthor]] = (resultHandler: Seq[ResponseAuthor]) => {
+      val resultHandler: Seq[ResponseAuthor] => Action[Seq[ResponseAuthor]] = (resultHandler: Seq[ResponseAuthor]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    procedures().transact()(doobieContext)
+    actions().transact()(doobieContext)
   }
 
   /**
@@ -57,15 +57,15 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
 
-    def procedures(id: AuthorId): ServiceLogic[Option[ResponseAuthor]] = {
+    def actions(id: AuthorId): Action[Option[ResponseAuthor]] = {
       val request = FindById(id)
-      val resultHandler: Option[ResponseAuthor] => ServiceLogic[Option[ResponseAuthor]] = (resultHandler: Option[ResponseAuthor]) => {
+      val resultHandler: Option[ResponseAuthor] => Action[Option[ResponseAuthor]] = (resultHandler: Option[ResponseAuthor]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    procedures(id).transact()(doobieContext)
+    actions(id).transact()(doobieContext)
   }
 
   /**
@@ -76,15 +76,15 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
 
-    def procedures(id: AuthorId): ServiceLogic[Option[Author]] = {
+    def actions(id: AuthorId): Action[Option[Author]] = {
       val request = FindByIdWithPassword(id)
-      val resultHandler: Option[Author] => ServiceLogic[Option[Author]] = (resultHandler: Option[Author]) => {
+      val resultHandler: Option[Author] => Action[Option[Author]] = (resultHandler: Option[Author]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    procedures(id).transact()(doobieContext)
+    actions(id).transact()(doobieContext)
   }
 
   /**
@@ -95,13 +95,13 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
    */
   def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
 
-    def procedures(name: AuthorName): ServiceLogic[Option[ResponseAuthor]] = {
+    def actions(name: AuthorName): Action[Option[ResponseAuthor]] = {
       val request = FindByName(name)
-      val resultHandler: Option[ResponseAuthor] => ServiceLogic[Option[ResponseAuthor]] = { resultHandler: Option[ResponseAuthor] => Done(resultHandler) }
+      val resultHandler: Option[ResponseAuthor] => Action[Option[ResponseAuthor]] = { resultHandler: Option[ResponseAuthor] => Done(resultHandler) }
       Continue(request, resultHandler)
     }
 
-    transact(procedures(name))(doobieContext)
+    transact(actions(name))(doobieContext)
   }
 
 }

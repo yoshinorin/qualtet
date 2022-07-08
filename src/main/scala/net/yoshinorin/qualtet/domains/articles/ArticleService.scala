@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.domains.articles
 
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.ServiceBase
-import net.yoshinorin.qualtet.domains.ServiceLogic._
-import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
 import net.yoshinorin.qualtet.message.Fail.NotFound
@@ -16,7 +16,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
   def get[A](
     data: A,
     queryParam: ArticlesQueryParameter
-  )(f: (ContentTypeId, A, ArticlesQueryParameter) => ServiceLogic[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
+  )(f: (ContentTypeId, A, ArticlesQueryParameter) => Action[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
       c <- findBy("article", NotFound(s"content-type not found: article"))(contentTypeService.findByName)
       articlesWithCount <- f(c.id, data, queryParam).transact()(doobieContext)
@@ -30,19 +30,19 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
 
   def getWithCount(queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
 
-    def procedures(
+    def actions(
       contentTypeId: ContentTypeId,
       none: Unit = (),
       queryParams: ArticlesQueryParameter
-    ): ServiceLogic[Seq[(Int, ResponseArticle)]] = {
+    ): Action[Seq[(Int, ResponseArticle)]] = {
       val request = GetWithCount(contentTypeId, none, queryParams)
-      val resultHandler: Seq[(Int, ResponseArticle)] => ServiceLogic[Seq[(Int, ResponseArticle)]] = (resultHandler: Seq[(Int, ResponseArticle)]) => {
+      val resultHandler: Seq[(Int, ResponseArticle)] => Action[Seq[(Int, ResponseArticle)]] = (resultHandler: Seq[(Int, ResponseArticle)]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    this.get((), queryParam)(procedures)
+    this.get((), queryParam)(actions)
   }
 
   /*
@@ -53,19 +53,19 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
 
   def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
 
-    def procedures(
+    def actions(
       contentTypeId: ContentTypeId,
       tagName: TagName,
       queryParams: ArticlesQueryParameter
-    ): ServiceLogic[Seq[(Int, ResponseArticle)]] = {
+    ): Action[Seq[(Int, ResponseArticle)]] = {
       val request = FindByTagNameWithCount(contentTypeId, tagName, queryParams)
-      val resultHandler: Seq[(Int, ResponseArticle)] => ServiceLogic[Seq[(Int, ResponseArticle)]] = (resultHandler: Seq[(Int, ResponseArticle)]) => {
+      val resultHandler: Seq[(Int, ResponseArticle)] => Action[Seq[(Int, ResponseArticle)]] = (resultHandler: Seq[(Int, ResponseArticle)]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    this.get(tagName, queryParam)(procedures)
+    this.get(tagName, queryParam)(actions)
   }
 
   def getFeeds(queryParam: ArticlesQueryParameter): IO[Seq[ResponseFeed]] = {

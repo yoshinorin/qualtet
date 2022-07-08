@@ -7,14 +7,14 @@ import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.repository.requests._
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
-sealed trait ServiceLogic[R]
-final case class Continue[T, R](request: RepositoryRequest[T], next: T => ServiceLogic[R]) extends ServiceLogic[R]
-final case class Done[R](value: R) extends ServiceLogic[R]
+sealed trait Action[R]
+final case class Continue[T, R](request: RepositoryRequest[T], next: T => Action[R]) extends Action[R]
+final case class Done[R](value: R) extends Action[R]
 
-object ServiceLogic {
+object Action {
 
   // with transaction
-  def transact[R](serviceLogic: ServiceLogic[R])(doobieContext: DoobieContextBase): IO[R] = serviceLogic match {
+  def transact[R](serviceLogic: Action[R])(doobieContext: DoobieContextBase): IO[R] = serviceLogic match {
     case continue: Continue[_, R] => runContinueWithTransaction(continue)(doobieContext)
     case Done(value) => IO(value)
   }
@@ -24,7 +24,7 @@ object ServiceLogic {
   }
 
   // without transaction
-  def connect[R](serviceLogic: ServiceLogic[R]): ConnectionIO[R] = serviceLogic match {
+  def connect[R](serviceLogic: Action[R]): ConnectionIO[R] = serviceLogic match {
     case continue: Continue[_, R] => runContinueWithoutTransaction(continue)
     case done: Done[R] => done.value.pure[ConnectionIO] // NOTE: Can I use pure here? I have to investigate what is `pure`.
   }
@@ -33,8 +33,8 @@ object ServiceLogic {
     continue.request.dispatch.flatMap { t => connect(continue.next(t)) }
   }
 
-  implicit class ServiceLogicOps[R](serviceLogic: ServiceLogic[R]) {
-    def transact()(doobieContext: DoobieContextBase): IO[R] = ServiceLogic.transact(serviceLogic)(doobieContext)
-    def connect(): ConnectionIO[R] = ServiceLogic.connect(serviceLogic)
+  implicit class ActionOps[R](serviceLogic: Action[R]) {
+    def transact()(doobieContext: DoobieContextBase): IO[R] = Action.transact(serviceLogic)(doobieContext)
+    def connect(): ConnectionIO[R] = Action.connect(serviceLogic)
   }
 }

@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.domains.tags
 import cats.effect.IO
 import cats.implicits._
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.ServiceLogic._
-import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
 class TagService()(doobieContext: DoobieContextBase) {
@@ -16,13 +16,13 @@ class TagService()(doobieContext: DoobieContextBase) {
    */
   def getAll: IO[Seq[ResponseTag]] = {
 
-    def procedures(): ServiceLogic[Seq[ResponseTag]] = {
+    def actions(): Action[Seq[ResponseTag]] = {
       val request = GetAll()
-      val resultHandler: Seq[ResponseTag] => ServiceLogic[Seq[ResponseTag]] = (resultHandler: Seq[ResponseTag]) => { Done(resultHandler) }
+      val resultHandler: Seq[ResponseTag] => Action[Seq[ResponseTag]] = (resultHandler: Seq[ResponseTag]) => { Done(resultHandler) }
       Continue(request, resultHandler)
     }
 
-    procedures().transact()(doobieContext)
+    actions().transact()(doobieContext)
   }
 
   /**
@@ -33,15 +33,15 @@ class TagService()(doobieContext: DoobieContextBase) {
    */
   def findByName(tagName: TagName): IO[Option[Tag]] = {
 
-    def procedures(tagName: TagName): ServiceLogic[Option[Tag]] = {
+    def actions(tagName: TagName): Action[Option[Tag]] = {
       val request = FindByName(tagName)
-      val resuleHandler: Option[Tag] => ServiceLogic[Option[Tag]] = (resuleHandler: Option[Tag]) => {
+      val resuleHandler: Option[Tag] => Action[Option[Tag]] = (resuleHandler: Option[Tag]) => {
         Done(resuleHandler)
       }
       Continue(request, resuleHandler)
     }
 
-    procedures(tagName).transact()(doobieContext)
+    actions(tagName).transact()(doobieContext)
   }
 
   /**
@@ -80,14 +80,14 @@ class TagService()(doobieContext: DoobieContextBase) {
    */
   def bulkUpsertWithoutTaransact(data: Option[List[Tag]]): ConnectionIO[Int] = {
 
-    def procedures(data: Option[List[Tag]]): ServiceLogic[Int] = {
+    def actions(data: Option[List[Tag]]): Action[Int] = {
       val request = BulkUpsert(data)
-      val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
+      val resultHandler: Int => Action[Int] = (resultHandler: Int) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    procedures(data).connect()
+    actions(data).connect()
   }
 }

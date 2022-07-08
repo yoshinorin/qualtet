@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.domains.contentTypes
 import cats.effect.IO
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.ServiceBase
-import net.yoshinorin.qualtet.domains.ServiceLogic._
-import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 
@@ -18,9 +18,9 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
    */
   def create(data: ContentType): IO[ContentType] = {
 
-    def procedures(data: ContentType): ServiceLogic[Int] = {
+    def actions(data: ContentType): Action[Int] = {
       val request = Upsert(data)
-      val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
+      val resultHandler: Int => Action[Int] = (resultHandler: Int) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
@@ -30,7 +30,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
-          _ <- procedures(data).transact()(doobieContext)
+          _ <- actions(data).transact()(doobieContext)
           c <- findBy(data.name, InternalServerError("contentType not found"))(this.findByName)
         } yield c
     }
@@ -45,9 +45,9 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
    */
   def findByName(name: String): IO[Option[ContentType]] = {
 
-    def procedures(name: String): ServiceLogic[Option[ContentType]] = {
+    def actions(name: String): Action[Option[ContentType]] = {
       val request = FindByName(name)
-      val resultHandler: Option[ContentType] => ServiceLogic[Option[ContentType]] = (resultHandler: Option[ContentType]) => {
+      val resultHandler: Option[ContentType] => Action[Option[ContentType]] = (resultHandler: Option[ContentType]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
@@ -55,7 +55,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
 
     def fromDB(name: String): IO[Option[ContentType]] = {
       for {
-        x <- procedures(name).transact()(doobieContext)
+        x <- actions(name).transact()(doobieContext)
       } yield (x, cache.put(name, x))._1
     }
 
@@ -73,15 +73,15 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
    */
   def getAll: IO[Seq[ContentType]] = {
 
-    def procedures(): ServiceLogic[Seq[ContentType]] = {
+    def actions(): Action[Seq[ContentType]] = {
       val request = GetAll()
-      val resultHandler: Seq[ContentType] => ServiceLogic[Seq[ContentType]] = (resultHandler: Seq[ContentType]) => {
+      val resultHandler: Seq[ContentType] => Action[Seq[ContentType]] = (resultHandler: Seq[ContentType]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    procedures().transact()(doobieContext)
+    actions().transact()(doobieContext)
   }
 
 }

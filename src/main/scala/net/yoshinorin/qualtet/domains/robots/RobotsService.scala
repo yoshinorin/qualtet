@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.domains.robots
 
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.ServiceLogic._
-import net.yoshinorin.qualtet.domains.{ServiceLogic, Continue, Done}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 
 class RobotsService() {
 
@@ -15,14 +15,14 @@ class RobotsService() {
    */
   def upsertWithoutTaransact(data: Robots): ConnectionIO[Int] = {
 
-    def procedures(data: Robots): ServiceLogic[Int] = {
+    def actions(data: Robots): Action[Int] = {
       val request = Upsert(data)
-      val resultHandler: Int => ServiceLogic[Int] = (resultHandler: Int) => {
+      val resultHandler: Int => Action[Int] = (resultHandler: Int) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    procedures(data).connect()
+    actions(data).connect()
   }
 }
