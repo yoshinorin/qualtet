@@ -10,7 +10,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class ArchiveServiceSpec extends AnyWordSpec {
 
   val requestContents: List[RequestContent] = {
-    (1 until 40).toList.map(i =>
+    (1 until 40).toList.map(_.toString()).map(i =>
       RequestContent(
         contentType = "article",
         path = Path(s"/test/archives-${i}"),

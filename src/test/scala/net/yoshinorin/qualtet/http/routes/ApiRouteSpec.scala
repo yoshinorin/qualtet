@@ -7,7 +7,7 @@ import org.scalatest.wordspec.AnyWordSpec
 // testOnly net.yoshinorin.qualtet.http.routes.ApiRouteSpec
 class ApiRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
-  val apiStatusRoute = new ApiStatusRoute()
+  val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
 
   "ApiStatusRoute" should {
 

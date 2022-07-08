@@ -12,7 +12,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
   val requestContents: List[RequestContent] = {
-    (0 until 20).toList.map(i =>
+    (0 until 20).toList.map(_.toString()).map(i =>
       RequestContent(
         contentType = "article",
         path = Path(s"/articles/route/article-${i}"),

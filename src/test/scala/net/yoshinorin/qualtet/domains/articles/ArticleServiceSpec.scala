@@ -12,7 +12,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class ArticleServiceSpec extends AnyWordSpec {
 
   val requestContents: List[RequestContent] = {
-    (1 until 30).toList.map(i =>
+    (1 until 30).toList.map(_.toString()).map(_.toString()).map(i =>
       RequestContent(
         contentType = "article",
         path = Path(s"/test/path-${i}"),
@@ -27,7 +27,7 @@ class ArticleServiceSpec extends AnyWordSpec {
   }
 
   val sameTagNameRequestContents: List[RequestContent] = {
-    (1 until 15).toList.map(i =>
+    (1 until 15).toList.map(_.toString()).map(i =>
       RequestContent(
         contentType = "article",
         path = Path(s"/test/same/tags/${i}"),

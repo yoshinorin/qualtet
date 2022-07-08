@@ -15,7 +15,7 @@ class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   val tagRoute: TagRoute = new TagRoute(tagService, articleService)
 
   val requestContents: List[RequestContent] = {
-    (0 until 2).toList.map(i =>
+    (0 until 2).toList.map(_.toString()).map(i =>
       RequestContent(
         contentType = "article",
         path = Path(s"/test/tagRoute-${i}"),

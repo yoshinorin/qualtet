@@ -12,7 +12,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class FeedRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
   val requestContents: List[RequestContent] = {
-    (0 until 2).toList.map(i =>
+    (0 until 2).toList.map(_.toString()).map(i =>
       RequestContent(
         contentType = "article",
         path = Path(s"/feeds/feedsRoute-${i}"),

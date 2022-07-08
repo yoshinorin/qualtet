@@ -10,7 +10,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class TagServiceSpec extends AnyWordSpec {
 
   val requestContents: List[RequestContent] = {
-    (0 until 10).toList.map(i =>
+    (0 until 10).toList.map(_.toString()).map(i =>
       RequestContent(
         contentType = "article",
         path = Path(s"/test/tagService-${i}"),
