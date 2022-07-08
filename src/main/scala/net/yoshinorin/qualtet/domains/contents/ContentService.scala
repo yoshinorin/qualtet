@@ -102,7 +102,7 @@ class ContentService(
     }
 
     val queries = for {
-      contentUpsert <- actions(data).connect()
+      contentUpsert <- actions(data).perform()
       robotsUpsert <- robotsService.upsertWithoutTaransact(Robots(data.id, robotsAttributes))
       // TODO: check diff and clean up tags before upsert
       tagsBulkUpsert <- tagService.bulkUpsertWithoutTaransact(tags)
@@ -134,7 +134,7 @@ class ContentService(
       Continue(request, resultHandler)
     }
 
-    actions(path).transact()(doobieContext)
+    actions(path).perform().andTransact()(doobieContext)
   }
 
   /**
@@ -169,7 +169,7 @@ class ContentService(
 
     import net.yoshinorin.qualtet.syntax._
 
-    f(data).transact()(doobieContext).flatMap {
+    f(data).perform().andTransact()(doobieContext).flatMap {
       case None => IO(None)
       case Some(x) =>
         val stripedContent = x.content.stripHtmlTags.replaceAll("\n", "")

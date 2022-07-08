@@ -22,7 +22,7 @@ class SitemapService(cache: CacheModule[String, Seq[Url]])(doobieContext: Doobie
       case Some(x: Seq[Url]) => IO(x)
       case _ =>
         for {
-          x <- actions().transact()(doobieContext)
+          x <- actions().perform().andTransact()(doobieContext)
         } yield (x, cache.put(cacheKey, x))._1
     }
   }

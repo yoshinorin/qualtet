@@ -30,7 +30,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
-          _ <- actions(data).transact()(doobieContext)
+          _ <- actions(data).perform().andTransact()(doobieContext)
           c <- findBy(data.name, InternalServerError("contentType not found"))(this.findByName)
         } yield c
     }
@@ -55,7 +55,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
 
     def fromDB(name: String): IO[Option[ContentType]] = {
       for {
-        x <- actions(name).transact()(doobieContext)
+        x <- actions(name).perform().andTransact()(doobieContext)
       } yield (x, cache.put(name, x))._1
     }
 
@@ -81,7 +81,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
       Continue(request, resultHandler)
     }
 
-    actions().transact()(doobieContext)
+    actions().perform().andTransact()(doobieContext)
   }
 
 }

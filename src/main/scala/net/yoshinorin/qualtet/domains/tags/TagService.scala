@@ -22,7 +22,7 @@ class TagService()(doobieContext: DoobieContextBase) {
       Continue(request, resultHandler)
     }
 
-    actions().transact()(doobieContext)
+    actions().perform().andTransact()(doobieContext)
   }
 
   /**
@@ -41,7 +41,7 @@ class TagService()(doobieContext: DoobieContextBase) {
       Continue(request, resuleHandler)
     }
 
-    actions(tagName).transact()(doobieContext)
+    actions(tagName).perform().andTransact()(doobieContext)
   }
 
   /**
@@ -88,6 +88,6 @@ class TagService()(doobieContext: DoobieContextBase) {
       Continue(request, resultHandler)
     }
 
-    actions(data).connect()
+    actions(data).perform()
   }
 }
