@@ -37,6 +37,7 @@ import pdi.jwt.JwtAlgorithm
 
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
+import net.yoshinorin.qualtet.auth.Signature
 // import scala.io.StdIn
 
 object BootStrap extends App {
@@ -55,25 +56,25 @@ object BootStrap extends App {
   logger.info("created: doobieContext")
 
   // NOTE: for generate JWT. They are reset when re-boot application.
-  val keyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
+  val keyPair: KeyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
   val message: Array[Byte] = SecureRandom.getInstanceStrong.toString.getBytes
-  val signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
-  val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
+  val signature: Signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
+  val jwtInstance: Jwt = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
 
   logger.info("created: keyPair, signature and jwt instances")
 
   val authorService: AuthorService = new AuthorService()(doobieContext)
 
-  val authService = new AuthService(authorService, jwtInstance)
+  val authService: AuthService = new AuthService(authorService, jwtInstance)
 
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheContentType, TimeUnit.SECONDS).build[String, ContentType]
-  val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
+  val contentTypeCache: CacheModule[String, ContentType] = new CacheModule[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeCache)(doobieContext)
 
-  val tagService = new TagService()(doobieContext)
-  val robotsService = new RobotsService()
-  val externalResourceService = new ExternalResourceService()
+  val tagService: TagService = new TagService()(doobieContext)
+  val robotsService: RobotsService = new RobotsService()
+  val externalResourceService: ExternalResourceService = new ExternalResourceService()
 
   val contentService: ContentService =
     new ContentService(
@@ -90,8 +91,8 @@ object BootStrap extends App {
 
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
-  val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService = new SitemapService(sitemapCache)(doobieContext)
+  val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
+  val sitemapService: SitemapService = new SitemapService(sitemapCache)(doobieContext)
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
