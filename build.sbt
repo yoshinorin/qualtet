@@ -4,7 +4,7 @@ import scala.sys.process.Process
 organization := "net.yoshinorin"
 name := "qualtet"
 version := "v1.4.0"
-scalaVersion := "2.13.6"
+scalaVersion := "2.13.8"
 
 scalacOptions ++= Seq(
   "-Yrangepos",
