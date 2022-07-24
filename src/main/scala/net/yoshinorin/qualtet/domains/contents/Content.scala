@@ -12,6 +12,8 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId}
+import net.yoshinorin.qualtet.message.Fail.BadRequest
+import javax.naming.spi.DirStateFactory.Result
 
 final case class ContentId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
 object ContentId {
@@ -87,6 +89,48 @@ object RequestContent {
   implicit val encodeRequestContents: Encoder[List[RequestContent]] = Encoder.encodeList[RequestContent]
   implicit val decodeRequestContent: Decoder[RequestContent] = deriveConfiguredDecoder
   implicit val decodeRequestContents: Decoder[List[RequestContent]] = Decoder.decodeList[RequestContent]
+
+  def apply(
+    requestId: String = ULID.newULIDString.toLowerCase,
+    contentType: String,
+    robotsAttributes: Attributes,
+    externalResources: Option[List[ExternalResources]] = None,
+    tags: Option[List[String]] = None,
+    path: Path,
+    title: String,
+    rawContent: String,
+    htmlContent: String,
+    publishedAt: Long = ZonedDateTime.now.toEpochSecond,
+    updatedAt: Long = ZonedDateTime.now.toEpochSecond
+  ): RequestContent = {
+
+    val trimedTitle = title.trim()
+    if (trimedTitle.isEmpty) {
+      throw BadRequest("title required.")
+    }
+    val trimedRawContent = rawContent.trim()
+    if (trimedRawContent.isEmpty) {
+      throw BadRequest("rawContent required.")
+    }
+    val trimedHtmlContent = htmlContent.trim()
+    if (trimedHtmlContent.isEmpty) {
+      throw BadRequest("htmlContent required.")
+    }
+
+    new RequestContent(
+      requestId = requestId,
+      contentType = contentType,
+      robotsAttributes = robotsAttributes,
+      externalResources = externalResources,
+      tags = tags,
+      path = path,
+      title = trimedTitle,
+      rawContent = trimedRawContent,
+      htmlContent = trimedHtmlContent,
+      publishedAt = publishedAt,
+      updatedAt = updatedAt
+    )
+  }
 }
 
 final case class ResponseContent(

@@ -126,6 +126,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/requestContent'
+        400:
+          description: BadRequest
         401:
           description: Unauthorized
         404:

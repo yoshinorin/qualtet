@@ -7,6 +7,7 @@ import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, E
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName}
 import net.yoshinorin.qualtet.fixture.Fixture._
+import net.yoshinorin.qualtet.message.Fail.BadRequest
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
@@ -54,6 +55,53 @@ class ContentSpec extends AnyWordSpec {
       assert(instanceUTCDateTime.getMonth === currentUTCDateTime.getMonth)
       assert(instanceUTCDateTime.getDayOfMonth === currentUTCDateTime.getDayOfMonth)
       assert(instanceUTCDateTime.getHour === currentUTCDateTime.getHour)
+    }
+  }
+
+  "RequestContent" should {
+    "be thrown BadRequest if title is empty" in {
+      assertThrows[BadRequest] {
+        RequestContent(
+          contentType = "article",
+          path = Path("/articles/contentSpec/1"),
+          title = "",
+          rawContent = "this is a articleRoute raw content",
+          htmlContent = "this is a articleRoute html content",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          tags = Option(List()),
+          externalResources = Option(List())
+        )
+      }
+    }
+
+    "be thrown BadRequest if rawContent is empty" in {
+      assertThrows[BadRequest] {
+        RequestContent(
+          contentType = "article",
+          path = Path("/articles/contentSpec/2"),
+          title = "this is a articleRoute title",
+          rawContent = "",
+          htmlContent = "this is a articleRoute html content",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          tags = Option(List()),
+          externalResources = Option(List())
+        )
+      }
+    }
+
+    "be thrown BadRequest if htmlContent is empty" in {
+      assertThrows[BadRequest] {
+        RequestContent(
+          contentType = "article",
+          path = Path("/articles/contentSpec/3"),
+          title = "this is a articleRoute title",
+          rawContent = "this is a articleRoute raw content",
+          htmlContent = "",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          tags = Option(List()),
+          externalResources = Option(List())
+        )
+      }
     }
   }
 

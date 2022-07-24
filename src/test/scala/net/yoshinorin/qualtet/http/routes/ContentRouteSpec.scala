@@ -41,6 +41,72 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       }
     }
 
+    "be return 400 BadRequest caused by empty title" in {
+      val json =
+        """
+          |{
+          |  "contentType" : "article",
+          |  "path" : "/test/ContentRouteSpec/BadRequest1",
+          |  "title" : "",
+          |  "robotsAttributes": "noarchive, noimageindex",
+          |  "rawContent" : "this is a raw ContentRouteSpec BadRequest1",
+          |  "htmlContent" : "<p>this is a html ContentRouteSpec BadRequest1<p>",
+          |  "publishedAt" : 1644075206,
+          |  "updatedAt" : 1644075206
+          |}
+        """.stripMargin
+
+      Post("/contents/")
+        .withEntity(ContentTypes.`application/json`, json) ~> addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
+        assert(status === StatusCodes.BadRequest)
+        assert(contentType === ContentTypes.`application/json`)
+      }
+    }
+
+    "be return 400 BadRequest caused by empty rawContent" in {
+      val json =
+        """
+          |{
+          |  "contentType" : "article",
+          |  "path" : "/test/ContentRouteSpec/BadRequest2",
+          |  "title" : "this is a ContentRouteSpec title BadRequest2",
+          |  "robotsAttributes": "noarchive, noimageindex",
+          |  "rawContent" : "",
+          |  "htmlContent" : "<p>this is a html ContentRouteSpec BadRequest2<p>",
+          |  "publishedAt" : 1644075206,
+          |  "updatedAt" : 1644075206
+          |}
+        """.stripMargin
+
+      Post("/contents/")
+        .withEntity(ContentTypes.`application/json`, json) ~> addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
+        assert(status === StatusCodes.BadRequest)
+        assert(contentType === ContentTypes.`application/json`)
+      }
+    }
+
+    "be return 400 BadRequest caused by empty htmlContent" in {
+      val json =
+        """
+          |{
+          |  "contentType" : "article",
+          |  "path" : "/test/ContentRouteSpec/BadRequest3",
+          |  "title" : "this is a ContentRouteSpec title BadRequest3",
+          |  "robotsAttributes": "noarchive, noimageindex",
+          |  "rawContent" : "this is a raw ContentRouteSpec BadRequest3",
+          |  "htmlContent" : "",
+          |  "publishedAt" : 1644075206,
+          |  "updatedAt" : 1644075206
+          |}
+        """.stripMargin
+
+      Post("/contents/")
+        .withEntity(ContentTypes.`application/json`, json) ~> addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
+        assert(status === StatusCodes.BadRequest)
+        assert(contentType === ContentTypes.`application/json`)
+      }
+    }
+
     "be reject caused by expired token" in {
       val json =
         """

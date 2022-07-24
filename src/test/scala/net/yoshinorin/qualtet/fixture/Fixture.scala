@@ -147,7 +147,7 @@ object Fixture {
     contentType = "article",
     path = Path("/test/no-metas"),
     title = "this is a title",
-    rawContent = "",
+    rawContent = "this is a raw content",
     htmlContent = "this is a html content",
     robotsAttributes = Attributes("noarchive, noimageindex"),
     tags = Option(List()),
