@@ -119,21 +119,21 @@ assembly / assemblyMergeStrategy := {
 val runTestDbContainer = TaskKey[Unit]("runTestDbContainer", "Run DB container for testing.")
 val dockerComposeFilePath = new File("src/test/resources/docker-compose.yml")
 runTestDbContainer := {
-  println("=====starting db container")
+  println("\n ---- db container starting")
   val dockerCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} up -d")
   dockerCommand.run
 
   // workaround
   Thread.sleep(20000)
-  println("=====started db container")
+  println("\n ---- db container started")
 }
 
 val shutDownTestDbContainer = TaskKey[Unit]("shutDownTestDbContainer", "Shut down DB container for testing.")
 shutDownTestDbContainer := {
-  println("=====stopping db container")
+  println("\n ---- db container stopping")
   val dockerDownCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} down")
   dockerDownCommand.run
-  println("=====stopped db container")
+  println(" ---- db container stopped\n")
 }
 // TODO: The DB container does not seems to shutdown if the tests are fails.
 val testCommands = {
