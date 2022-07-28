@@ -35,7 +35,7 @@ val akkaVersion = "2.6.19"
 val akkaHttpVersion = "10.2.9"
 val circeVersion = "0.14.2"
 val doobieVersion = "0.13.4"
-val jwtScalaVersion = "9.0.5"
+val jwtScalaVersion = "9.0.6"
 
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.2",
@@ -55,7 +55,7 @@ libraryDependencies ++= Seq(
   "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.5",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-  "org.wvlet.airframe" %% "airframe-ulid" % "22.6.2",
+  "org.wvlet.airframe" %% "airframe-ulid" % "22.7.3",
   "com.github.ben-manes.caffeine" % "caffeine" % "3.1.1",
   // TODO: Upgrade higher than 8.2.2
   //       https://github.com/flyway/flyway/issues/3355
