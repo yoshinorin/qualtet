@@ -4,8 +4,8 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.message.Fail
 
-// testOnly net.yoshinorin.qualtet.utils.StringOpsSpec
-class StringOpsSpec extends AnyWordSpec {
+// testOnly net.yoshinorin.qualtet.syntax.StringSpec
+class StringSpec extends AnyWordSpec {
 
   "StringOps - stripHtmlTags" should {
 
