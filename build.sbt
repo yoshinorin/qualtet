@@ -29,7 +29,7 @@ inThisBuild(
 )
 
 // https://www.wartremover.org/
-Compile / compile / wartremoverWarnings ++= Warts.allBut(Wart.StringPlusAny)
+Compile / compile / wartremoverWarnings ++= Warts.allBut(Wart.StringPlusAny, Wart.Throw)
 
 val akkaVersion = "2.6.19"
 val akkaHttpVersion = "10.2.9"
