@@ -7,7 +7,7 @@ import io.circe.generic.semiauto.deriveDecoder
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.authors.Author
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
-import net.yoshinorin.qualtet.validator.Validator
+import net.yoshinorin.qualtet.syntax._
 import org.slf4j.LoggerFactory
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
 import pdi.jwt.{JwtCirce, JwtOptions}
@@ -82,9 +82,9 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
         IO(Left(t))
       case Right(jc) => {
         (for {
-          _ <- Validator.validate(jc)(x => x.aud === Config.jwtAud)(Unauthorized())
-          _ <- Validator.validate(jc)(x => x.iss === Config.jwtIss)(Unauthorized())
-          result <- Validator.validate(jc)(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
+          _ <- jc.toEitherIO(x => x.aud === Config.jwtAud)(Unauthorized())
+          _ <- jc.toEitherIO(x => x.iss === Config.jwtIss)(Unauthorized())
+          result <- jc.toEitherIO(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
         } yield result).value
       }
     }
