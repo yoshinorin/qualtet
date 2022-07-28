@@ -39,7 +39,7 @@ An example of architecture.
 
 ## Requirements
 
-* sbt 1.6.x
+* sbt 1.7.x
 * Scala 2.13.x
 * Java 11.x, 17.x
 * MariaDB 10.6.x
@@ -51,7 +51,7 @@ An example of architecture.
 
 ## Set up
 
-Create a database sachema before install application. Also, schema name is anything will be fine.
+Create a database schema before install an application. Also, schema name is anything will be fine.
 
 ```sql
 CREATE DATABASE qualtet;
@@ -59,17 +59,17 @@ CREATE DATABASE qualtet;
 
 ### Create an author
 
-Qualtet does not support signup endpoint. You have to create an author with `sbt task`, like below.
+Qualtet does not support the signup endpoint. Need to create an author with `sbt task`, like below.
 
 ```scala
 $ sbt
 
 ...
 
-$ sbt:qualtet>createAuthor <name> <displayName> <password>
+$ sbt:qualtet> createAuthor <name> <displayName> <password>
 
 // example
-$ sbt:qualtet>createAuthor jhonDue JD pass
+$ sbt:qualtet> createAuthor jhonDue JD pass
 
 // result
 2021-08-03 21:54:03 +0900 [INFO] from net.yoshinorin.qualtet.tasks.createAuthor$ - author created: {
@@ -82,11 +82,11 @@ $ sbt:qualtet>createAuthor jhonDue JD pass
 
 ## Remarks
 
-Qualtet **does not escape HTML** when creating or updating a `htmlContent` field when you POST it. Please escape it yourself before POST.
+Qualtet **does not escape HTML** when creating or updating a `htmlContent` field when you `POST` a content (JSON). Please escape it yourself before `POST`.
 
 ## Examples
 
-API execution examples
+API execution examples.
 
 ### Generate ID Token
 
@@ -102,6 +102,10 @@ Content-Length: 638
   "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3Mi...."
 }
 ```
+
+### POST a content
+
+TODO
 
 ## Development
 
@@ -181,6 +185,14 @@ $ sbt coverageReport
 or
 
 $ sbt clean coverage testWithDb coverageReport
+```
+
+### Check Scala 3
+
+```scala
+$ sbt migrate-libs root
+
+// https://scalacenter.github.io/scala-3-migration-guide/docs/tooling/scala-3-migrate-plugin.html
 ```
 
 ### Generate commit log for release note
