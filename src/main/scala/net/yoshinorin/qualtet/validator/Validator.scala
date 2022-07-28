@@ -7,15 +7,15 @@ object Validator {
 
   /**
    * @param a value
-   * @param f function for validate condition
-   * @param fail Instance of Fail
+   * @param cond function for validate condition
+   * @param fail Instance for Fail.
    * @return validation result with EitherT
    */
-  def validate[A](a: A)(f: A => Boolean)(throwable: Throwable): EitherT[IO, Throwable, A] = {
-    if (f(a)) {
+  def validate[A, F](a: A)(cond: A => Boolean)(fail: F): EitherT[IO, F, A] = {
+    if (cond(a)) {
       EitherT.right(IO(a))
     } else {
-      EitherT.left(IO(throwable))
+      EitherT.left(IO(fail))
     }
   }
 
@@ -23,13 +23,13 @@ object Validator {
    * Opposite of validate function
    *
    * @param a value
-   * @param f function for validate condition
-   * @param fail Instance of Fail
+   * @param cond function for validate condition
+   * @param fail Instance for Fail.
    * @return validation result with EitherT
    */
-  def validateUnless[A](a: A)(f: A => Boolean)(throwable: Throwable): EitherT[IO, Throwable, A] = {
-    if (f(a)) {
-      EitherT.left(IO(throwable))
+  def validateUnless[A, F](a: A)(cond: A => Boolean)(fail: F): EitherT[IO, F, A] = {
+    if (cond(a)) {
+      EitherT.left(IO(fail))
     } else {
       EitherT.right(IO(a))
     }

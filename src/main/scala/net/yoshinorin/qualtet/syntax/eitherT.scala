@@ -5,7 +5,7 @@ import cats.effect.IO
 
 trait eitherT {
 
-  implicit final class ValidationOps[A](v: EitherT[IO, Throwable, A]) {
+  implicit final class ValidationOps[A, F <: Throwable](v: EitherT[IO, F, A]) {
     def andThrow: IO[A] = {
       v.value.flatMap {
         case Right(v: A) => IO(v)
