@@ -35,6 +35,16 @@ package object syntax {
 
   }
 
+  implicit final class TrimOps[A](s: String) {
+    def trimOrThrow(t: Throwable): String = {
+      val s2 = s.trim()
+      if (s2.isEmpty()) {
+        throw t
+      }
+      s2
+    }
+  }
+
   private def getKeyValues(kv: (Option[String], Option[String])): Option[(List[String], List[String])] = {
     kv match {
       case (None, _) => None

@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId}
 import net.yoshinorin.qualtet.message.Fail.BadRequest
-import javax.naming.spi.DirStateFactory.Result
+import net.yoshinorin.qualtet.syntax._
 
 final case class ContentId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
 object ContentId {
@@ -60,7 +60,7 @@ object Content {
   implicit val decodeContents: Decoder[List[Content]] = Decoder.decodeList[Content]
 }
 
-case class ContentTagging(
+final case class ContentTagging(
   ContentId: ContentId,
   TagId: TagId
 )
@@ -103,20 +103,6 @@ object RequestContent {
     publishedAt: Long = ZonedDateTime.now.toEpochSecond,
     updatedAt: Long = ZonedDateTime.now.toEpochSecond
   ): RequestContent = {
-
-    val trimedTitle = title.trim()
-    if (trimedTitle.isEmpty) {
-      throw BadRequest("title required.")
-    }
-    val trimedRawContent = rawContent.trim()
-    if (trimedRawContent.isEmpty) {
-      throw BadRequest("rawContent required.")
-    }
-    val trimedHtmlContent = htmlContent.trim()
-    if (trimedHtmlContent.isEmpty) {
-      throw BadRequest("htmlContent required.")
-    }
-
     new RequestContent(
       requestId = requestId,
       contentType = contentType,
@@ -124,9 +110,9 @@ object RequestContent {
       externalResources = externalResources,
       tags = tags,
       path = path,
-      title = trimedTitle,
-      rawContent = trimedRawContent,
-      htmlContent = trimedHtmlContent,
+      title = title.trimOrThrow(BadRequest("title required.")),
+      rawContent = rawContent.trimOrThrow(BadRequest("rawContent required.")),
+      htmlContent = htmlContent.trimOrThrow(BadRequest("htmlContent required.")),
       publishedAt = publishedAt,
       updatedAt = updatedAt
     )

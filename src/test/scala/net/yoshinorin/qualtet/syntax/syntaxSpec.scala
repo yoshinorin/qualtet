@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.syntax
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.message.Fail
 
 // testOnly net.yoshinorin.qualtet.utils.StringOpsSpec
 class StringOpsSpec extends AnyWordSpec {
@@ -61,6 +62,25 @@ class StringOpsSpec extends AnyWordSpec {
       "testtesいt".filterIgnoreChars mustBe "testtesいt"
       "test$%^&@!test".filterIgnoreChars mustBe "testtest"
       "\\acb。.def///ghi%_jkl*mn**op$qr{}s\\tuあいう。。えお、かきく!!け!こ".filterIgnoreChars mustBe "acbdefghijklmnopqrstuあいうえおかきくけこ"
+    }
+
+  }
+
+  "trimOrThrow" should {
+
+    "not be thrown exception" in {
+      "test".trimOrThrow(Fail.BadRequest("error")) mustBe "test"
+      " test ".trimOrThrow(Fail.BadRequest("error")) mustBe "test"
+    }
+
+    "be thrown exception" in {
+      assertThrows[Fail.BadRequest] {
+        "".trimOrThrow(Fail.BadRequest("error")) mustBe "test"
+      }
+
+      assertThrows[Fail.BadRequest] {
+        " ".trimOrThrow(Fail.BadRequest("error")) mustBe "test"
+      }
     }
 
   }
