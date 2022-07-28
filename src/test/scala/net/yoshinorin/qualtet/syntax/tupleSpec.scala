@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.syntax
 
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName}
-import net.yoshinorin.qualtet.syntax._
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.utils.ConvertersSpec

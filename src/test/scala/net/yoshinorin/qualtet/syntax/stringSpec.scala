@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.syntax
 
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.message.Fail
 
 // testOnly net.yoshinorin.qualtet.utils.StringOpsSpec
