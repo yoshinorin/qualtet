@@ -2,13 +2,13 @@ package net.yoshinorin.qualtet.domains.contentTypes
 
 import cats.effect.IO
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.domains.Action._
 import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.syntax._
 
-class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext: DoobieContextBase) extends ServiceBase {
+class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext: DoobieContextBase) {
 
   /**
    * create a contentType
@@ -31,7 +31,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
       case None =>
         for {
           _ <- actions(data).perform.andTransact(doobieContext)
-          c <- findBy(data.name, InternalServerError("contentType not found"))(this.findByName)
+          c <- this.findByName(data.name).throwIfNone(InternalServerError("contentType not found"))
         } yield c
     }
 

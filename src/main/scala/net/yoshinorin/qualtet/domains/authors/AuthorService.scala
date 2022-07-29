@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.domains.authors
 
 import cats.effect.IO
-import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.Action._
 import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
+import net.yoshinorin.qualtet.syntax._
 
-class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
+class AuthorService()(doobieContext: DoobieContextBase) {
 
   /**
    * create an authorName
@@ -27,7 +27,7 @@ class AuthorService()(doobieContext: DoobieContextBase) extends ServiceBase {
 
     for {
       _ <- actions(data).perform.andTransact(doobieContext)
-      a <- findBy(data.name, InternalServerError("user not found"))(this.findByName)
+      a <- this.findByName(data.name).throwIfNone(InternalServerError("user not found"))
     } yield a
   }
 

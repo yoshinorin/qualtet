@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.contents
 
 import cats.effect.IO
 import doobie.implicits._
-import net.yoshinorin.qualtet.domains.ServiceBase
 import net.yoshinorin.qualtet.domains.Action._
 import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
@@ -12,6 +11,7 @@ import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.syntax._
 import wvlet.airframe.ulid.ULID
 
 class ContentService(
@@ -22,7 +22,7 @@ class ContentService(
   contentTypeService: ContentTypeService
 )(
   doobieContext: DoobieContextBase
-) extends ServiceBase {
+) {
 
   /**
    * create a content from RequestContent case class
@@ -40,8 +40,8 @@ class ContentService(
     }
 
     for {
-      a <- findBy(authorName, NotFound(s"user not found: ${request.contentType}"))(authorService.findByName)
-      c <- findBy(request.contentType, NotFound(s"content-type not found: ${request.contentType}"))(contentTypeService.findByName)
+      a <- authorService.findByName(authorName).throwIfNone(NotFound(s"user not found: ${request.contentType}"))
+      c <- contentTypeService.findByName(request.contentType).throwIfNone(NotFound(s"content-type not found: ${request.contentType}"))
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
         case None => ContentId(ULID.newULIDString.toLowerCase)
