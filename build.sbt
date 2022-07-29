@@ -33,7 +33,7 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(Wart.StringPlusAny, War
 
 val akkaVersion = "2.6.19"
 val akkaHttpVersion = "10.2.9"
-val circeVersion = "0.14.2"
+val circeVersion = "0.15.0-M1"
 val doobieVersion = "0.13.4"
 val jwtScalaVersion = "9.0.6"
 
@@ -49,7 +49,7 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % circeVersion,
   "io.circe" %% "circe-generic" % circeVersion,
   "io.circe" %% "circe-parser" % circeVersion,
-  "io.circe" %% "circe-generic-extras" % circeVersion,
+  "io.circe" %% "circe-generic-extras" % "0.14.2",
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.jwt-scala" %% "jwt-circe" % jwtScalaVersion,
   "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.5",
