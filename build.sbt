@@ -52,7 +52,7 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic-extras" % "0.14.2",
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.jwt-scala" %% "jwt-circe" % jwtScalaVersion,
-  "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.5",
+  "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.6",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
   "org.wvlet.airframe" %% "airframe-ulid" % "22.7.3",
