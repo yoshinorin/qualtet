@@ -7,27 +7,27 @@ import net.yoshinorin.qualtet.message.Fail
 // testOnly net.yoshinorin.qualtet.syntax.StringSpec
 class StringSpec extends AnyWordSpec {
 
-  "StringOps - stripHtmlTags" should {
+  "stripHtmlTags" should {
 
-    "replace all html tags" in {
+    "be replace all html tags" in {
       val x = "<html>aiu<p>eo</p><script>kakiku</script>keko<a>sashisu</a>seso<br><code></code></html>owari".stripHtmlTags
       x mustBe "aiueokakikukekosashisusesoowari"
     }
 
   }
 
-  "StringOps - stripHtmlSpecialChars" should {
+  "stripHtmlSpecialChars" should {
 
-    "replace all html special chars" in {
+    "be replace all html special chars" in {
       val x = "a&amp;b&#38;c&#169;d&#x27;e&quot;f&#xA0;g&lt;h&gt;i&quot;j".stripHtmlSpecialChars
       x mustBe "abcdefghij"
     }
 
   }
 
-  "StringOps - hasIgnoreChars" should {
+  "hasIgnoreChars" should {
 
-    "detected ignore chars" in {
+    "be detect ignore chars" in {
       "test;test".hasIgnoreChars mustBe true
       "\\testtest".hasIgnoreChars mustBe true
       "%testtest".hasIgnoreChars mustBe true
@@ -54,9 +54,9 @@ class StringSpec extends AnyWordSpec {
 
   }
 
-  "StringOps - filterIgnoreChars" should {
+  "filterIgnoreChars" should {
 
-    "filterd ignore chars" in {
+    "be filter ignore chars" in {
       "testtesあt".filterIgnoreChars mustBe "testtesあt"
       "testtesいt".filterIgnoreChars mustBe "testtesいt"
       "test$%^&@!test".filterIgnoreChars mustBe "testtest"
@@ -74,11 +74,11 @@ class StringSpec extends AnyWordSpec {
 
     "be thrown exception" in {
       assertThrows[Fail.BadRequest] {
-        "".trimOrThrow(Fail.BadRequest("error")) mustBe "test"
+        "".trimOrThrow(Fail.BadRequest("error"))
       }
 
       assertThrows[Fail.BadRequest] {
-        " ".trimOrThrow(Fail.BadRequest("error")) mustBe "test"
+        " ".trimOrThrow(Fail.BadRequest("error"))
       }
     }
 
