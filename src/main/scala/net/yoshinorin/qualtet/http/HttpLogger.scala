@@ -4,6 +4,7 @@ import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.{HttpRequest, RemoteAddress}
 import akka.http.scaladsl.server.{Directive0, RouteResult}
 import akka.http.scaladsl.server.directives.{DebuggingDirectives, LogEntry, LoggingMagnet}
+import net.yoshinorin.qualtet.syntax._
 
 trait HttpLogger {
 
@@ -15,12 +16,13 @@ trait HttpLogger {
     response match {
       case RouteResult.Complete(response) =>
         LogEntry(
-          s"""${hostAddress} - ${request.method.name} - ${request.uri} - ${response.status} - ${elapsedTime}ms""",
+          s"""${hostAddress} - ${request.method.name} - ${request.uri} - ${response.status} - ${elapsedTime}ms - ${request.headers.referer} - ${request.headers.userAgent}""",
           Logging.InfoLevel
         ).logTo(loggingAdapter)
       case RouteResult.Rejected(rejections) =>
         LogEntry(
-          s"""${hostAddress} - ${request.method.name} - ${request.uri} - ${rejections.mkString(",")} - ${elapsedTime}ms""",
+          s"""${hostAddress} - ${request.method.name} - ${request.uri} - ${rejections
+            .mkString(",")} - ${elapsedTime}ms - ${request.headers.referer} - ${request.headers.userAgent}""",
           Logging.ErrorLevel
         ).logTo(loggingAdapter)
     }
