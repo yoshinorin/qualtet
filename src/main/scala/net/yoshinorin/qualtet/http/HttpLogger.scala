@@ -11,23 +11,19 @@ trait HttpLogger {
     request: HttpRequest
   )(response: RouteResult): Unit = {
     val elapsedTime: Long = (System.nanoTime - requestTimestamp) / 1000000
-    val entry = response match {
+    val hostAddress = ip.toOption.map(_.getHostAddress).getOrElse("unknown")
+    response match {
       case RouteResult.Complete(response) =>
         LogEntry(
-          s"""${ip.toOption
-            .map(_.getHostAddress)
-            .getOrElse("unknown")} - ${request.method.name} - ${request.uri} - ${response.status} - ${elapsedTime}ms""",
+          s"""${hostAddress} - ${request.method.name} - ${request.uri} - ${response.status} - ${elapsedTime}ms""",
           Logging.InfoLevel
-        )
+        ).logTo(loggingAdapter)
       case RouteResult.Rejected(rejections) =>
         LogEntry(
-          s"""${ip.toOption
-            .map(_.getHostAddress)
-            .getOrElse("unknown")} - ${request.method.name} - ${request.uri} - ${rejections.mkString(",")} - ${elapsedTime}ms""",
+          s"""${hostAddress} - ${request.method.name} - ${request.uri} - ${rejections.mkString(",")} - ${elapsedTime}ms""",
           Logging.ErrorLevel
-        )
+        ).logTo(loggingAdapter)
     }
-    entry.logTo(loggingAdapter)
   }
 
   private[this] def loggingFunction(log: LoggingAdapter, ip: RemoteAddress): HttpRequest => RouteResult => Unit = {
