@@ -8,28 +8,37 @@ import net.yoshinorin.qualtet.syntax._
 
 trait HttpLogger {
 
-  private[this] def requestAndResponseLogging(loggingAdapter: LoggingAdapter, requestTimestamp: Long, ip: RemoteAddress)(
-    request: HttpRequest
-  )(routeResult: RouteResult): Unit = {
+  private[this] def makeLogString(request: HttpRequest, ip: String, elapsedTime: Long, reason: String): String = {
+    List[String](
+      ip,
+      request.method.name,
+      request.uri.toString(),
+      reason,
+      s"${elapsedTime}ms",
+      request.headers.referer.getOrElse("").toString(),
+      request.headers.userAgent.getOrElse("").toString()
+    ).map(x => s""""${ x }"""").mkString(" - ")
+  }
+
+  private[this] def write(loggingAdapter: LoggingAdapter, requestTimestamp: Long, ip: RemoteAddress)(request: HttpRequest)(routeResult: RouteResult): Unit = {
     val elapsedTime: Long = (System.nanoTime - requestTimestamp) / 1000000
-    val hostAddress = ip.toOption.map(_.getHostAddress).getOrElse("unknown")
+    val stringifyIp = ip.toOption.map(_.getHostAddress).getOrElse("unknown")
     routeResult match {
       case RouteResult.Complete(response) =>
         LogEntry(
-          s"""${hostAddress} - ${request.method.name} - ${request.uri} - ${response.status} - ${elapsedTime}ms - ${request.headers.referer} - ${request.headers.userAgent}""",
+          makeLogString(request, stringifyIp, elapsedTime, response.status.toString()),
           Logging.InfoLevel
         ).logTo(loggingAdapter)
       case RouteResult.Rejected(rejections) =>
         LogEntry(
-          s"""${hostAddress} - ${request.method.name} - ${request.uri} - ${rejections
-            .mkString(",")} - ${elapsedTime}ms - ${request.headers.referer} - ${request.headers.userAgent}""",
+          makeLogString(request, stringifyIp, elapsedTime, rejections.mkString(",")),
           Logging.ErrorLevel
         ).logTo(loggingAdapter)
     }
   }
 
-  private[this] def loggingFunction(log: LoggingAdapter, ip: RemoteAddress): HttpRequest => RouteResult => Unit = {
-    requestAndResponseLogging(log, System.nanoTime, ip)
+  private[this] def loggingFunction(loggingAdapter: LoggingAdapter, ip: RemoteAddress): HttpRequest => RouteResult => Unit = {
+    write(loggingAdapter, System.nanoTime, ip)
   }
 
   def httpLogging(ip: RemoteAddress): Directive0 = DebuggingDirectives.logRequestResult(LoggingMagnet(loggingFunction(_, ip)))
