@@ -17,7 +17,7 @@ trait HttpLogger {
       s"${elapsedTime}ms",
       request.headers.referer.getOrElse("").toString(),
       request.headers.userAgent.getOrElse("").toString()
-    ).map(x => s""""${ x }"""").mkString(" - ")
+    ).map(x => s""""${x}"""").mkString(" - ")
   }
 
   private[this] def write(loggingAdapter: LoggingAdapter, requestTimestamp: Long, ip: RemoteAddress)(request: HttpRequest)(routeResult: RouteResult): Unit = {
@@ -25,15 +25,9 @@ trait HttpLogger {
     val stringifyIp = ip.toOption.map(_.getHostAddress).getOrElse("unknown")
     routeResult match {
       case RouteResult.Complete(response) =>
-        LogEntry(
-          makeLogString(request, stringifyIp, elapsedTime, response.status.toString()),
-          Logging.InfoLevel
-        ).logTo(loggingAdapter)
+        LogEntry(makeLogString(request, stringifyIp, elapsedTime, response.status.toString()), Logging.InfoLevel).logTo(loggingAdapter)
       case RouteResult.Rejected(rejections) =>
-        LogEntry(
-          makeLogString(request, stringifyIp, elapsedTime, rejections.mkString(",")),
-          Logging.ErrorLevel
-        ).logTo(loggingAdapter)
+        LogEntry(makeLogString(request, stringifyIp, elapsedTime, rejections.mkString(",")), Logging.ErrorLevel).logTo(loggingAdapter)
     }
   }
 
