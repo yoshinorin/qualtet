@@ -10,10 +10,10 @@ trait HttpLogger {
 
   private[this] def requestAndResponseLogging(loggingAdapter: LoggingAdapter, requestTimestamp: Long, ip: RemoteAddress)(
     request: HttpRequest
-  )(response: RouteResult): Unit = {
+  )(routeResult: RouteResult): Unit = {
     val elapsedTime: Long = (System.nanoTime - requestTimestamp) / 1000000
     val hostAddress = ip.toOption.map(_.getHostAddress).getOrElse("unknown")
-    response match {
+    routeResult match {
       case RouteResult.Complete(response) =>
         LogEntry(
           s"""${hostAddress} - ${request.method.name} - ${request.uri} - ${response.status} - ${elapsedTime}ms - ${request.headers.referer} - ${request.headers.userAgent}""",

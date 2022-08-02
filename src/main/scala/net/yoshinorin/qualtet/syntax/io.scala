@@ -5,7 +5,7 @@ import scala.reflect.ClassTag
 
 trait io {
 
-  implicit final class IOOps[A : ClassTag](val io: IO[Option[A]]) {
+  implicit final class IOOps[A: ClassTag](val io: IO[Option[A]]) {
     def throwIfNone[F <: Throwable](t: F): IO[A] = {
       io.flatMap {
         case Some(a: A) => IO(a)
