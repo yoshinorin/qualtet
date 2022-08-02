@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.syntax._
 
 trait HttpLogger {
 
-  private[this] def makeLogString(request: HttpRequest, ip: String, elapsedTime: Long, reason: String): String = {
+  private[http] def makeLogString(request: HttpRequest, ip: String, elapsedTime: Long, reason: String): String = {
     List[String](
       ip,
       request.method.name,
