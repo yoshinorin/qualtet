@@ -119,13 +119,18 @@ paths:
       summary: Create or Update a content
       description: |
         Create or Update a content
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestContent'
       responses:
         201:
           description: Create or Update succeeded
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/requestContent'
+                $ref: '#/components/schemas/responseContent'
         400:
           description: BadRequest
         401:
@@ -369,6 +374,18 @@ components:
     responseContent:
       type: object
       properties:
+        id:
+          type: string
+          format: ulid
+          example: "01fgvhme5b7cj0m5agr9f4g2ca"
+        authorId:
+          type: string
+          format: ulid
+          example: "01fgvhk1bz6546e4b1s2hdw0pw"
+        contentTypeId:
+          type: string
+          format: ulid
+          example: "01fgvhjxftxfjvxg3xbvv78kr1"
         title:
           type: string
           example: "Post Title"
