@@ -70,7 +70,7 @@ paths:
                 type: object
                 properties:
                   count:
-                    description: The numbers of all articles.
+                    description: The number of all articles.
                     type: integer
                     example: 99
                   articles:
@@ -82,12 +82,12 @@ paths:
           name: page
           schema:
             type: integer
-          description: The numbers of page for pagination.
+          description: The number of pages for pagination.
         - in: query
           name: limit
           schema:
             type: integer
-          description: The numbers of items to return. Max is 10.
+          description: The number of items to return. Max is 10.
   /authors:
     get:
       summary: Get all authors
