@@ -39,6 +39,11 @@ docker/data
 docker/config
 tmpdata
 
+# Bench
+benchmark/data
+benchmark/logs
+benchmark/config
+
 # Artifacts
 *.jar
 
