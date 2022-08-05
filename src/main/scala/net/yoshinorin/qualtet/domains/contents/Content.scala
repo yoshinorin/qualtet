@@ -14,8 +14,9 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId}
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax._
+import java.util.Locale
 
-final case class ContentId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
+final case class ContentId(value: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH)) extends AnyVal
 object ContentId {
   implicit val encodeContentId: Encoder[ContentId] = Encoder[String].contramap(_.value)
   implicit val decodeContentId: Decoder[ContentId] = Decoder[String].map(ContentId.apply)
@@ -66,7 +67,7 @@ final case class ContentTagging(
 )
 
 final case class RequestContent(
-  requestId: String = ULID.newULIDString.toLowerCase,
+  requestId: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH),
   contentType: String,
   robotsAttributes: Attributes, // TODO: change to Option[Attributes]
   externalResources: Option[List[ExternalResources]] = None,
@@ -91,7 +92,7 @@ object RequestContent {
   implicit val decodeRequestContents: Decoder[List[RequestContent]] = Decoder.decodeList[RequestContent]
 
   def apply(
-    requestId: String = ULID.newULIDString.toLowerCase,
+    requestId: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH),
     contentType: String,
     robotsAttributes: Attributes,
     externalResources: Option[List[ExternalResources]] = None,

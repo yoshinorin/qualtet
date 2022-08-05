@@ -3,8 +3,9 @@ package net.yoshinorin.qualtet.domains.tags
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
 import wvlet.airframe.ulid.ULID
+import java.util.Locale
 
-final case class TagId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
+final case class TagId(value: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH)) extends AnyVal
 object TagId {
   implicit val encodeTagId: Encoder[TagId] = Encoder[String].contramap(_.value)
   implicit val decodeTagId: Decoder[TagId] = Decoder[String].map(TagId.apply)

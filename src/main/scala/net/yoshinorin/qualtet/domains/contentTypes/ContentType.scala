@@ -3,8 +3,9 @@ package net.yoshinorin.qualtet.domains.contentTypes
 import wvlet.airframe.ulid.ULID
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.deriveEncoder
+import java.util.Locale
 
-final case class ContentTypeId(value: String = ULID.newULIDString.toLowerCase) extends AnyVal
+final case class ContentTypeId(value: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH)) extends AnyVal
 object ContentTypeId {
   implicit val encodeContentTypeId: Encoder[ContentTypeId] = deriveEncoder[ContentTypeId]
   implicit val decodeContentTypeId: Decoder[ContentTypeId] = Decoder[String].map(ContentTypeId.apply)
