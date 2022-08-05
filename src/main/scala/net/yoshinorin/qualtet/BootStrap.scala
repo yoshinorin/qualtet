@@ -57,7 +57,7 @@ object BootStrap extends App {
 
   // NOTE: for generate JWT. They are reset when re-boot application.
   val keyPair: KeyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
-  val message: Array[Byte] = SecureRandom.getInstanceStrong.toString.getBytes
+  val message: Array[Byte] = SecureRandom.getInstanceStrong.toString.getBytes("UTF-8")
   val signature: Signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
   val jwtInstance: Jwt = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
 
