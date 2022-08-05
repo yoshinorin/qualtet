@@ -1,0 +1,4 @@
+# https://github.com/Philippus/sbt-dotenv#illegal-reflective-access-warnings-and-exceptions
+
+-J--add-opens=java.base/java.util=ALL-UNNAMED
+-J--add-opens=java.base/java.lang=ALL-UNNAMED
