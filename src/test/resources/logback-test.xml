@@ -1,3 +1,68 @@
+<!--
 <configuration>
     <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+</configuration>
+-->
+<configuration>
+
+    <appender name="TEST_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${application.home:-.}/logs/test.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Daily rollover with compression -->
+            <fileNamePattern>${application.home:-.}/logs/test.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <!-- keep 30 days worth of history -->
+            <maxHistory>30</maxHistory>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from %logger - %message%n%xException</pattern>
+        </encoder>
+        <!--
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>DENY</onMatch>
+        </filter>
+        -->
+    </appender>
+
+    <!--
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from %logger - %message%n%xException</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    -->
+
+    <logger name="error" level="ERROR" additivity="false">
+        <!--<appender-ref ref="STDOUT" />-->
+        <appender-ref ref="TEST_FILE" />
+    </logger>
+
+    <logger name="info" level="INFO" additivity="false">
+        <appender-ref ref="TEST_FILE" />
+    </logger>
+
+    <logger name="debug" level="DEBUG" additivity="false">
+        <appender-ref ref="TEST_FILE" />
+    </logger>
+
+    <root level="ERROR">
+        <!--<appender-ref ref="STDOUT" />-->
+        <appender-ref ref="TEST_FILE"/>
+    </root>
+
+    <root level="INFO">
+        <appender-ref ref="TEST_FILE"/>
+    </root>
+
+    <root level="DEBUG">
+        <appender-ref ref="TEST_FILE"/>
+    </root>
 </configuration>
