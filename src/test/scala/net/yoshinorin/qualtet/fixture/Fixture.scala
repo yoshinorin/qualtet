@@ -32,6 +32,7 @@ import pdi.jwt.JwtAlgorithm
 
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
+import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
 
 // Just test data
@@ -80,6 +81,8 @@ object Fixture {
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService = new SitemapService(sitemapCache)(doobieContext)
 
+  val feedService: FeedService = new FeedService(articleService)
+
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val authRoute: AuthRoute = new AuthRoute(authService)
@@ -90,7 +93,7 @@ object Fixture {
   val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
   val sitemapRoute: SitemapRoute = new SitemapRoute(sitemapService)
-  val feedRoute: FeedRoute = new FeedRoute(articleService)
+  val feedRoute: FeedRoute = new FeedRoute(feedService)
 
   val authorId: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754a")
   val authorId2: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754b")

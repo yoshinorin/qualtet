@@ -67,20 +67,4 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
     this.get(tagName, queryParam)(actions)
   }
 
-  def getFeeds(queryParam: ArticlesQueryParameter): IO[Seq[ResponseFeed]] = {
-    // TODO: Cache
-    for {
-      articles <- this.getWithCount(queryParam)
-    } yield articles.articles.map(a => {
-      new ResponseFeed(
-        title = a.title,
-        link = a.path,
-        id = a.path,
-        published = a.publishedAt,
-        updated = a.updatedAt
-      )
-    })
-
-  }
-
 }

@@ -38,6 +38,7 @@ import pdi.jwt.JwtAlgorithm
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
 import net.yoshinorin.qualtet.auth.Signature
+import net.yoshinorin.qualtet.domains.feeds.FeedService
 // import scala.io.StdIn
 
 object BootStrap extends App {
@@ -94,6 +95,8 @@ object BootStrap extends App {
   val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService: SitemapService = new SitemapService(sitemapCache)(doobieContext)
 
+  val feedService: FeedService = new FeedService(articleService)
+
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val authRoute: AuthRoute = new AuthRoute(authService)
@@ -104,7 +107,7 @@ object BootStrap extends App {
   val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
   val sitemapRoute: SitemapRoute = new SitemapRoute(sitemapService)
-  val feedRoute: FeedRoute = new FeedRoute(articleService)
+  val feedRoute: FeedRoute = new FeedRoute(feedService)
 
   logger.info("created all instances")
 

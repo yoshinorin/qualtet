@@ -68,11 +68,7 @@ class ArticleServiceSpec extends AnyWordSpec {
       result.articles.map(a => a.path.value).foreach { p => assert(p.startsWith("/test/same/tags/")) }
     }
 
-    "getFeeds return ResponseFeed instances" in {
-      val result = articleService.getFeeds(ArticlesQueryParameter(1, 5)).unsafeRunSync()
-      assert(result.size === 5)
-      assert(result === result.sortWith((x, y) => x.published > y.published))
-    }
+
 
   }
 
