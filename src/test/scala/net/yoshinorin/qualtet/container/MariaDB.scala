@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.container
+// package net.yoshinorin.qualtet.container
 
 /* NOTE:
 This object is debris of using testcontainers (I can't implement & use it for testing)
