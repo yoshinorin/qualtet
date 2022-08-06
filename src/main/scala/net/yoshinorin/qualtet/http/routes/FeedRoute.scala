@@ -12,7 +12,7 @@ class FeedRoute(
 
   def route: Route = {
     pathPrefix("feeds") {
-      pathPrefix(".+".r) { feedName =>
+      pathPrefix(".+".r) { _ =>
         get {
           // TOOD: configurable
           // TODO: create feed by x (e.g. tagName
