@@ -7,8 +7,9 @@ import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.domains.Cacheable
 
-class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext: DoobieContextBase) {
+class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext: DoobieContextBase) extends Cacheable {
 
   /**
    * create a contentType
@@ -82,6 +83,10 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
     }
 
     actions.perform.andTransact(doobieContext)
+  }
+
+  def invalidate: Unit = {
+    cache.invalidate()
   }
 
 }

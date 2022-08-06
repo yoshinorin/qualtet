@@ -5,8 +5,9 @@ import net.yoshinorin.qualtet.domains.Action._
 import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.domains.Cacheable
 
-class SitemapService(cache: CacheModule[String, Seq[Url]])(doobieContext: DoobieContextBase) {
+class SitemapService(cache: CacheModule[String, Seq[Url]])(doobieContext: DoobieContextBase) extends Cacheable {
 
   private val cacheKey = "sitemaps-full-cache"
 
@@ -25,6 +26,10 @@ class SitemapService(cache: CacheModule[String, Seq[Url]])(doobieContext: Doobie
           x <- actions.perform.andTransact(doobieContext)
         } yield (x, cache.put(cacheKey, x))._1
     }
+  }
+
+  def invalidate: Unit = {
+    cache.invalidate()
   }
 
 }
