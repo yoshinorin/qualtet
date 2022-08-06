@@ -32,6 +32,7 @@ import pdi.jwt.JwtAlgorithm
 
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
+import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
 
 // Just test data
 object Fixture {
@@ -196,5 +197,21 @@ object Fixture {
     content = "a" * 101,
     publishedAt = 0,
     updatedAt = 0
+  )
+
+  val feed1: ResponseFeed = ResponseFeed(
+    title = "feedTitle1",
+    link = Path("/feed1"),
+    id = Path("/feed1"),
+    published = 0,
+    updated = 0
+  )
+
+  val feed2: ResponseFeed = ResponseFeed(
+    title = "feedTitle2",
+    link = Path("/feed2"),
+    id = Path("/feed2"),
+    published = 0,
+    updated = 0
   )
 }
