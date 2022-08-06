@@ -15,7 +15,7 @@ object AuthorId {
   implicit val decodeAuthorId: Decoder[AuthorId] = Decoder[String].map(AuthorId.apply)
 
   def apply(value: String): AuthorId = {
-    ULID.fromString(value)
+    val _ = ULID.fromString(value)
     new AuthorId(value)
   }
 }

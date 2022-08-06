@@ -22,7 +22,7 @@ object ContentId {
   implicit val decodeContentId: Decoder[ContentId] = Decoder[String].map(ContentId.apply)
 
   def apply(value: String): ContentId = {
-    ULID.fromString(value)
+    val _ = ULID.fromString(value)
     new ContentId(value)
   }
 }

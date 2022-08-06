@@ -11,7 +11,7 @@ object TagId {
   implicit val decodeTagId: Decoder[TagId] = Decoder[String].map(TagId.apply)
 
   def apply(value: String): TagId = {
-    ULID.fromString(value)
+    val _ = ULID.fromString(value)
     new TagId(value)
   }
 }
