@@ -34,6 +34,8 @@ import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
+import net.yoshinorin.qualtet.cache.CacheService
+import net.yoshinorin.qualtet.http.routes.CacheRoute
 
 // Just test data
 object Fixture {
@@ -82,6 +84,8 @@ object Fixture {
   val sitemapService = new SitemapService(sitemapCache)(doobieContext)
 
   val feedService: FeedService = new FeedService(articleService)
+
+  val cacheService: CacheService = new CacheService(sitemapService, contentTypeService)
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
