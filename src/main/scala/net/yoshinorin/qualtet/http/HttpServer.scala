@@ -21,6 +21,7 @@ import net.yoshinorin.qualtet.http.routes.{
 
 import scala.concurrent.Future
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
+import net.yoshinorin.qualtet.http.routes.CacheRoute
 
 class HttpServer(
   homeRoute: HomeRoute,
@@ -33,7 +34,8 @@ class HttpServer(
   archiveRoute: ArchiveRoute,
   contentTypeRoute: ContentTypeRoute,
   sitemapRoute: SitemapRoute,
-  feedRoute: FeedRoute
+  feedRoute: FeedRoute,
+  cacheRoute: CacheRoute
 )(implicit actorSystem: ActorSystem)
     extends HttpLogger {
 
@@ -56,7 +58,8 @@ class HttpServer(
           archiveRoute.route ~
           contentTypeRoute.route ~
           sitemapRoute.route ~
-          feedRoute.route
+          feedRoute.route ~
+          cacheRoute.route
       }
     }
   }

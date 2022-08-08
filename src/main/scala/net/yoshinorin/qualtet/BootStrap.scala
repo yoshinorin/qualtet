@@ -39,6 +39,8 @@ import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
 import net.yoshinorin.qualtet.auth.Signature
 import net.yoshinorin.qualtet.domains.feeds.FeedService
+import net.yoshinorin.qualtet.cache.CacheService
+import net.yoshinorin.qualtet.http.routes.CacheRoute
 // import scala.io.StdIn
 
 object BootStrap extends App {
@@ -97,6 +99,8 @@ object BootStrap extends App {
 
   val feedService: FeedService = new FeedService(articleService)
 
+  val cacheService: CacheService = new CacheService(sitemapService, contentTypeService)
+
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val authRoute: AuthRoute = new AuthRoute(authService)
@@ -108,6 +112,7 @@ object BootStrap extends App {
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
   val sitemapRoute: SitemapRoute = new SitemapRoute(sitemapService)
   val feedRoute: FeedRoute = new FeedRoute(feedService)
+  val cacheRoute: CacheRoute = new CacheRoute(authService, cacheService)
 
   logger.info("created all instances")
 
@@ -125,7 +130,8 @@ object BootStrap extends App {
       archiveRoute,
       contentTypeRoute,
       sitemapRoute,
-      feedRoute
+      feedRoute,
+      cacheRoute
     )
 
   logger.info("starting http server...")

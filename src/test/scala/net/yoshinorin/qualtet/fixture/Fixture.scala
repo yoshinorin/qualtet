@@ -98,6 +98,7 @@ object Fixture {
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
   val sitemapRoute: SitemapRoute = new SitemapRoute(sitemapService)
   val feedRoute: FeedRoute = new FeedRoute(feedService)
+  val cacheRoute: CacheRoute = new CacheRoute(authService, cacheService)
 
   val authorId: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754a")
   val authorId2: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754b")

@@ -226,6 +226,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/feed'
+  /caches/:
+    delete:
+      summary: Invalidate all caches
+      response:
+        204:
+          description: Caches are invalidated
+        401:
+          description: Unauthorized
 components:
   schemas:
     requestToken:
