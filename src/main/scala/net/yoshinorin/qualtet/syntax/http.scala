@@ -14,4 +14,9 @@ trait http {
     def referer: Option[HttpHeader] = this.extract("Referer")
   }
 
+  implicit final class HttpHeaderOptionOps(maybeHeader: Option[HttpHeader]) {
+    @SuppressWarnings(Array("org.wartremover.warts.ToString"))
+    def stringify(): String = maybeHeader.getOrElse("").toString()
+  }
+
 }

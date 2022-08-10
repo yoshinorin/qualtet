@@ -15,8 +15,8 @@ trait HttpLogger {
       request.uri.toString(),
       reason,
       s"${elapsedTime}ms",
-      request.headers.referer.getOrElse("").toString(),
-      request.headers.userAgent.getOrElse("").toString()
+      request.headers.referer.stringify(),
+      request.headers.userAgent.stringify()
     ).map(x => s""""${x}"""").mkString(" - ")
   }
 
