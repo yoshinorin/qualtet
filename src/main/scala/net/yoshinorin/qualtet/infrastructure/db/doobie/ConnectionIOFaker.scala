@@ -7,6 +7,6 @@ trait ConnectionIOFaker {
 
   def ConnectionIOWithInt: ConnectionIO[Int] = 0.pure[ConnectionIO]
 
-  def ConnectionIOWithNone[T]: ConnectionIO[Option[T]] = Option.empty[T].pure[ConnectionIO]
+  // def ConnectionIOWithNone[T]: ConnectionIO[Option[T]] = Option.empty[T].pure[ConnectionIO]
 
 }
