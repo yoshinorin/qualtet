@@ -15,7 +15,7 @@ class CacheService(
   def invalidateAll(): IO[Unit] = {
     sitemapService.invalidate()
     contentTypeService.invalidate()
-    IO(logger.error(s"All caches are invalidated."))
+    IO(logger.info(s"All caches are invalidated."))
   }
 
 }
