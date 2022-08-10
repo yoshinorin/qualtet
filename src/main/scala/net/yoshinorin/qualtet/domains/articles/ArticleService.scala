@@ -20,7 +20,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
       articlesWithCount <- f(c.id, data, queryParam).perform.andTransact(doobieContext)
     } yield
       if (articlesWithCount.nonEmpty) {
-        ResponseArticleWithCount(articlesWithCount.map(_._1).head, articlesWithCount.map(_._2))
+        ResponseArticleWithCount(articlesWithCount.map(_._1).headOption.getOrElse(0), articlesWithCount.map(_._2))
       } else {
         throw NotFound("articles not found")
       }
