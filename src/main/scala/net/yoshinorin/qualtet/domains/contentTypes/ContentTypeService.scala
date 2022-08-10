@@ -5,11 +5,11 @@ import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.Action._
 import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.domains.Cacheable
 
-class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext: DoobieContextBase) extends Cacheable {
+class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext: DoobieContext) extends Cacheable {
 
   /**
    * create a contentType

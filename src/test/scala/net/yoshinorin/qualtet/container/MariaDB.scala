@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.services.ContentTypeService
 import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeId, doobieContext}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.Migration
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.cache.Cache
 import org.scalatest.wordspec.AnyWordSpec
 

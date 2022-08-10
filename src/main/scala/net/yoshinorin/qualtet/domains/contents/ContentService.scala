@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, Exter
 import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.syntax._
 import wvlet.airframe.ulid.ULID
 import java.util.Locale
@@ -22,7 +22,7 @@ class ContentService(
   authorService: AuthorService,
   contentTypeService: ContentTypeService
 )(
-  doobieContext: DoobieContextBase
+  doobieContext: DoobieContext
 ) {
 
   /**

@@ -7,9 +7,9 @@ import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeSe
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.syntax._
-class ArticleService(contentTypeService: ContentTypeService)(doobieContext: DoobieContextBase) {
+class ArticleService(contentTypeService: ContentTypeService)(doobieContext: DoobieContext) {
 
   def get[A](
     data: A = (),

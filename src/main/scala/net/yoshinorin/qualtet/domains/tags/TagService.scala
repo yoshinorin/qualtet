@@ -5,9 +5,9 @@ import cats.implicits._
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.Action._
 import net.yoshinorin.qualtet.domains.{Action, Continue}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
-class TagService()(doobieContext: DoobieContextBase) {
+class TagService()(doobieContext: DoobieContext) {
 
   /**
    * get all tags

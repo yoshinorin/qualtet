@@ -5,9 +5,9 @@ import cats.effect.{Blocker, IO, Resource}
 import doobie.KleisliInterpreter
 import doobie.util.transactor.Transactor
 import doobie.util.transactor.Transactor.Aux
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
-class DoobieStubContext extends DoobieContextBase {
+class DoobieStubContext extends DoobieContext {
 
   implicit val applicative: Applicative[IO] = Applicative[IO]
 

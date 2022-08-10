@@ -7,8 +7,7 @@ import cats.effect._
 import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.config.Config
 
-// TODO: refactor
-trait DoobieContextBase {
+class DoobieContext {
 
   val executors: ExecutorService = Executors.newCachedThreadPool()
   val executionContexts: ExecutionContextExecutor = scala.concurrent.ExecutionContext.fromExecutor(executors)
@@ -23,6 +22,3 @@ trait DoobieContextBase {
   )
 
 }
-
-// TODO: refactor
-class DoobieContext extends DoobieContextBase {}

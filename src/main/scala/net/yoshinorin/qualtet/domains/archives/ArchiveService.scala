@@ -5,11 +5,11 @@ import net.yoshinorin.qualtet.domains.Action._
 import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.message.Fail.NotFound
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.syntax._
 
-class ArchiveService(contentTypeService: ContentTypeService)(doobieContext: DoobieContextBase) {
+class ArchiveService(contentTypeService: ContentTypeService)(doobieContext: DoobieContext) {
 
   def get: IO[Seq[ResponseArchive]] = {
 

@@ -5,7 +5,7 @@ import cats.implicits.catsSyntaxApplicativeId
 import doobie.implicits._
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.repository.requests._
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 sealed trait Action[R]
 final case class Continue[T, R](request: RepositoryRequest[T], next: T => Action[R]) extends Action[R]
@@ -22,12 +22,12 @@ object Action {
 
   // with transaction
   /*
-  def performWithTransaction[R](serviceLogic: Action[R])(doobieContext: DoobieContextBase): IO[R] = serviceLogic match {
+  def performWithTransaction[R](serviceLogic: Action[R])(doobieContext: DoobieContext): IO[R] = serviceLogic match {
     case continue: Continue[_, R] => runContinueWithTransaction(continue)(doobieContext)
     case Done(value) => IO(value)
   }
 
-  private def runContinueWithTransaction[T, R](continue: Continue[T, R])(doobieContext: DoobieContextBase): IO[R] = {
+  private def runContinueWithTransaction[T, R](continue: Continue[T, R])(doobieContext: DoobieContext): IO[R] = {
     continue.request.dispatch.transact(doobieContext.transactor).flatMap { t => performWithTransaction(continue.next(t))(doobieContext) }
   }
    */
@@ -43,11 +43,11 @@ object Action {
   }
 
   implicit class ActionOps[R](serviceLogic: Action[R]) {
-    // def transact()(doobieContext: DoobieContextBase): IO[R] = Action.performWithTransaction(serviceLogic)(doobieContext)
+    // def transact()(doobieContext: DoobieContext): IO[R] = Action.performWithTransaction(serviceLogic)(doobieContext)
     def perform: ConnectionIO[R] = Action.performWithoutTransaction(serviceLogic)
   }
 
   implicit class ConnectionOps[T](connectionIO: ConnectionIO[T]) {
-    def andTransact(doobieContext: DoobieContextBase): IO[T] = connectionIO.transact(doobieContext.transactor)
+    def andTransact(doobieContext: DoobieContext): IO[T] = connectionIO.transact(doobieContext.transactor)
   }
 }
