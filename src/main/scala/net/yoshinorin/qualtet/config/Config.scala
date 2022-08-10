@@ -19,5 +19,6 @@ object Config {
 
   val cacheContentType: Long = config.getLong("cache.content-type")
   val cacheSitemap: Long = config.getLong("cache.sitemap")
+  val cacheFeed: Long = config.getLong("cache.feed")
 
 }

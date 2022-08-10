@@ -36,6 +36,7 @@ import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.http.routes.CacheRoute
+import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 
 // Just test data
 object Fixture {
@@ -83,7 +84,10 @@ object Fixture {
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService = new SitemapService(sitemapCache)(doobieContext)
 
-  val feedService: FeedService = new FeedService(articleService)
+  val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
+    Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
+  val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
+  val feedService: FeedService = new FeedService(feedCache, articleService)
 
   val cacheService: CacheService = new CacheService(sitemapService, contentTypeService)
 

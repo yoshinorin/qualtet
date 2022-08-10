@@ -41,6 +41,7 @@ import net.yoshinorin.qualtet.auth.Signature
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.http.routes.CacheRoute
+import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 // import scala.io.StdIn
 
 @SuppressWarnings(Array("org.wartremover.warts.ScalaApp")) // Not yet migrate to Scala3
@@ -98,7 +99,10 @@ object BootStrap extends App {
   val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService: SitemapService = new SitemapService(sitemapCache)(doobieContext)
 
-  val feedService: FeedService = new FeedService(articleService)
+  val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
+    Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
+  val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
+  val feedService: FeedService = new FeedService(feedCache, articleService)
 
   val cacheService: CacheService = new CacheService(sitemapService, contentTypeService)
 

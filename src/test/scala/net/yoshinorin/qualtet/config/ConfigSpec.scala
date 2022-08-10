@@ -26,6 +26,7 @@ class ConfigSpec extends AnyWordSpec {
     "cache configuration gettable from application.conf" in {
       assert(Config.cacheContentType === 604800)
       assert(Config.cacheSitemap === 3601)
+      assert(Config.cacheFeed === 7200)
     }
   }
 
