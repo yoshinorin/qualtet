@@ -149,7 +149,9 @@ shutDownTestDbContainer := {
 }
 // TODO: The DB container does not seems to shutdown if the tests are fails.
 val testCommands = {
-  """;runTestDbContainer
+  """
+    |;scalafmt
+    |;runTestDbContainer
     |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigrationSpec
     |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
     |;test
