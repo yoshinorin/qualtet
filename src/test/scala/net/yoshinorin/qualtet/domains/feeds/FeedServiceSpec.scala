@@ -34,4 +34,8 @@ class FeedServiceSpec extends AnyWordSpec {
     assert(result === result.sortWith((x, y) => x.published > y.published))
   }
 
+  "be invalidate cache" in {
+    assert(feedService.invalidate() === ())
+  }
+
 }
