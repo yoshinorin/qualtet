@@ -43,8 +43,8 @@ class FeedService(cache: CacheModule[String, ResponseArticleWithCount], articleS
     }
   }
 
-  def invalidate(): Unit = {
-    cache.invalidate()
+  def invalidate(): IO[Unit] = {
+    IO(cache.invalidate())
   }
 
 }

@@ -28,8 +28,8 @@ class SitemapService(cache: CacheModule[String, Seq[Url]])(doobieContext: Doobie
     }
   }
 
-  def invalidate(): Unit = {
-    cache.invalidate()
+  def invalidate(): IO[Unit] = {
+    IO(cache.invalidate())
   }
 
 }

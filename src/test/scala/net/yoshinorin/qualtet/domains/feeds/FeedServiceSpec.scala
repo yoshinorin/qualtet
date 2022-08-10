@@ -29,13 +29,17 @@ class FeedServiceSpec extends AnyWordSpec {
   requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
 
   "getFeeds return ResponseFeed instances" in {
-    val result = feedService.get(ArticlesQueryParameter(1, 5)).unsafeRunSync()
+    val result = (for {
+      _ <- feedService.invalidate()
+      feed <- feedService.get(ArticlesQueryParameter(1, 5))
+    } yield feed).unsafeRunSync()
+
     assert(result.size === 5)
     assert(result === result.sortWith((x, y) => x.published > y.published))
   }
 
   "be invalidate cache" in {
-    assert(feedService.invalidate() === ())
+    assert(feedService.invalidate().unsafeRunSync() === ())
   }
 
 }

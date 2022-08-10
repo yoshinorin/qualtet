@@ -85,8 +85,8 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
     actions.perform.andTransact(doobieContext)
   }
 
-  def invalidate(): Unit = {
-    cache.invalidate()
+  def invalidate(): IO[Unit] = {
+    IO(cache.invalidate())
   }
 
 }

@@ -8,7 +8,7 @@ class SitemapServiceSpec extends AnyWordSpec {
 
   "invalidate" should {
     "be callable" in {
-      assert(sitemapService.invalidate() === ())
+      assert(sitemapService.invalidate().unsafeRunSync() === ())
     }
   }
 

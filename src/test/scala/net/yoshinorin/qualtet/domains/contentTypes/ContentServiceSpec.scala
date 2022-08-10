@@ -8,7 +8,7 @@ class ContentTypeServiceSpec extends AnyWordSpec {
 
   "invalidate" should {
     "be callable" in {
-      assert(contentTypeService.invalidate() === ())
+      assert(contentTypeService.invalidate().unsafeRunSync() === ())
     }
   }
 
