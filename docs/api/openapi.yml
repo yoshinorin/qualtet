@@ -229,7 +229,7 @@ paths:
   /caches/:
     delete:
       summary: Invalidate all caches
-      response:
+      responses:
         204:
           description: Caches are invalidated
         401:
