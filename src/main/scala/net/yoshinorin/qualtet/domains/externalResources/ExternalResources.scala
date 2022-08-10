@@ -24,10 +24,13 @@ final case class ExternalResource(
   kind: ExternalResourceKind,
   name: String // TODO: consider naming
 )
+
+/*
 object ExternalResource {
   implicit val encodeExternalResource: Encoder[ExternalResource] = deriveEncoder[ExternalResource]
   implicit val decodeExternalResource: Decoder[ExternalResource] = deriveDecoder[ExternalResource]
 }
+ */
 
 final case class ExternalResources(
   kind: ExternalResourceKind,
