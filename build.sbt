@@ -58,7 +58,7 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic-extras" % "0.14.2",
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.jwt-scala" %% "jwt-circe" % jwtScalaVersion,
-  "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.6",
+  "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.7",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
   "org.wvlet.airframe" %% "airframe-ulid" % "22.7.3",
@@ -69,7 +69,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.11",
   "org.springframework.security" % "spring-security-core" % "5.7.2",
   "org.slf4j" % "slf4j-api" % "1.7.36",
-  "org.scalatest" %% "scalatest" % "3.2.12" % "test",
+  "org.scalatest" %% "scalatest" % "3.2.13" % "test",
   "org.mockito" % "mockito-core" % "4.6.1" % "test"
 )
 
