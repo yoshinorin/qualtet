@@ -24,8 +24,10 @@ class CreateAuthorSpec extends AnyWordSpec {
       // CreateAuthor.main(Array("notexistsuser", "NA", "pass"))
     }
 
-    "can not be create author" in {
-      CreateAuthor.main(Array("testUser2", "tu"))
+    "not be create author" in {
+      assertThrows[IllegalArgumentException] {
+        CreateAuthor.main(Array("testUser2", "tu"))
+      }
 
       val a = authorService.findByName(AuthorName("testUser2")).unsafeRunSync()
       assert(a.isEmpty)

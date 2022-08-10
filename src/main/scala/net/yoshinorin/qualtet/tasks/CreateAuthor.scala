@@ -23,9 +23,7 @@ object CreateAuthor {
 
   def main(args: Array[String]): Unit = {
     if (args.length =!= 3) {
-      logger.error("args must be three length.")
-      logger.info("shutting down...")
-      return
+      throw new IllegalArgumentException("args must be three length.")
     }
 
     // https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage-bcrypt
