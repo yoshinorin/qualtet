@@ -1,12 +1,12 @@
 package net.yoshinorin.qualtet.auth
 
 import org.slf4j.LoggerFactory
-import java.security.{PrivateKey, Signature}
+import java.security.{PrivateKey, Signature => JavaSignature}
 
 class Signature(algorithm: String, message: Array[Byte], key: KeyPair) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
-  private[this] val signature = Signature.getInstance(algorithm)
+  private[this] val signature = JavaSignature.getInstance(algorithm)
 
   signature.initSign(key.privateKey)
   signature.update(message)

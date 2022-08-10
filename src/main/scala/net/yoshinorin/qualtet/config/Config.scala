@@ -1,10 +1,10 @@
 package net.yoshinorin.qualtet.config
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.{Config => TypeSafeConfig, ConfigFactory}
 
 object Config {
 
-  private[this] val config: Config = ConfigFactory.load
+  private[this] val config: TypeSafeConfig = ConfigFactory.load
 
   val dbUrl: String = config.getString("db.ctx.dataSource.url")
   val dbUser: String = config.getString("db.ctx.dataSource.user")
