@@ -104,7 +104,11 @@ object BootStrap extends App {
   val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
   val feedService: FeedService = new FeedService(feedCache, articleService)
 
-  val cacheService: CacheService = new CacheService(sitemapService, contentTypeService)
+  val cacheService: CacheService = new CacheService(
+    sitemapService,
+    contentTypeService,
+    feedService
+  )
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
