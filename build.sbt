@@ -33,7 +33,8 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
   Wart.StringPlusAny,
   Wart.Throw,
   Wart.DefaultArguments,
-  Wart.Overloading
+  Wart.Overloading,
+  Wart.Nothing
 )
 
 val akkaVersion = "2.6.19"
