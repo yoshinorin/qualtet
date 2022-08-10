@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.articles
 
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
@@ -33,11 +33,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
       none: Unit = (),
       queryParams: ArticlesQueryParameter
     ): Action[Seq[(Int, ResponseArticle)]] = {
-      val request = GetWithCount(contentTypeId, queryParams)
-      val resultHandler: Seq[(Int, ResponseArticle)] => Action[Seq[(Int, ResponseArticle)]] = (resultHandler: Seq[(Int, ResponseArticle)]) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(GetWithCount(contentTypeId, queryParams), Action.buildNext[Seq[(Int, ResponseArticle)]])
     }
 
     this.get(queryParam = queryParam)(actions)
@@ -56,11 +52,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
       tagName: TagName,
       queryParams: ArticlesQueryParameter
     ): Action[Seq[(Int, ResponseArticle)]] = {
-      val request = FindByTagNameWithCount(contentTypeId, tagName, queryParams)
-      val resultHandler: Seq[(Int, ResponseArticle)] => Action[Seq[(Int, ResponseArticle)]] = (resultHandler: Seq[(Int, ResponseArticle)]) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(FindByTagNameWithCount(contentTypeId, tagName, queryParams), Action.buildNext[Seq[(Int, ResponseArticle)]])
     }
 
     this.get(tagName, queryParam)(actions)

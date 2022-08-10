@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contentTypes
 import cats.effect.IO
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.syntax._
@@ -20,11 +20,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
   def create(data: ContentType): IO[ContentType] = {
 
     def actions(data: ContentType): Action[Int] = {
-      val request = Upsert(data)
-      val resultHandler: Int => Action[Int] = (resultHandler: Int) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(Upsert(data), Action.buildNext[Int])
     }
 
     this.findByName(data.name).flatMap {
@@ -47,11 +43,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
   def findByName(name: String): IO[Option[ContentType]] = {
 
     def actions(name: String): Action[Option[ContentType]] = {
-      val request = FindByName(name)
-      val resultHandler: Option[ContentType] => Action[Option[ContentType]] = (resultHandler: Option[ContentType]) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(FindByName(name), Action.buildNext[Option[ContentType]])
     }
 
     def fromDB(name: String): IO[Option[ContentType]] = {
@@ -75,11 +67,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
   def getAll: IO[Seq[ContentType]] = {
 
     def actions: Action[Seq[ContentType]] = {
-      val request = GetAll()
-      val resultHandler: Seq[ContentType] => Action[Seq[ContentType]] = (resultHandler: Seq[ContentType]) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(GetAll(), Action.buildNext[Seq[ContentType]])
     }
 
     actions.perform.andTransact(doobieContext)

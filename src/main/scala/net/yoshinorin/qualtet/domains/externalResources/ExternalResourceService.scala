@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 
 class ExternalResourceService() {
 
@@ -16,11 +16,7 @@ class ExternalResourceService() {
   def bulkUpsertWithoutTaransact(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
 
     def actions(data: Option[List[ExternalResource]]): Action[Int] = {
-      val request = BulkUpsert(data)
-      val resultHandler: Int => Action[Int] = (resultHandler: Int) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(BulkUpsert(data), Action.buildNext[Int])
     }
 
     actions(data).perform

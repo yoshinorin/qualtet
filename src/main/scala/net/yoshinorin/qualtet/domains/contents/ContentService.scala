@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import cats.effect.IO
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
@@ -90,11 +90,7 @@ class ContentService(
     }
 
     def actions(data: Content): Action[Int] = {
-      val request = Upsert(data)
-      val resultHandler: Int => Action[Int] = (resultHandler: Int) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(Upsert(data), Action.buildNext[Int])
     }
 
     val maybeExternalResources = externalResources match {
@@ -128,11 +124,7 @@ class ContentService(
   def findByPath(path: Path): IO[Option[Content]] = {
 
     def actions(path: Path): Action[Option[Content]] = {
-      val request = FindByPath(path)
-      val resultHandler: Option[Content] => Action[Option[Content]] = (resultHandler: Option[Content]) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(FindByPath(path), Action.buildNext[Option[Content]])
     }
 
     actions(path).perform.andTransact(doobieContext)
@@ -149,11 +141,7 @@ class ContentService(
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
 
     def actions(path: Path): Action[Option[ResponseContentDbRow]] = {
-      val request = FindByPathWithMeta(path)
-      val resultHandler: Option[ResponseContentDbRow] => Action[Option[ResponseContentDbRow]] = (resultHandler: Option[ResponseContentDbRow]) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(FindByPathWithMeta(path), Action.buildNext[Option[ResponseContentDbRow]])
     }
 
     this.findBy(path)(actions)

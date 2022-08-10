@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.sitemaps
 
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.Cacheable
@@ -14,9 +14,7 @@ class SitemapService(cache: CacheModule[String, Seq[Url]])(doobieContext: Doobie
   def get(): IO[Seq[Url]] = {
 
     def actions: Action[Seq[Url]] = {
-      val request = Get()
-      val resultHandler: Seq[Url] => Action[Seq[Url]] = (resultHandler: Seq[Url]) => { Done(resultHandler) }
-      Continue(request, resultHandler)
+      Continue(Get(), Action.buildNext[Seq[Url]])
     }
 
     cache.get(cacheKey) match {

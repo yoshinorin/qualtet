@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.archives
 
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
@@ -14,11 +14,7 @@ class ArchiveService(contentTypeService: ContentTypeService)(doobieContext: Doob
   def get: IO[Seq[ResponseArchive]] = {
 
     def actions(contentTypeId: ContentTypeId): Action[Seq[ResponseArchive]] = {
-      val request = GetByContentTypeId(contentTypeId)
-      val resultHandler: Seq[ResponseArchive] => Action[Seq[ResponseArchive]] = (resultHandler: Seq[ResponseArchive]) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(GetByContentTypeId(contentTypeId), Action.buildNext[Seq[ResponseArchive]])
     }
 
     for {

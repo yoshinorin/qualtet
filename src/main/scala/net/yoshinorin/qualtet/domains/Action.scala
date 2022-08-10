@@ -13,6 +13,13 @@ final case class Done[R](value: R) extends Action[R]
 
 object Action {
 
+  def buildNext[T]: T => Action[T] = {
+    val next: T => Action[T] = (rh: T) => {
+      Done(rh)
+    }
+    next
+  }
+
   // with transaction
   /*
   def performWithTransaction[R](serviceLogic: Action[R])(doobieContext: DoobieContextBase): IO[R] = serviceLogic match {

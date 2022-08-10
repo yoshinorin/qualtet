@@ -4,7 +4,7 @@ import cats.effect.IO
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContextBase
 import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.syntax._
 
 class AuthorService()(doobieContext: DoobieContextBase) {
@@ -18,11 +18,7 @@ class AuthorService()(doobieContext: DoobieContextBase) {
   def create(data: Author): IO[ResponseAuthor] = {
 
     def actions(data: Author): Action[Int] = {
-      val request = Upsert(data)
-      val resultHandler: Int => Action[Int] = (resultHandler: Int) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(Upsert(data), Action.buildNext[Int])
     }
 
     for {
@@ -39,11 +35,7 @@ class AuthorService()(doobieContext: DoobieContextBase) {
   def getAll: IO[Seq[ResponseAuthor]] = {
 
     def actions: Action[Seq[ResponseAuthor]] = {
-      val request = GetAll()
-      val resultHandler: Seq[ResponseAuthor] => Action[Seq[ResponseAuthor]] = (resultHandler: Seq[ResponseAuthor]) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(GetAll(), Action.buildNext[Seq[ResponseAuthor]])
     }
 
     actions.perform.andTransact(doobieContext)
@@ -58,11 +50,7 @@ class AuthorService()(doobieContext: DoobieContextBase) {
   def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
 
     def actions(id: AuthorId): Action[Option[ResponseAuthor]] = {
-      val request = FindById(id)
-      val resultHandler: Option[ResponseAuthor] => Action[Option[ResponseAuthor]] = (resultHandler: Option[ResponseAuthor]) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(FindById(id), Action.buildNext[Option[ResponseAuthor]])
     }
 
     actions(id).perform.andTransact(doobieContext)
@@ -77,11 +65,7 @@ class AuthorService()(doobieContext: DoobieContextBase) {
   def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
 
     def actions(id: AuthorId): Action[Option[Author]] = {
-      val request = FindByIdWithPassword(id)
-      val resultHandler: Option[Author] => Action[Option[Author]] = (resultHandler: Option[Author]) => {
-        Done(resultHandler)
-      }
-      Continue(request, resultHandler)
+      Continue(FindByIdWithPassword(id), Action.buildNext[Option[Author]])
     }
 
     actions(id).perform.andTransact(doobieContext)
@@ -96,9 +80,7 @@ class AuthorService()(doobieContext: DoobieContextBase) {
   def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
 
     def actions(name: AuthorName): Action[Option[ResponseAuthor]] = {
-      val request = FindByName(name)
-      val resultHandler: Option[ResponseAuthor] => Action[Option[ResponseAuthor]] = { resultHandler: Option[ResponseAuthor] => Done(resultHandler) }
-      Continue(request, resultHandler)
+      Continue(FindByName(name), Action.buildNext[Option[ResponseAuthor]])
     }
 
     actions(name).perform.andTransact(doobieContext)
