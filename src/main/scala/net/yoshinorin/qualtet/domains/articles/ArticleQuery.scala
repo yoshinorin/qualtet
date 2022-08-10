@@ -8,8 +8,7 @@ import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
 object ArticleQuery {
 
-  // TOOD: delete none argument. Maybe lift is effective.
-  def getWithCount(contentTypeId: ContentTypeId, none: Unit = (), sqlParams: SqlParams): Query0[(Int, ResponseArticle)] = {
+  def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams): Query0[(Int, ResponseArticle)] = {
     sql"""
       SELECT
         count(1) OVER () AS count,

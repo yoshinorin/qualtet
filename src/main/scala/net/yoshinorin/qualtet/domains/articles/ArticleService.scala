@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.syntax._
 class ArticleService(contentTypeService: ContentTypeService)(doobieContext: DoobieContextBase) {
 
   def get[A](
-    data: A,
+    data: A = (),
     queryParam: ArticlesQueryParameter
   )(f: (ContentTypeId, A, ArticlesQueryParameter) => Action[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
@@ -33,14 +33,14 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
       none: Unit = (),
       queryParams: ArticlesQueryParameter
     ): Action[Seq[(Int, ResponseArticle)]] = {
-      val request = GetWithCount(contentTypeId, none, queryParams)
+      val request = GetWithCount(contentTypeId, queryParams)
       val resultHandler: Seq[(Int, ResponseArticle)] => Action[Seq[(Int, ResponseArticle)]] = (resultHandler: Seq[(Int, ResponseArticle)]) => {
         Done(resultHandler)
       }
       Continue(request, resultHandler)
     }
 
-    this.get((), queryParam)(actions)
+    this.get(queryParam = queryParam)(actions)
   }
 
   /*
