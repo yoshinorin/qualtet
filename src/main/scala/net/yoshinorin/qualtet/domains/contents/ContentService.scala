@@ -84,11 +84,6 @@ class ContentService(
     externalResources: Option[List[ExternalResources]]
   ): IO[Content] = {
 
-    def content: IO[Content] = this.findByPath(data.path).flatMap {
-      case None => IO.raiseError(InternalServerError("content not found")) //NOTE: 404 is better?
-      case Some(x) => IO(x)
-    }
-
     def actions(data: Content): Action[Int] = {
       Continue(Upsert(data), Action.buildNext[Int])
     }
@@ -111,7 +106,7 @@ class ContentService(
 
     for {
       _ <- queries.transact(doobieContext.transactor)
-      c <- content
+      c <- this.findByPath(data.path).throwIfNone(InternalServerError("content not found")) //NOTE: 404 is better?
     } yield c
   }
 

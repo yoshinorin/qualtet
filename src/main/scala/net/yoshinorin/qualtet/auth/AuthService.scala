@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
-import net.yoshinorin.qualtet.domains.authors.{Author, AuthorId, AuthorService, BCryptPassword, ResponseAuthor}
+import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorService, BCryptPassword, ResponseAuthor}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
+import net.yoshinorin.qualtet.syntax._
 import org.slf4j.LoggerFactory
 
 class AuthService(authorService: AuthorService, jwt: Jwt) {
@@ -12,11 +13,6 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
   private[this] val bcryptPasswordEncoder = new BCryptPasswordEncoder()
 
   def generateToken(tokenRequest: RequestToken): IO[ResponseToken] = {
-
-    def author: IO[Author] = authorService.findByIdWithPassword(tokenRequest.authorId).flatMap {
-      case None => IO.raiseError(NotFound(s"${tokenRequest.authorId} is not found."))
-      case Some(x) => IO(x)
-    }
 
     def verifyPassword(password: BCryptPassword): IO[Unit] = {
       if (bcryptPasswordEncoder.matches(tokenRequest.password, password.value)) {
@@ -28,7 +24,7 @@ class AuthService(authorService: AuthorService, jwt: Jwt) {
     }
 
     for {
-      a <- author
+      a <- authorService.findByIdWithPassword(tokenRequest.authorId).throwIfNone(NotFound(s"${tokenRequest.authorId} is not found."))
       _ <- verifyPassword(a.password)
       jwt <- IO(jwt.encode(a))
       responseToken <- IO(ResponseToken(jwt))
