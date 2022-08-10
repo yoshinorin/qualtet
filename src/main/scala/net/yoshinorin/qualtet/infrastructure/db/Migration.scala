@@ -14,16 +14,20 @@ object Migration {
    * Do migration
    */
   def migrate(contentTypeService: ContentTypeService): Unit = {
-    flyway.migrate()
-    contentTypeService.create(ContentType(name = "article")).unsafeRunSync()
-    contentTypeService.create(ContentType(name = "page")).unsafeRunSync()
+    val _ = flyway.migrate()
+    (for {
+      _ <- contentTypeService.create(ContentType(name = "article"))
+      _ <- contentTypeService.create(ContentType(name = "page"))
+    } yield ()).unsafeRunSync()
   }
 
   /**
    * DROP all tables
    * NOTE: for development
    */
-  def clean(): Unit = flyway.clean()
+  def clean(): Unit = {
+    val _ = flyway.clean()
+  }
 
   /**
    * DROP all tables and re-create
