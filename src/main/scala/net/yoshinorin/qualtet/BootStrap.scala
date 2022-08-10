@@ -43,6 +43,7 @@ import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.http.routes.CacheRoute
 // import scala.io.StdIn
 
+@SuppressWarnings(Array("org.wartremover.warts.ScalaApp")) // Not yet migrate to Scala3
 object BootStrap extends App {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
