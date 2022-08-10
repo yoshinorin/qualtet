@@ -16,6 +16,12 @@ scalacOptions ++= Seq(
   "UTF-8"
 )
 
+initialize := {
+  val _ = initialize.value
+  // Process("git config --local core.hooksPath .githooks").run()
+  // println("set the git pre-commit hooks.")
+}
+
 // https://scalacenter.github.io/scalafix/docs/users/installation.html
 ThisBuild / scalafixScalaBinaryVersion := "2.13"
 // TODO: AggressiveMerge or Merge not working
