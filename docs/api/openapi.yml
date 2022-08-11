@@ -14,6 +14,8 @@ paths:
   /status:
     get:
       summary: Get API server status
+      tags:
+        - status
       responses:
         200:
           description: Response when Success
@@ -28,6 +30,8 @@ paths:
   /token:
     post:
       summary: Create an IDToken
+      tags:
+        - token
       description: |
         Create an IDToken
       requestBody:
@@ -54,6 +58,8 @@ paths:
   /archives:
     get:
       summary: Get all articles
+      tags:
+        - archives
       responses:
         200:
           description: Response when Success
@@ -66,6 +72,8 @@ paths:
   /articles:
     get:
       summary: Get articles with count
+      tags:
+        - articles
       responses:
         200:
           description: Response when Success
@@ -96,6 +104,8 @@ paths:
   /authors:
     get:
       summary: Get all authors
+      tags:
+        - authors
       responses:
         200:
           description: Response when Success
@@ -108,6 +118,8 @@ paths:
   /authors/{authorName}:
     get:
       summary: Get an author
+      tags:
+        - authors
       responses:
         200:
           description: Response when Success
@@ -122,6 +134,8 @@ paths:
   /contents:
     post:
       summary: Create or Update a content
+      tags:
+        - contents
       description: |
         Create or Update a content
       requestBody:
@@ -146,6 +160,8 @@ paths:
   /contents/{contentPath}:
     get:
       summary: Get a content
+      tags:
+        - contents
       responses:
         200:
           description: Response when Success
@@ -159,6 +175,8 @@ paths:
   /tags:
     get:
       summary: Get a tags
+      tags:
+        - tags
       responses:
         200:
           description: Response when Success
@@ -170,6 +188,8 @@ paths:
   /tags/{tagName}:
     get:
       summary: Get an articles by tagName
+      tags:
+        - tags
       responses:
         200:
           description: Response when Success
@@ -184,6 +204,8 @@ paths:
   /content-types/{contentPath}:
     get:
       summary: Get content-types
+      tags:
+        - content-types
       responses:
         200:
           description: Response when Success
@@ -195,6 +217,8 @@ paths:
   /content-types/{contentTypeName}:
     get:
       summary: Get a content-type with name
+      tags:
+        - content-types
       responses:
         200:
           description: Response when Success
@@ -205,6 +229,8 @@ paths:
   /sitemaps:
     get:
       summary: Get an articles url & updated date for sitemaps.xml
+      tags:
+        - sitemaps
       responses:
         200:
           description: Response when Success
@@ -217,6 +243,8 @@ paths:
   /feed/{feedName}:
     get:
       summary: Get a feeds
+      tags:
+        - feed
       responses:
         200:
           description: Response when Success
@@ -229,6 +257,8 @@ paths:
   /caches/:
     delete:
       summary: Invalidate all caches
+      tags:
+        - cache
       responses:
         204:
           description: Caches are invalidated
