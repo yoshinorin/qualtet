@@ -34,6 +34,8 @@ paths:
         - token
       description: |
         Create an IDToken
+      security:
+        - basicAuth: []
       requestBody:
         content:
           application/json:
@@ -138,6 +140,8 @@ paths:
         - contents
       description: |
         Create or Update a content
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -259,12 +263,22 @@ paths:
       summary: Invalidate all caches
       tags:
         - cache
+      security:
+        - bearerAuth: []
       responses:
         204:
           description: Caches are invalidated
         401:
           description: Unauthorized
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     requestToken:
       type: object
