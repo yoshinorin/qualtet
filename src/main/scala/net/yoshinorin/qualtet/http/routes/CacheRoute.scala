@@ -24,11 +24,14 @@ class CacheRoute(
                 .invalidateAll()
                 .handleErrorWith { e => IO.pure(e) }
                 .unsafeToFuture()
-            ) { _ => httpResponse(NoContent) }
+            ) {
+              case e: Exception =>
+                httpResponse(e)
+              case _ => httpResponse(NoContent)
+            }
           }
         }
       }
     }
   }
-
 }
