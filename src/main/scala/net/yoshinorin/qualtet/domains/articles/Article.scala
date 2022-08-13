@@ -2,12 +2,13 @@ package net.yoshinorin.qualtet.domains.articles
 
 import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
-import net.yoshinorin.qualtet.domains.contents.Path
+import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
 import net.yoshinorin.qualtet.syntax._
 
 import scala.util.Random
 
 final case class ResponseArticle(
+  id: ContentId,
   path: Path,
   title: String,
   content: String,
@@ -21,10 +22,11 @@ object ResponseArticle {
   implicit val decodeContent: Decoder[ResponseArticle] = deriveDecoder[ResponseArticle]
   implicit val decodeContents: Decoder[List[ResponseArticle]] = Decoder.decodeList[ResponseArticle]
 
-  def apply(path: Path, title: String, content: String, publishedAt: Long, updatedAt: Long): ResponseArticle = {
+  def apply(id: ContentId, path: Path, title: String, content: String, publishedAt: Long, updatedAt: Long): ResponseArticle = {
     val stripedContent = content.stripHtmlTags
     val stripedContentLen = if (stripedContent.length > 100) 100 else stripedContent.length
     new ResponseArticle(
+      id,
       path,
       title,
       stripedContent.substring(0, Random.between((stripedContentLen - stripedContentLen / 3), stripedContentLen)),

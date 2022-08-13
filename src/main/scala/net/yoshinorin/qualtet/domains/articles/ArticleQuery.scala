@@ -12,6 +12,7 @@ object ArticleQuery {
     sql"""
       SELECT
         count(1) OVER () AS count,
+        id,
         path,
         title,
         html_content,
@@ -66,6 +67,7 @@ object ArticleQuery {
     sql"""
       SELECT
         count(1) OVER () AS count,
+        contents.id,
         path,
         title,
         html_content,

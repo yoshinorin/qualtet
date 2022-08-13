@@ -9,6 +9,7 @@ import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.syntax._
+
 class ArticleService(contentTypeService: ContentTypeService)(doobieContext: DoobieContext) {
 
   def get[A](

@@ -32,6 +32,8 @@ import pdi.jwt.JwtAlgorithm
 
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
+import java.util.Locale
+import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
 import net.yoshinorin.qualtet.cache.CacheService
@@ -192,6 +194,7 @@ object Fixture {
     )
 
   val responseArticle1: ResponseArticle = ResponseArticle(
+    id = ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH)),
     path = Path("/test"),
     title = "title",
     content = "this is a content",
@@ -200,6 +203,7 @@ object Fixture {
   )
 
   val responseArticle2: ResponseArticle = ResponseArticle(
+    id = ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH)),
     path = Path("/test/path2"),
     title = "title2",
     content = "this is a content2",
@@ -208,6 +212,7 @@ object Fixture {
   )
 
   val responseArticleWithLongLengthContent: ResponseArticle = ResponseArticle(
+    id = ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH)),
     path = Path("/test"),
     title = "title",
     content = "a" * 101,

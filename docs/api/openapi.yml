@@ -91,7 +91,7 @@ paths:
                   articles:
                     type: array
                     items:
-                      $ref: '#/components/schemas/simpleArticle'
+                      $ref: '#/components/schemas/article'
       parameters:
         - in: query
           name: page
@@ -368,6 +368,10 @@ components:
         title:
           type: string
           example: "Post Title"
+        path:
+          type: string
+          format: url(excludes domain part)
+          example: "/post/test-article"
         content:
           type: string
           example: "Post Content.... RAW strings"
