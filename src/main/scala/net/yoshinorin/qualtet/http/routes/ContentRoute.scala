@@ -8,6 +8,7 @@ import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.contents.{Content, ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.{Authentication, RequestDecoder, ResponseHandler}
+import net.yoshinorin.qualtet.domains.contents.ContentId
 
 class ContentRoute(
   authService: AuthService,
@@ -40,6 +41,25 @@ class ContentRoute(
                   }
                 case Left(message) =>
                   httpResponse(message)
+              }
+            }
+          }
+        }
+      } ~ {
+        pathPrefix(".+".r) { id =>
+          pathEndOrSingleSlash {
+            delete {
+              authenticate { _ =>
+                onSuccess(
+                  contentService
+                    .delete(ContentId(id))
+                    .handleErrorWith { e => IO.pure(e) }
+                    .unsafeToFuture()
+                ) {
+                  case e: Exception =>
+                    httpResponse(e)
+                  case _ => httpResponse(NoContent)
+                }
               }
             }
           }

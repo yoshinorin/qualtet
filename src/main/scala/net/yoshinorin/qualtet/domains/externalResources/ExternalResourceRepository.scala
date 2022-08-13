@@ -12,5 +12,7 @@ object ExternalResourceRepository extends ConnectionIOFaker {
         case Some(x) =>
           ExternalResourceQuery.bulkUpsert.updateMany(x)
       }
+    // TODO: fix return type `Int` to `Unit`
+    case Delete(content_id) => ExternalResourceQuery.delete(content_id).option.map(_ => 0)
   }
 }

@@ -5,6 +5,9 @@ import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
+import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
+import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
+import net.yoshinorin.qualtet.domains.tags.TagName
 
 // testOnly net.yoshinorin.qualtet.domains.ContentServiceSpec
 class ContentServiceSpec extends AnyWordSpec {
@@ -79,12 +82,73 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(updatedContent.content === updatedRequestContent.htmlContent)
     }
 
+    "be delete" in {
+  // create test data for delete
+      val willBeDeleteContent: RequestContent = RequestContent(
+        contentType = "article",
+        path = Path("/test/willbe/delete"),
+        title = "this is a title",
+        rawContent = "this is a raw content",
+        htmlContent = "this is a html content",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = Option(List("WillBeDelete", "WillBeDelete2")),
+        externalResources = Option(
+          List(
+            ExternalResources(
+              ExternalResourceKind("js"),
+              values = List("willBeDelete1", "willBeDelete2")
+            )
+          )
+        )
+      )
+
+      val willNotDeleteContent: RequestContent = RequestContent(
+        contentType = "article",
+        path = Path("/test/willnot/delete"),
+        title = "this is a title",
+        rawContent = "this is a raw content",
+        htmlContent = "this is a html content",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = Option(List("WillNotDelete", "WillNotDelete2")),
+        externalResources = Option(
+          List(
+            ExternalResources(
+              ExternalResourceKind("js"),
+              values = List("willNotDelete1", "willNotDelete2")
+            )
+          )
+        )
+      )
+
+      // Create test data
+      val x = (for {
+        x <- contentService.createContentFromRequest(AuthorName(author.name.value), willBeDeleteContent)
+        _ <- contentService.createContentFromRequest(AuthorName(author.name.value), willNotDeleteContent)
+      } yield x).unsafeRunSync()
+
+      val willBeDeleteContentResult = contentService.findByPath(x.path).unsafeRunSync().get
+      contentService.delete(willBeDeleteContentResult.id).unsafeRunSync()
+
+      val afterDeleteOps = (for {
+        maybeNoneContent <- contentService.findByPath(willBeDeleteContentResult.path)
+        // TODO: Tags should be deleted automatically after delete a content which are not refer from other contents.
+        // maybeNoneTag1 <- tagService.findByName(TagName(willBeDeleteContent.tags.get(0)))
+        // maybeNoneTag2 <- tagService.findByName(TagName(willBeDeleteContent.tags.get(1)))
+        anotherContent <- contentService.findByPath(willNotDeleteContent.path)
+      } yield (maybeNoneContent, anotherContent)).unsafeRunSync()
+
+      assert(afterDeleteOps._1.isEmpty)
+      assert(afterDeleteOps._2.get.path === willNotDeleteContent.path)
+      // assert(afterDeleteOps._2.isEmpty)
+      // assert(afterDeleteOps._3.isEmpty)
+      // assert(afterDeleteOps._4.get.path === willNotDeleteContent.path)
+    }
+
     "be throw Author NotFound Exception" in {
       assertThrows[NotFound] {
         contentService.createContentFromRequest(AuthorName("not_exists_user"), requestContent1).unsafeRunSync()
       }
     }
-
   }
 
 }

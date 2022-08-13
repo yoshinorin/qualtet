@@ -41,6 +41,15 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       }
     }
 
+    "be delete a content" in {
+      val content = contentService.findByPath(Path("/test/ContentRouteSpec1")).unsafeRunSync().get
+      Delete(s"/contents/${content.id.value}")
+        .addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
+        assert(status === StatusCodes.NoContent)
+      }
+      assert(contentService.findByPath(Path("/test/ContentRouteSpec1")).unsafeRunSync().isEmpty)
+    }
+
     "be return 400 BadRequest caused by empty title" in {
       val json =
         """

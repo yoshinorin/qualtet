@@ -21,6 +21,11 @@ object ContentQuery {
     Update[Content](q)
   }
 
+  def delete(id: ContentId): Query0[Unit] = {
+    sql"DELETE FROM contents WHERE id = ${id.value}"
+      .query[Unit]
+  }
+
   def findByPath(path: Path): Query0[Content] = {
     sql"SELECT * FROM contents WHERE path = $path"
       .query[Content]

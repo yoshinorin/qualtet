@@ -176,6 +176,17 @@ paths:
         404:
           description: Content not found
           # content: TODO
+    delete:
+      summary: Delete a content
+      tags:
+        - contents
+      security:
+        - bearerAuth: []
+      responses:
+        204:
+          description: Delete succeeded
+        401:
+          description: Unauthorized
   /tags:
     get:
       summary: Get a tags

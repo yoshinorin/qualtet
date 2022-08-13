@@ -111,6 +111,34 @@ class ContentService(
   }
 
   /**
+   * delete a content by id
+   *
+   * @param id Instance of ContentId
+   */
+  def delete(id: ContentId): IO[Unit] = {
+    def actions(id: ContentId): Action[Int] = {
+      Continue(Delete(id), Action.buildNext[Int])
+    }
+
+    val queries = for {
+      externalResourcesDelete <- externalResourceService.deleteWithoutTransact(id)
+      // TODO: Tags should be deleted automatically after delete a content which are not refer from other contents.
+      contentTaggingDelete <- ContentTaggingRepository.delete(id)
+      robotsDelete <- robotsService.deleteWithoutTransaction(id)
+      contentDelete <- actions(id).perform
+    } yield (
+      externalResourcesDelete,
+      contentTaggingDelete,
+      robotsDelete,
+      contentDelete
+    )
+
+    for {
+      _ <- queries.transact(doobieContext.transactor)
+    } yield ()
+  }
+
+  /**
    * Find a content by path
    *
    * @param path a content path

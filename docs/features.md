@@ -39,8 +39,8 @@
     - [ ] GET API migrate from `path` to `id`
 - [x] Update
     - [ ] Check diff & clean up externalResources & Tags
-- [ ] Delete
-    - [ ] Delete with externalResources & Tags
+- [x] Delete
+    - [x] Delete with externalResources, Tags & Robots
 
 ## Tags
 

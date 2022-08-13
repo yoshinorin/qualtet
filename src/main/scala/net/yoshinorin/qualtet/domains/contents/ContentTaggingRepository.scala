@@ -22,4 +22,9 @@ object ContentTaggingRepository extends ConnectionIOFaker {
     }
   }
 
+  def delete(id: ContentId): ConnectionIO[Int] = {
+    // TODO: work around
+    ContentTaggingQuery.delete(id).option.map(_ => 0)
+  }
+
 }

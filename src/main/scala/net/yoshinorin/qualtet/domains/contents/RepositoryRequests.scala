@@ -12,3 +12,6 @@ final case class FindByPath(path: Path) extends ContentRepositoryRequest[Option[
 final case class FindByPathWithMeta(path: Path) extends ContentRepositoryRequest[Option[ResponseContentDbRow]] {
   def dispatch = ContentRepository.dispatch(this)
 }
+final case class Delete(id: ContentId) extends ContentRepositoryRequest[Int] {
+  def dispatch = ContentRepository.dispatch(this)
+}
