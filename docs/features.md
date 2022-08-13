@@ -24,7 +24,7 @@
 
 ## Caching
 
-- [ ] Cache Flash API
+- [x] Cache Flash API
 - [x] Sitemap Caching
     - [x] Configurable
 - [x] ContentTypes Caching
@@ -38,7 +38,7 @@
     - [ ] Return id
     - [ ] GET API migrate from `path` to `id`
 - [x] Update
-    - [ ] Check diff & clean up externalResources & Tags
+    - [ ] Check diff & clean up externalResources, Tags & Robots
 - [x] Delete
     - [x] Delete with externalResources, Tags & Robots
 
