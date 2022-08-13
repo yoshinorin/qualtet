@@ -70,7 +70,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/article'
+                  $ref: '#/components/schemas/simpleArticle'
   /articles:
     get:
       summary: Get articles with count
@@ -347,10 +347,10 @@ components:
     simpleArticle:
       type: object
       properties:
-        id:
+        path:
           type: string
-          format: ulid
-          example: "01fgvhme5b7cj0m5agr9f4g2ca"
+          format: url(excludes domain part)
+          example: "/post/test-article"
         title:
           type: string
           example: "Post Title"
