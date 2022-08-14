@@ -48,6 +48,7 @@ val akkaHttpVersion = "10.2.9"
 val circeVersion = "0.15.0-M1"
 val doobieVersion = "0.13.4"
 val jwtScalaVersion = "9.0.6"
+val flywayVersion = "9.1.3"
 
 // https://github.com/rtimush/sbt-updates
 dependencyAllowPreRelease := true
@@ -71,9 +72,9 @@ libraryDependencies ++= Seq(
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
   "org.wvlet.airframe" %% "airframe-ulid" % "22.7.3",
   "com.github.ben-manes.caffeine" % "caffeine" % "3.1.1",
-  // TODO: Upgrade higher than 8.2.2
-  //       https://github.com/flyway/flyway/issues/3355
-  "org.flywaydb" % "flyway-core" % "8.2.0",
+  "org.flywaydb" % "flyway-core" % flywayVersion,
+  // NOTE: workaround: https://github.com/flyway/flyway/issues/3355
+  "org.flywaydb" % "flyway-mysql" % flywayVersion,
   "ch.qos.logback" % "logback-classic" % "1.2.11",
   "org.springframework.security" % "spring-security-core" % "5.7.2",
   "org.slf4j" % "slf4j-api" % "1.7.36",
