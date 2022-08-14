@@ -76,7 +76,7 @@ libraryDependencies ++= Seq(
   "org.springframework.security" % "spring-security-core" % "5.7.2",
   "org.slf4j" % "slf4j-api" % "1.7.36",
   "org.scalatest" %% "scalatest" % "3.2.13" % "test",
-  "org.mockito" % "mockito-core" % "4.6.1" % "test"
+  "org.mockito" % "mockito-core" % "4.7.0" % "test"
 )
 
 val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
