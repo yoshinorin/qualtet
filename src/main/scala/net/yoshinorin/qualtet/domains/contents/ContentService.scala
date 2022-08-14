@@ -124,7 +124,7 @@ class ContentService(
     val queries = for {
       externalResourcesDelete <- externalResourceService.deleteWithoutTransact(id)
       // TODO: Tags should be deleted automatically after delete a content which are not refer from other contents.
-      contentTaggingDelete <- ContentTaggingRepository.delete(id)
+      contentTaggingDelete <- ContentTaggingRepository.deleteByContentId(id)
       robotsDelete <- robotsService.deleteWithoutTransaction(id)
       contentDelete <- actions(id).perform
     } yield (

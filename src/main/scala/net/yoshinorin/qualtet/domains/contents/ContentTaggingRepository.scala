@@ -2,8 +2,14 @@ package net.yoshinorin.qualtet.domains.contents
 
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
+import net.yoshinorin.qualtet.domains.tags.TagId
 
 object ContentTaggingRepository extends ConnectionIOFaker {
+
+  def findByTagId(id: TagId): ConnectionIO[Seq[ContentTagging]] = {
+    // TODO: work around
+    ContentTaggingQuery.findByTagId(id).to[Seq]
+  }
 
   /**
    * create a ContentTagging bulky
@@ -22,9 +28,14 @@ object ContentTaggingRepository extends ConnectionIOFaker {
     }
   }
 
-  def delete(id: ContentId): ConnectionIO[Int] = {
+  def deleteByContentId(id: ContentId): ConnectionIO[Int] = {
     // TODO: work around
-    ContentTaggingQuery.delete(id).option.map(_ => 0)
+    ContentTaggingQuery.deleteByContentId(id).option.map(_ => 0)
+  }
+
+  def deleteByTagId(id: TagId): ConnectionIO[Int] = {
+    // TODO: work around
+    ContentTaggingQuery.deleteByTagId(id).option.map(_ => 0)
   }
 
 }

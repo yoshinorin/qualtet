@@ -218,6 +218,19 @@ paths:
         404:
           description: Content not found
           # content: TODO
+    delete:
+      summary: Delete a tag
+      tags:
+        - tags
+      security:
+        - bearerAuth: []
+      responses:
+        204:
+          description: Delete succeeded
+        401:
+          description: Unauthorized
+        404:
+          description: Tag not found
   /content-types/{contentPath}:
     get:
       summary: Get content-types

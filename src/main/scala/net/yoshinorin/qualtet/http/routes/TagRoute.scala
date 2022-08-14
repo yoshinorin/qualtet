@@ -6,15 +6,18 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import io.circe.syntax.EncoderOps
+import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticleWithCount}
-import net.yoshinorin.qualtet.domains.tags.{TagName, TagService}
+import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
 import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
+import net.yoshinorin.qualtet.http.{Authentication, ArticlesQueryParameter, ResponseHandler}
 
 class TagRoute(
+  authService: AuthService,
   tagService: TagService,
   articleService: ArticleService
-) extends ResponseHandler {
+) extends Authentication(authService)
+    with ResponseHandler {
 
   def route: Route = {
     pathPrefix("tags") {
@@ -45,12 +48,13 @@ class TagRoute(
           }
         }
          */
-        pathPrefix(".+".r) { tagName =>
+        // NOTE: Should not mix tag and id.
+        pathPrefix(".+".r) { tagNameOrId =>
           get {
             parameters("page".as[Int].?, "limit".as[Int].?) { (page, limit) =>
               onSuccess(
                 articleService
-                  .getByTagNameWithCount(TagName(tagName), ArticlesQueryParameter(page, limit))
+                  .getByTagNameWithCount(TagName(tagNameOrId), ArticlesQueryParameter(page, limit))
                   .handleErrorWith { e => IO.pure(e) }
                   .unsafeToFuture()
               ) {
@@ -62,10 +66,23 @@ class TagRoute(
                   httpResponse(Fail.InternalServerError("Internal server error"))
               }
             }
+          } ~ {
+            delete {
+              authenticate { _ =>
+                onSuccess(
+                  tagService
+                    .delete(TagId(tagNameOrId))
+                    .handleErrorWith { e => IO.pure(e) }
+                    .unsafeToFuture()
+                ) {
+                  case e: Exception => httpResponse(e)
+                  case _ => httpResponse(NoContent)
+                }
+              }
+            }
           }
         }
       }
     }
   }
-
 }

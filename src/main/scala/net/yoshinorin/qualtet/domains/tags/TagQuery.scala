@@ -16,6 +16,11 @@ object TagQuery {
       .query[Tag]
   }
 
+  def findById(id: TagId): Query0[Tag] = {
+    sql"SELECT * FROM tags WHERE id = ${id.value}"
+      .query[Tag]
+  }
+
   def bulkUpsert: Update[Tag] = {
     val q = s"""
           INSERT INTO tags (id, name)
@@ -24,6 +29,11 @@ object TagQuery {
             name = VALUES(name)
         """
     Update[Tag](q)
+  }
+
+  def delete(id: TagId): Query0[Unit] = {
+    sql"DELETE FROM tags WHERE id = ${id.value}"
+      .query[Unit]
   }
 
 }

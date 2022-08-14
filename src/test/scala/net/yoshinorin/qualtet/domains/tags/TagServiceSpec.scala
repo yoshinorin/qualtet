@@ -5,6 +5,10 @@ import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
+import net.yoshinorin.qualtet.domains.contents.ContentTaggingRepository
+import net.yoshinorin.qualtet.message.Fail
+import wvlet.airframe.ulid.ULID
+import java.util.Locale
 
 // testOnly net.yoshinorin.qualtet.domains.TagServiceSpec
 class TagServiceSpec extends AnyWordSpec {
@@ -40,12 +44,36 @@ class TagServiceSpec extends AnyWordSpec {
       assert(result.get.name.value === "tagService1")
     }
 
+    "be findById" in {
+      val result = tagService.findByName(TagName("tagService3")).unsafeRunSync()
+      assert(tagService.findById(result.get.id).unsafeRunSync().get.name.value === "tagService3")
+    }
+
     "be getTags" in {
       val result = tagService.getTags(Option(List("tagService1", "tagService2"))).unsafeRunSync()
       assert(result.get(0).name.value === "tagService1")
       assert(result.get(1).name.value === "tagService2")
     }
 
+    "be delete" in {
+      val result = (for{
+        beforeDeleteTag <- tagService.findByName(TagName("tagService9"))
+        _ <- tagService.delete(beforeDeleteTag.get.id)
+        afterDeleteTag <- tagService.findById(beforeDeleteTag.get.id)
+      } yield (beforeDeleteTag, afterDeleteTag)).unsafeRunSync()
+
+      assert(result._1.get.name.value === "tagService9")
+      assert(result._2.isEmpty)
+      // TODO: add test
+      // val ct = ContentTaggingRepository.findByTagId(result._1.get.id).unsafeRunSync()
+      //assert(ct.isEmpty)
+    }
+
+    "be throw NotFound exception when delete" in {
+      assertThrows[Fail.NotFound] {
+        tagService.delete(TagId(ULID.newULIDString.toLowerCase(Locale.ENGLISH))).unsafeRunSync()
+      }
+    }
   }
 
 }

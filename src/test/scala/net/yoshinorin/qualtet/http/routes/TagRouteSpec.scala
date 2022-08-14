@@ -1,21 +1,27 @@
 package net.yoshinorin.qualtet.http.routes
 
+import wvlet.airframe.ulid.ULID
+import java.util.Locale
+import akka.http.scaladsl.model.headers.OAuth2BearerToken
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import net.yoshinorin.qualtet.domains.authors.AuthorName
+import net.yoshinorin.qualtet.auth.RequestToken
+import net.yoshinorin.qualtet.domains.authors.{AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.domains.tags.ResponseTag
-import net.yoshinorin.qualtet.fixture.Fixture.{articleService, author, contentService, tagService}
+import net.yoshinorin.qualtet.domains.tags.{TagId, ResponseTag}
+import net.yoshinorin.qualtet.fixture.Fixture.{authService, authorService, articleService, author, contentService, tagService}
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.http.routes.TagRouteSpec
 class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
-  val tagRoute: TagRoute = new TagRoute(tagService, articleService)
+  val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
+  val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
+  val tagRoute: TagRoute = new TagRoute(authService, tagService, articleService)
 
   val requestContents: List[RequestContent] = {
-    (0 until 2).toList.map(_.toString()).map(i =>
+    (0 until 5).toList.map(_.toString()).map(i =>
       RequestContent(
         contentType = "article",
         path = Path(s"/test/tagRoute-${i}"),
@@ -93,6 +99,39 @@ class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     "be return 500" in {
       Get("/tags/not-exists") ~> tagRoute.route ~> check {
         assert(status === StatusCodes.NotFound)
+      }
+    }
+
+    "be delete a tag" in {
+      val tag = tagService.findByName(t(4).name).unsafeRunSync().get
+
+      // 204 (first time)
+      Delete(s"/tags/${tag.id.value}")
+        .addCredentials(OAuth2BearerToken(validToken)) ~> tagRoute.route ~> check {
+        assert(status === StatusCodes.NoContent)
+      }
+      assert(tagService.findByName(t(4).name).unsafeRunSync().isEmpty)
+
+      // 404 (second time)
+      Delete(s"/tags/${tag.id.value}")
+        .addCredentials(OAuth2BearerToken(validToken)) ~> tagRoute.route ~> check {
+        assert(status === StatusCodes.NotFound)
+      }
+    }
+
+    "be return 404 DELETE endopoint" in {
+      val id = TagId(ULID.newULIDString.toLowerCase(Locale.ENGLISH))
+      Delete(s"/tags/${id.value}")
+        .addCredentials(OAuth2BearerToken(validToken)) ~> tagRoute.route ~> check {
+        assert(status === StatusCodes.NotFound)
+      }
+    }
+
+    "be reject DELETE endpoint caused by invalid token" in {
+      Delete("/tags/reject")
+        .addCredentials(OAuth2BearerToken("invalid token")) ~> tagRoute.route ~> check {
+        // TODO: fix status code
+        assert(status === StatusCodes.InternalServerError)
       }
     }
 

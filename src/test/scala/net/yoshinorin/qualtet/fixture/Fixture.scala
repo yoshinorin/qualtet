@@ -102,7 +102,7 @@ object Fixture {
   val authRoute: AuthRoute = new AuthRoute(authService)
   val authorRoute: AuthorRoute = new AuthorRoute(authorService)
   val contentRoute: ContentRoute = new ContentRoute(authService, contentService)
-  val tagRoute: TagRoute = new TagRoute(tagService, articleService)
+  val tagRoute: TagRoute = new TagRoute(authService, tagService, articleService)
   val articleRoute: ArticleRoute = new ArticleRoute(articleService)
   val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)

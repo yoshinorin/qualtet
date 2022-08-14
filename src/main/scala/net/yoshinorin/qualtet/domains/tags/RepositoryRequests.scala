@@ -6,9 +6,15 @@ trait TagRepositoryRequest[T] extends RepositoryRequest[T]
 final case class GetAll() extends TagRepositoryRequest[Seq[ResponseTag]] {
   def dispatch = TagRepository.dispatch(this)
 }
+final case class FindById(id: TagId) extends TagRepositoryRequest[Option[Tag]] {
+  def dispatch = TagRepository.dispatch(this)
+}
 final case class FindByName(data: TagName) extends TagRepositoryRequest[Option[Tag]] {
   def dispatch = TagRepository.dispatch(this)
 }
 final case class BulkUpsert(data: Option[List[Tag]]) extends TagRepositoryRequest[Int] {
+  def dispatch = TagRepository.dispatch(this)
+}
+final case class Delete(id: TagId) extends TagRepositoryRequest[Int] {
   def dispatch = TagRepository.dispatch(this)
 }

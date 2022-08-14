@@ -3,8 +3,14 @@ package net.yoshinorin.qualtet.domains.contents
 import doobie.implicits.toSqlInterpolator
 import doobie.util.update.Update
 import doobie.util.query
+import net.yoshinorin.qualtet.domains.tags.TagId
 
 object ContentTaggingQuery {
+
+  def findByTagId(id: TagId): query.Query0[ContentTagging] = {
+    sql"SELECT * FROM contents_tagging FROM tag_id = ${id.value}"
+      .query[ContentTagging]
+  }
 
   def bulkUpsert: Update[ContentTagging] = {
     val q = s"""
@@ -17,8 +23,13 @@ object ContentTaggingQuery {
     Update[ContentTagging](q)
   }
 
-  def delete(id: ContentId): query.Query0[Unit] = {
+  def deleteByContentId(id: ContentId): query.Query0[Unit] = {
     sql"DELETE FROM contents_tagging WHERE content_id = ${id.value}"
+      .query[Unit]
+  }
+
+  def deleteByTagId(id: TagId): query.Query0[Unit] = {
+    sql"DELETE FROM contents_tagging WHERE tag_id = ${id.value}"
       .query[Unit]
   }
 

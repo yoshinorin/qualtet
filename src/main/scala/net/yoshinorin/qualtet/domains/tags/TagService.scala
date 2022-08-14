@@ -2,10 +2,14 @@ package net.yoshinorin.qualtet.domains.tags
 
 import cats.effect.IO
 import cats.implicits._
+import doobie.implicits._
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.Action._
 import net.yoshinorin.qualtet.domains.{Action, Continue}
+import net.yoshinorin.qualtet.domains.contents.ContentTaggingRepository
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.message.Fail.NotFound
+import net.yoshinorin.qualtet.syntax._
 
 class TagService()(doobieContext: DoobieContext) {
 
@@ -21,6 +25,21 @@ class TagService()(doobieContext: DoobieContext) {
     }
 
     actions.perform.andTransact(doobieContext)
+  }
+
+  /**
+   * find tag by id
+   *
+   * @param id
+   * @return maybe Tag
+   */
+  def findById(id: TagId): IO[Option[Tag]] = {
+
+    def actions(id: TagId): Action[Option[Tag]] = {
+      Continue(FindById(id), Action.buildNext[Option[Tag]])
+    }
+
+    actions(id).perform.andTransact(doobieContext)
   }
 
   /**
@@ -79,5 +98,27 @@ class TagService()(doobieContext: DoobieContext) {
     }
 
     actions(data).perform
+  }
+
+  /**
+   * delete a tag and related data by TagId
+   *
+   * @param id Instance of TagId
+   */
+  def delete(id: TagId): IO[Unit] = {
+
+    def actions(id: TagId): Action[Int] = {
+      Continue(Delete(id), Action.buildNext[Int])
+    }
+
+    val queries = for {
+      contentTaggingDelete <- ContentTaggingRepository.deleteByTagId(id)
+      tagDelete <- actions(id).perform
+    } yield (contentTaggingDelete, tagDelete)
+
+    for {
+      _ <- this.findById(id).throwIfNone(NotFound(s"tag not found: ${id}"))
+      _ <- queries.transact(doobieContext.transactor)
+    } yield ()
   }
 }
