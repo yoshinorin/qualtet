@@ -1,5 +1,7 @@
 package net.yoshinorin.qualtet.http.routes
 
+import wvlet.airframe.ulid.ULID
+import java.util.Locale
 import akka.http.scaladsl.model.headers.OAuth2BearerToken
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.server.AuthenticationFailedRejection
@@ -7,7 +9,7 @@ import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsMissin
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
+import net.yoshinorin.qualtet.domains.contents.{ContentId, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.{authService, author, authorService, contentRoute, contentService, expiredToken, nonExistsUserToken}
 import org.scalatest.wordspec.AnyWordSpec
@@ -43,11 +45,27 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
     "be delete a content" in {
       val content = contentService.findByPath(Path("/test/ContentRouteSpec1")).unsafeRunSync().get
+
+      // 204 (first time)
       Delete(s"/contents/${content.id.value}")
         .addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
         assert(status === StatusCodes.NoContent)
       }
       assert(contentService.findByPath(Path("/test/ContentRouteSpec1")).unsafeRunSync().isEmpty)
+
+      // 404 (second time)
+      Delete(s"/contents/${content.id.value}")
+        .addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
+        assert(status === StatusCodes.NotFound)
+      }
+    }
+
+    "be return 404 DELETE endopoint" in {
+      val id = ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH))
+      Delete(s"/contents/${id.value}")
+        .addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
+        assert(status === StatusCodes.NotFound)
+      }
     }
 
     "be reject DELETE endpoint caused by invalid token" in {

@@ -116,6 +116,7 @@ class ContentService(
    * @param id Instance of ContentId
    */
   def delete(id: ContentId): IO[Unit] = {
+
     def actions(id: ContentId): Action[Int] = {
       Continue(Delete(id), Action.buildNext[Int])
     }
@@ -134,6 +135,7 @@ class ContentService(
     )
 
     for {
+      _ <- this.findById(id).throwIfNone(NotFound(s"content not found: ${id}"))
       _ <- queries.transact(doobieContext.transactor)
     } yield ()
   }
@@ -168,12 +170,20 @@ class ContentService(
     this.findBy(path)(actions)
   }
 
-  /*
-  def findByIdWithMeta(id: ContentId): IO[Option[ResponseContent]] = {
-    ???
-    // TODO:  this.findBy(id)(contentRepository.findById)
-  }
+  /**
+   * Find a content by id
+   *
+   * @param id ContentId
+   * @return ResponseContent instance
    */
+  def findById(id: ContentId): IO[Option[Content]] = {
+
+    def actions(id: ContentId): Action[Option[Content]] = {
+      Continue(FindById(id), Action.buildNext[Option[Content]])
+    }
+
+    actions(id).perform.andTransact(doobieContext)
+  }
 
   def findBy[A](data: A)(f: A => Action[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 

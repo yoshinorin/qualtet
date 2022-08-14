@@ -1,5 +1,7 @@
 package net.yoshinorin.qualtet.domains.contents
 
+import wvlet.airframe.ulid.ULID
+import java.util.Locale
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.robots.Attributes
@@ -7,7 +9,6 @@ import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
-import net.yoshinorin.qualtet.domains.tags.TagName
 
 // testOnly net.yoshinorin.qualtet.domains.ContentServiceSpec
 class ContentServiceSpec extends AnyWordSpec {
@@ -73,6 +74,19 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(createdContent.content === "this is a html content")
     }
 
+    "be find by id" in {
+      val createRequestContent = requestContent1.copy(
+        path = Path("ContentServiceSpec-FindById")
+      )
+
+      val result = (for {
+        createdContent <- contentService.createContentFromRequest(AuthorName(author.name.value), createRequestContent)
+        maybeContent <- contentService.findById(createdContent.id)
+      } yield maybeContent).unsafeRunSync()
+
+      assert(result.get.path === createRequestContent.path)
+    }
+
     "be return htmlContent if include its field when request create" in {
       val updatedRequestContent = requestContent1.copy(
         htmlContent = "<h1>this is a html content<h1>"
@@ -83,7 +97,7 @@ class ContentServiceSpec extends AnyWordSpec {
     }
 
     "be delete" in {
-  // create test data for delete
+      // create test data for delete
       val willBeDeleteContent: RequestContent = RequestContent(
         contentType = "article",
         path = Path("/test/willbe/delete"),
@@ -142,6 +156,12 @@ class ContentServiceSpec extends AnyWordSpec {
       // assert(afterDeleteOps._2.isEmpty)
       // assert(afterDeleteOps._3.isEmpty)
       // assert(afterDeleteOps._4.get.path === willNotDeleteContent.path)
+    }
+
+    "be throw Content NotFound Exception when not exists content to delete" in {
+      assertThrows[NotFound] {
+        contentService.delete(ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH))).unsafeRunSync()
+      }
     }
 
     "be throw Author NotFound Exception" in {

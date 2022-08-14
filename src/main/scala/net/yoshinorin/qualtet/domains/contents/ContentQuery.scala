@@ -26,6 +26,11 @@ object ContentQuery {
       .query[Unit]
   }
 
+  def findById(id: ContentId): Query0[Content] = {
+    sql"SELECT * FROM contents WHERE id = ${id.value}"
+      .query[Content]
+  }
+
   def findByPath(path: Path): Query0[Content] = {
     sql"SELECT * FROM contents WHERE path = $path"
       .query[Content]

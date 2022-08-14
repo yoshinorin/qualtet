@@ -6,6 +6,7 @@ object ContentRepository {
 
   def dispatch[T](request: ContentRepositoryRequest[T]): ConnectionIO[T] = request match {
     case Upsert(data) => ContentQuery.upsert.run(data)
+    case FindById(id) => ContentQuery.findById(id).option
     case FindByPath(path) => ContentQuery.findByPath(path).option
     case FindByPathWithMeta(path) => ContentQuery.findByPathWithMeta(path).unique
     // TODO: fix return type `Int` to `Unit`

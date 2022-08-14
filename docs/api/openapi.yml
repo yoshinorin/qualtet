@@ -187,6 +187,8 @@ paths:
           description: Delete succeeded
         401:
           description: Unauthorized
+        404:
+          description: Content not found
   /tags:
     get:
       summary: Get a tags
