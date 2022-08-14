@@ -49,6 +49,8 @@ val circeVersion = "0.15.0-M1"
 val doobieVersion = "0.13.4"
 val jwtScalaVersion = "9.0.6"
 
+// https://github.com/rtimush/sbt-updates
+dependencyAllowPreRelease := true
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.2",
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
