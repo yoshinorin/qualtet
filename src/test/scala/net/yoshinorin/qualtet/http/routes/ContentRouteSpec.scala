@@ -50,6 +50,14 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       assert(contentService.findByPath(Path("/test/ContentRouteSpec1")).unsafeRunSync().isEmpty)
     }
 
+    "be reject DELETE endpoint caused by invalid token" in {
+      Delete("/contents/reject")
+        .addCredentials(OAuth2BearerToken("invalid token")) ~> contentRoute.route ~> check {
+        // TODO: fix status code
+        assert(status === StatusCodes.InternalServerError)
+      }
+    }
+
     "be return 400 BadRequest caused by empty title" in {
       val json =
         """
@@ -138,14 +146,14 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
       }
     }
 
-    "be reject caused by the authorization header is empty" in {
+    "be reject POST endpoint caused by the authorization header is empty" in {
       Post("/contents/")
         .withEntity(ContentTypes.`application/json`, """{}""") ~> contentRoute.route ~> check {
         assert(rejection.asInstanceOf[AuthenticationFailedRejection].cause === CredentialsMissing)
       }
     }
 
-    "be reject caused by invalid token" in {
+    "be reject POST endpoint caused by invalid token" in {
       Post("/contents/")
         .withEntity(ContentTypes.`application/json`, """{}""") ~> addCredentials(OAuth2BearerToken("invalid token")) ~> contentRoute.route ~> check {
         // TODO: fix status code
