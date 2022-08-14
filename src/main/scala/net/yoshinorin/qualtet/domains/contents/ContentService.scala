@@ -158,8 +158,6 @@ class ContentService(
    *
    * @param path a content path
    * @return ResponseContent instance
-   *
-   * @deprecated should replace findByIdWithMeta
    */
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
 
