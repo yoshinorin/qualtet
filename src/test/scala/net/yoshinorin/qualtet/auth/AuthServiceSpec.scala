@@ -5,6 +5,7 @@ import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
 import net.yoshinorin.qualtet.fixture.Fixture._
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import org.scalatest.wordspec.AnyWordSpec
+import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.auth.AuthServiceSpec
 class AuthServiceSpec extends AnyWordSpec {

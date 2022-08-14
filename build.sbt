@@ -46,7 +46,7 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
 val akkaVersion = "2.6.19"
 val akkaHttpVersion = "10.2.9"
 val circeVersion = "0.15.0-M1"
-val doobieVersion = "0.13.4"
+val doobieVersion = "1.0.0-RC2"
 val jwtScalaVersion = "9.0.6"
 val flywayVersion = "9.1.3"
 
@@ -60,6 +60,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
   "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
+  // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4
+  "org.typelevel" %% "cats-effect" % "3.3.4",
   "ch.megard" %% "akka-http-cors" % "1.1.3",
   "io.circe" %% "circe-core" % circeVersion,
   "io.circe" %% "circe-generic" % circeVersion,

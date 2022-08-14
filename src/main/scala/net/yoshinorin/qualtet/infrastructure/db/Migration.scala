@@ -4,6 +4,7 @@ import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.FluentConfiguration
+import cats.effect.unsafe.implicits.global
 
 object Migration {
 

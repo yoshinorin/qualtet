@@ -8,6 +8,8 @@ import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.http.{Authentication, ResponseHandler}
 
+import cats.effect.unsafe.implicits.global
+
 class CacheRoute(
   authService: AuthService,
   cacheService: CacheService

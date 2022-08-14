@@ -10,6 +10,7 @@ import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, Author
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import cats.effect.unsafe.implicits.global
 
 object CreateAuthor {
 

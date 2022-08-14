@@ -12,6 +12,7 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{TagId, ResponseTag}
 import net.yoshinorin.qualtet.fixture.Fixture.{authService, authorService, articleService, author, contentService, tagService}
 import org.scalatest.wordspec.AnyWordSpec
+import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.TagRouteSpec
 class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {

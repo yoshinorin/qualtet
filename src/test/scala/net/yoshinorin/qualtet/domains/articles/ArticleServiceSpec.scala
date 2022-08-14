@@ -7,6 +7,7 @@ import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.fixture.Fixture._
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import org.scalatest.wordspec.AnyWordSpec
+import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.ArticleServiceSpec
 class ArticleServiceSpec extends AnyWordSpec {

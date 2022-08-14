@@ -10,6 +10,8 @@ import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
 
+import cats.effect.unsafe.implicits.global
+
 // testOnly net.yoshinorin.qualtet.domains.ContentServiceSpec
 class ContentServiceSpec extends AnyWordSpec {
 

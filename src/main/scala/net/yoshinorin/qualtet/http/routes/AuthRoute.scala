@@ -7,6 +7,7 @@ import cats.effect.IO
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken, ResponseToken}
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.{RequestDecoder, ResponseHandler}
+import cats.effect.unsafe.implicits.global
 
 class AuthRoute(authService: AuthService) extends RequestDecoder with ResponseHandler {
 

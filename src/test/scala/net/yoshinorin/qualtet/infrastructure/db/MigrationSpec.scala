@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.infrastructure.db
 
 import net.yoshinorin.qualtet.fixture.Fixture.contentTypeService
 import org.scalatest.wordspec.AnyWordSpec
+import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.infrastructure.db.MigrationSpec
 class MigrationSpec extends AnyWordSpec {

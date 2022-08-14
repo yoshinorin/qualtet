@@ -6,6 +6,8 @@ import akka.http.scaladsl.server.Route
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 
+import cats.effect.unsafe.implicits.global
+
 class FeedRoute(
   feedService: FeedService
 ) extends ResponseHandler {

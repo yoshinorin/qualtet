@@ -6,6 +6,7 @@ import akka.http.scaladsl.server.Route
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.ResponseHandler
+import cats.effect.unsafe.implicits.global
 
 class ContentTypeRoute(
   contentTypeService: ContentTypeService

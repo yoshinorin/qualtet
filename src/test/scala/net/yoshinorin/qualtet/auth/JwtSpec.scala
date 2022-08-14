@@ -8,6 +8,7 @@ import net.yoshinorin.qualtet.validator.Validator
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.exceptions.JwtValidationException
 import wvlet.airframe.ulid.ULID
+import cats.effect.unsafe.implicits.global
 
 import java.time.Instant
 

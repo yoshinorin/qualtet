@@ -10,6 +10,8 @@ import net.yoshinorin.qualtet.message.Fail
 import wvlet.airframe.ulid.ULID
 import java.util.Locale
 
+import cats.effect.unsafe.implicits.global
+
 // testOnly net.yoshinorin.qualtet.domains.TagServiceSpec
 class TagServiceSpec extends AnyWordSpec {
 

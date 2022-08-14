@@ -7,6 +7,7 @@ import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.{author, contentService, sitemapRoute}
 import org.scalatest.wordspec.AnyWordSpec
+import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.SitemapRouteSpec
 class SitemapRouteSpec extends AnyWordSpec with ScalatestRouteTest {
