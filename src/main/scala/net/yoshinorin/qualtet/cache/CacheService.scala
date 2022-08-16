@@ -14,11 +14,13 @@ class CacheService(
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  def invalidateAll(): IO[Unit] = IO {
-    sitemapService.invalidate()
-    contentTypeService.invalidate()
-    feedService.invalidate()
-    logger.info(s"All caches are invalidated.")
+  def invalidateAll(): IO[Unit] = {
+    for {
+      _ <- sitemapService.invalidate()
+      _ <- contentTypeService.invalidate()
+      _ <- feedService.invalidate()
+      _ <- IO(logger.info(s"All caches are invalidated."))
+    } yield ()
   }
 
 }
