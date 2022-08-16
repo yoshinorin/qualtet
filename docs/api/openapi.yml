@@ -176,6 +176,7 @@ paths:
         404:
           description: Content not found
           # content: TODO
+  /contents/{contentId}:
     delete:
       summary: Delete a content
       tags:
@@ -218,6 +219,7 @@ paths:
         404:
           description: Content not found
           # content: TODO
+  /tags/{tagId}:
     delete:
       summary: Delete a tag
       tags:
