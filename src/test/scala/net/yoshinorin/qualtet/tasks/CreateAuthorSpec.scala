@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.tasks
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, authorService}
 import org.scalatest.wordspec.AnyWordSpec
+import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
 class CreateAuthorSpec extends AnyWordSpec {

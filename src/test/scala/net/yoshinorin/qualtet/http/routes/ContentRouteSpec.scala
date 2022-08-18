@@ -11,6 +11,7 @@ import net.yoshinorin.qualtet.domains.contents.{ContentId, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
+import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.ContentRouteSpec
 class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {

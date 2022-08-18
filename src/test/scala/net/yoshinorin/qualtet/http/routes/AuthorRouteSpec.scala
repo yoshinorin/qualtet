@@ -5,6 +5,7 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, authorService}
 import org.scalatest.wordspec.AnyWordSpec
+import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.AuthorRouteSpec
 class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {

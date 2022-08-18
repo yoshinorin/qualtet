@@ -28,7 +28,7 @@ import net.yoshinorin.qualtet.http.routes.{
   TagRoute
 }
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
-import net.yoshinorin.qualtet.stub.DoobieStubContext
+// import net.yoshinorin.qualtet.stub.DoobieStubContext
 import pdi.jwt.JwtAlgorithm
 
 import java.security.SecureRandom
@@ -49,7 +49,7 @@ object Fixture {
   }
 
   val doobieContext = new DoobieContext()
-  val doobieStubContext = new DoobieStubContext()
+  // val doobieStubContext = new DoobieStubContext()
 
   // TODO: repositories, services, routes are just copy from bootstrap. Should DRY.
   // NOTE: for generate JWT. They are reset when re-boot application.

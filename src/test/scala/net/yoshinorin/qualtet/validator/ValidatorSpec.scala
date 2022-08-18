@@ -4,6 +4,7 @@ import cats.implicits.catsSyntaxEq
 import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
 import net.yoshinorin.qualtet.syntax._
 import org.scalatest.wordspec.AnyWordSpec
+import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.validator.ValidatorSpec
 class ValidatorSpec extends AnyWordSpec {

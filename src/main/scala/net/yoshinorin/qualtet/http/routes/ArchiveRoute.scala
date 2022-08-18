@@ -5,6 +5,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import net.yoshinorin.qualtet.domains.archives.ArchiveService
 import net.yoshinorin.qualtet.http.{RequestDecoder, ResponseHandler}
+import cats.effect.unsafe.implicits.global
 
 class ArchiveRoute(
   archiveService: ArchiveService

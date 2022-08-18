@@ -10,6 +10,8 @@ import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.{Authentication, RequestDecoder, ResponseHandler}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
+import cats.effect.unsafe.implicits.global
+
 class ContentRoute(
   authService: AuthService,
   contentService: ContentService

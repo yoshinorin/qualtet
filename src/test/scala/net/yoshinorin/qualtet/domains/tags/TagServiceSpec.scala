@@ -8,6 +8,8 @@ import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.message.Fail
 
+import cats.effect.unsafe.implicits.global
+
 // testOnly net.yoshinorin.qualtet.domains.TagServiceSpec
 class TagServiceSpec extends AnyWordSpec {
 

@@ -10,6 +10,8 @@ import akka.http.scaladsl.model.headers.OAuth2BearerToken
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.AuthenticationFailedRejection
 
+import cats.effect.unsafe.implicits.global
+
 // testOnly net.yoshinorin.qualtet.http.routes.CacheRouteSpec
 class CacheRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 

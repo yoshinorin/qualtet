@@ -8,6 +8,7 @@ import io.circe.syntax._
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.ResponseHandler
+import cats.effect.unsafe.implicits.global
 
 class AuthorRoute(
   authorService: AuthorService

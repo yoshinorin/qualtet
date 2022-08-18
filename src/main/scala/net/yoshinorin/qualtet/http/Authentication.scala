@@ -8,6 +8,7 @@ import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.syntax._
 
+import cats.effect.unsafe.implicits.global
 import scala.concurrent.Future
 
 class Authentication(authService: AuthService) {

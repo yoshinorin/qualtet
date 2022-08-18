@@ -7,6 +7,8 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 
+import cats.effect.unsafe.implicits.global
+
 // testOnly net.yoshinorin.qualtet.domains.FeedServiceSpec
 class FeedServiceSpec extends AnyWordSpec {
 
