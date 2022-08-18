@@ -43,6 +43,10 @@ import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 // Just test data
 object Fixture {
 
+  def generateUlid(): String = {
+    ULID.newULIDString.toLowerCase(Locale.ENGLISH)
+  }
+
   val doobieContext = new DoobieContext()
   val doobieStubContext = new DoobieStubContext()
 
@@ -194,7 +198,7 @@ object Fixture {
     )
 
   val responseArticle1: ResponseArticle = ResponseArticle(
-    id = ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH)),
+    id = ContentId(generateUlid()),
     path = Path("/test"),
     title = "title",
     content = "this is a content",
@@ -203,7 +207,7 @@ object Fixture {
   )
 
   val responseArticle2: ResponseArticle = ResponseArticle(
-    id = ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH)),
+    id = ContentId(generateUlid()),
     path = Path("/test/path2"),
     title = "title2",
     content = "this is a content2",
@@ -212,7 +216,7 @@ object Fixture {
   )
 
   val responseArticleWithLongLengthContent: ResponseArticle = ResponseArticle(
-    id = ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH)),
+    id = ContentId(generateUlid()),
     path = Path("/test"),
     title = "title",
     content = "a" * 101,

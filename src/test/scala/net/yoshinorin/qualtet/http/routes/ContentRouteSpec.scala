@@ -1,7 +1,5 @@
 package net.yoshinorin.qualtet.http.routes
 
-import wvlet.airframe.ulid.ULID
-import java.util.Locale
 import akka.http.scaladsl.model.headers.OAuth2BearerToken
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.server.AuthenticationFailedRejection
@@ -11,7 +9,7 @@ import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{ContentId, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.fixture.Fixture.{authService, author, authorService, contentRoute, contentService, expiredToken, nonExistsUserToken}
+import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.http.routes.ContentRouteSpec
@@ -61,7 +59,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     }
 
     "be return 404 DELETE endopoint" in {
-      val id = ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH))
+      val id = ContentId(generateUlid())
       Delete(s"/contents/${id.value}")
         .addCredentials(OAuth2BearerToken(validToken)) ~> contentRoute.route ~> check {
         assert(status === StatusCodes.NotFound)

@@ -7,8 +7,6 @@ import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.contents.ContentTaggingRepository
 import net.yoshinorin.qualtet.message.Fail
-import wvlet.airframe.ulid.ULID
-import java.util.Locale
 
 // testOnly net.yoshinorin.qualtet.domains.TagServiceSpec
 class TagServiceSpec extends AnyWordSpec {
@@ -71,7 +69,7 @@ class TagServiceSpec extends AnyWordSpec {
 
     "be throw NotFound exception when delete" in {
       assertThrows[Fail.NotFound] {
-        tagService.delete(TagId(ULID.newULIDString.toLowerCase(Locale.ENGLISH))).unsafeRunSync()
+        tagService.delete(TagId(generateUlid())).unsafeRunSync()
       }
     }
   }

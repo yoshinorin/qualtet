@@ -1,7 +1,5 @@
 package net.yoshinorin.qualtet.http.routes
 
-import wvlet.airframe.ulid.ULID
-import java.util.Locale
 import akka.http.scaladsl.model.headers.OAuth2BearerToken
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
@@ -10,7 +8,7 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{TagId, ResponseTag}
-import net.yoshinorin.qualtet.fixture.Fixture.{authService, authorService, articleService, author, contentService, tagService}
+import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.http.routes.TagRouteSpec
@@ -120,7 +118,7 @@ class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
     }
 
     "be return 404 DELETE endopoint" in {
-      val id = TagId(ULID.newULIDString.toLowerCase(Locale.ENGLISH))
+      val id = TagId(generateUlid())
       Delete(s"/tags/${id.value}")
         .addCredentials(OAuth2BearerToken(validToken)) ~> tagRoute.route ~> check {
         assert(status === StatusCodes.NotFound)

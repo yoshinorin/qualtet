@@ -1,7 +1,5 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import wvlet.airframe.ulid.ULID
-import java.util.Locale
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.robots.Attributes
@@ -160,7 +158,7 @@ class ContentServiceSpec extends AnyWordSpec {
 
     "be throw Content NotFound Exception when not exists content to delete" in {
       assertThrows[NotFound] {
-        contentService.delete(ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH))).unsafeRunSync()
+        contentService.delete(ContentId(generateUlid())).unsafeRunSync()
       }
     }
 
