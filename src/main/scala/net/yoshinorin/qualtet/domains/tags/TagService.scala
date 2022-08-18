@@ -5,13 +5,15 @@ import cats.implicits._
 import doobie.implicits._
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepository
+import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.syntax._
 
-class TagService()(doobieContext: DoobieContext) {
+class TagService(
+  contentTaggingService: ContentTaggingService
+)(doobieContext: DoobieContext) {
 
   /**
    * get all tags
@@ -112,7 +114,7 @@ class TagService()(doobieContext: DoobieContext) {
     }
 
     val queries = for {
-      contentTaggingDelete <- ContentTaggingRepository.deleteByTagId(id)
+      contentTaggingDelete <- contentTaggingService.deleteByTagIdWithoutTransaction(id)
       tagDelete <- actions(id).perform
     } yield (contentTaggingDelete, tagDelete)
 

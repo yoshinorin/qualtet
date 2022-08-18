@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
 import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound}
-import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingRepository}
+import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
@@ -18,6 +18,7 @@ import java.util.Locale
 
 class ContentService(
   tagService: TagService,
+  contentTaggingService: ContentTaggingService,
   robotsService: RobotsService,
   externalResourceService: ExternalResourceService,
   authorService: AuthorService,
@@ -100,7 +101,7 @@ class ContentService(
       // TODO: check diff and clean up tags before upsert
       tagsBulkUpsert <- tagService.bulkUpsertWithoutTaransact(tags)
       // TODO: check diff and clean up contentTagging before upsert
-      contentTaggingBulkUpsert <- ContentTaggingRepository.bulkUpsert(contentTagging)
+      contentTaggingBulkUpsert <- contentTaggingService.bulkUpsertWithoutTaransact(contentTagging)
       // TODO: check diff and clean up external_resources before upsert
       externalResourceBulkUpsert <- externalResourceService.bulkUpsertWithoutTaransact(maybeExternalResources)
     } yield (contentUpsert, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
@@ -125,7 +126,7 @@ class ContentService(
     val queries = for {
       externalResourcesDelete <- externalResourceService.deleteWithoutTransact(id)
       // TODO: Tags should be deleted automatically after delete a content which are not refer from other contents.
-      contentTaggingDelete <- ContentTaggingRepository.deleteByContentId(id)
+      contentTaggingDelete <- contentTaggingService.deleteByContentIdWithoutTransaction(id)
       robotsDelete <- robotsService.deleteWithoutTransaction(id)
       contentDelete <- actions(id).perform
     } yield (

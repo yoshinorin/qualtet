@@ -8,6 +8,7 @@ import net.yoshinorin.qualtet.domains.archives.{ArchiveService, ResponseArchive}
 import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticle}
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, AuthorService, BCryptPassword}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceService, ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, RobotsService}
@@ -67,13 +68,15 @@ object Fixture {
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeCache)(doobieContext)
 
-  val tagService = new TagService()(doobieContext)
   val robotsService = new RobotsService()
   val externalResourceService = new ExternalResourceService()
+  val contentTaggingService: ContentTaggingService = new ContentTaggingService()(doobieContext)
+  val tagService: TagService = new TagService(contentTaggingService)(doobieContext)
 
   val contentService: ContentService =
     new ContentService(
       tagService,
+      contentTaggingService,
       robotsService,
       externalResourceService,
       authorService,

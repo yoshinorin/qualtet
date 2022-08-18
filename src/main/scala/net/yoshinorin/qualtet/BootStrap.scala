@@ -12,6 +12,7 @@ import net.yoshinorin.qualtet.domains.archives.ArchiveService
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorService
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.domains.contents.ContentService
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceService
 import net.yoshinorin.qualtet.domains.robots.RobotsService
@@ -77,13 +78,15 @@ object BootStrap extends App {
   val contentTypeCache: CacheModule[String, ContentType] = new CacheModule[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeCache)(doobieContext)
 
-  val tagService: TagService = new TagService()(doobieContext)
   val robotsService: RobotsService = new RobotsService()
   val externalResourceService: ExternalResourceService = new ExternalResourceService()
+  val contentTaggingService: ContentTaggingService = new ContentTaggingService()(doobieContext)
+  val tagService: TagService = new TagService(contentTaggingService)(doobieContext)
 
   val contentService: ContentService =
     new ContentService(
       tagService,
+      contentTaggingService,
       robotsService,
       externalResourceService,
       authorService,
