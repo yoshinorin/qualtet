@@ -12,7 +12,6 @@ class ExternalResourceService() {
    *
    * @param Robots instance
    * @return dummy long id (Doobie return Int)
-   *
    */
   def bulkUpsertWithoutTaransact(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
 

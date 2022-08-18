@@ -12,7 +12,6 @@ class RobotsService() {
    *
    * @param Robots instance
    * @return dummy long id (Doobie return Int)
-   *
    */
   def upsertWithoutTaransact(data: Robots): ConnectionIO[Int] = {
 

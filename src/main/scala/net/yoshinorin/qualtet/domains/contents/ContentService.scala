@@ -106,7 +106,7 @@ class ContentService(
 
     for {
       _ <- queries.transact(doobieContext.transactor)
-      c <- this.findByPath(data.path).throwIfNone(InternalServerError("content not found")) //NOTE: 404 is better?
+      c <- this.findByPath(data.path).throwIfNone(InternalServerError("content not found")) // NOTE: 404 is better?
     } yield c
   }
 

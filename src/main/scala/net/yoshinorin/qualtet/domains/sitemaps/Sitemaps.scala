@@ -42,8 +42,8 @@ final case class Url(
   lastMod: LastMod
   // TODO: consider below tags
   // https://www.sitemaps.org/protocol.html
-  //changefreq: Option[String] = Option("daily"),
-  //priolity: Option[Double] = Option(1.0)
+  // changefreq: Option[String] = Option("daily"),
+  // priolity: Option[Double] = Option(1.0)
 )
 
 object Url {
