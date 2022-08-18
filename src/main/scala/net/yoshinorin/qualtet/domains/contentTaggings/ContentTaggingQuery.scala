@@ -1,9 +1,10 @@
-package net.yoshinorin.qualtet.domains.contents
+package net.yoshinorin.qualtet.domains.contentTaggings
 
 import doobie.implicits.toSqlInterpolator
 import doobie.util.update.Update
 import doobie.util.query
 import net.yoshinorin.qualtet.domains.tags.TagId
+import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object ContentTaggingQuery {
 

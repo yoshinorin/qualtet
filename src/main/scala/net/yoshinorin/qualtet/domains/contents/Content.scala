@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.domains.tags.{Tag, TagId}
+import net.yoshinorin.qualtet.domains.tags.Tag
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax._
 import java.util.Locale
@@ -60,11 +60,6 @@ object Content {
   implicit val decodeContent: Decoder[Content] = deriveDecoder[Content]
   implicit val decodeContents: Decoder[List[Content]] = Decoder.decodeList[Content]
 }
-
-final case class ContentTagging(
-  ContentId: ContentId,
-  TagId: TagId
-)
 
 final case class RequestContent(
   requestId: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH),

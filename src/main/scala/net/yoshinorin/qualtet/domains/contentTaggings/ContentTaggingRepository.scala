@@ -1,7 +1,8 @@
-package net.yoshinorin.qualtet.domains.contents
+package net.yoshinorin.qualtet.domains.contentTaggings
 
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
+import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.tags.TagId
 
 object ContentTaggingRepository extends ConnectionIOFaker {
