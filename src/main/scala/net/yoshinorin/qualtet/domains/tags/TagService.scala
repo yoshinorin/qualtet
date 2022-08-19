@@ -23,7 +23,7 @@ class TagService(
   def getAll: IO[Seq[ResponseTag]] = {
 
     def actions: Action[Seq[ResponseTag]] = {
-      Continue(GetAll(), Action.buildNext[Seq[ResponseTag]])
+      Continue(GetAll(), Action.buildDoneWithoutAnyHandle[Seq[ResponseTag]])
     }
 
     actions.perform.andTransact(doobieContext)
@@ -38,7 +38,7 @@ class TagService(
   def findById(id: TagId): IO[Option[Tag]] = {
 
     def actions(id: TagId): Action[Option[Tag]] = {
-      Continue(FindById(id), Action.buildNext[Option[Tag]])
+      Continue(FindById(id), Action.buildDoneWithoutAnyHandle[Option[Tag]])
     }
 
     actions(id).perform.andTransact(doobieContext)
@@ -53,7 +53,7 @@ class TagService(
   def findByName(tagName: TagName): IO[Option[Tag]] = {
 
     def actions(tagName: TagName): Action[Option[Tag]] = {
-      Continue(FindByName(tagName), Action.buildNext[Option[Tag]])
+      Continue(FindByName(tagName), Action.buildDoneWithoutAnyHandle[Option[Tag]])
     }
 
     actions(tagName).perform.andTransact(doobieContext)
@@ -96,7 +96,7 @@ class TagService(
   def bulkUpsertWithoutTaransact(data: Option[List[Tag]]): ConnectionIO[Int] = {
 
     def actions(data: Option[List[Tag]]): Action[Int] = {
-      Continue(BulkUpsert(data), Action.buildNext[Int])
+      Continue(BulkUpsert(data), Action.buildDoneWithoutAnyHandle[Int])
     }
 
     actions(data).perform
@@ -110,7 +110,7 @@ class TagService(
   def delete(id: TagId): IO[Unit] = {
 
     def actions(id: TagId): Action[Int] = {
-      Continue(Delete(id), Action.buildNext[Int])
+      Continue(Delete(id), Action.buildDoneWithoutAnyHandle[Int])
     }
 
     val queries = for {

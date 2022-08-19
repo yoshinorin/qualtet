@@ -20,7 +20,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
   def create(data: ContentType): IO[ContentType] = {
 
     def actions(data: ContentType): Action[Int] = {
-      Continue(Upsert(data), Action.buildNext[Int])
+      Continue(Upsert(data), Action.buildDoneWithoutAnyHandle[Int])
     }
 
     this.findByName(data.name).flatMap {
@@ -43,7 +43,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
   def findByName(name: String): IO[Option[ContentType]] = {
 
     def actions(name: String): Action[Option[ContentType]] = {
-      Continue(FindByName(name), Action.buildNext[Option[ContentType]])
+      Continue(FindByName(name), Action.buildDoneWithoutAnyHandle[Option[ContentType]])
     }
 
     def fromDB(name: String): IO[Option[ContentType]] = {
@@ -67,7 +67,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
   def getAll: IO[Seq[ContentType]] = {
 
     def actions: Action[Seq[ContentType]] = {
-      Continue(GetAll(), Action.buildNext[Seq[ContentType]])
+      Continue(GetAll(), Action.buildDoneWithoutAnyHandle[Seq[ContentType]])
     }
 
     actions.perform.andTransact(doobieContext)

@@ -87,7 +87,7 @@ class ContentService(
   ): IO[Content] = {
 
     def actions(data: Content): Action[Int] = {
-      Continue(Upsert(data), Action.buildNext[Int])
+      Continue(Upsert(data), Action.buildDoneWithoutAnyHandle[Int])
     }
 
     val maybeExternalResources = externalResources match {
@@ -120,7 +120,7 @@ class ContentService(
   def delete(id: ContentId): IO[Unit] = {
 
     def actions(id: ContentId): Action[Int] = {
-      Continue(Delete(id), Action.buildNext[Int])
+      Continue(Delete(id), Action.buildDoneWithoutAnyHandle[Int])
     }
 
     val queries = for {
@@ -151,7 +151,7 @@ class ContentService(
   def findByPath(path: Path): IO[Option[Content]] = {
 
     def actions(path: Path): Action[Option[Content]] = {
-      Continue(FindByPath(path), Action.buildNext[Option[Content]])
+      Continue(FindByPath(path), Action.buildDoneWithoutAnyHandle[Option[Content]])
     }
 
     actions(path).perform.andTransact(doobieContext)
@@ -166,7 +166,7 @@ class ContentService(
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
 
     def actions(path: Path): Action[Option[ResponseContentDbRow]] = {
-      Continue(FindByPathWithMeta(path), Action.buildNext[Option[ResponseContentDbRow]])
+      Continue(FindByPathWithMeta(path), Action.buildDoneWithoutAnyHandle[Option[ResponseContentDbRow]])
     }
 
     this.findBy(path)(actions)
@@ -181,7 +181,7 @@ class ContentService(
   def findById(id: ContentId): IO[Option[Content]] = {
 
     def actions(id: ContentId): Action[Option[Content]] = {
-      Continue(FindById(id), Action.buildNext[Option[Content]])
+      Continue(FindById(id), Action.buildDoneWithoutAnyHandle[Option[Content]])
     }
 
     actions(id).perform.andTransact(doobieContext)

@@ -14,7 +14,7 @@ class SitemapService(cache: CacheModule[String, Seq[Url]])(doobieContext: Doobie
   def get(): IO[Seq[Url]] = {
 
     def actions: Action[Seq[Url]] = {
-      Continue(Get(), Action.buildNext[Seq[Url]])
+      Continue(Get(), Action.buildDoneWithoutAnyHandle[Seq[Url]])
     }
 
     cache.get(cacheKey) match {

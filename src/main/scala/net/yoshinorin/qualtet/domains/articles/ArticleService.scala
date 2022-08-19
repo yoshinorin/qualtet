@@ -34,7 +34,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
       none: Unit = (),
       queryParams: ArticlesQueryParameter
     ): Action[Seq[(Int, ResponseArticle)]] = {
-      Continue(GetWithCount(contentTypeId, queryParams), Action.buildNext[Seq[(Int, ResponseArticle)]])
+      Continue(GetWithCount(contentTypeId, queryParams), Action.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]])
     }
 
     this.get(queryParam = queryParam)(actions)
@@ -53,7 +53,7 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
       tagName: TagName,
       queryParams: ArticlesQueryParameter
     ): Action[Seq[(Int, ResponseArticle)]] = {
-      Continue(FindByTagNameWithCount(contentTypeId, tagName, queryParams), Action.buildNext[Seq[(Int, ResponseArticle)]])
+      Continue(FindByTagNameWithCount(contentTypeId, tagName, queryParams), Action.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]])
     }
 
     this.get(tagName, queryParam)(actions)

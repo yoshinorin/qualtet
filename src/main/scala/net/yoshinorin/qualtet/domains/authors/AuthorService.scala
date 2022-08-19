@@ -18,7 +18,7 @@ class AuthorService()(doobieContext: DoobieContext) {
   def create(data: Author): IO[ResponseAuthor] = {
 
     def actions(data: Author): Action[Int] = {
-      Continue(Upsert(data), Action.buildNext[Int])
+      Continue(Upsert(data), Action.buildDoneWithoutAnyHandle[Int])
     }
 
     for {
@@ -35,7 +35,7 @@ class AuthorService()(doobieContext: DoobieContext) {
   def getAll: IO[Seq[ResponseAuthor]] = {
 
     def actions: Action[Seq[ResponseAuthor]] = {
-      Continue(GetAll(), Action.buildNext[Seq[ResponseAuthor]])
+      Continue(GetAll(), Action.buildDoneWithoutAnyHandle[Seq[ResponseAuthor]])
     }
 
     actions.perform.andTransact(doobieContext)
@@ -50,7 +50,7 @@ class AuthorService()(doobieContext: DoobieContext) {
   def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
 
     def actions(id: AuthorId): Action[Option[ResponseAuthor]] = {
-      Continue(FindById(id), Action.buildNext[Option[ResponseAuthor]])
+      Continue(FindById(id), Action.buildDoneWithoutAnyHandle[Option[ResponseAuthor]])
     }
 
     actions(id).perform.andTransact(doobieContext)
@@ -65,7 +65,7 @@ class AuthorService()(doobieContext: DoobieContext) {
   def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
 
     def actions(id: AuthorId): Action[Option[Author]] = {
-      Continue(FindByIdWithPassword(id), Action.buildNext[Option[Author]])
+      Continue(FindByIdWithPassword(id), Action.buildDoneWithoutAnyHandle[Option[Author]])
     }
 
     actions(id).perform.andTransact(doobieContext)
@@ -80,7 +80,7 @@ class AuthorService()(doobieContext: DoobieContext) {
   def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
 
     def actions(name: AuthorName): Action[Option[ResponseAuthor]] = {
-      Continue(FindByName(name), Action.buildNext[Option[ResponseAuthor]])
+      Continue(FindByName(name), Action.buildDoneWithoutAnyHandle[Option[ResponseAuthor]])
     }
 
     actions(name).perform.andTransact(doobieContext)

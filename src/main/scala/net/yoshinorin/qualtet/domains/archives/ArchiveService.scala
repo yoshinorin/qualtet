@@ -14,7 +14,7 @@ class ArchiveService(contentTypeService: ContentTypeService)(doobieContext: Doob
   def get: IO[Seq[ResponseArchive]] = {
 
     def actions(contentTypeId: ContentTypeId): Action[Seq[ResponseArchive]] = {
-      Continue(GetByContentTypeId(contentTypeId), Action.buildNext[Seq[ResponseArchive]])
+      Continue(GetByContentTypeId(contentTypeId), Action.buildDoneWithoutAnyHandle[Seq[ResponseArchive]])
     }
 
     for {

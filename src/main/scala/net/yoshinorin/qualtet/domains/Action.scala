@@ -13,7 +13,7 @@ final case class Done[R](value: R) extends Action[R]
 
 object Action {
 
-  def buildNext[T]: T => Action[T] = {
+  def buildDoneWithoutAnyHandle[T]: T => Action[T] = {
     val next: T => Action[T] = (rh: T) => {
       Done(rh)
     }

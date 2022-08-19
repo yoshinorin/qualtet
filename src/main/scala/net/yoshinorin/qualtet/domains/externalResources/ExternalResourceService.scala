@@ -16,7 +16,7 @@ class ExternalResourceService() {
   def bulkUpsertWithoutTaransact(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
 
     def actions(data: Option[List[ExternalResource]]): Action[Int] = {
-      Continue(BulkUpsert(data), Action.buildNext[Int])
+      Continue(BulkUpsert(data), Action.buildDoneWithoutAnyHandle[Int])
     }
 
     actions(data).perform
@@ -25,7 +25,7 @@ class ExternalResourceService() {
   def deleteWithoutTransact(content_id: ContentId): ConnectionIO[Int] = {
     def actions(content_id: ContentId): Action[Int] = {
       // TODO: fix return type `Int` to `Unit
-      Continue(Delete(content_id), Action.buildNext[Int])
+      Continue(Delete(content_id), Action.buildDoneWithoutAnyHandle[Int])
     }
 
     actions(content_id).perform

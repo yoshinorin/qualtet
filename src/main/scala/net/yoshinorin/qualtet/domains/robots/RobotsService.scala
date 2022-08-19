@@ -16,7 +16,7 @@ class RobotsService() {
   def upsertWithoutTaransact(data: Robots): ConnectionIO[Int] = {
 
     def actions(data: Robots): Action[Int] = {
-      Continue(Upsert(data), Action.buildNext[Int])
+      Continue(Upsert(data), Action.buildDoneWithoutAnyHandle[Int])
     }
 
     actions(data).perform
@@ -31,7 +31,7 @@ class RobotsService() {
   def deleteWithoutTransaction(content_id: ContentId): ConnectionIO[Int] = {
     def actions(content_id: ContentId): Action[Int] = {
       // TODO: fix return type `Int` to `Unit
-      Continue(Delete(content_id), Action.buildNext[Int])
+      Continue(Delete(content_id), Action.buildDoneWithoutAnyHandle[Int])
     }
 
     actions(content_id).perform
