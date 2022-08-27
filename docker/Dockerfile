@@ -2,11 +2,11 @@ FROM ghcr.io/yoshinorin/docker-sbt:v1.7.1.2
 
 LABEL maintainer="yoshinorin"
 
-RUN apt-get update -y \
-  && apt-get upgrade -y \
-  && apt-get install -y git vim \
-  && apt-get autoremove \
-  && apt-get clean
+RUN apt update -y \
+  && apt upgrade -y \
+  && apt install -y git vim \
+  && apt autoremove \
+  && apt clean
 
 WORKDIR /usr/opt
 
