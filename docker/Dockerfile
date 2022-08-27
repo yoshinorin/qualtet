@@ -1,4 +1,4 @@
-FROM ghcr.io/yoshinorin/docker-sbt:v1.7.1
+FROM ghcr.io/yoshinorin/docker-sbt:v1.7.1.2
 
 LABEL maintainer="yoshinorin"
 
