@@ -10,7 +10,7 @@ RUN apt update -y \
 
 WORKDIR /usr/opt
 
-RUN git clone --depth 1 --branch v1.8.0 https://github.com/yoshinorin/qualtet.git
+RUN git clone --depth 1 --branch v1.9.0 https://github.com/yoshinorin/qualtet.git
 
 WORKDIR /usr/opt/qualtet
 
@@ -18,7 +18,7 @@ COPY entry-point.sh entry-point.sh
 
 RUN rm -rf scripts docs docker .github .gitignore .editorconfig .git .env .env.example \
   && sbt assembly exit \
-  && cp ./target/scala-2.13/qualtet-assembly-v1.8.0.jar qualtet-assembly.jar \
+  && cp ./target/scala-2.13/qualtet-assembly-v1.9.0.jar qualtet-assembly.jar \
   && chmod +x entry-point.sh
 
 ENTRYPOINT [ "/usr/opt/qualtet/entry-point.sh" ]
