@@ -20,6 +20,7 @@ services:
     command: ["mysqld", "--character-set-server=utf8mb4"]
     restart: unless-stopped
   qualtet:
+    # build: .
     image: ghcr.io/yoshinorin/docker-qualtet:latest
     # NOTE: these values are examples. Please fill by yourself.
     environment:
