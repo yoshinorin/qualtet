@@ -30,9 +30,10 @@ services:
       QUALTET_HTTP_PORT: 9001
       QUALTET_JWT_ISS: "http://localhost:9001"
       QUALTET_JWT_AUD: "qualtet_dev_1111"
-      JAVA_OPTS: "-Xms512M -Xmx768M -Xss2M -Xlog:gc=info:file=/usr/opt/qualtet/logs/gc.log"
+      JAVA_OPTS: "-Xms512M -Xmx768M -Xss2M -Xlog:gc=info:file=/usr/opt/qualtet/logs/gc.log -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/opt/qualtet/dumps/heapdump.bin"
     volumes:
       - ./logs:/usr/opt/qualtet/logs
+      - ./dumps:/usr/opt/qualtet/dumps
     hostname: qualtet
     networks:
       - qualtet

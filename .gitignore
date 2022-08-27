@@ -37,6 +37,7 @@ index.html
 # Docker
 docker/data
 docker/config
+docker/dumps/
 tmpdata
 
 # Artifacts
