@@ -12,7 +12,7 @@ trait HttpLogger {
     List[String](
       ip,
       request.method.name,
-      request.uri.toString(),
+      request.uri.path.toString(),
       reason,
       s"${elapsedTime}ms",
       request.headers.referer.stringify,
