@@ -4,7 +4,7 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.domains.archives.{ArchiveService, ResponseArchive}
+import net.yoshinorin.qualtet.domains.archives.{DoobieArchiveRepository, ArchiveService, ResponseArchive}
 import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticle}
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, DoobieAuthorRepository, AuthorService, BCryptPassword}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService}
@@ -86,7 +86,8 @@ object Fixture {
 
   val articleService: ArticleService = new ArticleService(contentTypeService)(doobieContext)
 
-  val archiveService: ArchiveService = new ArchiveService(contentTypeService)(doobieContext)
+  val archiveRepository: DoobieArchiveRepository = new DoobieArchiveRepository()
+  val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)(doobieContext)
 
   // TODO: from inf cache
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =

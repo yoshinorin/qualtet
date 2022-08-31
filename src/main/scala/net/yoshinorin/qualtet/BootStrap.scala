@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.Config
-import net.yoshinorin.qualtet.domains.archives.ArchiveService
+import net.yoshinorin.qualtet.domains.archives.{DoobieArchiveRepository, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.{DoobieAuthorRepository, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
@@ -96,7 +96,8 @@ object BootStrap extends App {
 
   val articleService: ArticleService = new ArticleService(contentTypeService)(doobieContext)
 
-  val archiveService: ArchiveService = new ArchiveService(contentTypeService)(doobieContext)
+  val archiveRepository: DoobieArchiveRepository = new DoobieArchiveRepository()
+  val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)(doobieContext)
 
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, Seq[Url]]

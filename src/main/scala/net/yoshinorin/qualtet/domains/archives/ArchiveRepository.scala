@@ -1,11 +1,12 @@
 package net.yoshinorin.qualtet.domains.archives
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 
-object ArchiveRepository {
+trait ArchiveRepository[M[_]] {
+  def get(contentTypeId: ContentTypeId): M[Seq[ResponseArchive]]
+}
 
-  def dispatch[T](request: ArchiveRepositoryRequest[T]): ConnectionIO[T] = request match {
-    case GetByContentTypeId(contentTypeId) => ArchiveQuery.get(contentTypeId).to[Seq]
-  }
-
+class DoobieArchiveRepository extends ArchiveRepository[ConnectionIO] {
+  override def get(contentTypeId: ContentTypeId): ConnectionIO[Seq[ResponseArchive]] = ArchiveQuery.get(contentTypeId).to[Seq]
 }
