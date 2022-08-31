@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.archives.ArchiveService
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.domains.authors.AuthorService
+import net.yoshinorin.qualtet.domains.authors.{DoobieAuthorRepository, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.domains.contents.ContentService
@@ -69,7 +69,8 @@ object BootStrap extends App {
 
   logger.info("created: keyPair, signature and jwt instances")
 
-  val authorService: AuthorService = new AuthorService()(doobieContext)
+  val authorRepository = new DoobieAuthorRepository()
+  val authorService: AuthorService = new AuthorService(authorRepository)(doobieContext)
 
   val authService: AuthService = new AuthService(authorService, jwtInstance)
 

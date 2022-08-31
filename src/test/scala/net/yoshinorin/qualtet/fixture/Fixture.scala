@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.archives.{ArchiveService, ResponseArchive}
 import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticle}
-import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, AuthorService, BCryptPassword}
+import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, DoobieAuthorRepository, AuthorService, BCryptPassword}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, Path, RequestContent}
@@ -58,7 +58,8 @@ object Fixture {
   val signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
   val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
 
-  val authorService: AuthorService = new AuthorService()(doobieContext)
+  val authorRepository = new DoobieAuthorRepository()
+  val authorService: AuthorService = new AuthorService(authorRepository)(doobieContext)
 
   val authService = new AuthService(authorService, jwtInstance)
 
