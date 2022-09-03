@@ -13,33 +13,38 @@ import cats.effect.unsafe.implicits.global
 class ArticleServiceSpec extends AnyWordSpec {
 
   val requestContents: List[RequestContent] = {
-    (1 until 30).toList.map(_.toString()).map(_.toString()).map(i =>
-      RequestContent(
-        contentType = "article",
-        path = Path(s"/test/path-${i}"),
-        title = s"this is a title ${i}",
-        rawContent = s"this is a raw content ${i}",
-        htmlContent = s"this is a html content ${i}",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = Option(List(s"testTag${i}")),
-        externalResources = Option(List())
+    (1 until 30).toList
+      .map(_.toString())
+      .map(_.toString())
+      .map(i =>
+        RequestContent(
+          contentType = "article",
+          path = Path(s"/test/path-${i}"),
+          title = s"this is a title ${i}",
+          rawContent = s"this is a raw content ${i}",
+          htmlContent = s"this is a html content ${i}",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          tags = Option(List(s"testTag${i}")),
+          externalResources = Option(List())
+        )
       )
-    )
   }
 
   val sameTagNameRequestContents: List[RequestContent] = {
-    (1 until 15).toList.map(_.toString()).map(i =>
-      RequestContent(
-        contentType = "article",
-        path = Path(s"/test/same/tags/${i}"),
-        title = s"this is a same tag title ${i}",
-        rawContent = s"this is a same tag raw content ${i}",
-        htmlContent = s"this is a html content ${i}",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = Option(List("SameTag")),
-        externalResources = Option(List())
+    (1 until 15).toList
+      .map(_.toString())
+      .map(i =>
+        RequestContent(
+          contentType = "article",
+          path = Path(s"/test/same/tags/${i}"),
+          title = s"this is a same tag title ${i}",
+          rawContent = s"this is a same tag raw content ${i}",
+          htmlContent = s"this is a html content ${i}",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          tags = Option(List("SameTag")),
+          externalResources = Option(List())
+        )
       )
-    )
   }
 
   // NOTE: create content and related data for test
@@ -68,8 +73,6 @@ class ArticleServiceSpec extends AnyWordSpec {
 
       result.articles.map(a => a.path.value).foreach { p => assert(p.startsWith("/test/same/tags/")) }
     }
-
-
 
   }
 

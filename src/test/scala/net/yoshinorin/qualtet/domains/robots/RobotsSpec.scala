@@ -30,7 +30,7 @@ class RobotsSpec extends AnyWordSpec {
         Attributes("all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate")
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
-      //NOTE: failed equally compare
+      // NOTE: failed equally compare
       assert(json.contains(expectJson))
     }
   }

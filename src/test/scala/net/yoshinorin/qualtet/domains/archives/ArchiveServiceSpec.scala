@@ -11,18 +11,20 @@ import cats.effect.unsafe.implicits.global
 class ArchiveServiceSpec extends AnyWordSpec {
 
   val requestContents: List[RequestContent] = {
-    (1 until 40).toList.map(_.toString()).map(i =>
-      RequestContent(
-        contentType = "article",
-        path = Path(s"/test/archives-${i}"),
-        title = s"this is a archives title ${i}",
-        rawContent = s"this is a archives raw content ${i}",
-        htmlContent = s"this is a archives html content ${i}",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = Option(List(s"archivesTag${i}")),
-        externalResources = Option(List())
+    (1 until 40).toList
+      .map(_.toString())
+      .map(i =>
+        RequestContent(
+          contentType = "article",
+          path = Path(s"/test/archives-${i}"),
+          title = s"this is a archives title ${i}",
+          rawContent = s"this is a archives raw content ${i}",
+          htmlContent = s"this is a archives html content ${i}",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          tags = Option(List(s"archivesTag${i}")),
+          externalResources = Option(List())
+        )
       )
-    )
   }
 
   // NOTE: create content and related data for test

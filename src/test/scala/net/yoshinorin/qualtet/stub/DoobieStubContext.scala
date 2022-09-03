@@ -21,4 +21,4 @@ class DoobieStubContext extends DoobieContext {
   )
 
 }
-*/
+ */

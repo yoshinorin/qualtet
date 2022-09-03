@@ -27,7 +27,7 @@ class QueryParameterSpec extends AnyWordSpec {
       assert(queryParameter.page === 5)
       assert(queryParameter.offset === 50)
     }
-   */
+     */
   }
 
 }

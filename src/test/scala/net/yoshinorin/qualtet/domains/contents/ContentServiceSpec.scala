@@ -50,7 +50,7 @@ class ContentServiceSpec extends AnyWordSpec {
       val updatedContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync().get
 
       // TODO: add id to response field
-      //assert(currentContent.id === updatedContent.id)
+      // assert(currentContent.id === updatedContent.id)
       // TODO: check authorId, ContentTypeId
 
       assert(updatedContent.title === updatedRequestContent.title)

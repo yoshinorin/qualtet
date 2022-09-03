@@ -17,7 +17,7 @@ class HttpLoggerSpec extends AnyWordSpec with HttpLogger {
       val request = HttpRequest(headers = Seq(Referer(Uri("https://example.com"))))
       assert(makeLogString(request, "0.0.0.0", 123, "200 OK") == """"0.0.0.0" - "GET" - "/" - "200 OK" - "123ms" - "https://example.com" - """"")
     }
-    */
+     */
 
     "be return string for log without headers" in {
       val request = HttpRequest()

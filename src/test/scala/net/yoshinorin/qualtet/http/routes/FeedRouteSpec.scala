@@ -13,18 +13,20 @@ import cats.effect.unsafe.implicits.global
 class FeedRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
   val requestContents: List[RequestContent] = {
-    (0 until 2).toList.map(_.toString()).map(i =>
-      RequestContent(
-        contentType = "article",
-        path = Path(s"/feeds/feedsRoute-${i}"),
-        title = s"this is a feedsRoute title ${i}",
-        rawContent = s"this is a feedsRoute raw content ${i}",
-        htmlContent = s"this is a feedsRoute html content ${i}",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = Option(List(s"feedsRoute${i}")),
-        externalResources = Option(List())
+    (0 until 2).toList
+      .map(_.toString())
+      .map(i =>
+        RequestContent(
+          contentType = "article",
+          path = Path(s"/feeds/feedsRoute-${i}"),
+          title = s"this is a feedsRoute title ${i}",
+          rawContent = s"this is a feedsRoute raw content ${i}",
+          htmlContent = s"this is a feedsRoute html content ${i}",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          tags = Option(List(s"feedsRoute${i}")),
+          externalResources = Option(List())
+        )
       )
-    )
   }
 
   // NOTE: create content and related data for test

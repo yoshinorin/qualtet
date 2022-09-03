@@ -14,18 +14,20 @@ import cats.effect.unsafe.implicits.global
 class TagServiceSpec extends AnyWordSpec {
 
   val requestContents: List[RequestContent] = {
-    (0 until 10).toList.map(_.toString()).map(i =>
-      RequestContent(
-        contentType = "article",
-        path = Path(s"/test/tagService-${i}"),
-        title = s"this is a tagService title ${i}",
-        rawContent = s"this is a tagService raw content ${i}",
-        htmlContent = s"this is a tagService html content ${i}",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = Option(List(s"tagService${i}")),
-        externalResources = Option(List())
+    (0 until 10).toList
+      .map(_.toString())
+      .map(i =>
+        RequestContent(
+          contentType = "article",
+          path = Path(s"/test/tagService-${i}"),
+          title = s"this is a tagService title ${i}",
+          rawContent = s"this is a tagService raw content ${i}",
+          htmlContent = s"this is a tagService html content ${i}",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          tags = Option(List(s"tagService${i}")),
+          externalResources = Option(List())
+        )
       )
-    )
   }
 
   // NOTE: create content and related data for test
@@ -56,7 +58,7 @@ class TagServiceSpec extends AnyWordSpec {
     }
 
     "be delete" in {
-      val result = (for{
+      val result = (for {
         beforeDeleteTag <- tagService.findByName(TagName("tagService9"))
         _ <- tagService.delete(beforeDeleteTag.get.id)
         afterDeleteTag <- tagService.findById(beforeDeleteTag.get.id)
@@ -66,7 +68,7 @@ class TagServiceSpec extends AnyWordSpec {
       assert(result._2.isEmpty)
       // TODO: add test
       // val ct = ContentTaggingRepository.findByTagId(result._1.get.id).unsafeRunSync()
-      //assert(ct.isEmpty)
+      // assert(ct.isEmpty)
     }
 
     "be throw NotFound exception when delete" in {

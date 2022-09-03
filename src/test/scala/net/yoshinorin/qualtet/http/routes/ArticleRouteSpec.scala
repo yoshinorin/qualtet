@@ -13,18 +13,20 @@ import cats.effect.unsafe.implicits.global
 class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
   val requestContents: List[RequestContent] = {
-    (0 until 20).toList.map(_.toString()).map(i =>
-      RequestContent(
-        contentType = "article",
-        path = Path(s"/articles/route/article-${i}"),
-        title = s"this is a articleRoute title ${i}",
-        rawContent = s"this is a articleRoute raw content ${i}",
-        htmlContent = s"this is a articleRoute html content ${i}",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = Option(List(s"articleRoute-${i}")),
-        externalResources = Option(List())
+    (0 until 20).toList
+      .map(_.toString())
+      .map(i =>
+        RequestContent(
+          contentType = "article",
+          path = Path(s"/articles/route/article-${i}"),
+          title = s"this is a articleRoute title ${i}",
+          rawContent = s"this is a articleRoute raw content ${i}",
+          htmlContent = s"this is a articleRoute html content ${i}",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          tags = Option(List(s"articleRoute-${i}")),
+          externalResources = Option(List())
+        )
       )
-    )
   }
 
   // NOTE: create content and related data for test

@@ -120,7 +120,7 @@ class AuthorSpec extends AnyWordSpec {
         createdAt = 1567814290
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
-      //NOTE: failed equally compare
+      // NOTE: failed equally compare
       assert(json.contains(expectJson))
     }
 
@@ -158,7 +158,7 @@ class AuthorSpec extends AnyWordSpec {
         )
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
-      //NOTE: failed equally compare
+      // NOTE: failed equally compare
       assert(json.contains(expectJson))
     }
   }

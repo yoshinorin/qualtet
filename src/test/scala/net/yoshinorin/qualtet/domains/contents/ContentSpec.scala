@@ -132,7 +132,7 @@ class ContentSpec extends AnyWordSpec {
         updatedAt = 1567814291
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
-      //NOTE: failed equally compare
+      // NOTE: failed equally compare
       assert(json.contains(expectJson))
     }
 
@@ -223,7 +223,7 @@ class ContentSpec extends AnyWordSpec {
         )
       ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
-      //NOTE: failed equally compare
+      // NOTE: failed equally compare
       assert(json.contains(expectJson))
     }
   }

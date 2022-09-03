@@ -96,7 +96,7 @@ lazy val root = (project in file("."))
   )
   .settings(
     assembly / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
-    //assembly /assemblyJarName := "qualtet.jar"
+    // assembly /assemblyJarName := "qualtet.jar"
   )
 
 reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
@@ -107,8 +107,8 @@ assembly / test := {}
 // https://github.com/sbt/sbt-assembly#merge-strategy
 // https://github.com/sbt/sbt-assembly/issues/146#issuecomment-601134577
 assembly / assemblyMergeStrategy := {
-  //case PathList("spring-beans-5.3.14.jar", xs @ _*) => MergeStrategy.last
-  //case PathList("spring-context-5.3.14.jar", xs @ _*) => MergeStrategy.last
+  // case PathList("spring-beans-5.3.14.jar", xs @ _*) => MergeStrategy.last
+  // case PathList("spring-context-5.3.14.jar", xs @ _*) => MergeStrategy.last
   case x if Assembly.isConfigFile(x) =>
     MergeStrategy.concat
   case PathList(ps @ _*) if Assembly.isReadme(ps.last) || Assembly.isLicenseFile(ps.last) =>

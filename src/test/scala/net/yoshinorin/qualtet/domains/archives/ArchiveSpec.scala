@@ -20,7 +20,7 @@ class ArchiveSpec extends AnyWordSpec {
 
       val json = responseArchive.asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
-      //NOTE: failed equally compare
+      // NOTE: failed equally compare
       assert(json.contains(expectJson))
     }
 
@@ -43,7 +43,7 @@ class ArchiveSpec extends AnyWordSpec {
 
       val json = Seq(responseArchive2, responseArchive3).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
 
-      //NOTE: failed equally compare
+      // NOTE: failed equally compare
       assert(json.contains(expectJson))
     }
 
