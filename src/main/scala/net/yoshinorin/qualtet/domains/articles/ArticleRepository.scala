@@ -1,12 +1,20 @@
 package net.yoshinorin.qualtet.domains.articles
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.tags.TagName
+import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
-object ArticleRepository {
+trait ArticleRepository[M[_]] {
+  def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams): M[Seq[(Int, ResponseArticle)]]
+  def findByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, sqlParams: SqlParams): M[Seq[(Int, ResponseArticle)]]
+}
 
-  def dispatch[T](request: ArticleRepositoryRequest[T]): ConnectionIO[T] = request match {
-    case GetWithCount(contentTypeId, sqlParams) => ArticleQuery.getWithCount(contentTypeId, sqlParams).to[Seq]
-    case FindByTagNameWithCount(contentTypeId, tagName, sqlParams) => ArticleQuery.findByTagNameWithCount(contentTypeId, tagName, sqlParams).to[Seq]
+class DoobieArticleRepository extends ArticleRepository[ConnectionIO] {
+  override def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
+    ArticleQuery.getWithCount(contentTypeId, sqlParams).to[Seq]
   }
-
+  override def findByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
+    ArticleQuery.findByTagNameWithCount(contentTypeId, tagName, sqlParams).to[Seq]
+  }
 }

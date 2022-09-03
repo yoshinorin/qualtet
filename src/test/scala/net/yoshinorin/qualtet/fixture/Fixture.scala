@@ -5,7 +5,7 @@ import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.archives.{DoobieArchiveRepository, ArchiveService, ResponseArchive}
-import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticle}
+import net.yoshinorin.qualtet.domains.articles.{DoobieArticleRepository, ArticleService, ResponseArticle}
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, DoobieAuthorRepository, AuthorService, BCryptPassword}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
@@ -84,7 +84,8 @@ object Fixture {
       contentTypeService
     )(doobieContext)
 
-  val articleService: ArticleService = new ArticleService(contentTypeService)(doobieContext)
+  val articleRepository: DoobieArticleRepository = new DoobieArticleRepository()
+  val articleService: ArticleService = new ArticleService(articleRepository, contentTypeService)(doobieContext)
 
   val archiveRepository: DoobieArchiveRepository = new DoobieArchiveRepository()
   val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)(doobieContext)

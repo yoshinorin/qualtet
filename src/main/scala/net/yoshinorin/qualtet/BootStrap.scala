@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.archives.{DoobieArchiveRepository, ArchiveService}
-import net.yoshinorin.qualtet.domains.articles.ArticleService
+import net.yoshinorin.qualtet.domains.articles.{DoobieArticleRepository, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{DoobieAuthorRepository, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
@@ -94,7 +94,8 @@ object BootStrap extends App {
       contentTypeService
     )(doobieContext)
 
-  val articleService: ArticleService = new ArticleService(contentTypeService)(doobieContext)
+  val articleRepository: DoobieArticleRepository = new DoobieArticleRepository()
+  val articleService: ArticleService = new ArticleService(articleRepository, contentTypeService)(doobieContext)
 
   val archiveRepository: DoobieArchiveRepository = new DoobieArchiveRepository()
   val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)(doobieContext)

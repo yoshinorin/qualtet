@@ -1,8 +1,9 @@
 package net.yoshinorin.qualtet.domains.articles
 
 import cats.effect.IO
+import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue}
+import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
@@ -10,12 +11,34 @@ import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.syntax._
 
-class ArticleService(contentTypeService: ContentTypeService)(doobieContext: DoobieContext) {
+class ArticleService(
+  articleRepository: ArticleRepository[ConnectionIO],
+  contentTypeService: ContentTypeService
+)(doobieContext: DoobieContext) {
+
+  def actions(
+    contentTypeId: ContentTypeId,
+    none: Unit = (),
+    queryParams: ArticlesQueryParameter
+  ): DoobieAction[Seq[(Int, ResponseArticle)]] = {
+    DoobieContinue(articleRepository.getWithCount(contentTypeId, queryParams), DoobieAction.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]])
+  }
+
+  def actions(
+    contentTypeId: ContentTypeId,
+    tagName: TagName,
+    queryParams: ArticlesQueryParameter
+  ): DoobieAction[Seq[(Int, ResponseArticle)]] = {
+    DoobieContinue(
+      articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams),
+      DoobieAction.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]]
+    )
+  }
 
   def get[A](
     data: A = (),
     queryParam: ArticlesQueryParameter
-  )(f: (ContentTypeId, A, ArticlesQueryParameter) => Action[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
+  )(f: (ContentTypeId, A, ArticlesQueryParameter) => DoobieAction[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
       c <- contentTypeService.findByName("article").throwIfNone(NotFound(s"content-type not found: article"))
       articlesWithCount <- f(c.id, data, queryParam).perform.andTransact(doobieContext)
@@ -28,15 +51,6 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
   }
 
   def getWithCount(queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
-
-    def actions(
-      contentTypeId: ContentTypeId,
-      none: Unit = (),
-      queryParams: ArticlesQueryParameter
-    ): Action[Seq[(Int, ResponseArticle)]] = {
-      Continue(GetWithCount(contentTypeId, queryParams), Action.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]])
-    }
-
     this.get(queryParam = queryParam)(actions)
   }
 
@@ -47,15 +61,6 @@ class ArticleService(contentTypeService: ContentTypeService)(doobieContext: Doob
    */
 
   def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
-
-    def actions(
-      contentTypeId: ContentTypeId,
-      tagName: TagName,
-      queryParams: ArticlesQueryParameter
-    ): Action[Seq[(Int, ResponseArticle)]] = {
-      Continue(FindByTagNameWithCount(contentTypeId, tagName, queryParams), Action.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]])
-    }
-
     this.get(tagName, queryParam)(actions)
   }
 
