@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.archives.{DoobieArchiveRepository, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.{DoobieArticleRepository, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{DoobieAuthorRepository, AuthorService}
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contentTypes.{DoobieContentTypeRepository, ContentType, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.{DoobieContentTaggingRepository, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.contents.{DoobieContentRepository, ContentService}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceService
@@ -74,10 +74,11 @@ object BootStrap extends App {
 
   val authService: AuthService = new AuthService(authorService, jwtInstance)
 
+  val contentTypeRepository: DoobieContentTypeRepository = new DoobieContentTypeRepository()
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheContentType, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache: CacheModule[String, ContentType] = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeCache)(doobieContext)
+  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)(doobieContext)
 
   val robotsService: RobotsService = new RobotsService()
   val externalResourceService: ExternalResourceService = new ExternalResourceService()

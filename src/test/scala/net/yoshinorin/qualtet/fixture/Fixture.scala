@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.archives.{DoobieArchiveRepository, ArchiveService, ResponseArchive}
 import net.yoshinorin.qualtet.domains.articles.{DoobieArticleRepository, ArticleService, ResponseArticle}
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, DoobieAuthorRepository, AuthorService, BCryptPassword}
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contentTypes.{DoobieContentTypeRepository, ContentType, ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.{DoobieContentTaggingRepository, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.contents.{ContentId, DoobieContentRepository, ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceService, ExternalResourceKind, ExternalResources}
@@ -63,11 +63,12 @@ object Fixture {
 
   val authService = new AuthService(authorService, jwtInstance)
 
+  val contentTypeRepository: DoobieContentTypeRepository = new DoobieContentTypeRepository()
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeCache)(doobieContext)
+  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)(doobieContext)
 
   val robotsService = new RobotsService()
   val externalResourceService = new ExternalResourceService()

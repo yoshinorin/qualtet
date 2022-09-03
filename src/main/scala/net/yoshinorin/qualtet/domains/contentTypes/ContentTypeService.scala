@@ -1,15 +1,28 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
 import cats.effect.IO
+import doobie.ConnectionIO
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue}
+import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.domains.Cacheable
 
-class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext: DoobieContext) extends Cacheable {
+class ContentTypeService(
+  contentRepository: ContentTypeRepository[ConnectionIO],
+  cache: CacheModule[String, ContentType]
+)(doobieContext: DoobieContext)
+    extends Cacheable {
+
+  def upsertActions(data: ContentType): DoobieAction[Int] = {
+    DoobieContinue(contentRepository.upsert(data), DoobieAction.buildDoneWithoutAnyHandle[Int])
+  }
+
+  def getAllActions: DoobieAction[Seq[ContentType]] = {
+    DoobieContinue(contentRepository.getAll(), DoobieAction.buildDoneWithoutAnyHandle[Seq[ContentType]])
+  }
 
   /**
    * create a contentType
@@ -18,16 +31,11 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
    * @return
    */
   def create(data: ContentType): IO[ContentType] = {
-
-    def actions(data: ContentType): Action[Int] = {
-      Continue(Upsert(data), Action.buildDoneWithoutAnyHandle[Int])
-    }
-
     this.findByName(data.name).flatMap {
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
-          _ <- actions(data).perform.andTransact(doobieContext)
+          _ <- upsertActions(data).perform.andTransact(doobieContext)
           c <- this.findByName(data.name).throwIfNone(InternalServerError("contentType not found"))
         } yield c
     }
@@ -42,8 +50,8 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
    */
   def findByName(name: String): IO[Option[ContentType]] = {
 
-    def actions(name: String): Action[Option[ContentType]] = {
-      Continue(FindByName(name), Action.buildDoneWithoutAnyHandle[Option[ContentType]])
+    def actions(name: String): DoobieAction[Option[ContentType]] = {
+      DoobieContinue(contentRepository.findByName(name), DoobieAction.buildDoneWithoutAnyHandle[Option[ContentType]])
     }
 
     def fromDB(name: String): IO[Option[ContentType]] = {
@@ -65,12 +73,7 @@ class ContentTypeService(cache: CacheModule[String, ContentType])(doobieContext:
    * @return ContentTypes
    */
   def getAll: IO[Seq[ContentType]] = {
-
-    def actions: Action[Seq[ContentType]] = {
-      Continue(GetAll(), Action.buildDoneWithoutAnyHandle[Seq[ContentType]])
-    }
-
-    actions.perform.andTransact(doobieContext)
+    getAllActions.perform.andTransact(doobieContext)
   }
 
   def invalidate(): IO[Unit] = {
