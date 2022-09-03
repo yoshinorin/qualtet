@@ -47,8 +47,8 @@ val akkaVersion = "2.6.19"
 val akkaHttpVersion = "10.2.9"
 val circeVersion = "0.15.0-M1"
 val doobieVersion = "1.0.0-RC2"
-val jwtScalaVersion = "9.0.6"
-val flywayVersion = "9.1.3"
+val jwtScalaVersion = "9.1.1"
+val flywayVersion = "9.2.1"
 
 // https://github.com/rtimush/sbt-updates
 dependencyAllowPreRelease := true
@@ -72,13 +72,13 @@ libraryDependencies ++= Seq(
   "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.7",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-  "org.wvlet.airframe" %% "airframe-ulid" % "22.7.3",
+  "org.wvlet.airframe" %% "airframe-ulid" % "22.8.0",
   "com.github.ben-manes.caffeine" % "caffeine" % "3.1.1",
   "org.flywaydb" % "flyway-core" % flywayVersion,
   // NOTE: workaround: https://github.com/flyway/flyway/issues/3355
   "org.flywaydb" % "flyway-mysql" % flywayVersion,
   "ch.qos.logback" % "logback-classic" % "1.2.11",
-  "org.springframework.security" % "spring-security-core" % "5.7.2",
+  "org.springframework.security" % "spring-security-core" % "5.7.3",
   "org.slf4j" % "slf4j-api" % "1.7.36",
   "org.scalatest" %% "scalatest" % "3.2.13" % "test",
   "org.mockito" % "mockito-core" % "4.7.0" % "test"
