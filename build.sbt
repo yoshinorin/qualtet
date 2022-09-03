@@ -156,6 +156,7 @@ shutDownTestDbContainer := {
 val testCommands = {
   """
     |;scalafmt
+    |;Test / scalafmt
     |;runTestDbContainer
     |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigrationSpec
     |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
