@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.domains.articles.{DoobieArticleRepository, Article
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, DoobieAuthorRepository, AuthorService, BCryptPassword}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
-import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.contents.{ContentId, DoobieContentRepository, ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceService, ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, RobotsService}
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, Url}
@@ -74,8 +74,10 @@ object Fixture {
   val contentTaggingService: ContentTaggingService = new ContentTaggingService()(doobieContext)
   val tagService: TagService = new TagService(contentTaggingService)(doobieContext)
 
+  val contentRepository: DoobieContentRepository = new DoobieContentRepository()
   val contentService: ContentService =
     new ContentService(
+      contentRepository,
       tagService,
       contentTaggingService,
       robotsService,
