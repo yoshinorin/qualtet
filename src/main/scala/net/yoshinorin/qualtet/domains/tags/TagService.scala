@@ -5,15 +5,39 @@ import cats.implicits._
 import doobie.implicits._
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
-import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.syntax._
 
 class TagService(
+  tagRepository: TagRepository[ConnectionIO],
   contentTaggingService: ContentTaggingService
 )(doobieContext: DoobieContext) {
+
+  def bulkUpsertActions(data: Option[List[Tag]]): DoobieAction[Int] = {
+    data match {
+      case Some(d) => DoobieContinue(tagRepository.bulkUpsert(d), DoobieAction.buildDoneWithoutAnyHandle[Int])
+      case None => DoobieContinue(tagRepository.fakeRequest(), DoobieAction.buildDoneWithoutAnyHandle[Int])
+    }
+  }
+
+  def getAllActions: DoobieAction[Seq[ResponseTag]] = {
+    DoobieContinue(tagRepository.getAll(), DoobieAction.buildDoneWithoutAnyHandle[Seq[ResponseTag]])
+  }
+
+  def findByIdActions(id: TagId): DoobieAction[Option[Tag]] = {
+    DoobieContinue(tagRepository.findById(id), DoobieAction.buildDoneWithoutAnyHandle[Option[Tag]])
+  }
+
+  def findByNameActions(tagName: TagName): DoobieAction[Option[Tag]] = {
+    DoobieContinue(tagRepository.findByName(tagName), DoobieAction.buildDoneWithoutAnyHandle[Option[Tag]])
+  }
+
+  def deleteActions(id: TagId): DoobieAction[Unit] = {
+    DoobieContinue(tagRepository.delete(id), DoobieAction.buildDoneWithoutAnyHandle[Unit])
+  }
 
   /**
    * get all tags
@@ -21,12 +45,7 @@ class TagService(
    * @return tags
    */
   def getAll: IO[Seq[ResponseTag]] = {
-
-    def actions: Action[Seq[ResponseTag]] = {
-      Continue(GetAll(), Action.buildDoneWithoutAnyHandle[Seq[ResponseTag]])
-    }
-
-    actions.perform.andTransact(doobieContext)
+    getAllActions.perform.andTransact(doobieContext)
   }
 
   /**
@@ -36,12 +55,7 @@ class TagService(
    * @return maybe Tag
    */
   def findById(id: TagId): IO[Option[Tag]] = {
-
-    def actions(id: TagId): Action[Option[Tag]] = {
-      Continue(FindById(id), Action.buildDoneWithoutAnyHandle[Option[Tag]])
-    }
-
-    actions(id).perform.andTransact(doobieContext)
+    findByIdActions(id).perform.andTransact(doobieContext)
   }
 
   /**
@@ -51,12 +65,7 @@ class TagService(
    * @return maybe Tag
    */
   def findByName(tagName: TagName): IO[Option[Tag]] = {
-
-    def actions(tagName: TagName): Action[Option[Tag]] = {
-      Continue(FindByName(tagName), Action.buildDoneWithoutAnyHandle[Option[Tag]])
-    }
-
-    actions(tagName).perform.andTransact(doobieContext)
+    findByNameActions(tagName).perform.andTransact(doobieContext)
   }
 
   /**
@@ -86,36 +95,14 @@ class TagService(
   }
 
   /**
-   * create a Tag
-   *
-   * @param data List of Tag
-   * @return dummy long id (Doobie return Int)
-   *
-   * TODO: avoid using ConnectionIO
-   */
-  def bulkUpsertWithoutTaransact(data: Option[List[Tag]]): ConnectionIO[Int] = {
-
-    def actions(data: Option[List[Tag]]): Action[Int] = {
-      Continue(BulkUpsert(data), Action.buildDoneWithoutAnyHandle[Int])
-    }
-
-    actions(data).perform
-  }
-
-  /**
    * delete a tag and related data by TagId
    *
    * @param id Instance of TagId
    */
   def delete(id: TagId): IO[Unit] = {
-
-    def actions(id: TagId): Action[Int] = {
-      Continue(Delete(id), Action.buildDoneWithoutAnyHandle[Int])
-    }
-
     val queries = for {
-      contentTaggingDelete <- contentTaggingService.deleteByTagIdWithoutTransaction(id)
-      tagDelete <- actions(id).perform
+      contentTaggingDelete <- contentTaggingService.deleteByTagIdActions(id).perform
+      tagDelete <- deleteActions(id).perform
     } yield (contentTaggingDelete, tagDelete)
 
     for {

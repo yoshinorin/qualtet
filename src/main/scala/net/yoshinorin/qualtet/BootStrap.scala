@@ -12,12 +12,12 @@ import net.yoshinorin.qualtet.domains.archives.{DoobieArchiveRepository, Archive
 import net.yoshinorin.qualtet.domains.articles.{DoobieArticleRepository, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{DoobieAuthorRepository, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
-import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
+import net.yoshinorin.qualtet.domains.contentTaggings.{DoobieContentTaggingRepository, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.contents.{DoobieContentRepository, ContentService}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceService
 import net.yoshinorin.qualtet.domains.robots.RobotsService
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, Url}
-import net.yoshinorin.qualtet.domains.tags.TagService
+import net.yoshinorin.qualtet.domains.tags.{DoobieTagRepository, TagService}
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,
@@ -81,8 +81,12 @@ object BootStrap extends App {
 
   val robotsService: RobotsService = new RobotsService()
   val externalResourceService: ExternalResourceService = new ExternalResourceService()
-  val contentTaggingService: ContentTaggingService = new ContentTaggingService()(doobieContext)
-  val tagService: TagService = new TagService(contentTaggingService)(doobieContext)
+
+  val contentTaggingRepository: DoobieContentTaggingRepository = new DoobieContentTaggingRepository()
+  val contentTaggingService: ContentTaggingService = new ContentTaggingService(contentTaggingRepository)(doobieContext)
+
+  val tagRepository: DoobieTagRepository = new DoobieTagRepository()
+  val tagService: TagService = new TagService(tagRepository, contentTaggingService)(doobieContext)
 
   val contentRepository: DoobieContentRepository = new DoobieContentRepository()
   val contentService: ContentService =

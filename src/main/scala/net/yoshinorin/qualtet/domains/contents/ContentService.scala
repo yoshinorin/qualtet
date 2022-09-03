@@ -117,9 +117,9 @@ class ContentService(
       contentUpsert <- upsertActions(data).perform
       robotsUpsert <- robotsService.upsertWithoutTaransact(Robots(data.id, robotsAttributes))
       // TODO: check diff and clean up tags before upsert
-      tagsBulkUpsert <- tagService.bulkUpsertWithoutTaransact(tags)
+      tagsBulkUpsert <- tagService.bulkUpsertActions(tags).perform
       // TODO: check diff and clean up contentTagging before upsert
-      contentTaggingBulkUpsert <- contentTaggingService.bulkUpsertWithoutTaransact(contentTagging)
+      contentTaggingBulkUpsert <- contentTaggingService.bulkUpsertActions(contentTagging).perform
       // TODO: check diff and clean up external_resources before upsert
       externalResourceBulkUpsert <- externalResourceService.bulkUpsertWithoutTaransact(maybeExternalResources)
     } yield (contentUpsert, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
@@ -140,7 +140,7 @@ class ContentService(
     val queries = for {
       externalResourcesDelete <- externalResourceService.deleteWithoutTransact(id)
       // TODO: Tags should be deleted automatically after delete a content which are not refer from other contents.
-      contentTaggingDelete <- contentTaggingService.deleteByContentIdWithoutTransaction(id)
+      contentTaggingDelete <- contentTaggingService.deleteByContentIdActions(id).perform
       robotsDelete <- robotsService.deleteWithoutTransaction(id)
       contentDelete <- deleteActions(id).perform
     } yield (

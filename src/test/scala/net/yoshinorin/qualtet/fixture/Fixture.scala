@@ -8,12 +8,12 @@ import net.yoshinorin.qualtet.domains.archives.{DoobieArchiveRepository, Archive
 import net.yoshinorin.qualtet.domains.articles.{DoobieArticleRepository, ArticleService, ResponseArticle}
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, DoobieAuthorRepository, AuthorService, BCryptPassword}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId, ContentTypeService}
-import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
+import net.yoshinorin.qualtet.domains.contentTaggings.{DoobieContentTaggingRepository, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.contents.{ContentId, DoobieContentRepository, ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceService, ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, RobotsService}
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, Url}
-import net.yoshinorin.qualtet.domains.tags.{TagId, TagService}
+import net.yoshinorin.qualtet.domains.tags.{TagId, DoobieTagRepository, TagService}
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,
@@ -71,8 +71,12 @@ object Fixture {
 
   val robotsService = new RobotsService()
   val externalResourceService = new ExternalResourceService()
-  val contentTaggingService: ContentTaggingService = new ContentTaggingService()(doobieContext)
-  val tagService: TagService = new TagService(contentTaggingService)(doobieContext)
+
+  val contentTaggingRepository: DoobieContentTaggingRepository = new DoobieContentTaggingRepository()
+  val contentTaggingService: ContentTaggingService = new ContentTaggingService(contentTaggingRepository)(doobieContext)
+
+  val tagRepository: DoobieTagRepository = new DoobieTagRepository()
+  val tagService: TagService = new TagService(tagRepository, contentTaggingService)(doobieContext)
 
   val contentRepository: DoobieContentRepository = new DoobieContentRepository()
   val contentService: ContentService =
