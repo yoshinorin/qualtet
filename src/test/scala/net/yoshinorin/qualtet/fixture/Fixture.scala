@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.domains.contentTaggings.{DoobieContentTaggingRepos
 import net.yoshinorin.qualtet.domains.contents.{ContentId, DoobieContentRepository, ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceService, ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, RobotsService}
-import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, Url}
+import net.yoshinorin.qualtet.domains.sitemaps.{DoobieSitemapsRepository, SitemapService, Url}
 import net.yoshinorin.qualtet.domains.tags.{TagId, DoobieTagRepository, TagService}
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
@@ -97,10 +97,11 @@ object Fixture {
   val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)(doobieContext)
 
   // TODO: from inf cache
+  val sitemapRepository: DoobieSitemapsRepository = new DoobieSitemapsRepository()
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService = new SitemapService(sitemapCache)(doobieContext)
+  val sitemapService: SitemapService = new SitemapService(sitemapRepository, sitemapCache)(doobieContext)
 
   val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]

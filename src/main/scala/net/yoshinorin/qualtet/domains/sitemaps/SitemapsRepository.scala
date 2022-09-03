@@ -2,10 +2,12 @@ package net.yoshinorin.qualtet.domains.sitemaps
 
 import doobie.ConnectionIO
 
-object SitemapsRepository {
+trait SitemapsRepository[M[_]] {
+  def get(): M[Seq[Url]]
+}
 
-  def dispatch[T](request: SitemapRepositoryRequest[T]): ConnectionIO[T] = request match {
-    case Get() => SitemapsQuery.get.to[Seq]
+class DoobieSitemapsRepository extends SitemapsRepository[ConnectionIO] {
+  override def get(): ConnectionIO[Seq[Url]] = {
+    SitemapsQuery.get.to[Seq]
   }
-
 }

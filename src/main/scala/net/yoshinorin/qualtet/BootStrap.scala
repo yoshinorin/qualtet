@@ -16,7 +16,7 @@ import net.yoshinorin.qualtet.domains.contentTaggings.{DoobieContentTaggingRepos
 import net.yoshinorin.qualtet.domains.contents.{DoobieContentRepository, ContentService}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceService
 import net.yoshinorin.qualtet.domains.robots.RobotsService
-import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, Url}
+import net.yoshinorin.qualtet.domains.sitemaps.{DoobieSitemapsRepository, SitemapService, Url}
 import net.yoshinorin.qualtet.domains.tags.{DoobieTagRepository, TagService}
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
@@ -106,10 +106,11 @@ object BootStrap extends App {
   val archiveRepository: DoobieArchiveRepository = new DoobieArchiveRepository()
   val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)(doobieContext)
 
+  val sitemapRepository: DoobieSitemapsRepository = new DoobieSitemapsRepository()
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService: SitemapService = new SitemapService(sitemapCache)(doobieContext)
+  val sitemapService: SitemapService = new SitemapService(sitemapRepository, sitemapCache)(doobieContext)
 
   val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
