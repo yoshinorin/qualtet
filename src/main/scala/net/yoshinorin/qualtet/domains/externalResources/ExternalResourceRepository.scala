@@ -2,17 +2,16 @@ package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
+import net.yoshinorin.qualtet.domains.contents.ContentId
 
-object ExternalResourceRepository extends ConnectionIOFaker {
+trait ExternalResourceRepository[M[_]] {
+  def bulkUpsert(data: List[ExternalResource]): M[Int]
+  def delete(contentId: ContentId): M[Unit]
+  def fakeRequest(): M[Int]
+}
 
-  def dispatch[T](request: ExternalResourceRepositoryRequest[T]): ConnectionIO[T] = request match {
-    case BulkUpsert(data) =>
-      data match {
-        case None => ConnectionIOWithInt
-        case Some(x) =>
-          ExternalResourceQuery.bulkUpsert.updateMany(x)
-      }
-    // TODO: fix return type `Int` to `Unit`
-    case Delete(content_id) => ExternalResourceQuery.delete(content_id).option.map(_ => 0)
-  }
+class DoobieExternalResourceRepository extends ExternalResourceRepository[ConnectionIO] with ConnectionIOFaker {
+  override def bulkUpsert(data: List[ExternalResource]): ConnectionIO[Int] = ExternalResourceQuery.bulkUpsert.updateMany(data)
+  override def delete(contentId: ContentId): ConnectionIO[Unit] = ExternalResourceQuery.delete(contentId).option.map(_ => 0)
+  override def fakeRequest(): ConnectionIO[Int] = ConnectionIOWithInt
 }

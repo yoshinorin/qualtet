@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, Author
 import net.yoshinorin.qualtet.domains.contentTypes.{DoobieContentTypeRepository, ContentType, ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.{DoobieContentTaggingRepository, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.contents.{ContentId, DoobieContentRepository, ContentService, Path, RequestContent}
-import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceService, ExternalResourceKind, ExternalResources}
+import net.yoshinorin.qualtet.domains.externalResources.{DoobieExternalResourceRepository, ExternalResourceService, ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, RobotsService}
 import net.yoshinorin.qualtet.domains.sitemaps.{DoobieSitemapsRepository, SitemapService, Url}
 import net.yoshinorin.qualtet.domains.tags.{TagId, DoobieTagRepository, TagService}
@@ -71,7 +71,9 @@ object Fixture {
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)(doobieContext)
 
   val robotsService = new RobotsService()
-  val externalResourceService = new ExternalResourceService()
+
+  val externalResourceRepository: DoobieExternalResourceRepository = new DoobieExternalResourceRepository()
+  val externalResourceService: ExternalResourceService = new ExternalResourceService(externalResourceRepository)
 
   val contentTaggingRepository: DoobieContentTaggingRepository = new DoobieContentTaggingRepository()
   val contentTaggingService: ContentTaggingService = new ContentTaggingService(contentTaggingRepository)(doobieContext)

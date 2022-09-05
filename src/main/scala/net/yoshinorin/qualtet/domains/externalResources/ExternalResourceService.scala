@@ -1,33 +1,22 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue}
+import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-class ExternalResourceService() {
+class ExternalResourceService(
+  externalResourceRepository: ExternalResourceRepository[ConnectionIO]
+) {
 
-  /**
-   * create are ExternalResources bulky without transaction
-   *
-   * @param Robots instance
-   * @return dummy long id (Doobie return Int)
-   */
-  def bulkUpsertWithoutTaransact(data: Option[List[ExternalResource]]): ConnectionIO[Int] = {
-
-    def actions(data: Option[List[ExternalResource]]): Action[Int] = {
-      Continue(BulkUpsert(data), Action.buildDoneWithoutAnyHandle[Int])
+  def bulkUpsertActions(data: Option[List[ExternalResource]]): DoobieAction[Int] = {
+    data match {
+      case Some(value) => DoobieContinue(externalResourceRepository.bulkUpsert(value), DoobieAction.buildDoneWithoutAnyHandle[Int])
+      case None => DoobieContinue(externalResourceRepository.fakeRequest(), DoobieAction.buildDoneWithoutAnyHandle[Int])
     }
-
-    actions(data).perform
   }
 
-  def deleteWithoutTransact(content_id: ContentId): ConnectionIO[Int] = {
-    def actions(content_id: ContentId): Action[Int] = {
-      // TODO: fix return type `Int` to `Unit
-      Continue(Delete(content_id), Action.buildDoneWithoutAnyHandle[Int])
-    }
-
-    actions(content_id).perform
+  def deleteActions(contentId: ContentId): DoobieAction[Unit] = {
+    DoobieContinue(externalResourceRepository.delete(contentId), DoobieAction.buildDoneWithoutAnyHandle[Unit])
   }
+
 }

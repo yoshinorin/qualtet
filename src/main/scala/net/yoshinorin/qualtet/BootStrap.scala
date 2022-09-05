@@ -14,7 +14,7 @@ import net.yoshinorin.qualtet.domains.authors.{DoobieAuthorRepository, AuthorSer
 import net.yoshinorin.qualtet.domains.contentTypes.{DoobieContentTypeRepository, ContentType, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.{DoobieContentTaggingRepository, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.contents.{DoobieContentRepository, ContentService}
-import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceService
+import net.yoshinorin.qualtet.domains.externalResources.{DoobieExternalResourceRepository, ExternalResourceService}
 import net.yoshinorin.qualtet.domains.robots.RobotsService
 import net.yoshinorin.qualtet.domains.sitemaps.{DoobieSitemapsRepository, SitemapService, Url}
 import net.yoshinorin.qualtet.domains.tags.{DoobieTagRepository, TagService}
@@ -81,7 +81,9 @@ object BootStrap extends App {
   val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)(doobieContext)
 
   val robotsService: RobotsService = new RobotsService()
-  val externalResourceService: ExternalResourceService = new ExternalResourceService()
+
+  val externalResourceRepository: DoobieExternalResourceRepository = new DoobieExternalResourceRepository()
+  val externalResourceService: ExternalResourceService = new ExternalResourceService(externalResourceRepository)
 
   val contentTaggingRepository: DoobieContentTaggingRepository = new DoobieContentTaggingRepository()
   val contentTaggingService: ContentTaggingService = new ContentTaggingService(contentTaggingRepository)(doobieContext)
