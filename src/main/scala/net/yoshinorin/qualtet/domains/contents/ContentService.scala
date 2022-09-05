@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.implicits._
-import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.DoobieAction._
 import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService

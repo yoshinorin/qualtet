@@ -4,7 +4,7 @@ import cats.effect.IO
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
-import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.DoobieAction._
 import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.syntax._
 

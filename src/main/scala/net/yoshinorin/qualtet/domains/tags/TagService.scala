@@ -4,7 +4,7 @@ import cats.effect.IO
 import cats.implicits._
 import doobie.implicits._
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.DoobieAction._
 import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
