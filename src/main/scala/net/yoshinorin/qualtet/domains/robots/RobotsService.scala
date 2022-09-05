@@ -1,39 +1,17 @@
 package net.yoshinorin.qualtet.domains.robots
 
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.Action._
-import net.yoshinorin.qualtet.domains.{Action, Continue}
+import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-class RobotsService() {
-
-  /**
-   * create a Robots without transaction
-   *
-   * @param Robots instance
-   * @return dummy long id (Doobie return Int)
-   */
-  def upsertWithoutTaransact(data: Robots): ConnectionIO[Int] = {
-
-    def actions(data: Robots): Action[Int] = {
-      Continue(Upsert(data), Action.buildDoneWithoutAnyHandle[Int])
-    }
-
-    actions(data).perform
+class RobotsService(
+  robotsRepository: RobotsRepository[ConnectionIO]
+) {
+  def upsertActions(data: Robots): DoobieAction[Int] = {
+    DoobieContinue(robotsRepository.upsert(data), DoobieAction.buildDoneWithoutAnyHandle[Int])
   }
 
-  /**
-   * delete a Robots instance
-   *
-   * @param content_id ContentId instance
-   * @return dummy id (Doobie return Int)
-   */
-  def deleteWithoutTransaction(content_id: ContentId): ConnectionIO[Int] = {
-    def actions(content_id: ContentId): Action[Int] = {
-      // TODO: fix return type `Int` to `Unit
-      Continue(Delete(content_id), Action.buildDoneWithoutAnyHandle[Int])
-    }
-
-    actions(content_id).perform
+  def deleteActions(contentId: ContentId): DoobieAction[Unit] = {
+    DoobieContinue(robotsRepository.delete(contentId), DoobieAction.buildDoneWithoutAnyHandle[Unit])
   }
 }

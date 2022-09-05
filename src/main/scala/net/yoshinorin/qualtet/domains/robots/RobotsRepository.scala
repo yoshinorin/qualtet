@@ -1,13 +1,14 @@
 package net.yoshinorin.qualtet.domains.robots
 
 import doobie.ConnectionIO
+import net.yoshinorin.qualtet.domains.contents.ContentId
 
-object RobotsRepository {
+trait RobotsRepository[M[_]] {
+  def upsert(data: Robots): M[Int]
+  def delete(contentId: ContentId): M[Unit]
+}
 
-  def dispatch[T](request: RobotsRepositoryRequest[T]): ConnectionIO[T] = request match {
-    case Upsert(data) => RobotsQuery.upsert.run(data)
-    // TODO: fix return type `Int` to `Unit`
-    case Delete(content_id) => RobotsQuery.delete(content_id).option.map(_ => 0)
-  }
-
+class DoobieRobotsRepository extends RobotsRepository[ConnectionIO] {
+  override def upsert(data: Robots): ConnectionIO[Int] = RobotsQuery.upsert.run(data)
+  override def delete(contentId: ContentId): ConnectionIO[Unit] = RobotsQuery.delete(contentId).option.map(_ => 0)
 }
