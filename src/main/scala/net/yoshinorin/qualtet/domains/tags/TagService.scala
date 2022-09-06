@@ -10,6 +10,7 @@ import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.domains.contents.ContentId
 
 class TagService(
   tagRepository: TagRepository[ConnectionIO],
@@ -33,6 +34,10 @@ class TagService(
 
   def findByNameActions(tagName: TagName): DoobieAction[Option[Tag]] = {
     DoobieContinue(tagRepository.findByName(tagName), DoobieAction.buildDoneWithoutAnyHandle[Option[Tag]])
+  }
+
+  def findByContentIdActions(contenId: ContentId): DoobieAction[Seq[Tag]] = {
+    DoobieContinue(tagRepository.findByContentId(contenId), DoobieAction.buildDoneWithoutAnyHandle[Seq[Tag]])
   }
 
   def deleteActions(id: TagId): DoobieAction[Unit] = {

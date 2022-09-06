@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.tags
 import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
 import doobie.util.update.Update
+import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object TagQuery {
 
@@ -18,6 +19,18 @@ object TagQuery {
 
   def findById(id: TagId): Query0[Tag] = {
     sql"SELECT * FROM tags WHERE id = ${id.value}"
+      .query[Tag]
+  }
+
+  def findByContentId(id: ContentId): Query0[Tag] = {
+    sql"""
+      SELECT tags.*
+      FROM
+        tags
+      INNER JOIN contents_tagging
+        ON tags.id = contents_tagging.tag_id
+      WHERE contents_tagging.content_id = $id
+    """
       .query[Tag]
   }
 

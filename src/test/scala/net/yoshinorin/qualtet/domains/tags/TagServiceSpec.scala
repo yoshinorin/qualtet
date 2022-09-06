@@ -4,6 +4,7 @@ import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 // import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepository
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.DoobieAction._
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.message.Fail
@@ -49,6 +50,14 @@ class TagServiceSpec extends AnyWordSpec {
     "be findById" in {
       val result = tagService.findByName(TagName("tagService3")).unsafeRunSync()
       assert(tagService.findById(result.get.id).unsafeRunSync().get.name.value === "tagService3")
+    }
+
+    "be findByContentId" in {
+      val r = (for {
+        c <- contentService.findByPath(Path("/test/tagService-4"))
+        t <- tagService.findByContentIdActions(c.get.id).perform.andTransact(doobieContext)
+      } yield t).unsafeRunSync()
+      assert(r.head.name === TagName("tagService4"))
     }
 
     "be getTags" in {
