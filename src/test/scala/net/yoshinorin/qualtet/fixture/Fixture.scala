@@ -58,7 +58,7 @@ object Fixture {
   val signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
   val jwtInstance = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
 
-  val authorRepository = new DoobieAuthorRepository()
+  val authorRepository: DoobieAuthorRepository = new DoobieAuthorRepository()
   val authorService: AuthorService = new AuthorService(authorRepository)(doobieContext)
 
   val authService = new AuthService(authorService, jwtInstance)

@@ -69,7 +69,7 @@ object BootStrap extends App {
 
   logger.info("created: keyPair, signature and jwt instances")
 
-  val authorRepository = new DoobieAuthorRepository()
+  val authorRepository: DoobieAuthorRepository = new DoobieAuthorRepository()
   val authorService: AuthorService = new AuthorService(authorRepository)(doobieContext)
 
   val authService: AuthService = new AuthService(authorService, jwtInstance)
