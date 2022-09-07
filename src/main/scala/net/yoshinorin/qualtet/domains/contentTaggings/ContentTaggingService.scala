@@ -19,7 +19,7 @@ class ContentTaggingService(
   def bulkUpsertActions(data: Option[List[ContentTagging]]): DoobieAction[Int] = {
     data match {
       case Some(d) => DoobieContinue(contentTaggingRepository.bulkUpsert(d), DoobieAction.buildDoneWithoutAnyHandle[Int])
-      case None => DoobieContinue(contentTaggingRepository.fakeRequest(), DoobieAction.buildDoneWithoutAnyHandle[Int])
+      case None => DoobieContinue(contentTaggingRepository.fakeRequestInt, DoobieAction.buildDoneWithoutAnyHandle[Int])
     }
   }
 
@@ -29,6 +29,17 @@ class ContentTaggingService(
 
   def deleteByTagIdActions(id: TagId): DoobieAction[Unit] = {
     DoobieContinue(contentTaggingRepository.deleteByTagId(id), DoobieAction.buildDoneWithoutAnyHandle[Unit])
+  }
+
+  def deleteActions(contentId: ContentId, tagIds: Seq[TagId]): DoobieAction[Unit] = {
+    DoobieContinue(contentTaggingRepository.delete(contentId, tagIds), DoobieAction.buildDoneWithoutAnyHandle[Unit])
+  }
+
+  def bulkDeleteActions(data: (ContentId, Seq[TagId])): DoobieAction[Unit] = {
+    data._2.size match {
+      case 0 => DoobieContinue(contentTaggingRepository.fakeRequestUnit, DoobieAction.buildDoneWithoutAnyHandle[Unit])
+      case _ => this.deleteActions(data._1, data._2)
+    }
   }
 
   def findByTagId(id: TagId): IO[Seq[ContentTagging]] = {

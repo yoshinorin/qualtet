@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
+import cats.data.NonEmptyList
 import doobie.implicits.toSqlInterpolator
 import doobie.util.update.Update
 import doobie.util.query
@@ -32,6 +33,21 @@ object ContentTaggingQuery {
   def deleteByTagId(id: TagId): query.Query0[Unit] = {
     sql"DELETE FROM contents_tagging WHERE tag_id = ${id.value}"
       .query[Unit]
+  }
+
+  def delete(contentId: ContentId, tagIds: Seq[TagId]): query.Query0[Unit] = {
+    // https://tpolecat.github.io/doobie/docs/05-Parameterized.html#dealing-with-in-clauses
+    // https://tpolecat.github.io/doobie/docs/08-Fragments.html#composing-sql-literals
+    //
+    // val inClauseFragment = fr" tag_id IN (" ++ tagIds.map(n => fr"$n").intercalate(fr",") ++ fr")"
+    // val sTagIds = tagIds.map(t => s"${t.value}").mkString(",")
+    // val inClauseFragment = fr" tag_id IN (" ++ fr"${sTagIds}" ++ fr")"
+    // val inClauseFragment = doobie.util.fragments.in(fr"tag_id", NonEmptyList.fromList(tagIds.toList))
+
+    (fr"""
+      DELETE FROM contents_tagging
+      WHERE content_id = ${contentId}
+      AND """ ++ doobie.util.fragments.in(fr"tag_id", NonEmptyList.fromList(tagIds.toList.map(t => t.value)).get)).query[Unit]
   }
 
 }

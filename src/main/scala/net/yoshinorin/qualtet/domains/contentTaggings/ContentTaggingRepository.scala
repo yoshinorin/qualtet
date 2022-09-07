@@ -10,7 +10,10 @@ trait ContentTaggingRepository[M[_]] {
   def findByTagId(id: TagId): M[Seq[ContentTagging]]
   def deleteByContentId(id: ContentId): M[Unit]
   def deleteByTagId(id: TagId): M[Unit]
-  def fakeRequest(): M[Int]
+  def delete(contentId: ContentId, tagIds: Seq[TagId]): M[Unit]
+  // TODO: generics
+  def fakeRequestInt: M[Int]
+  def fakeRequestUnit: M[Unit]
 }
 
 class DoobieContentTaggingRepository extends ContentTaggingRepository[ConnectionIO] with ConnectionIOFaker {
@@ -26,5 +29,9 @@ class DoobieContentTaggingRepository extends ContentTaggingRepository[Connection
   override def deleteByTagId(id: TagId): ConnectionIO[Unit] = {
     ContentTaggingQuery.deleteByTagId(id).option.map(_ => 0)
   }
-  override def fakeRequest(): ConnectionIO[Int] = ConnectionIOWithInt
+  override def delete(contentId: ContentId, tagIds: Seq[TagId]): ConnectionIO[Unit] = {
+    ContentTaggingQuery.delete(contentId, tagIds).option.map(_ => 0)
+  }
+  override def fakeRequestInt: ConnectionIO[Int] = ConnectionIOWithInt
+  override def fakeRequestUnit: ConnectionIO[Unit] = ConnectionIOWithUnit
 }
