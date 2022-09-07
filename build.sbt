@@ -43,8 +43,10 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
   Wart.Nothing
 )
 
-val akkaVersion = "2.6.19"
-val akkaHttpVersion = "10.2.9"
+// NOTE: do not bump 2.7.x for a LICENSE reasonse
+// https://www.lightbend.com/blog/why-we-are-changing-the-license-for-akka
+val akkaVersion = "2.6.20"
+val akkaHttpVersion = "10.2.10"
 val circeVersion = "0.15.0-M1"
 val doobieVersion = "1.0.0-RC2"
 val jwtScalaVersion = "9.1.1"
