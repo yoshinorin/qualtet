@@ -7,9 +7,11 @@ services:
       MYSQL_USER: root
       MYSQL_PASSWORD: pass
       MYSQL_DATABASE: qualtet
+    volumes:
+      - ../../../logs/mysql:/var/log/mysql
     expose:
       - "33066"
     ports:
       - "33066:3306"
-    command: ["mysqld", "--character-set-server=utf8mb4"]
+    command: ["mysqld", "--character-set-server=utf8mb4", "--general_log=1", "--general_log_file=/var/log/mysql/general.log"]
     restart: unless-stopped
