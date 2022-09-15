@@ -40,14 +40,33 @@ class ContentServiceSpec extends AnyWordSpec {
 
     "be upsert" in {
 
-      val currentContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync().get
-      val updatedRequestContent = requestContent1.copy(
+      val requestContent: RequestContent = RequestContent(
+        contentType = "article",
+        path = Path("/test/path/ContentServiceSpec/upsert"),
+        title = "this is a title",
+        rawContent = "this is a raw content",
+        htmlContent = "this is a html content",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = Option(List("Scala", "Akka")),
+        externalResources = Option(
+          List(
+            ExternalResources(
+              ExternalResourceKind("js"),
+              values = List("test", "foo", "bar")
+            )
+          )
+        )
+      )
+
+      contentService.createContentFromRequest(AuthorName(author.name.value), requestContent).unsafeRunSync()
+      val currentContent = contentService.findByPathWithMeta(requestContent.path).unsafeRunSync().get
+      val updatedRequestContent = requestContent.copy(
         title = "updated title",
         tags = Option(List("Scala", "Scala3")),
         robotsAttributes = Attributes("noarchive")
       )
       contentService.createContentFromRequest(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
-      val updatedContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync().get
+      val updatedContent = contentService.findByPathWithMeta(requestContent.path).unsafeRunSync().get
 
       // TODO: add id to response field
       // assert(currentContent.id === updatedContent.id)
@@ -60,9 +79,16 @@ class ContentServiceSpec extends AnyWordSpec {
       val updatedTagNames = updatedContent.tags.get.map(x => x.name.value)
       assert(updatedTagNames.contains("Scala"))
       assert(updatedTagNames.contains("Scala3"))
-      assert(updatedTagNames.contains("Akka"))
+      assert(!updatedTagNames.contains("Akka"))
 
-      // TODO: check clean up deleted tags & externalResources
+      contentService.createContentFromRequest(AuthorName(author.name.value), requestContent.copy(tags = None)).unsafeRunSync()
+
+      for {
+        r <- contentService.findByPathWithMeta(requestContent.path)
+      } yield {
+        assert(r.get.tags.isEmpty)
+      }
+      // TODO: check clean up externalResources
 
     }
 

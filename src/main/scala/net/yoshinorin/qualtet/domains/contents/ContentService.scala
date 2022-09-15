@@ -116,13 +116,15 @@ class ContentService(
     val queries = for {
       contentUpsert <- upsertActions(data).perform
       robotsUpsert <- robotsService.upsertActions(Robots(data.id, robotsAttributes)).perform
-      // TODO: check diff and clean up tags before upsert
+      currentTags <- tagService.findByContentIdActions(data.id).perform
+      tagsDiffDelete <- contentTaggingService.bulkDeleteActions(data.id, currentTags.map(_.id).diff(tags.getOrElse(List()).map(t => t.id))).perform
       tagsBulkUpsert <- tagService.bulkUpsertActions(tags).perform
+      // _ <- contentTaggingService.bulkDeleteActions(data.id, currentTags.map(_.id).diff(tags.map(t => t.id))).perform
       // TODO: check diff and clean up contentTagging before upsert
       contentTaggingBulkUpsert <- contentTaggingService.bulkUpsertActions(contentTagging).perform
       // TODO: check diff and clean up external_resources before upsert
       externalResourceBulkUpsert <- externalResourceService.bulkUpsertActions(maybeExternalResources).perform
-    } yield (contentUpsert, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
+    } yield (contentUpsert, currentTags, tagsDiffDelete, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
 
     for {
       _ <- queries.transact(doobieContext.transactor)
