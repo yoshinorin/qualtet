@@ -6,6 +6,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusC
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.StandardRoute
 import io.circe.Encoder
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.message.Message
 import org.slf4j.LoggerFactory
@@ -38,8 +39,14 @@ trait ResponseHandler {
     complete(HttpResponse(r._1, entity = HttpEntity(ContentTypes.`application/json`, r._2.asJson.toString())))
   }
 
+  // TODO: delete after migrate to jsoniter
   def httpResponse[T](statusCode: StatusCode, response: T)(implicit e: Encoder[T]): StandardRoute = {
     complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, response.asJson.toString())))
+  }
+
+  // TODO: rename after remove circe
+  def httpResponseWithJsoniter[T](statusCode: StatusCode, response: T)(implicit e: JsonValueCodec[T]): StandardRoute = {
+    complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, writeToArray(response))))
   }
 
   def httpResponse(statusCode: StatusCode): StandardRoute = {
