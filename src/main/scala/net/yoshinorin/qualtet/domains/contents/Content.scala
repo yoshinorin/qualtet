@@ -115,7 +115,7 @@ final case class ResponseContent(
 
 object ResponseContent {
   implicit val codecResponseContent: JsonValueCodec[ResponseContent] = JsonCodecMaker.make
-  implicit val codecResponseContents: JsonValueCodec[List[ResponseContent]] = JsonCodecMaker.make
+  implicit val codecResponseContents: JsonValueCodec[Seq[ResponseContent]] = JsonCodecMaker.make
 }
 
 final case class ResponseContentDbRow(

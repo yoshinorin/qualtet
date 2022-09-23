@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.feeds
 
-import io.circe.syntax._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -10,11 +10,11 @@ class FeedSpec extends AnyWordSpec {
   "ResponseFeed" should {
 
     "be convert as JSON" in {
-      feed1.asJson
+      new String(writeToArray(feed1))
     }
 
     "be convert as JSON Array" in {
-      Seq(feed1, feed2).asJson
+      new String(writeToArray(Seq(feed1, feed2)))
     }
 
   }
