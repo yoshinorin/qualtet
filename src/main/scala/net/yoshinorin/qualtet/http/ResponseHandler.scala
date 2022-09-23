@@ -1,11 +1,9 @@
 package net.yoshinorin.qualtet.http
 
-import io.circe.syntax._
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCode}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.StandardRoute
-import io.circe.Encoder
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.message.Message
