@@ -6,13 +6,12 @@ import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticleWithCount}
 import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, RequestDecoder, ResponseHandler}
+import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
 import cats.effect.unsafe.implicits.global
 
 class ArticleRoute(
   articleService: ArticleService
-) extends RequestDecoder
-    with ResponseHandler {
+) extends ResponseHandler {
 
   def route: Route = {
     pathPrefix("articles") {
