@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.articles
 
-import io.circe.{Decoder, Encoder}
-import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
 import net.yoshinorin.qualtet.syntax._
 
@@ -17,10 +17,8 @@ final case class ResponseArticle(
 )
 
 object ResponseArticle {
-  implicit val encodeContent: Encoder[ResponseArticle] = deriveEncoder[ResponseArticle]
-  implicit val encodeContents: Encoder[List[ResponseArticle]] = Encoder.encodeList[ResponseArticle]
-  implicit val decodeContent: Decoder[ResponseArticle] = deriveDecoder[ResponseArticle]
-  implicit val decodeContents: Decoder[List[ResponseArticle]] = Decoder.decodeList[ResponseArticle]
+  implicit val codecResponseArticle: JsonValueCodec[ResponseArticle] = JsonCodecMaker.make
+  implicit val codecResponseArticles: JsonValueCodec[Seq[ResponseArticle]] = JsonCodecMaker.make
 
   def apply(id: ContentId, path: Path, title: String, content: String, publishedAt: Long, updatedAt: Long): ResponseArticle = {
     val stripedContent = content.stripHtmlTags
@@ -42,8 +40,6 @@ final case class ResponseArticleWithCount(
 )
 
 object ResponseArticleWithCount {
-  implicit val encodeResponseArticleWithCount: Encoder[ResponseArticleWithCount] = deriveEncoder[ResponseArticleWithCount]
-  implicit val encodeResponseArticlesWithCount: Encoder[List[ResponseArticleWithCount]] = Encoder.encodeList[ResponseArticleWithCount]
-  implicit val decodeResponseArticleWithCount: Decoder[ResponseArticleWithCount] = deriveDecoder[ResponseArticleWithCount]
-  implicit val decodeResponseArticlesWithCount: Decoder[List[ResponseArticleWithCount]] = Decoder.decodeList[ResponseArticleWithCount]
+  implicit val codecResponseArticleWithCount: JsonValueCodec[ResponseArticleWithCount] = JsonCodecMaker.make
+  implicit val codecResponseArticlesWithCount: JsonValueCodec[Seq[ResponseArticleWithCount]] = JsonCodecMaker.make
 }

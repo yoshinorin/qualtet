@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.articles
 
-import io.circe.syntax._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -14,12 +14,12 @@ class ArticleSpec extends AnyWordSpec {
 
     // NOTE: content length are random. Can't test.
     "as JSON" in {
-      responseArticle1.asJson
+      writeToArray(responseArticle1)
     }
 
     // NOTE: content length are random. Can't test.
     "as JSON Array" in {
-      Seq(responseArticle1, responseArticle2).asJson
+      writeToArray(Seq(responseArticle1, responseArticle2))
     }
 
   }

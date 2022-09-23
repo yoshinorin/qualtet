@@ -5,6 +5,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticleWithCount}
+import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount._
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
 import cats.effect.unsafe.implicits.global
@@ -25,7 +26,7 @@ class ArticleRoute(
                 .unsafeToFuture()
             ) {
               case r: ResponseArticleWithCount =>
-                httpResponse(OK, r)
+                httpResponseWithJsoniter(OK, r)
               case e: Exception =>
                 httpResponse(e)
               case _ =>
