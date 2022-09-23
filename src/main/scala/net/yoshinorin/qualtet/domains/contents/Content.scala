@@ -2,11 +2,8 @@ package net.yoshinorin.qualtet.domains.contents
 
 import java.time.ZonedDateTime
 import wvlet.airframe.ulid.ULID
-import io.circe.Decoder
-import io.circe.Encoder
-import io.circe.generic.semiauto.deriveDecoder
-import io.circe.generic.semiauto.deriveEncoder
-import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
@@ -18,8 +15,7 @@ import java.util.Locale
 
 final case class ContentId(value: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH)) extends AnyVal
 object ContentId {
-  implicit val encodeContentId: Encoder[ContentId] = Encoder[String].contramap(_.value)
-  implicit val decodeContentId: Decoder[ContentId] = Decoder[String].map(ContentId.apply)
+  implicit val codecContentId: JsonValueCodec[ContentId] = JsonCodecMaker.make
 
   def apply(value: String): ContentId = {
     val _ = ULID.fromString(value)
@@ -29,8 +25,7 @@ object ContentId {
 
 final case class Path(value: String) extends AnyVal
 object Path {
-  implicit val encodePath: Encoder[Path] = Encoder[String].contramap(_.value)
-  implicit val decodePath: Decoder[Path] = Decoder[String].map(Path.apply)
+  implicit val codecPath: JsonValueCodec[Path] = JsonCodecMaker.make
 
   def apply(value: String): Path = {
     // TODO: check valid url https://www.ietf.org/rfc/rfc3986.txt
@@ -55,10 +50,8 @@ final case class Content(
 )
 
 object Content {
-  implicit val encodeContent: Encoder[Content] = deriveEncoder[Content]
-  implicit val encodeContents: Encoder[List[Content]] = Encoder.encodeList[Content]
-  implicit val decodeContent: Decoder[Content] = deriveDecoder[Content]
-  implicit val decodeContents: Decoder[List[Content]] = Decoder.decodeList[Content]
+  implicit val codecContent: JsonValueCodec[Content] = JsonCodecMaker.make
+  implicit val codecContents: JsonValueCodec[List[Content]] = JsonCodecMaker.make
 }
 
 final case class RequestContent(
@@ -76,15 +69,8 @@ final case class RequestContent(
 )
 
 object RequestContent {
-
-  import io.circe.generic.extras.Configuration
-
-  implicit val circeCustomConfig: Configuration = Configuration.default.withDefaults
-
-  implicit val encodeRequestContent: Encoder[RequestContent] = deriveEncoder[RequestContent]
-  implicit val encodeRequestContents: Encoder[List[RequestContent]] = Encoder.encodeList[RequestContent]
-  implicit val decodeRequestContent: Decoder[RequestContent] = deriveConfiguredDecoder
-  implicit val decodeRequestContents: Decoder[List[RequestContent]] = Decoder.decodeList[RequestContent]
+  implicit val codecRequestContent: JsonValueCodec[RequestContent] = JsonCodecMaker.make
+  implicit val codecRequestContents: JsonValueCodec[List[RequestContent]] = JsonCodecMaker.make
 
   def apply(
     requestId: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH),
@@ -128,8 +114,8 @@ final case class ResponseContent(
 )
 
 object ResponseContent {
-  implicit val encodeResponseContent: Encoder[ResponseContent] = deriveEncoder[ResponseContent]
-  implicit val decodeResponseContent: Decoder[ResponseContent] = deriveDecoder[ResponseContent]
+  implicit val codecResponseContent: JsonValueCodec[ResponseContent] = JsonCodecMaker.make
+  implicit val codecResponseContents: JsonValueCodec[List[ResponseContent]] = JsonCodecMaker.make
 }
 
 final case class ResponseContentDbRow(

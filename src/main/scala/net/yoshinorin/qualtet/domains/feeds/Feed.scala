@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.feeds
 
-import io.circe.{Decoder, Encoder}
-import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.contents.Path
 
 // https://validator.w3.org/feed/docs/atom.html
@@ -13,8 +13,6 @@ final case class ResponseFeed(
   updated: Long
 )
 object ResponseFeed {
-  implicit val encodeResponseFeed: Encoder[ResponseFeed] = deriveEncoder[ResponseFeed]
-  implicit val encodeResponseFeeds: Encoder[List[ResponseFeed]] = Encoder.encodeList[ResponseFeed]
-  implicit val decodeResponseFeed: Decoder[ResponseFeed] = deriveDecoder[ResponseFeed]
-  implicit val decodeResponseFeeds: Decoder[List[ResponseFeed]] = Decoder.decodeList[ResponseFeed]
+  implicit val codecResponseFeed: JsonValueCodec[ResponseFeed] = JsonCodecMaker.make
+  implicit val codecResponseFeeds: JsonValueCodec[Seq[ResponseFeed]] = JsonCodecMaker.make
 }

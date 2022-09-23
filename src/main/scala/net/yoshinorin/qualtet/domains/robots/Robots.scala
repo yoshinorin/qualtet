@@ -1,17 +1,13 @@
 package net.yoshinorin.qualtet.domains.robots
 
-import io.circe.Decoder
-import io.circe.Encoder
-import io.circe.generic.semiauto.deriveDecoder
-import io.circe.generic.semiauto.deriveEncoder
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 
 final case class Attributes(value: String) extends AnyVal
 object Attributes {
-
-  implicit val encodeAttributes: Encoder[Attributes] = Encoder[String].contramap(_.value)
-  implicit val decodeAttributes: Decoder[Attributes] = Decoder[String].map(Attributes.apply)
+  implicit val codecAttributes: JsonValueCodec[Attributes] = JsonCodecMaker.make
 
   // https://developers.google.com/search/docs/advanced/robots/robots_meta_tag
   // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
@@ -37,6 +33,5 @@ final case class Robots(
 )
 
 object Robots {
-  implicit val encodeRobots: Encoder[Robots] = deriveEncoder[Robots]
-  implicit val decodeRobots: Decoder[Robots] = deriveDecoder[Robots]
+  implicit val codecRobots: JsonValueCodec[Robots] = JsonCodecMaker.make
 }

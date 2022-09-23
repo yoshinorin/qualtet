@@ -6,9 +6,11 @@ import akka.http.scaladsl.server.Route
 import cats.effect.IO
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.contents.{Content, ContentService, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.contents.ContentId
+import net.yoshinorin.qualtet.domains.contents.ResponseContent._
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.{Authentication, RequestDecoder, ResponseHandler}
-import net.yoshinorin.qualtet.domains.contents.ContentId
+
 
 import cats.effect.unsafe.implicits.global
 
@@ -35,7 +37,7 @@ class ContentRoute(
                       .unsafeToFuture()
                   ) {
                     case c: Content =>
-                      httpResponse(Created, c)
+                      httpResponseWithJsoniter(Created, c)
                     case e: Exception =>
                       httpResponse(e)
                     case _ =>
@@ -73,7 +75,7 @@ class ContentRoute(
           get {
             onSuccess(contentService.findByPathWithMeta(Path(path)).unsafeToFuture()) {
               case Some(content) =>
-                httpResponse(OK, content)
+                httpResponseWithJsoniter(OK, content)
               case _ => httpResponse(Fail.NotFound("Not found"))
             }
           }
