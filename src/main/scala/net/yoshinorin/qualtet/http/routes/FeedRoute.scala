@@ -19,7 +19,7 @@ class FeedRoute(
         get {
           // TOOD: configurable
           // TODO: create feed by x (e.g. tagName
-          onSuccess(feedService.get(ArticlesQueryParameter(1, 5)).unsafeToFuture()) { result => httpResponseWithJsoniter(OK, result) }
+          onSuccess(feedService.get(ArticlesQueryParameter(1, 5)).unsafeToFuture()) { result => httpResponse(OK, result) }
         }
       }
     }

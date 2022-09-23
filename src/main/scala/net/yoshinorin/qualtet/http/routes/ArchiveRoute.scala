@@ -17,7 +17,7 @@ class ArchiveRoute(
     pathPrefix("archives") {
       pathEndOrSingleSlash {
         get {
-          onSuccess(archiveService.get.unsafeToFuture()) { result => httpResponseWithJsoniter(OK, result) }
+          onSuccess(archiveService.get.unsafeToFuture()) { result => httpResponse(OK, result) }
         }
       }
     }

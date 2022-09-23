@@ -62,7 +62,7 @@ class TagRoute(
                   .unsafeToFuture()
               ) {
                 case r: ResponseArticleWithCount =>
-                  httpResponseWithJsoniter(OK, r)
+                  httpResponse(OK, r)
                 case e: Exception =>
                   httpResponse(e)
                 case _ =>

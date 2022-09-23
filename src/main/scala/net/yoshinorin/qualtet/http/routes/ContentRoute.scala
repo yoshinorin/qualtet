@@ -36,7 +36,7 @@ class ContentRoute(
                       .unsafeToFuture()
                   ) {
                     case c: Content =>
-                      httpResponseWithJsoniter(Created, c)
+                      httpResponse(Created, c)
                     case e: Exception =>
                       httpResponse(e)
                     case _ =>
@@ -74,7 +74,7 @@ class ContentRoute(
           get {
             onSuccess(contentService.findByPathWithMeta(Path(path)).unsafeToFuture()) {
               case Some(content) =>
-                httpResponseWithJsoniter(OK, content)
+                httpResponse(OK, content)
               case _ => httpResponse(Fail.NotFound("Not found"))
             }
           }

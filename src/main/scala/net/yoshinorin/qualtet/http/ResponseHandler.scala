@@ -39,13 +39,7 @@ trait ResponseHandler {
     complete(HttpResponse(r._1, entity = HttpEntity(ContentTypes.`application/json`, writeToArray(r._2))))
   }
 
-  // TODO: delete after migrate to jsoniter
-  def httpResponse[T](statusCode: StatusCode, response: T)(implicit e: Encoder[T]): StandardRoute = {
-    complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, response.asJson.toString())))
-  }
-
-  // TODO: rename after remove circe
-  def httpResponseWithJsoniter[T](statusCode: StatusCode, response: T)(implicit e: JsonValueCodec[T]): StandardRoute = {
+  def httpResponse[T](statusCode: StatusCode, response: T)(implicit e: JsonValueCodec[T]): StandardRoute = {
     complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, writeToArray(response))))
   }
 

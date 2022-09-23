@@ -25,7 +25,7 @@ class AuthRoute(authService: AuthService) extends RequestDecoder with ResponseHa
                     .unsafeToFuture()
                 ) {
                   case r: ResponseToken =>
-                    httpResponseWithJsoniter(Created, r)
+                    httpResponse(Created, r)
                   case f: Fail =>
                     httpResponse(f)
                   case _ =>

@@ -30,7 +30,7 @@ class AuthorRoute(
           pathEndOrSingleSlash {
             get {
               onSuccess(authorService.findByName(AuthorName(authorName)).unsafeToFuture()) {
-                case Some(author) => httpResponseWithJsoniter(OK, author)
+                case Some(author) => httpResponse(OK, author)
                 case _ => httpResponse(Fail.NotFound("Not found"))
               }
             }
