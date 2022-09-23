@@ -14,6 +14,7 @@ trait RequestDecoder {
 
   def decode[T](string: String)(implicit e: JsonValueCodec[T]): Either[Fail, T] = {
     try {
+      // TODO: consider how to handle Charset
       Right(readFromArray(string.getBytes(Charset.forName("UTF-8"))))
     } catch {
       case NonFatal(t) =>

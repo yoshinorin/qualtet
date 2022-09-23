@@ -1,15 +1,13 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
-import io.circe.{Decoder, Encoder}
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import wvlet.airframe.ulid.ULID
 import java.util.Locale
 
 final case class TagId(value: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH)) extends AnyVal
 object TagId {
-  implicit val encodeTagId: Encoder[TagId] = Encoder[String].contramap(_.value)
-  implicit val decodeTagId: Decoder[TagId] = Decoder[String].map(TagId.apply)
-
+  implicit val codecTagId: JsonValueCodec[TagId] = JsonCodecMaker.make
   def apply(value: String): TagId = {
     val _ = ULID.fromString(value)
     new TagId(value)
@@ -18,10 +16,8 @@ object TagId {
 
 final case class TagName(value: String) extends AnyVal
 object TagName {
-  implicit val encodeTagName: Encoder[TagName] = Encoder[String].contramap(_.value)
-  implicit val decodeTagName: Decoder[TagName] = Decoder[String].map(TagName.apply)
-  implicit val decodeTagNames: Decoder[List[TagName]] = Decoder.decodeList[TagName]
-  implicit val encodeTagNames: Encoder[List[TagName]] = Encoder.encodeList[TagName]
+  implicit val codecTagName: JsonValueCodec[TagName] = JsonCodecMaker.make
+  implicit val codecTagNames: JsonValueCodec[Seq[TagName]] = JsonCodecMaker.make
 }
 
 final case class Tag(
@@ -29,9 +25,8 @@ final case class Tag(
   name: TagName
 )
 object Tag {
-  implicit val decodeTag: Decoder[Tag] = deriveDecoder[Tag]
-  implicit val encodeTag: Encoder[Tag] = deriveEncoder[Tag]
-  implicit val decodeTags: Decoder[Option[List[Tag]]] = Decoder[Option[List[Tag]]]
+  implicit val codecTag: JsonValueCodec[Tag] = JsonCodecMaker.make
+  implicit val codecTags: JsonValueCodec[Option[Seq[Tag]]] = JsonCodecMaker.make
 }
 
 final case class ResponseTag(
@@ -39,8 +34,6 @@ final case class ResponseTag(
   name: TagName
 )
 object ResponseTag {
-  implicit val decodeResponseTag: Decoder[ResponseTag] = deriveDecoder[ResponseTag]
-  implicit val encodeResponseTag: Encoder[ResponseTag] = deriveEncoder[ResponseTag]
-  implicit val decodeResponseTags: Decoder[List[ResponseTag]] = Decoder.decodeList[ResponseTag]
-  implicit val encodeResponseTags: Encoder[List[ResponseTag]] = Encoder.encodeList[ResponseTag]
+  implicit val codecResponseTag: JsonValueCodec[ResponseTag] = JsonCodecMaker.make
+  implicit val codecResponseTags: JsonValueCodec[Seq[ResponseTag]] = JsonCodecMaker.make
 }

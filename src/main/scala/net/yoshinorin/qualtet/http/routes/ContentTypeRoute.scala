@@ -17,7 +17,7 @@ class ContentTypeRoute(
     pathPrefix("content-types") {
       pathEndOrSingleSlash {
         get {
-          onSuccess(contentTypeService.getAll.unsafeToFuture()) { result => httpResponse(OK, result) }
+          onSuccess(contentTypeService.getAll.unsafeToFuture()) { result => httpResponseWithJsoniter(OK, result) }
         }
       } ~ {
         // example: host/content-types/article
@@ -26,7 +26,7 @@ class ContentTypeRoute(
             get {
               onSuccess(contentTypeService.findByName(conetntTypeName).unsafeToFuture()) {
                 case Some(contentType) =>
-                  httpResponse(OK, contentType)
+                  httpResponseWithJsoniter(OK, contentType)
                 case _ => httpResponse(Fail.NotFound("Not found"))
               }
             }

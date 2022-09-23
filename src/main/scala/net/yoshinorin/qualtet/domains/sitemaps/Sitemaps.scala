@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-import io.circe.{Decoder, Encoder}
-import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
@@ -11,8 +11,7 @@ class Sitemap {}
 
 final case class Loc(value: String) extends AnyVal
 object Loc {
-  implicit val encodeLoc: Encoder[Loc] = Encoder[String].contramap(_.value)
-  implicit val decodeLoc: Decoder[Loc] = Decoder[String].map(Loc.apply)
+  implicit val codecLastMod: JsonValueCodec[Loc] = JsonCodecMaker.make
 
   def apply(value: String): Loc = {
     // TODO: add url to prefix like https://example.com/....
@@ -23,8 +22,7 @@ object Loc {
 
 final case class LastMod(value: String) extends AnyVal
 object LastMod {
-  implicit val encodeLastMod: Encoder[LastMod] = Encoder[String].contramap(_.value)
-  implicit val decodeLastMod: Decoder[LastMod] = Decoder[String].map(LastMod.apply)
+  implicit val codecLastMod: JsonValueCodec[LastMod] = JsonCodecMaker.make
 
   def apply(value: String): LastMod = {
     // TODO: validate YYYY-MM-DD string or not
@@ -47,8 +45,6 @@ final case class Url(
 )
 
 object Url {
-  implicit val encodeUrl: Encoder[Url] = deriveEncoder[Url]
-  implicit val encodeUrls: Encoder[List[Url]] = Encoder.encodeList[Url]
-  implicit val decodeUrl: Decoder[Url] = deriveDecoder[Url]
-  implicit val decodeUrls: Decoder[List[Url]] = Decoder.decodeList[Url]
+  implicit val codecUrl: JsonValueCodec[Url] = JsonCodecMaker.make
+  implicit val codecUrls: JsonValueCodec[Seq[Url]] = JsonCodecMaker.make
 }

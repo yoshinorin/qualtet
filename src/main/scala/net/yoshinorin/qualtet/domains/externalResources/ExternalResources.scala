@@ -1,14 +1,13 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
-import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
-import io.circe.{Decoder, Encoder}
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 
 final case class ExternalResourceKind(value: String) extends AnyVal
 object ExternalResourceKind {
-  implicit val encodeExternalResourceKind: Encoder[ExternalResourceKind] = Encoder[String].contramap(_.value)
-  implicit val decodeExternalResourceKind: Decoder[ExternalResourceKind] = Decoder[String].map(ExternalResourceKind.apply)
+  implicit val codecExternalResources: JsonValueCodec[ExternalResourceKind] = JsonCodecMaker.make
 
   val allowedKinds: List[String] = List("js", "css")
   def apply(value: String): ExternalResourceKind = {
@@ -25,18 +24,10 @@ final case class ExternalResource(
   name: String // TODO: consider naming
 )
 
-/*
-object ExternalResource {
-  implicit val encodeExternalResource: Encoder[ExternalResource] = deriveEncoder[ExternalResource]
-  implicit val decodeExternalResource: Decoder[ExternalResource] = deriveDecoder[ExternalResource]
-}
- */
-
 final case class ExternalResources(
   kind: ExternalResourceKind,
   values: List[String]
 )
 object ExternalResources {
-  implicit val encodeExternalResources: Encoder[ExternalResources] = deriveEncoder[ExternalResources]
-  implicit val decodeExternalResources: Decoder[ExternalResources] = deriveDecoder[ExternalResources]
+  implicit val codecExternalResources: JsonValueCodec[ExternalResources] = JsonCodecMaker.make
 }

@@ -13,7 +13,7 @@ class SitemapRoute(sitemapService: SitemapService) extends ResponseHandler {
     pathPrefix("sitemaps") {
       pathEndOrSingleSlash {
         get {
-          onSuccess(sitemapService.get().unsafeToFuture()) { result => httpResponse(OK, result) }
+          onSuccess(sitemapService.get().unsafeToFuture()) { result => httpResponseWithJsoniter(OK, result) }
         }
       }
     }

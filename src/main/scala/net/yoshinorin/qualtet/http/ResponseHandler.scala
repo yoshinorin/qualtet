@@ -36,7 +36,7 @@ trait ResponseHandler {
 
   def httpResponse(e: Exception): StandardRoute = {
     val r = this.toFailureResponse(e)
-    complete(HttpResponse(r._1, entity = HttpEntity(ContentTypes.`application/json`, r._2.asJson.toString())))
+    complete(HttpResponse(r._1, entity = HttpEntity(ContentTypes.`application/json`, writeToArray(r._2))))
   }
 
   // TODO: delete after migrate to jsoniter
