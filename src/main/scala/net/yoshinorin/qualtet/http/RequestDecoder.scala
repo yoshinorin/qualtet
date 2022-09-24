@@ -22,6 +22,9 @@ trait RequestDecoder {
         t match {
           // TODO: may be I need re-architect of error handling (e.g. HTTP STATUS CODE 400, 422) for jsoniter
           case t: Fail => Left(t)
+          case t: JsonReaderException =>
+            logger.error(t.getMessage())
+            Left(Fail.BadRequest(t.getMessage()))
           case _ => Left(InternalServerError())
         }
     }
