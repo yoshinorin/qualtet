@@ -7,8 +7,6 @@ import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
 
 // https://www.sitemaps.org/index.html
-class Sitemap {}
-
 final case class Loc(value: String) extends AnyVal
 object Loc {
   implicit val encodeLoc: Encoder[Loc] = Encoder[String].contramap(_.value)
