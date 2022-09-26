@@ -4,6 +4,7 @@ import java.time.ZonedDateTime
 import wvlet.airframe.ulid.ULID
 import com.github.plokhotnyuk.jsoniter_scala.macros._
 import com.github.plokhotnyuk.jsoniter_scala.core._
+import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
@@ -66,7 +67,15 @@ final case class RequestContent(
   htmlContent: String,
   publishedAt: Long = ZonedDateTime.now.toEpochSecond,
   updatedAt: Long = ZonedDateTime.now.toEpochSecond
-)
+) extends Request {
+  def postDecode: Unit = {
+    this.title.trimOrThrow(BadRequest("title required."))
+    this.rawContent.trimOrThrow(BadRequest("rawContent required."))
+    this.htmlContent.trimOrThrow(BadRequest("htmlContent required."))
+    this.externalResources = this.externalResources.copy()
+    this.robotsAttributes = this.robotsAttributes.copy()
+  }
+}
 
 object RequestContent {
   implicit val codecRequestContent: JsonValueCodec[RequestContent] = JsonCodecMaker.make
