@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.domains.authors
 
 import java.time.ZonedDateTime
 import wvlet.airframe.ulid.ULID
-import io.circe.{Decoder, Encoder}
-import io.circe.generic.semiauto.deriveEncoder
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
 
 import scala.util.matching.Regex
@@ -11,8 +11,7 @@ import java.util.Locale
 
 final case class AuthorId(value: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH)) extends AnyVal
 object AuthorId {
-  implicit val encodeAuthorId: Encoder[AuthorId] = Encoder[String].contramap(_.value)
-  implicit val decodeAuthorId: Decoder[AuthorId] = Decoder[String].map(AuthorId.apply)
+  implicit val codecAuthorId: JsonValueCodec[AuthorId] = JsonCodecMaker.make
 
   def apply(value: String): AuthorId = {
     val _ = ULID.fromString(value)
@@ -22,8 +21,7 @@ object AuthorId {
 
 final case class AuthorName(value: String) extends AnyVal
 object AuthorName {
-  implicit val encodeAuthorName: Encoder[AuthorName] = Encoder[String].contramap(_.value)
-  implicit val decodeAuthorName: Decoder[AuthorName] = Decoder[String].map(AuthorName.apply)
+  implicit val codecAuthorName: JsonValueCodec[AuthorName] = JsonCodecMaker.make
   val authorNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
   def apply(value: String): AuthorName = {
@@ -36,8 +34,7 @@ object AuthorName {
 
 final case class AuthorDisplayName(value: String) extends AnyVal
 object AuthorDisplayName {
-  implicit val encodeAuthorDisplayName: Encoder[AuthorDisplayName] = Encoder[String].contramap(_.value)
-  implicit val decodeAuthorDisplayName: Decoder[AuthorDisplayName] = Decoder[String].map(AuthorDisplayName.apply)
+  implicit val codecAuthorDisplayName: JsonValueCodec[AuthorDisplayName] = JsonCodecMaker.make
   val authorDisplayNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
   def apply(value: String): AuthorDisplayName = {
@@ -75,6 +72,6 @@ final case class ResponseAuthor(
 )
 
 object ResponseAuthor {
-  implicit val encodeAuthor: Encoder[ResponseAuthor] = deriveEncoder[ResponseAuthor]
-  implicit val encodeAuthors: Encoder[List[ResponseAuthor]] = Encoder.encodeList[ResponseAuthor]
+  implicit val codecAuthor: JsonValueCodec[ResponseAuthor] = JsonCodecMaker.make
+  implicit val codecAuthors: JsonValueCodec[Seq[ResponseAuthor]] = JsonCodecMaker.make
 }

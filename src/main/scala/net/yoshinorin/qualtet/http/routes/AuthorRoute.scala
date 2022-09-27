@@ -4,8 +4,9 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import io.circe.syntax._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
+import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.ResponseHandler
 import cats.effect.unsafe.implicits.global
@@ -20,7 +21,7 @@ class AuthorRoute(
         get {
           // TODO: need fix?
           onSuccess(authorService.getAll.unsafeToFuture()) { result =>
-            complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, s"${result.asJson}")))
+            complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, writeToArray(result))))
           }
         }
       } ~ {

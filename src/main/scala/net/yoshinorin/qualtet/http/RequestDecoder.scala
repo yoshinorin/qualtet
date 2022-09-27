@@ -1,30 +1,31 @@
 package net.yoshinorin.qualtet.http
 
-import io.circe.Decoder
-import net.yoshinorin.qualtet.message.Fail.{BadRequest, InternalServerError}
+import com.github.plokhotnyuk.jsoniter_scala.core._
+import net.yoshinorin.qualtet.domains.Request
+import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.message.Fail
 import org.slf4j.LoggerFactory
 
 import scala.util.control.NonFatal
+import java.nio.charset.Charset
 
 trait RequestDecoder {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  def decode[T](string: String)(implicit d: Decoder[T]): Either[Fail, T] = {
+  def decode[T <: Request[T]](string: String)(implicit j: JsonValueCodec[T]): Either[Fail, T] = {
     try {
-      io.circe.parser.decode[T](string) match {
-        case Right(v) =>
-          Right(v)
-        case Left(error) =>
-          logger.error(error.getMessage)
-          Left(BadRequest(error.getMessage))
-      }
+      // TODO: consider how to handle Charset
+      val x = readFromArray(string.getBytes(Charset.forName("UTF-8")))
+      Right(x.postDecode)
     } catch {
       case NonFatal(t) =>
-        logger.error(t.getMessage)
+        logger.error(t.getMessage())
         t match {
           case t: Fail => Left(t)
+          case t: JsonReaderException =>
+            // TODO: consider error message
+            Left(Fail.BadRequest(t.getMessage()))
           case _ => Left(InternalServerError())
         }
     }

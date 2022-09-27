@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.robots
 
-import io.circe.syntax._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots}
 import net.yoshinorin.qualtet.fixture.Fixture.{contentId, fullRobotsAttributes}
@@ -25,10 +25,14 @@ class RobotsSpec extends AnyWordSpec {
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      val json = Robots(
-        contentId,
-        Attributes("all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate")
-      ).asJson.toString.replaceAll("\n", "").replaceAll(" ", "")
+      val json = new String(
+        writeToArray(
+          Robots(
+            contentId,
+            Attributes("all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate")
+          )
+        )
+      ).replaceAll("\n", "").replaceAll(" ", "")
 
       // NOTE: failed equally compare
       assert(json.contains(expectJson))

@@ -1,11 +1,10 @@
 package net.yoshinorin.qualtet.http
 
-import io.circe.syntax._
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCode}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.StandardRoute
-import io.circe.Encoder
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.message.Message
 import org.slf4j.LoggerFactory
@@ -35,11 +34,11 @@ trait ResponseHandler {
 
   def httpResponse(e: Exception): StandardRoute = {
     val r = this.toFailureResponse(e)
-    complete(HttpResponse(r._1, entity = HttpEntity(ContentTypes.`application/json`, r._2.asJson.toString())))
+    complete(HttpResponse(r._1, entity = HttpEntity(ContentTypes.`application/json`, writeToArray(r._2))))
   }
 
-  def httpResponse[T](statusCode: StatusCode, response: T)(implicit e: Encoder[T]): StandardRoute = {
-    complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, response.asJson.toString())))
+  def httpResponse[T](statusCode: StatusCode, response: T)(implicit e: JsonValueCodec[T]): StandardRoute = {
+    complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, writeToArray(response))))
   }
 
   def httpResponse(statusCode: StatusCode): StandardRoute = {

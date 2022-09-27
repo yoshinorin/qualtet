@@ -1,17 +1,19 @@
 package net.yoshinorin.qualtet.auth
 
-import io.circe.{Decoder, Encoder}
-import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.authors.AuthorId
+import net.yoshinorin.qualtet.domains.Request
 
 final case class RequestToken(
   authorId: AuthorId,
   password: String
-)
+) extends Request[RequestToken] {
+  def postDecode: RequestToken = this // NOTE: nothing todo
+}
 
 object RequestToken {
-  implicit val encodeTokenRequest: Encoder[RequestToken] = deriveEncoder[RequestToken]
-  implicit val decodeTokenRequest: Decoder[RequestToken] = deriveDecoder[RequestToken]
+  implicit val codecTokenRequest: JsonValueCodec[RequestToken] = JsonCodecMaker.make
 }
 
 final case class ResponseToken(
@@ -19,6 +21,5 @@ final case class ResponseToken(
 )
 
 object ResponseToken {
-  implicit val encodeTokenResponse: Encoder[ResponseToken] = deriveEncoder[ResponseToken]
-  implicit val decodeTokenResponse: Decoder[ResponseToken] = deriveDecoder[ResponseToken]
+  implicit val codecTokenResponse: JsonValueCodec[ResponseToken] = JsonCodecMaker.make
 }

@@ -5,6 +5,7 @@ import akka.http.scaladsl.server.Directives.{get, onSuccess, pathPrefix}
 import akka.http.scaladsl.server.Route
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
 import net.yoshinorin.qualtet.domains.feeds.FeedService
+import net.yoshinorin.qualtet.domains.feeds.ResponseFeed._
 
 import cats.effect.unsafe.implicits.global
 

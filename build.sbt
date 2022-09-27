@@ -48,6 +48,7 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
 val akkaVersion = "2.6.20"
 val akkaHttpVersion = "10.2.10"
 val circeVersion = "0.15.0-M1"
+val jsoniterVersion = "2.17.4"
 val doobieVersion = "1.0.0-RC2"
 val jwtScalaVersion = "9.1.1"
 val flywayVersion = "9.2.1"
@@ -67,10 +68,11 @@ libraryDependencies ++= Seq(
   "ch.megard" %% "akka-http-cors" % "1.1.3",
   "io.circe" %% "circe-core" % circeVersion,
   "io.circe" %% "circe-generic" % circeVersion,
-  "io.circe" %% "circe-parser" % circeVersion,
-  "io.circe" %% "circe-generic-extras" % "0.14.2",
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.jwt-scala" %% "jwt-circe" % jwtScalaVersion,
+  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
+  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
+  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % Test,
   "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.7",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
