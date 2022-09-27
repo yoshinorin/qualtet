@@ -21,8 +21,8 @@ class ArchiveServiceSpec extends AnyWordSpec {
           rawContent = s"this is a archives raw content ${i}",
           htmlContent = s"this is a archives html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List(s"archivesTag${i}")),
-          externalResources = Option(List())
+          tags = List(s"archivesTag${i}"),
+          externalResources = List()
         )
       )
   }

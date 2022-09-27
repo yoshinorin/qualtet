@@ -237,8 +237,8 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
             rawContent = "this is a raw ContentRouteSpec2",
             htmlContent = "<p>this is a html ContentRouteSpec2<p>",
             robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = Option(List("ContentRoute")),
-            externalResources = Option(List())
+            tags = List("ContentRoute"),
+            externalResources = List()
           )
         )
         .unsafeRunSync()

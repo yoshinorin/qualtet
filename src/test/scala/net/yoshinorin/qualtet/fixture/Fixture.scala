@@ -172,13 +172,11 @@ object Fixture {
     rawContent = "this is a raw content",
     htmlContent = "this is a html content",
     robotsAttributes = Attributes("noarchive, noimageindex"),
-    tags = Option(List("Scala", "Akka")),
-    externalResources = Option(
-      List(
-        ExternalResources(
-          ExternalResourceKind("js"),
-          values = List("test", "foo", "bar")
-        )
+    tags = List("Scala", "Akka"),
+    externalResources = List(
+      ExternalResources(
+        ExternalResourceKind("js"),
+        values = List("test", "foo", "bar")
       )
     )
   )
@@ -190,8 +188,8 @@ object Fixture {
     rawContent = "this is a raw content",
     htmlContent = "this is a html content",
     robotsAttributes = Attributes("noarchive, noimageindex"),
-    tags = Option(List()),
-    externalResources = Option(List())
+    tags = List(),
+    externalResources = List()
   )
 
   val responseArchive: ResponseArchive = ResponseArchive(

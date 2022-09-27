@@ -24,8 +24,8 @@ class ArticleServiceSpec extends AnyWordSpec {
           rawContent = s"this is a raw content ${i}",
           htmlContent = s"this is a html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List(s"testTag${i}")),
-          externalResources = Option(List())
+          tags = List(s"testTag${i}"),
+          externalResources = List()
         )
       )
   }
@@ -41,8 +41,8 @@ class ArticleServiceSpec extends AnyWordSpec {
           rawContent = s"this is a same tag raw content ${i}",
           htmlContent = s"this is a html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List("SameTag")),
-          externalResources = Option(List())
+          tags = List("SameTag"),
+          externalResources = List()
         )
       )
   }
