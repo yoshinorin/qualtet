@@ -8,11 +8,8 @@ class ExternalResourceService(
   externalResourceRepository: ExternalResourceRepository[ConnectionIO]
 ) {
 
-  def bulkUpsertActions(data: Option[List[ExternalResource]]): DoobieAction[Int] = {
-    data match {
-      case Some(value) => DoobieContinue(externalResourceRepository.bulkUpsert(value), DoobieAction.buildDoneWithoutAnyHandle[Int])
-      case None => DoobieContinue(externalResourceRepository.fakeRequest(), DoobieAction.buildDoneWithoutAnyHandle[Int])
-    }
+  def bulkUpsertActions(data: List[ExternalResource]): DoobieAction[Int] = {
+    DoobieContinue(externalResourceRepository.bulkUpsert(data), DoobieAction.buildDoneWithoutAnyHandle[Int])
   }
 
   def deleteActions(contentId: ContentId): DoobieAction[Unit] = {

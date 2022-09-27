@@ -23,8 +23,8 @@ class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
           rawContent = s"this is a articleRoute raw content ${i}",
           htmlContent = s"this is a articleRoute html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List(s"articleRoute-${i}")),
-          externalResources = Option(List())
+          tags = List(s"articleRoute-${i}"),
+          externalResources = List()
         )
       )
   }

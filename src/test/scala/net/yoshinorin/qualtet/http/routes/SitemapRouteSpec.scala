@@ -23,8 +23,8 @@ class SitemapRouteSpec extends AnyWordSpec with ScalatestRouteTest {
           rawContent = s"this is a sitemapRoute raw content ${i}",
           htmlContent = s"this is a sitemapRoute html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List(s"sitemapRoute-${i}")),
-          externalResources = Option(List())
+          tags = List(s"sitemapRoute-${i}"),
+          externalResources = List()
         )
       )
   }

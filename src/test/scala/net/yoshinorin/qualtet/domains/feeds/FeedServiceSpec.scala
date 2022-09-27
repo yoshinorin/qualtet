@@ -24,8 +24,8 @@ class FeedServiceSpec extends AnyWordSpec {
           rawContent = s"this is a raw content for feed ${i}",
           htmlContent = s"this is a html content for feed ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List(s"testTagFeed${i}")),
-          externalResources = Option(List())
+          tags = List(s"testTagFeed${i}"),
+          externalResources = List()
         )
       )
   }

@@ -23,8 +23,8 @@ class ContentTaggingServiceSpec extends AnyWordSpec {
           rawContent = s"this is a ContentTaggingServiceSpec raw content ${i}",
           htmlContent = s"this is a ContentTaggingServiceSpec html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List(s"ContentTaggingServiceSpec${i}.1", s"ContentTaggingServiceSpec${i}.2", s"ContentTaggingServiceSpec${i}.3")),
-          externalResources = Option(List())
+          tags = List(s"ContentTaggingServiceSpec${i}.1", s"ContentTaggingServiceSpec${i}.2", s"ContentTaggingServiceSpec${i}.3"),
+          externalResources = List()
         )
       )
   }
@@ -38,13 +38,13 @@ class ContentTaggingServiceSpec extends AnyWordSpec {
       // TODO: clean up
       val contents1 = contentService.findByPath(Path("/test/ContentTaggingServiceSpec-1")).unsafeRunSync().get
       val contents = contentService.findByPathWithMeta(Path("/test/ContentTaggingServiceSpec-1")).unsafeRunSync().get
-      val shouledDeleteContentTaggings = (contents1.id, Seq(contents.tags.get.head.id, contents.tags.get.last.id))
+      val shouledDeleteContentTaggings = (contents1.id, Seq(contents.tags.head.id, contents.tags.last.id))
 
       contentTaggingService.bulkDeleteActions(shouledDeleteContentTaggings).perform.andTransact(doobieContext).unsafeRunSync()
       val result = contentService.findByPathWithMeta(Path("/test/ContentTaggingServiceSpec-1")).unsafeRunSync().get
 
-      assert(result.tags.get.size === 1)
-      assert(result.tags.get.head === contents.tags.get(1))
+      assert(result.tags.size === 1)
+      assert(result.tags.head === contents.tags(1))
     }
 
     "not be delete any tag" in {
@@ -52,7 +52,7 @@ class ContentTaggingServiceSpec extends AnyWordSpec {
       contentTaggingService.bulkDeleteActions(beforeDelete.id, Seq()).perform.andTransact(doobieContext).unsafeRunSync()
       val afterDelete = contentService.findByPathWithMeta(Path("/test/ContentTaggingServiceSpec-2")).unsafeRunSync().get
 
-      assert(afterDelete.tags.get.size === 3)
+      assert(afterDelete.tags.size === 3)
     }
   }
 

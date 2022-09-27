@@ -30,8 +30,8 @@ class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
           rawContent = s"this is a tagRoute raw content ${i}",
           htmlContent = s"this is a tagRoute html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List(s"tagRoute-${i}")),
-          externalResources = Option(List())
+          tags = List(s"tagRoute-${i}"),
+          externalResources = List()
         )
       )
   }

@@ -25,8 +25,8 @@ class TagServiceSpec extends AnyWordSpec {
           rawContent = s"this is a tagService raw content ${i}",
           htmlContent = s"this is a tagService html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List(s"tagService${i}")),
-          externalResources = Option(List())
+          tags = List(s"tagService${i}"),
+          externalResources = List()
         )
       )
   }

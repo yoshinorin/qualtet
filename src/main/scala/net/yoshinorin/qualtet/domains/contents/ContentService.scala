@@ -72,7 +72,7 @@ class ContentService(
         case None => ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH))
         case Some(x) => x.id
       }
-      maybeTags <- tagService.getTags(request.tags)
+      maybeTags <- tagService.getTags(Some(request.tags))
       maybeContentTagging <- createContentTagging(contentId, maybeTags)
       createdContent <- this.create(
         Content(
@@ -105,13 +105,10 @@ class ContentService(
     robotsAttributes: Attributes,
     tags: Option[List[Tag]],
     contentTagging: Option[List[ContentTagging]],
-    externalResources: Option[List[ExternalResources]]
+    externalResources: List[ExternalResources]
   ): IO[Content] = {
 
-    val maybeExternalResources = externalResources match {
-      case None => None
-      case Some(x) => Option(x.flatMap(a => a.values.map(v => ExternalResource(data.id, a.kind, v))))
-    }
+    val maybeExternalResources = externalResources.flatMap(a => a.values.map(v => ExternalResource(data.id, a.kind, v)))
 
     val queries = for {
       contentUpsert <- upsertActions(data).perform
@@ -205,8 +202,9 @@ class ContentService(
               title = x.title,
               robotsAttributes = x.robotsAttributes,
               externalResources = (x.externalResourceKindKeys, x.externalResourceKindValues)
-                .zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2).distinct)),
-              tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(new TagId(x), new TagName(y))).map(x => x.distinct),
+                .zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2).distinct))
+                .getOrElse(List()),
+              tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(new TagId(x), new TagName(y))).map(x => x.distinct).getOrElse(List()),
               description = stripedContent.substring(0, stripedContentLen),
               content = x.content,
               authorName = x.authorName,

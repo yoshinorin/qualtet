@@ -25,16 +25,16 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(result.rawContent === requestContent1.rawContent)
 
       val createdContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync()
-      val createdTagNames = createdContent.get.tags.get.map(x => x.name.value)
+      val createdTagNames = createdContent.get.tags.map(x => x.name.value)
       assert(createdTagNames.contains("Scala"))
       assert(createdTagNames.contains("Akka"))
 
       val createdAttributes = createdContent.get.robotsAttributes
       assert(createdAttributes.value === requestContent1.robotsAttributes.value)
 
-      val createdExternalResources = createdContent.get.externalResources.get.head
-      assert(createdExternalResources.kind === requestContent1.externalResources.get.head.kind)
-      assert(createdExternalResources.values.sorted === requestContent1.externalResources.get.head.values.sorted)
+      val createdExternalResources = createdContent.get.externalResources.head
+      assert(createdExternalResources.kind === requestContent1.externalResources.head.kind)
+      assert(createdExternalResources.values.sorted === requestContent1.externalResources.head.values.sorted)
 
     }
 
@@ -47,13 +47,11 @@ class ContentServiceSpec extends AnyWordSpec {
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = Option(List("Scala", "Akka")),
-        externalResources = Option(
-          List(
-            ExternalResources(
-              ExternalResourceKind("js"),
-              values = List("test", "foo", "bar")
-            )
+        tags = List("Scala", "Akka"),
+        externalResources = List(
+          ExternalResources(
+            ExternalResourceKind("js"),
+            values = List("test", "foo", "bar")
           )
         )
       )
@@ -62,7 +60,7 @@ class ContentServiceSpec extends AnyWordSpec {
       val currentContent = contentService.findByPathWithMeta(requestContent.path).unsafeRunSync().get
       val updatedRequestContent = requestContent.copy(
         title = "updated title",
-        tags = Option(List("Scala", "Scala3")),
+        tags = List("Scala", "Scala3"),
         robotsAttributes = Attributes("noarchive")
       )
       contentService.createContentFromRequest(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
@@ -76,12 +74,12 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(currentContent.publishedAt === updatedContent.publishedAt)
       assert(updatedContent.robotsAttributes === updatedRequestContent.robotsAttributes)
 
-      val updatedTagNames = updatedContent.tags.get.map(x => x.name.value)
+      val updatedTagNames = updatedContent.tags.map(x => x.name.value)
       assert(updatedTagNames.contains("Scala"))
       assert(updatedTagNames.contains("Scala3"))
       assert(!updatedTagNames.contains("Akka"))
 
-      contentService.createContentFromRequest(AuthorName(author.name.value), requestContent.copy(tags = None)).unsafeRunSync()
+      contentService.createContentFromRequest(AuthorName(author.name.value), requestContent.copy(tags = List())).unsafeRunSync()
 
       for {
         r <- contentService.findByPathWithMeta(requestContent.path)
@@ -131,13 +129,11 @@ class ContentServiceSpec extends AnyWordSpec {
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = Option(List("WillBeDelete", "WillBeDelete2")),
-        externalResources = Option(
-          List(
-            ExternalResources(
-              ExternalResourceKind("js"),
-              values = List("willBeDelete1", "willBeDelete2")
-            )
+        tags = List("WillBeDelete", "WillBeDelete2"),
+        externalResources = List(
+          ExternalResources(
+            ExternalResourceKind("js"),
+            values = List("willBeDelete1", "willBeDelete2")
           )
         )
       )
@@ -149,13 +145,11 @@ class ContentServiceSpec extends AnyWordSpec {
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = Option(List("WillNotDelete", "WillNotDelete2")),
-        externalResources = Option(
-          List(
-            ExternalResources(
-              ExternalResourceKind("js"),
-              values = List("willNotDelete1", "willNotDelete2")
-            )
+        tags = List("WillNotDelete", "WillNotDelete2"),
+        externalResources = List(
+          ExternalResources(
+            ExternalResourceKind("js"),
+            values = List("willNotDelete1", "willNotDelete2")
           )
         )
       )

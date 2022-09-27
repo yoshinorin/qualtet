@@ -68,8 +68,8 @@ class ContentSpec extends AnyWordSpec {
           rawContent = "this is a articleRoute raw content",
           htmlContent = "this is a articleRoute html content",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List()),
-          externalResources = Option(List())
+          tags = List(),
+          externalResources = List()
         )
       }
     }
@@ -83,8 +83,8 @@ class ContentSpec extends AnyWordSpec {
           rawContent = "",
           htmlContent = "this is a articleRoute html content",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List()),
-          externalResources = Option(List())
+          tags = List(),
+          externalResources = List()
         )
       }
     }
@@ -98,8 +98,8 @@ class ContentSpec extends AnyWordSpec {
           rawContent = "this is a articleRoute raw content",
           htmlContent = "",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = Option(List()),
-          externalResources = Option(List())
+          tags = List(),
+          externalResources = List()
         )
       }
     }
@@ -112,8 +112,8 @@ class ContentSpec extends AnyWordSpec {
           |{
           |  "title" : "title",
           |  "robotsAttributes" : "noarchive, noimageindex",
-          |  "externalResources" : null,
-          |  "tags" : null,
+          |  "externalResources" : [],
+          |  "tags" : [],
           |  "description" : "this is a description",
           |  "content" : "this is a content",
           |  "authorName" : "jhondue",
@@ -176,8 +176,8 @@ class ContentSpec extends AnyWordSpec {
           |  {
           |    "title" : "title2",
           |    "robotsAttributes" : "all",
-          |    "externalResources" : null,
-          |    "tags" : null,
+          |    "externalResources" : [],
+          |    "tags" : [],
           |    "description" : "this is a description2",
           |    "content" : "this is a content2",
           |    "authorName" : "jhondue",
@@ -193,23 +193,19 @@ class ContentSpec extends AnyWordSpec {
             ResponseContent(
               title = "title1",
               robotsAttributes = Attributes("noarchive, noimageindex"),
-              externalResources = Option(
-                List(
-                  ExternalResources(
-                    ExternalResourceKind("css"),
-                    List("css1", "css2")
-                  ),
-                  ExternalResources(
-                    ExternalResourceKind("js"),
-                    List("js1", "js2")
-                  )
+              externalResources = List(
+                ExternalResources(
+                  ExternalResourceKind("css"),
+                  List("css1", "css2")
+                ),
+                ExternalResources(
+                  ExternalResourceKind("js"),
+                  List("js1", "js2")
                 )
               ),
-              tags = Option(
-                List(
-                  Tag(TagId("01frdbdsdty42fv147cerqpv73"), TagName("ABC")),
-                  Tag(TagId("01frdbe1g83533h92rkhy8ctkw"), TagName("DEF"))
-                )
+              tags = List(
+                Tag(TagId("01frdbdsdty42fv147cerqpv73"), TagName("ABC")),
+                Tag(TagId("01frdbe1g83533h92rkhy8ctkw"), TagName("DEF"))
               ),
               description = "this is a description1",
               content = "this is a content1",
@@ -220,7 +216,7 @@ class ContentSpec extends AnyWordSpec {
             ResponseContent(
               title = "title2",
               robotsAttributes = Attributes("all"),
-              externalResources = None,
+              externalResources = List(),
               description = "this is a description2",
               content = "this is a content2",
               authorName = author.name,
