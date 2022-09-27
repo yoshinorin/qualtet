@@ -12,7 +12,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
 
-// testOnly net.yoshinorin.qualtet.domains.models.contents.ContentSpec
+// testOnly net.yoshinorin.qualtet.domains.contents.ContentSpec
 class ContentSpec extends AnyWordSpec {
 
   "ContentId" should {
