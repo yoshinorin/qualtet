@@ -13,7 +13,7 @@ trait RequestDecoder {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  def decode[T <: Request](string: String)(implicit e: JsonValueCodec[T]): Either[Fail, T] = {
+  def decode[T <: Request[T]](string: String)(implicit e: JsonValueCodec[T]): Either[Fail, T] = {
     try {
       // TODO: consider how to handle Charset
       val x = readFromArray(string.getBytes(Charset.forName("UTF-8")))

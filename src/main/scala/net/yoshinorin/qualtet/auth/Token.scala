@@ -8,8 +8,8 @@ import net.yoshinorin.qualtet.domains.Request
 final case class RequestToken(
   authorId: AuthorId,
   password: String
-) extends Request {
-  def postDecode: Unit = ()
+) extends Request[RequestToken] {
+  def postDecode: RequestToken = this // NOTE: nothing todo
 }
 
 object RequestToken {

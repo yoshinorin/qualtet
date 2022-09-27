@@ -103,7 +103,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           assert(r.title === "this is a title")
           assert(r.rawContent === "this is a raw content")
           assert(r.htmlContent === "this is a html content")
-          assert(r.robotsAttributes === Attributes("noindex, noarchive, noimageindex, nofollow"))
+          assert(r.robotsAttributes === Attributes("noarchive, nofollow, noimageindex, noindex"))
           assert(r.publishedAt === 1537974000)
           assert(r.updatedAt === 1621098091)
         }

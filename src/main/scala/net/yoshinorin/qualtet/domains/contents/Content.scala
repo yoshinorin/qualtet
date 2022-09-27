@@ -67,13 +67,30 @@ final case class RequestContent(
   htmlContent: String,
   publishedAt: Long = ZonedDateTime.now.toEpochSecond,
   updatedAt: Long = ZonedDateTime.now.toEpochSecond
-) extends Request {
-  def postDecode: Unit = {
+) extends Request[RequestContent] {
+  def postDecode: RequestContent = {
     this.title.trimOrThrow(BadRequest("title required."))
     this.rawContent.trimOrThrow(BadRequest("rawContent required."))
     this.htmlContent.trimOrThrow(BadRequest("htmlContent required."))
-    this.externalResources = this.externalResources.copy()
-    this.robotsAttributes = this.robotsAttributes.copy()
+
+    val robotsAttributes = new Attributes(
+      value = this.robotsAttributes.value
+    )
+    println(robotsAttributes)
+
+    this.copy(
+      /*
+      externalResources = this.externalResources.map(er =>
+          new ExternalResources(
+          kind = er..externalResources.kind,
+          name = this.externalResources.name
+        )
+      ),
+       */
+      robotsAttributes = new Attributes(
+        value = this.robotsAttributes.value
+      )
+    )
   }
 }
 
@@ -123,10 +140,17 @@ final case class ResponseContent(
 )
 
 object ResponseContent {
-  implicit val codecResponseContent: JsonValueCodec[ResponseContent] = JsonCodecMaker.make
+  implicit val codecResponseContent: JsonValueCodec[ResponseContent] = JsonCodecMaker.make(
+    CodecMakerConfig
+      .withRequireCollectionFields(true)
+      .withTransientEmpty(false)
+      .withSkipNestedOptionValues(false)
+      .withSkipUnexpectedFields(false)
+      .withTransientEmpty(false)
+      .withTransientDefault(false)
+  )
   implicit val codecResponseContents: JsonValueCodec[Seq[ResponseContent]] = JsonCodecMaker.make
 }
-
 final case class ResponseContentDbRow(
   title: String,
   robotsAttributes: Attributes,

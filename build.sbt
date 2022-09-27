@@ -71,6 +71,7 @@ libraryDependencies ++= Seq(
   "com.github.jwt-scala" %% "jwt-circe" % jwtScalaVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % "2.17.4",
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.17.4" % "compile-internal",
+  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.17.4" % Test,
   "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.7",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,

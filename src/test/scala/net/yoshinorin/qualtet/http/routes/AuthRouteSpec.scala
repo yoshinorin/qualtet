@@ -99,10 +99,9 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
            |}
         """.stripMargin
 
-      // TODO: fix response to 404
       Post("/token/")
         .withEntity(ContentTypes.`application/json`, json) ~> authRoute.route ~> check {
-        assert(status === StatusCodes.InternalServerError)
+        assert(status === StatusCodes.NotFound)
       }
     }
 

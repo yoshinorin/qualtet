@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
+import com.github.plokhotnyuk.jsoniter_scala.macros._
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, Path, ResponseContent}
@@ -14,6 +15,9 @@ import java.time.{Instant, ZoneOffset, ZonedDateTime}
 
 // testOnly net.yoshinorin.qualtet.domains.contents.ContentSpec
 class ContentSpec extends AnyWordSpec {
+
+  implicit val jsoniterConfigMaker =
+    CodecMakerConfig.withRequireCollectionFields(true).withTransientEmpty(false).withSkipNestedOptionValues(false).withSkipUnexpectedFields(false)
 
   "ContentId" should {
     "create instance with specific id" in {
