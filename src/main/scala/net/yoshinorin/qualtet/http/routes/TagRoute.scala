@@ -5,12 +5,12 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import cats.effect.IO
-import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticleWithCount}
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.{Authentication, ArticlesQueryParameter, ResponseHandler}
+import net.yoshinorin.qualtet.syntax._
 
 import cats.effect.unsafe.implicits.global
 
@@ -26,7 +26,7 @@ class TagRoute(
       pathEndOrSingleSlash {
         get {
           onSuccess(tagService.getAll.unsafeToFuture()) { result =>
-            complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, writeToArray(result))))
+            complete(HttpResponse(OK, entity = HttpEntity(ContentTypes.`application/json`, result.asJson)))
           }
         }
       } ~ {

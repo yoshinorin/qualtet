@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword, ResponseAuthor}
 import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
+import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -113,16 +113,13 @@ class AuthorSpec extends AnyWordSpec {
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      val json = new String(
-        writeToArray(
-          ResponseAuthor(
-            id = authorId,
-            name = AuthorName("JhonDue"),
-            displayName = AuthorDisplayName("JD"),
-            createdAt = 1567814290
-          )
-        )
-      ).replaceAll("\n", "").replaceAll(" ", "")
+      val json =
+        ResponseAuthor(
+          id = authorId,
+          name = AuthorName("JhonDue"),
+          displayName = AuthorDisplayName("JD"),
+          createdAt = 1567814290
+        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
 
       // NOTE: failed equally compare
       assert(json.contains(expectJson))
@@ -147,24 +144,21 @@ class AuthorSpec extends AnyWordSpec {
           |]
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      val json = new String(
-        writeToArray(
-          Seq(
-            ResponseAuthor(
-              id = authorId,
-              name = AuthorName("JhonDue"),
-              displayName = AuthorDisplayName("JD"),
-              createdAt = 1567814290
-            ),
-            ResponseAuthor(
-              id = authorId2,
-              name = AuthorName("JhonDue2"),
-              displayName = AuthorDisplayName("JD2"),
-              createdAt = 1567814291
-            )
+      val json =
+        Seq(
+          ResponseAuthor(
+            id = authorId,
+            name = AuthorName("JhonDue"),
+            displayName = AuthorDisplayName("JD"),
+            createdAt = 1567814290
+          ),
+          ResponseAuthor(
+            id = authorId2,
+            name = AuthorName("JhonDue2"),
+            displayName = AuthorDisplayName("JD2"),
+            createdAt = 1567814291
           )
-        )
-      ).replaceAll("\n", "").replaceAll(" ", "")
+        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
 
       // NOTE: failed equally compare
       assert(json.contains(expectJson))

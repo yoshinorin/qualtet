@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.sitemaps.{LastMod, Loc, Url}
+import net.yoshinorin.qualtet.syntax._
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.models.sitemaps.SitemapsSpec
@@ -49,14 +49,11 @@ class SitemapsSpec extends AnyWordSpec {
           |]
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      val urls = new String(
-        writeToArray(
-          Seq(
-            Url(Loc("https://example.com/aaa/bbb"), LastMod("1620738897")),
-            Url(Loc("https://example.com/ccc/ddd"), LastMod("1620938897"))
-          )
-        )
-      ).replaceAll("\n", "").replaceAll(" ", "")
+      val urls =
+        Seq(
+          Url(Loc("https://example.com/aaa/bbb"), LastMod("1620738897")),
+          Url(Loc("https://example.com/ccc/ddd"), LastMod("1620938897"))
+        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
 
       assert(expectJson === urls)
     }

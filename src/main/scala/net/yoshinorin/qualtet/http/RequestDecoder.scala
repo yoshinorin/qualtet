@@ -4,10 +4,10 @@ import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.message.Fail
+import net.yoshinorin.qualtet.syntax._
 import org.slf4j.LoggerFactory
 
 import scala.util.control.NonFatal
-import java.nio.charset.Charset
 
 trait RequestDecoder {
 
@@ -15,9 +15,7 @@ trait RequestDecoder {
 
   def decode[T <: Request[T]](string: String)(implicit j: JsonValueCodec[T]): Either[Fail, T] = {
     try {
-      // TODO: consider how to handle Charset
-      val x = readFromArray(string.getBytes(Charset.forName("UTF-8")))
-      Right(x.postDecode)
+      Right(string.decode.postDecode)
     } catch {
       case NonFatal(t) =>
         logger.error(t.getMessage())

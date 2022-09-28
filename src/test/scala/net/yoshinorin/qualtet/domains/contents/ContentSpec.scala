@@ -1,12 +1,11 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import com.github.plokhotnyuk.jsoniter_scala.core._
-import com.github.plokhotnyuk.jsoniter_scala.macros._
 import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, Path, ResponseContent}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName}
+import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.fixture.Fixture._
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import org.scalatest.wordspec.AnyWordSpec
@@ -123,19 +122,16 @@ class ContentSpec extends AnyWordSpec {
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      val json = new String(
-        writeToArray(
-          ResponseContent(
-            title = "title",
-            robotsAttributes = Attributes("noarchive, noimageindex"),
-            description = "this is a description",
-            content = "this is a content",
-            authorName = author.name,
-            publishedAt = 1567814290,
-            updatedAt = 1567814291
-          )
-        )
-      ).replaceAll("\n", "").replaceAll(" ", "")
+      val json =
+        ResponseContent(
+          title = "title",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          description = "this is a description",
+          content = "this is a content",
+          authorName = author.name,
+          publishedAt = 1567814290,
+          updatedAt = 1567814291
+        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
 
       // NOTE: failed equally compare
       assert(json.contains(expectJson))
@@ -188,45 +184,42 @@ class ContentSpec extends AnyWordSpec {
           |]
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      val json = new String(
-        writeToArray(
-          Seq(
-            ResponseContent(
-              title = "title1",
-              robotsAttributes = Attributes("noarchive, noimageindex"),
-              externalResources = List(
-                ExternalResources(
-                  ExternalResourceKind("css"),
-                  List("css1", "css2")
-                ),
-                ExternalResources(
-                  ExternalResourceKind("js"),
-                  List("js1", "js2")
-                )
+      val json =
+        Seq(
+          ResponseContent(
+            title = "title1",
+            robotsAttributes = Attributes("noarchive, noimageindex"),
+            externalResources = List(
+              ExternalResources(
+                ExternalResourceKind("css"),
+                List("css1", "css2")
               ),
-              tags = List(
-                Tag(TagId("01frdbdsdty42fv147cerqpv73"), TagName("ABC")),
-                Tag(TagId("01frdbe1g83533h92rkhy8ctkw"), TagName("DEF"))
-              ),
-              description = "this is a description1",
-              content = "this is a content1",
-              authorName = author.name,
-              publishedAt = 1567814290,
-              updatedAt = 1567814299
+              ExternalResources(
+                ExternalResourceKind("js"),
+                List("js1", "js2")
+              )
             ),
-            ResponseContent(
-              title = "title2",
-              robotsAttributes = Attributes("all"),
-              externalResources = List(),
-              description = "this is a description2",
-              content = "this is a content2",
-              authorName = author.name,
-              publishedAt = 1567814291,
-              updatedAt = 1567814391
-            )
+            tags = List(
+              Tag(TagId("01frdbdsdty42fv147cerqpv73"), TagName("ABC")),
+              Tag(TagId("01frdbe1g83533h92rkhy8ctkw"), TagName("DEF"))
+            ),
+            description = "this is a description1",
+            content = "this is a content1",
+            authorName = author.name,
+            publishedAt = 1567814290,
+            updatedAt = 1567814299
+          ),
+          ResponseContent(
+            title = "title2",
+            robotsAttributes = Attributes("all"),
+            externalResources = List(),
+            description = "this is a description2",
+            content = "this is a content2",
+            authorName = author.name,
+            publishedAt = 1567814291,
+            updatedAt = 1567814391
           )
-        )
-      ).replaceAll("\n", "").replaceAll(" ", "")
+        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
 
       // NOTE: failed equally compare
       assert(json.contains(expectJson))

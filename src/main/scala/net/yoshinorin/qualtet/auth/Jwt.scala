@@ -15,7 +15,6 @@ import wvlet.airframe.ulid.ULID
 
 import java.time.Instant
 import java.util.Locale
-import java.nio.charset.Charset
 import scala.util.Try
 
 final case class JwtClaim(
@@ -76,7 +75,7 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
     (for {
       _ <- verify(jwtString)
       maybeJwtClaim <- pdi.jwt.Jwt.decodeRaw(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
-      jwt <- Try(readFromArray(maybeJwtClaim.getBytes(Charset.forName("UTF-8")))).toEither
+      jwt <- Try(maybeJwtClaim.decode).toEither
     } yield jwt) match {
       case Left(t) =>
         logger.error(t.getMessage)

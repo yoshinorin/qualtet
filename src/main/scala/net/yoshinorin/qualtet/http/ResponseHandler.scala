@@ -7,6 +7,7 @@ import akka.http.scaladsl.server.StandardRoute
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.message.Message
+import net.yoshinorin.qualtet.syntax._
 import org.slf4j.LoggerFactory
 
 trait ResponseHandler {
@@ -34,11 +35,11 @@ trait ResponseHandler {
 
   def httpResponse(e: Exception): StandardRoute = {
     val r = this.toFailureResponse(e)
-    complete(HttpResponse(r._1, entity = HttpEntity(ContentTypes.`application/json`, writeToArray(r._2))))
+    complete(HttpResponse(r._1, entity = HttpEntity(ContentTypes.`application/json`, r._2.asJson)))
   }
 
   def httpResponse[T](statusCode: StatusCode, response: T)(implicit e: JsonValueCodec[T]): StandardRoute = {
-    complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, writeToArray(response))))
+    complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, response.asJson)))
   }
 
   def httpResponse(statusCode: StatusCode): StandardRoute = {

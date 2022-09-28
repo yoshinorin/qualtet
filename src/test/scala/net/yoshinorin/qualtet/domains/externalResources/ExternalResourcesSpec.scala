@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
-import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.syntax._
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.models.externalResources.ExternalResourcesSpec
@@ -27,14 +27,11 @@ class ExternalResourcesSpec extends AnyWordSpec {
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      val json = new String(
-        writeToArray(
-          ExternalResources(
-            ExternalResourceKind("js"),
-            values = List("test", "foo", "bar")
-          )
-        )
-      ).replaceAll("\n", "").replaceAll(" ", "")
+      val json =
+        ExternalResources(
+          ExternalResourceKind("js"),
+          values = List("test", "foo", "bar")
+        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
 
       assert(json.contains(expectJson))
     }
