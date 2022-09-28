@@ -13,9 +13,9 @@ trait RequestDecoder {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  def decode[T <: Request[T]](string: String)(implicit j: JsonValueCodec[T]): Either[Fail, T] = {
+  def decode[T <: Request[T]](maybeJsonString: String)(implicit j: JsonValueCodec[T]): Either[Fail, T] = {
     try {
-      Right(string.decode.postDecode)
+      Right(maybeJsonString.decode.postDecode)
     } catch {
       case NonFatal(t) =>
         logger.error(t.getMessage())

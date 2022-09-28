@@ -75,8 +75,8 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
     (for {
       _ <- verify(jwtString)
       maybeJwtClaim <- pdi.jwt.Jwt.decodeRaw(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
-      jwt <- Try(maybeJwtClaim.decode).toEither
-    } yield jwt) match {
+      jwtClaim <- Try(maybeJwtClaim.decode).toEither
+    } yield jwtClaim) match {
       case Left(t) =>
         logger.error(t.getMessage)
         IO(Left(t))
