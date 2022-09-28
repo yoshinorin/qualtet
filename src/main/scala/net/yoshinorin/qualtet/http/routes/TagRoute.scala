@@ -11,7 +11,6 @@ import net.yoshinorin.qualtet.domains.articles.{ArticleService, ResponseArticleW
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.{Authentication, ArticlesQueryParameter, ResponseHandler}
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
 
 import cats.effect.unsafe.implicits.global
 
