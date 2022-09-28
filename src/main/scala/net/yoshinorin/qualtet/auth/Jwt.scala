@@ -2,20 +2,21 @@ package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
 import cats.implicits.catsSyntaxEq
-import io.circe.Decoder
-import io.circe.generic.semiauto.deriveDecoder
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.authors.Author
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
 import net.yoshinorin.qualtet.syntax._
 import org.slf4j.LoggerFactory
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
-import pdi.jwt.{JwtCirce, JwtOptions}
+import pdi.jwt.JwtOptions
 import wvlet.airframe.ulid.ULID
 
 import java.time.Instant
-import scala.util.Try
 import java.util.Locale
+import java.nio.charset.Charset
+import scala.util.Try
 
 final case class JwtClaim(
   iss: String,
@@ -27,13 +28,12 @@ final case class JwtClaim(
 )
 
 object JwtClaim {
-
-  implicit val decodeJwtClaim: Decoder[JwtClaim] = deriveDecoder[JwtClaim]
-  implicit val decodeJwtClaims: Decoder[List[JwtClaim]] = Decoder.decodeList[JwtClaim]
-
+  implicit val codecJwtClaim: JsonValueCodec[JwtClaim] = JsonCodecMaker.make
 }
 
 class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signature) {
+
+  import JwtClaim._
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -75,9 +75,9 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
   def decode(jwtString: String): IO[Either[Throwable, JwtClaim]] = {
     (for {
       _ <- verify(jwtString)
-      jsonString <- JwtCirce.decodeJson(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
-      maybeJwtClaim <- jsonString.as[JwtClaim]
-    } yield maybeJwtClaim) match {
+      maybeJwtClaim <- pdi.jwt.Jwt.decodeRaw(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
+      jwt <- Try(readFromArray(maybeJwtClaim.getBytes(Charset.forName("UTF-8")))).toEither
+    } yield jwt) match {
       case Left(t) =>
         logger.error(t.getMessage)
         IO(Left(t))

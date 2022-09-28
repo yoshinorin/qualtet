@@ -47,7 +47,6 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
 // https://www.lightbend.com/blog/why-we-are-changing-the-license-for-akka
 val akkaVersion = "2.6.20"
 val akkaHttpVersion = "10.2.10"
-val circeVersion = "0.15.0-M1"
 val jsoniterVersion = "2.17.4"
 val doobieVersion = "1.0.0-RC2"
 val jwtScalaVersion = "9.1.1"
@@ -66,10 +65,7 @@ libraryDependencies ++= Seq(
   // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4
   "org.typelevel" %% "cats-effect" % "3.3.4",
   "ch.megard" %% "akka-http-cors" % "1.1.3",
-  "io.circe" %% "circe-core" % circeVersion,
-  "io.circe" %% "circe-generic" % circeVersion,
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
-  "com.github.jwt-scala" %% "jwt-circe" % jwtScalaVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % Test,
