@@ -76,17 +76,17 @@ libraryDependencies ++= Seq(
   "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.7",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-  "org.wvlet.airframe" %% "airframe-ulid" % "22.8.0",
+  "org.wvlet.airframe" %% "airframe-ulid" % "22.9.2",
   "com.github.ben-manes.caffeine" % "caffeine" % "3.1.1",
   "org.flywaydb" % "flyway-core" % flywayVersion,
   // NOTE: workaround: https://github.com/flyway/flyway/issues/3355
   "org.flywaydb" % "flyway-mysql" % flywayVersion,
-  "ch.qos.logback" % "logback-classic" % "1.4.0",
+  "ch.qos.logback" % "logback-classic" % "1.4.1",
   "org.codehaus.janino" % "janino" % "3.1.8",
   "org.springframework.security" % "spring-security-core" % "5.7.3",
-  "org.slf4j" % "slf4j-api" % "2.0.0",
+  "org.slf4j" % "slf4j-api" % "2.0.2",
   "org.scalatest" %% "scalatest" % "3.2.13" % "test",
-  "org.mockito" % "mockito-core" % "4.7.0" % "test"
+  "org.mockito" % "mockito-core" % "4.8.0" % "test"
 )
 
 val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
