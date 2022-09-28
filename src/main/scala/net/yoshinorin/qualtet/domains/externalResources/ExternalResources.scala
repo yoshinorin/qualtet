@@ -29,12 +29,5 @@ final case class ExternalResources(
   values: List[String]
 )
 object ExternalResources {
-  implicit val jsoniterConfigMaker = CodecMakerConfig
-    .withRequireCollectionFields(true)
-    .withTransientEmpty(false)
-    .withSkipNestedOptionValues(false)
-    .withSkipUnexpectedFields(false)
-    .withTransientEmpty(false)
-    .withTransientDefault(false)
   implicit val codecExternalResources: JsonValueCodec[ExternalResources] = JsonCodecMaker.make
 }
