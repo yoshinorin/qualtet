@@ -70,13 +70,18 @@ final case class RequestContent(
 ) extends Request[RequestContent] {
   // NOTE: see `net.yoshinorin.qualtet.domains.Request` comment.
   def postDecode: RequestContent = {
-    for {
-      _ <- this.title.trimOrThrow(BadRequest("title required."))
-      _ <- this.rawContent.trimOrThrow(BadRequest("rawContent required."))
-      _ <- this.htmlContent.trimOrThrow(BadRequest("htmlContent required."))
-    } yield ()
-    this.copy(
-      robotsAttributes = this.robotsAttributes.sort
+    new RequestContent(
+      requestId = requestId,
+      contentType = contentType,
+      robotsAttributes = this.robotsAttributes.sort,
+      externalResources = externalResources,
+      tags = tags,
+      path = path,
+      title = title.trimOrThrow(BadRequest("title required.")),
+      rawContent = rawContent.trimOrThrow(BadRequest("rawContent required.")),
+      htmlContent = htmlContent.trimOrThrow(BadRequest("htmlContent required.")),
+      publishedAt = publishedAt,
+      updatedAt = updatedAt
     )
   }
 }
