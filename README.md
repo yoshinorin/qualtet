@@ -14,7 +14,7 @@
 |---|---|
 |[Qualtet](https://github.com/yoshinorin/qualtet)|API-based blogging system (server-side).|
 |[Quintet](https://github.com/yoshinorin/quintet)|The front end for Qualtet.|
-|[Hexo](https://github.com/hexojs)|Hexo is SSG, but I'm using it for just local content management. (markdown, images, etc...) My website's contents depend on Hexo. But basically, Qualtet no needs to depend on Hexo.|
+|[Hexo](https://github.com/hexojs)|Hexo is SSG, but I'm using it for just local content management. (markdown, images, etc...) My website's contents depend on Hexo locally. But basically, Qualtet no needs to depend on Hexo.|
 
 ## Architecture (Example)
 
