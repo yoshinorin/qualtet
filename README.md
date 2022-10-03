@@ -2,6 +2,8 @@
 
 *Qualtet is an API-based blogging system (server-side).*
 
+> [Live (Qualtet is a backend of this site)](https://yoshinorin.net)
+
 |Latest|Build|Coverage|API Doc|
 |---|---|---|---|
 |![](https://img.shields.io/badge/Release-v1.11.0-blue.svg?style=flat-square)|[![CI](https://img.shields.io/github/workflow/status/yoshinorin/qualtet/CI/master?label=CI)](https://github.com/yoshinorin/qualtet/actions)|[![Coverage Status](https://coveralls.io/repos/github/yoshinorin/qualtet/badge.svg?branch=master)](https://coveralls.io/github/yoshinorin/qualtet?branch=master)|[![](https://img.shields.io/badge/Doc-Swagger-blue.svg)](https://yoshinorin.github.io/qualtet/)|
@@ -11,8 +13,8 @@
 |||
 |---|---|
 |[Qualtet](https://github.com/yoshinorin/qualtet)|API-based blogging system (server-side).|
-|[Quintet](https://github.com/yoshinorin/quintet)|The front end for the Qualtet.|
-|[Hexo](https://github.com/hexojs)|Hexo is SSG, but I'm using it for just local content management. (markdown, images, etc...) |
+|[Quintet](https://github.com/yoshinorin/quintet)|The front end for Qualtet.|
+|[Hexo](https://github.com/hexojs)|Hexo is SSG, but I'm using it for just local content management. (markdown, images, etc...) My website's contents depend on Hexo. But basically, Qualtet no needs to depend on Hexo.|
 
 ## Architecture (Example)
 
