@@ -39,6 +39,7 @@ class HttpServer(
 )(implicit actorSystem: ActorSystem)
     extends HttpLogger {
 
+  /*
   import akka.http.scaladsl.server.RouteConcatenation._
 
   def start(host: String, port: Int): Future[ServerBinding] = {
@@ -63,4 +64,5 @@ class HttpServer(
       }
     }
   }
+   */
 }

@@ -31,6 +31,7 @@ import org.http4s.ember.server.EmberServerBuilder
 import com.comcast.ip4s._
 import cats.effect.IOApp
 import cats.effect.ExitCode
+import cats.data.Kleisli
 // import scala.io.StdIn
 
 @SuppressWarnings(Array("org.wartremover.warts.ScalaApp")) // Not yet migrate to Scala3
@@ -62,10 +63,8 @@ object BootStrap extends IOApp {
 
   Migration.migrate(Modules.contentTypeService)
 
-  val helloWorldService = HttpRoutes.of[IO] {
-    case GET -> Root / "hello" / name =>
-      Ok(s"Hello, $name.")
-  }.orNotFound
+  val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
+  val routes: Kleisli[IO, Request[IO], Response[IO]] = apiStatusRoute.route
 
   def run(args: List[String]): IO[ExitCode] = {
 
@@ -74,7 +73,7 @@ object BootStrap extends IOApp {
       .default[IO]
       .withHost(Ipv4Address.fromString(Config.httpHost).get)
       .withPort(Port.fromInt(Config.httpPort).get)
-      .withHttpApp(helloWorldService)
+      .withHttpApp(routes)
       .build
       .use(_ => IO.never)
       .as(ExitCode.Success)
