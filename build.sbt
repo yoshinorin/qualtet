@@ -51,6 +51,7 @@ val jsoniterVersion = "2.17.9"
 val doobieVersion = "1.0.0-RC2"
 val jwtScalaVersion = "9.1.2"
 val flywayVersion = "9.8.2"
+val http4sVersion = "1.0.0-M37"
 
 // https://github.com/rtimush/sbt-updates
 dependencyAllowPreRelease := true
@@ -64,6 +65,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
   // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4, but cats-effect keep fully compatibility with 3.x
   "org.typelevel" %% "cats-effect" % "3.4.1",
+  "org.http4s" %% "http4s-dsl" % http4sVersion,
+  "org.http4s" %% "http4s-ember-server" % http4sVersion,
   "ch.megard" %% "akka-http-cors" % "1.1.3",
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,

@@ -3,6 +3,9 @@ package net.yoshinorin.qualtet
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import akka.actor.ActorSystem
+import org.http4s._
+import org.http4s.dsl.io._
+import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.http.routes.{
@@ -21,11 +24,17 @@ import net.yoshinorin.qualtet.http.routes.{
 import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.http.routes.CacheRoute
-
+import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
+import cats.effect.IO
+import org.http4s.server.Router
+import org.http4s.ember.server.EmberServerBuilder
+import com.comcast.ip4s._
+import cats.effect.IOApp
+import cats.effect.ExitCode
 // import scala.io.StdIn
 
 @SuppressWarnings(Array("org.wartremover.warts.ScalaApp")) // Not yet migrate to Scala3
-object BootStrap extends App {
+object BootStrap extends IOApp {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -53,38 +62,21 @@ object BootStrap extends App {
 
   Migration.migrate(Modules.contentTypeService)
 
-  val httpServer: HttpServer =
-    new HttpServer(
-      homeRoute,
-      apiStatusRoute,
-      authRoute,
-      authorRoute,
-      contentRoute,
-      tagRoute,
-      articleRoute,
-      archiveRoute,
-      contentTypeRoute,
-      sitemapRoute,
-      feedRoute,
-      cacheRoute
-    )
+  val helloWorldService = HttpRoutes.of[IO] {
+    case GET -> Root / "hello" / name =>
+      Ok(s"Hello, $name.")
+  }.orNotFound
 
-  logger.info("starting http server...")
+  def run(args: List[String]): IO[ExitCode] = {
 
-  httpServer.start(Config.httpHost, Config.httpPort).onComplete {
-    case Success(binding) =>
-      val address = binding.localAddress
-      logger.info(s"http server online at http://${address.getHostString}:${address.getPort}/")
-    // NOTE: docker & sbt-revolver does not work if below codes are enabled.
-    //       If do not user sbt-revolver when development below codes should be enable vice versa.
-    /*
-      StdIn.readLine()
-      binding
-        .unbind()
-        .onComplete(_ => actorSystem.terminate())
-     */
-    case Failure(ex) =>
-      println("Failed to bind HTTP endpoint, terminating system", ex)
-      actorSystem.terminate()
+    logger.info("starting http server...")
+    EmberServerBuilder
+      .default[IO]
+      .withHost(Ipv4Address.fromString(Config.httpHost).get)
+      .withPort(Port.fromInt(Config.httpPort).get)
+      .withHttpApp(helloWorldService)
+      .build
+      .use(_ => IO.never)
+      .as(ExitCode.Success)
   }
 }
