@@ -3,6 +3,12 @@ package net.yoshinorin.qualtet
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 import akka.actor.ActorSystem
+import cats._
+import cats.implicits._
+import cats.effect.IOApp
+import cats.effect.ExitCode
+import cats.data.Kleisli
+import cats.effect.IO
 import org.http4s._
 import org.http4s.dsl.io._
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
@@ -25,13 +31,9 @@ import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.http.routes.CacheRoute
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
-import cats.effect.IO
 import org.http4s.server.Router
 import org.http4s.ember.server.EmberServerBuilder
 import com.comcast.ip4s._
-import cats.effect.IOApp
-import cats.effect.ExitCode
-import cats.data.Kleisli
 // import scala.io.StdIn
 
 @SuppressWarnings(Array("org.wartremover.warts.ScalaApp")) // Not yet migrate to Scala3
@@ -63,8 +65,33 @@ object BootStrap extends IOApp {
 
   Migration.migrate(Modules.contentTypeService)
 
+  val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
-  val routes: Kleisli[IO, Request[IO], Response[IO]] = apiStatusRoute.route
+
+  val helloWorldService = HttpRoutes.of[IO] {
+    case GET -> Root / "hello" / name =>
+      Ok(s"Hello, $name.")
+  }
+
+  val helloWorldService2 = HttpRoutes.of[IO] {
+    case GET -> Root / "hello2" / name =>
+      Ok(s"Hello, $name.")
+  }
+
+  // TOOD: move somewhere
+  // val routes: Kleisli[IO, Request[IO], Response[IO]] = apiStatusRoute.route <+> homeRoute.route
+  /*
+  val httpApp = Router(
+    "/" -> homeRoute.route,
+    "/status" -> routes
+  ).orNotFound
+  */
+  // val services: Kleisli[IO, Request[IO], Response[IO]] = helloWorldService <+> helloWorldService2
+  val httpApp = Router(
+    "/" -> helloWorldService,
+    "/hello2" -> helloWorldService2
+  ).orNotFound
+
 
   def run(args: List[String]): IO[ExitCode] = {
 
@@ -73,7 +100,7 @@ object BootStrap extends IOApp {
       .default[IO]
       .withHost(Ipv4Address.fromString(Config.httpHost).get)
       .withPort(Port.fromInt(Config.httpPort).get)
-      .withHttpApp(routes)
+      .withHttpApp(httpApp)
       .build
       .use(_ => IO.never)
       .as(ExitCode.Success)

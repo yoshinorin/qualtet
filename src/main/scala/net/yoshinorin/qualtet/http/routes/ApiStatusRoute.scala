@@ -10,10 +10,9 @@ import cats.data.Kleisli
 class ApiStatusRoute {
 
   // TODO: pathEndOrSingleSlash
-  def route: Kleisli[IO, Request[IO], Response[IO]] = HttpRoutes
-    .of[IO] { case GET -> Root / "status" =>
+  def route: HttpRoutes[IO] = HttpRoutes
+    .of[IO] { case GET -> Path.empty / "status" =>
       Ok("{\"status\":\"operational\"}", `Content-Type`(MediaType.application.json))
     }
-    .orNotFound
 
 }
