@@ -67,12 +67,14 @@ object BootStrap extends IOApp {
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
+  val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
 
   // TOOD: move somewhere
   // val routes: Kleisli[IO, Request[IO], Response[IO]] = apiStatusRoute.route <+> homeRoute.route
   val httpApp = Router(
     "/" -> homeRoute.route,
-    "/" -> apiStatusRoute.route
+    "/" -> apiStatusRoute.route,
+    "/" -> archiveRoute.route
   ).orNotFound
 
   def run(args: List[String]): IO[ExitCode] = {

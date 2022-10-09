@@ -38,6 +38,11 @@ trait ResponseHandler {
     complete(HttpResponse(r._1, entity = HttpEntity(ContentTypes.`application/json`, r._2.asJson)))
   }
 
+  // TODO: rename
+  def makeResonse[T](response: T)(implicit e: JsonValueCodec[T]): String = {
+    response.asJson
+  }
+
   def httpResponse[T](statusCode: StatusCode, response: T)(implicit e: JsonValueCodec[T]): StandardRoute = {
     complete(HttpResponse(statusCode, entity = HttpEntity(ContentTypes.`application/json`, response.asJson)))
   }
