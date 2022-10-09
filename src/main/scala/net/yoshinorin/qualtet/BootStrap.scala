@@ -68,30 +68,12 @@ object BootStrap extends IOApp {
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
 
-  val helloWorldService = HttpRoutes.of[IO] {
-    case GET -> Root / "hello" / name =>
-      Ok(s"Hello, $name.")
-  }
-
-  val helloWorldService2 = HttpRoutes.of[IO] {
-    case GET -> Root / "hello2" / name =>
-      Ok(s"Hello, $name.")
-  }
-
   // TOOD: move somewhere
   // val routes: Kleisli[IO, Request[IO], Response[IO]] = apiStatusRoute.route <+> homeRoute.route
-  /*
   val httpApp = Router(
     "/" -> homeRoute.route,
-    "/status" -> routes
+    "/" -> apiStatusRoute.route
   ).orNotFound
-  */
-  // val services: Kleisli[IO, Request[IO], Response[IO]] = helloWorldService <+> helloWorldService2
-  val httpApp = Router(
-    "/" -> helloWorldService,
-    "/hello2" -> helloWorldService2
-  ).orNotFound
-
 
   def run(args: List[String]): IO[ExitCode] = {
 
