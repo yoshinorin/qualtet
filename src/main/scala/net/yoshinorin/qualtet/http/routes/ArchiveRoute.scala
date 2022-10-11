@@ -18,8 +18,8 @@ class ArchiveRoute(
 
   def route: HttpRoutes[IO] = HttpRoutes.of[IO] {
     {
-      case GET -> Root / "archives" =>
-        // TODO: do not unsafeRunSync
+      // TODO: more smart pathEndOrSlash
+      case GET -> Root / "archives" | GET -> Root / "archives" / "" =>
         Ok(makeResonse(archiveService.get.unsafeRunSync()), `Content-Type`(MediaType.application.json))
     }
   }
