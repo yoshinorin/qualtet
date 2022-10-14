@@ -9,8 +9,7 @@ import cats.effect.IO
 import net.yoshinorin.qualtet.domains.archives.ArchiveService
 import net.yoshinorin.qualtet.domains.archives.ResponseArchive._
 import net.yoshinorin.qualtet.http.ResponseHandler
-
-import cats.effect.unsafe.implicits.global
+import net.yoshinorin.qualtet.syntax._
 
 class ArchiveRoute(
   archiveService: ArchiveService
@@ -20,8 +19,10 @@ class ArchiveRoute(
     {
       // TODO: more smart pathEndOrSlash
       case GET -> Root / "archives" | GET -> Root / "archives" / "" =>
-        Ok(makeResonse(archiveService.get.unsafeRunSync()), `Content-Type`(MediaType.application.json))
+        for {
+          archives <- archiveService.get
+          response <- Ok(archives.asJson, `Content-Type`(MediaType.application.json))
+        } yield response
     }
   }
-
 }
