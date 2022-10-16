@@ -62,8 +62,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
   "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
-  // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4
-  "org.typelevel" %% "cats-effect" % "3.3.4",
+  // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4, but cats-effect keep fully compatibility with 3.x
+  "org.typelevel" %% "cats-effect" % "3.3.14",
   "ch.megard" %% "akka-http-cors" % "1.1.3",
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
