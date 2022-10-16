@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.http.routes
 
-
 import org.http4s.HttpRoutes
 import org.http4s.headers.`Content-Type`
 import org.http4s._

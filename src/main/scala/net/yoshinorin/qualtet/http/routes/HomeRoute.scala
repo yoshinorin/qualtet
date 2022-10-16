@@ -10,8 +10,8 @@ import cats.data.Kleisli
 class HomeRoute {
 
   def route: HttpRoutes[IO] = HttpRoutes
-    .of[IO] {
-      case GET -> Root => Ok("Hello Qualtet!!")
-  }
+    .of[IO] { case GET -> Root =>
+      Ok("Hello Qualtet!!")
+    }
 
 }
