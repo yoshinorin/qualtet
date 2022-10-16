@@ -47,7 +47,7 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
 // https://www.lightbend.com/blog/why-we-are-changing-the-license-for-akka
 val akkaVersion = "2.6.20"
 val akkaHttpVersion = "10.2.10"
-val jsoniterVersion = "2.17.4"
+val jsoniterVersion = "2.17.5"
 val doobieVersion = "1.0.0-RC2"
 val jwtScalaVersion = "9.1.1"
 val flywayVersion = "9.2.1"
@@ -69,19 +69,19 @@ libraryDependencies ++= Seq(
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % Test,
-  "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.7",
+  "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.8",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-  "org.wvlet.airframe" %% "airframe-ulid" % "22.9.2",
+  "org.wvlet.airframe" %% "airframe-ulid" % "22.9.3",
   "com.github.ben-manes.caffeine" % "caffeine" % "3.1.1",
   "org.flywaydb" % "flyway-core" % flywayVersion,
   // NOTE: workaround: https://github.com/flyway/flyway/issues/3355
   "org.flywaydb" % "flyway-mysql" % flywayVersion,
-  "ch.qos.logback" % "logback-classic" % "1.4.1",
+  "ch.qos.logback" % "logback-classic" % "1.4.4",
   "org.codehaus.janino" % "janino" % "3.1.8",
   "org.springframework.security" % "spring-security-core" % "5.7.3",
   "org.slf4j" % "slf4j-api" % "2.0.2",
-  "org.scalatest" %% "scalatest" % "3.2.13" % "test",
+  "org.scalatest" %% "scalatest" % "3.2.14" % "test",
   "org.mockito" % "mockito-core" % "4.8.0" % "test"
 )
 
