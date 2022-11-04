@@ -11,6 +11,7 @@ import cats.data.Kleisli
 import cats.effect.IO
 import org.http4s._
 import org.http4s.dsl.io._
+import org.http4s.server.middleware.Logger
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.config.Config
@@ -83,12 +84,15 @@ object BootStrap extends IOApp {
 
   def run(args: List[String]): IO[ExitCode] = {
 
+    // val httpAppWithLogger = Logger.httpApp(true, true)(httpApp)
+
     logger.info("starting http server...")
     EmberServerBuilder
       .default[IO]
       .withHost(Ipv4Address.fromString(Config.httpHost).get)
       .withPort(Port.fromInt(Config.httpPort).get)
       .withHttpApp(httpApp)
+      .withLogger(org.typelevel.log4cats.slf4j.Slf4jLogger.getLoggerFromSlf4j(logger))
       .build
       .use(_ => IO.never)
       .as(ExitCode.Success)
