@@ -36,15 +36,10 @@ class CacheRoute(
 
   def route: HttpRoutes[IO] = authMiddleware(authedRoutes)
 
+  // caches
   val authedRoutes: AuthedRoutes[ResponseAuthor, IO] =
     AuthedRoutes.of {
-      // TODO: DRY
-      case DELETE -> Root / "caches" as author =>
-        for {
-          _ <- cacheService.invalidateAll()
-          response <- NoContent()
-        } yield response
-      case DELETE -> Root / "caches" / "" as author =>
+      case DELETE -> Root as author =>
         for {
           _ <- cacheService.invalidateAll()
           response <- NoContent()

@@ -19,8 +19,9 @@ class ArticleRoute(
   articleService: ArticleService
 ) extends ResponseHandler {
 
+  // articles?page=n&limit=m
   def route: HttpRoutes[IO] = HttpRoutes[IO] {
-    { case GET -> Root / "articles" :? PageQueryParam(page) +& LimitQueryParam(limit) =>
+    { case GET -> Root :? PageQueryParam(page) +& LimitQueryParam(limit) =>
       for {
         articles <- OptionT.liftF(articleService.getWithCount(ArticlesQueryParameter(page, limit)))
         response <- OptionT.liftF(Ok(articles.asJson, `Content-Type`(MediaType.application.json)))

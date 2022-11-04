@@ -8,9 +8,9 @@ import cats.effect.IO
 
 class ApiStatusRoute {
 
-  // TODO: pathEndOrSingleSlash
+  // status
   def route: HttpRoutes[IO] = HttpRoutes
-    .of[IO] { case GET -> Root / "status" =>
+    .of[IO] { case GET -> Root =>
       Ok("{\"status\":\"operational\"}", `Content-Type`(MediaType.application.json))
     }
 
