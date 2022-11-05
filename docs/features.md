@@ -38,7 +38,10 @@
     - [ ] Return id
     - [ ] GET API migrate from `path` to `id`
 - [x] Update
-    - [ ] Check diff & clean up externalResources, Tags & Robots
+    - [ ] Check diff and delete unrelated them or update them
+        - [x] Tags
+        - [ ] externalResources
+        - [x] Robots
 - [x] Delete
     - [x] Delete with externalResources, Tags & Robots
 
@@ -50,7 +53,7 @@
         - [ ] Number of Contents by tag
     - [x] by TagName
 - [x] Update
-- [ ] Delete
+- [x] Delete
 
 ## Search
 
