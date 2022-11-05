@@ -38,12 +38,11 @@ class CacheRoute(
 
   // caches
   val authedRoutes: AuthedRoutes[ResponseAuthor, IO] =
-    AuthedRoutes.of {
-      case DELETE -> Root as author =>
-        for {
-          _ <- cacheService.invalidateAll()
-          response <- NoContent()
-        } yield response
+    AuthedRoutes.of { case DELETE -> Root as author =>
+      for {
+        _ <- cacheService.invalidateAll()
+        response <- NoContent()
+      } yield response
     }
 
 }

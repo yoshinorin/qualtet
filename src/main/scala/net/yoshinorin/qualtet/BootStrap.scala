@@ -70,7 +70,9 @@ object BootStrap extends IOApp {
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
   val articleRoute: ArticleRoute = new ArticleRoute(articleService)
+  val authorRoute: AuthorRoute = new AuthorRoute(authorService)
   val cacheRoute: CacheRoute = new CacheRoute(authService, cacheService)
+  val authRoute: AuthRoute = new AuthRoute(authService)
 
   // TOOD: move somewhere
   // val routes: Kleisli[IO, Request[IO], Response[IO]] = apiStatusRoute.route <+> homeRoute.route
@@ -79,7 +81,9 @@ object BootStrap extends IOApp {
     "/status" -> apiStatusRoute.route,
     "/archives" -> archiveRoute.route,
     "/articles" -> articleRoute.route,
-    "/caches" -> cacheRoute.route
+    "/authors" -> authorRoute.route,
+    "/caches" -> cacheRoute.route,
+    "/token" -> authRoute.route
   ).orNotFound
 
   def run(args: List[String]): IO[ExitCode] = {
