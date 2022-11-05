@@ -49,6 +49,7 @@ object BootStrap extends IOApp {
 
   logger.info("dispatched: actorSystem")
 
+  /*
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
@@ -61,6 +62,7 @@ object BootStrap extends IOApp {
   val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
   val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
   val cacheRoute: CacheRoute = new CacheRoute(Modules.authService, Modules.cacheService)
+  */
 
   logger.info("created all instances")
 
@@ -68,11 +70,11 @@ object BootStrap extends IOApp {
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
-  val archiveRoute: ArchiveRoute = new ArchiveRoute(archiveService)
-  val articleRoute: ArticleRoute = new ArticleRoute(articleService)
-  val authorRoute: AuthorRoute = new AuthorRoute(authorService)
-  val cacheRoute: CacheRoute = new CacheRoute(authService, cacheService)
-  val authRoute: AuthRoute = new AuthRoute(authService)
+  val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
+  val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
+  val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
+  val cacheRoute: CacheRoute = new CacheRoute(Modules.authService, Modules.cacheService)
+  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
 
   // TOOD: move somewhere
   // val routes: Kleisli[IO, Request[IO], Response[IO]] = apiStatusRoute.route <+> homeRoute.route
