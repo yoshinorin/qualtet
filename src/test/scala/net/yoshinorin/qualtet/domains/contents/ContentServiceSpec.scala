@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.Modules._
 import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources

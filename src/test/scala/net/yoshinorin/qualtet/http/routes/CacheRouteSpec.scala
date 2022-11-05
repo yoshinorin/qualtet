@@ -3,7 +3,8 @@ package net.yoshinorin.qualtet.http.routes
 import org.scalatest.wordspec.AnyWordSpec
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.fixture.Fixture.{authService, author, authorService, cacheRoute, expiredToken, nonExistsUserToken}
+import net.yoshinorin.qualtet.Modules._
+import net.yoshinorin.qualtet.fixture.Fixture.{author, cacheRoute, expiredToken, nonExistsUserToken}
 import net.yoshinorin.qualtet.auth.RequestToken
 import akka.http.scaladsl.model.ContentTypes
 import akka.http.scaladsl.model.headers.OAuth2BearerToken

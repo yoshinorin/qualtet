@@ -6,6 +6,7 @@ import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
+import net.yoshinorin.qualtet.Modules._
 
 import cats.effect.unsafe.implicits.global
 
@@ -35,8 +36,8 @@ class FeedServiceSpec extends AnyWordSpec {
 
   "getFeeds return ResponseFeed instances" in {
     val result = (for {
-      _ <- feedService.invalidate()
-      feed <- feedService.get(ArticlesQueryParameter(1, 5))
+      _ <- net.yoshinorin.qualtet.fixture.Fixture.feedService.invalidate()
+      feed <- net.yoshinorin.qualtet.fixture.Fixture.feedService.get(ArticlesQueryParameter(1, 5))
     } yield feed).unsafeRunSync()
 
     assert(result.size === 5)
@@ -44,7 +45,7 @@ class FeedServiceSpec extends AnyWordSpec {
   }
 
   "be invalidate cache" in {
-    assert(feedService.invalidate().unsafeRunSync() === ())
+    assert(net.yoshinorin.qualtet.fixture.Fixture.feedService.invalidate().unsafeRunSync() === ())
   }
 
 }

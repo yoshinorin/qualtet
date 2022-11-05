@@ -10,6 +10,7 @@ import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{ContentId, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture._
+import net.yoshinorin.qualtet.Modules._
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 

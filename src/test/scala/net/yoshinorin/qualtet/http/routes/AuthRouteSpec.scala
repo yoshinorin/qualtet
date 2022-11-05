@@ -3,7 +3,8 @@ package net.yoshinorin.qualtet.http.routes
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.fixture.Fixture.{authRoute, author, authorService}
+import net.yoshinorin.qualtet.Modules._
+import net.yoshinorin.qualtet.fixture.Fixture.{authRoute, author}
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 

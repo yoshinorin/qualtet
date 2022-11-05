@@ -5,7 +5,8 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.fixture.Fixture.{author, contentService, sitemapRoute}
+import net.yoshinorin.qualtet.fixture.Fixture.{author, sitemapRoute}
+import net.yoshinorin.qualtet.Modules._
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
