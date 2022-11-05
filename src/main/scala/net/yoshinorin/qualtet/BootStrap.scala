@@ -89,7 +89,7 @@ object BootStrap extends IOApp {
   def run(args: List[String]): IO[ExitCode] = {
 
     // TODO: filter & format log
-    val httpAppWithLogger = Logger.httpApp(true, true)(httpApp)
+    val httpAppWithLogger = Logger.httpApp(true, false)(httpApp)
 
     logger.info("starting http server...")
     EmberServerBuilder
