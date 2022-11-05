@@ -88,14 +88,15 @@ object BootStrap extends IOApp {
 
   def run(args: List[String]): IO[ExitCode] = {
 
-    // val httpAppWithLogger = Logger.httpApp(true, true)(httpApp)
+    // TODO: filter & format log
+    val httpAppWithLogger = Logger.httpApp(true, true)(httpApp)
 
     logger.info("starting http server...")
     EmberServerBuilder
       .default[IO]
       .withHost(Ipv4Address.fromString(Config.httpHost).get)
       .withPort(Port.fromInt(Config.httpPort).get)
-      .withHttpApp(httpApp)
+      .withHttpApp(httpAppWithLogger)
       .withLogger(org.typelevel.log4cats.slf4j.Slf4jLogger.getLoggerFromSlf4j(logger))
       .build
       .use(_ => IO.never)
