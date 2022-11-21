@@ -47,10 +47,10 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
 // https://www.lightbend.com/blog/why-we-are-changing-the-license-for-akka
 val akkaVersion = "2.6.20"
 val akkaHttpVersion = "10.2.10"
-val jsoniterVersion = "2.17.7"
+val jsoniterVersion = "2.17.9"
 val doobieVersion = "1.0.0-RC2"
-val jwtScalaVersion = "9.1.1"
-val flywayVersion = "9.7.0"
+val jwtScalaVersion = "9.1.2"
+val flywayVersion = "9.8.2"
 
 // https://github.com/rtimush/sbt-updates
 dependencyAllowPreRelease := true
@@ -63,26 +63,26 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
   // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4, but cats-effect keep fully compatibility with 3.x
-  "org.typelevel" %% "cats-effect" % "3.3.14",
+  "org.typelevel" %% "cats-effect" % "3.4.1",
   "ch.megard" %% "akka-http-cors" % "1.1.3",
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % Test,
-  "org.mariadb.jdbc" % "mariadb-java-client" % "3.0.8",
+  "org.mariadb.jdbc" % "mariadb-java-client" % "3.1.0",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-  "org.wvlet.airframe" %% "airframe-ulid" % "22.11.0",
+  "org.wvlet.airframe" %% "airframe-ulid" % "22.11.1",
   "com.github.ben-manes.caffeine" % "caffeine" % "3.1.1",
   "org.flywaydb" % "flyway-core" % flywayVersion,
   // NOTE: workaround: https://github.com/flyway/flyway/issues/3355
   "org.flywaydb" % "flyway-mysql" % flywayVersion,
-  "ch.qos.logback" % "logback-classic" % "1.4.4",
-  "org.codehaus.janino" % "janino" % "3.1.8",
+  "ch.qos.logback" % "logback-classic" % "1.4.5",
+  "org.codehaus.janino" % "janino" % "3.1.9",
   "org.springframework.security" % "spring-security-core" % "5.7.5",
-  "org.slf4j" % "slf4j-api" % "2.0.3",
+  "org.slf4j" % "slf4j-api" % "2.0.4",
   "org.scalatest" %% "scalatest" % "3.2.14" % "test",
-  "org.mockito" % "mockito-core" % "4.8.1" % "test"
+  "org.mockito" % "mockito-core" % "4.9.0" % "test"
 )
 
 val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
