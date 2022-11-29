@@ -19,7 +19,7 @@ class AuthorizationProvider(
   authService: AuthService
 ) {
 
-  val authUserHeader: Kleisli[IO, Request[IO], Either[String, ResponseAuthor]] =
+  def authUser: Kleisli[IO, Request[IO], Either[String, ResponseAuthor]] =
     Kleisli({ request =>
       try {
         for {
@@ -42,6 +42,6 @@ class AuthorizationProvider(
 
     })
 
-  val onFailure: AuthedRoutes[String, IO] = Kleisli(req => OptionT.liftF(Forbidden(req.context)))
-  val authenticate: AuthMiddleware[IO, ResponseAuthor] = AuthMiddleware(authUserHeader, onFailure)
+  def onFailure: AuthedRoutes[String, IO] = Kleisli(req => OptionT.liftF(Forbidden(req.context)))
+  def authenticate: AuthMiddleware[IO, ResponseAuthor] = AuthMiddleware(authUser, onFailure)
 }
