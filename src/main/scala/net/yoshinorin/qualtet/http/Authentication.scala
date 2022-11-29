@@ -11,6 +11,7 @@ import net.yoshinorin.qualtet.syntax._
 import cats.effect.unsafe.implicits.global
 import scala.concurrent.Future
 
+// TODO: delete all
 class Authentication(authService: AuthService) {
 
   def authenticate: AuthenticationDirective[ResponseAuthor] = {

@@ -21,6 +21,7 @@ import net.yoshinorin.qualtet.http.routes.{
   ArticleRoute,
   AuthRoute,
   AuthorRoute,
+  Authorization,
   ContentRoute,
   ContentTypeRoute,
   FeedRoute,
@@ -64,11 +65,13 @@ object BootStrap extends IOApp {
   val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
   val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
   val cacheRoute: CacheRoute = new CacheRoute(Modules.authService, Modules.cacheService)
-  */
+   */
 
   logger.info("created all instances")
 
   Migration.migrate(Modules.contentTypeService)
+
+  val authMiddleware: Authorization = new Authorization(Modules.authService)
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
