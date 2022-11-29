@@ -13,6 +13,9 @@ import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.auth.AuthService
 import org.http4s.dsl.impl.Auth
+import scala.util.control.NonFatal
+import scala.reflect.internal.FatalError
+import net.yoshinorin.qualtet.syntax._
 
 class CacheRoute(
   authService: AuthService,
@@ -32,17 +35,26 @@ class CacheRoute(
 
   val authUserHeader: Kleisli[IO, Request[IO], Either[String, ResponseAuthor]] =
     Kleisli({ request =>
-      for {
-        auth <- IO(request.headers.get[Authorization])
-        // _ = println(auth)
-        _ = println(auth.get.credentials.renderString.replace("Bearer ", ""))
-        // TODO: avoid using get
-        author <- authService.findAuthorFromJwtString(auth.get.credentials.renderString.replace("Bearer ", ""))
-        _ = println(author)
-      } yield author match {
-        case None => Left("TODO")
-        case Some(value) => Right(value)
+      try {
+        for {
+          auth <- IO(request.headers.get[Authorization].orThrow(new RuntimeException("TODO: Authorization header is none")))
+          _ = println(s"Authorization header is: ${auth}")
+          _ = println(auth.credentials.renderString.replace("Bearer ", ""))
+          // TODO: avoid using get
+          author <- authService.findAuthorFromJwtString(auth.credentials.renderString.replace("Bearer ", ""))
+          _ = println(author)
+        } yield author match {
+          case None => Left("TODO")
+          case Some(value) => Right(value)
+        }
+      } catch {
+        case NonFatal(nf) =>
+          println(nf)
+          IO.raiseError(nf)
+        case _ => println("====fatalError")
+          IO.raiseError(new RuntimeException("fatal error"))
       }
+
     })
 
   val onFailure: AuthedRoutes[String, IO] = Kleisli(req => OptionT.liftF(Forbidden(req.context)))
