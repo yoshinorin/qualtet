@@ -27,6 +27,11 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
 
+      - name: Create log file
+        working-directory: .
+        # Workaround for suddenly happen permission denied
+        run: touch ./logs/test.log
+
       - name: Run tests
         working-directory: .
         run: source ./scripts/devenv.sh && sbt clean coverage testWithDb
