@@ -11,13 +11,23 @@ import org.http4s.headers.Authorization
 import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.auth.AuthService
-import net.yoshinorin.qualtet.http.{Authentication, ResponseHandler}
 
 class CacheRoute(
   authService: AuthService,
   cacheService: CacheService
-) extends Authentication(authService)
-    with ResponseHandler {
+) {
+
+  /* No-Auth: Works well.
+  def route: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    { case DELETE -> Root =>
+        for {
+          _ <- cacheService.invalidateAll()
+          response <- NoContent()
+        } yield response
+    }
+  }
+  */
+
 
   val onFailure: AuthedRoutes[String, IO] =
     Kleisli(req => OptionT.liftF(Forbidden(req.context)))
@@ -36,7 +46,6 @@ class CacheRoute(
   })
 
   def route: HttpRoutes[IO] = authMiddleware(authedRoutes)
-
   // caches
   val authedRoutes: AuthedRoutes[ResponseAuthor, IO] =
     AuthedRoutes.of { case DELETE -> Root as author =>
@@ -45,5 +54,4 @@ class CacheRoute(
         response <- NoContent()
       } yield response
     }
-
 }
