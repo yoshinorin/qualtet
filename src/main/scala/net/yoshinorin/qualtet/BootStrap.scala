@@ -35,6 +35,8 @@ import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import org.http4s.server.Router
 import org.http4s.ember.server.EmberServerBuilder
 import com.comcast.ip4s._
+import cats.data.OptionT
+import cats.data.Op
 // import scala.io.StdIn
 
 @SuppressWarnings(Array("org.wartremover.warts.ScalaApp")) // Not yet migrate to Scala3
@@ -74,6 +76,7 @@ object BootStrap extends IOApp {
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
   val cacheRoute: CacheRoute = new CacheRoute(Modules.authService, Modules.cacheService)
+  val contentRoute: ContentRoute = new ContentRoute(Modules.authService, Modules.contentService)
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
 
   // TOOD: move somewhere
@@ -85,6 +88,7 @@ object BootStrap extends IOApp {
     "/articles" -> articleRoute.route,
     "/authors" -> authorRoute.route,
     "/caches" -> cacheRoute.route,
+    // "/contents" -> contentRoute.route,
     "/token" -> authRoute.route
   ).orNotFound
 

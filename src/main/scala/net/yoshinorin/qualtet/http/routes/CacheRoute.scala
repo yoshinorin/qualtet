@@ -26,6 +26,7 @@ class CacheRoute(
 
   val authUserHeader: Kleisli[IO, Request[IO], Either[String, ResponseAuthor]] = Kleisli({ request =>
     val h = request.headers.get[Authorization]
+    // https://http4s.org/v1/docs/auth.html#authorization-header
     for {
       author <- authService.findAuthorFromJwtString(h.toString())
     } yield author match {

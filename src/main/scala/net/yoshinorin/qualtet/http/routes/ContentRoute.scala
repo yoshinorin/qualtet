@@ -1,17 +1,16 @@
 package net.yoshinorin.qualtet.http.routes
 
-import akka.http.scaladsl.model.StatusCodes._
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
 import cats.effect.IO
+import org.http4s.HttpRoutes
+import org.http4s.headers.`Content-Type`
+import org.http4s._
+import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.contents.{Content, ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.contents.ResponseContent._
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.{Authentication, RequestDecoder, ResponseHandler}
-
-import cats.effect.unsafe.implicits.global
 
 class ContentRoute(
   authService: AuthService,
@@ -20,6 +19,19 @@ class ContentRoute(
     with RequestDecoder
     with ResponseHandler {
 
+  // contents
+  /*
+  def route: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case request @ POST -> Root => {
+      for {
+        stringifyRequest <- request.as[String]
+        _ <- contentService.createContentFromRequest()
+      }
+    }
+  }
+  */
+
+  /*
   def route: Route = {
     // TODO: logging (who create a content)
     pathPrefix("contents") {
@@ -82,5 +94,6 @@ class ContentRoute(
       }
     }
   }
+  */
 
 }
