@@ -15,13 +15,13 @@ import org.http4s.server.middleware.Logger
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.http.AuthorizationProvider
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,
   ArticleRoute,
   AuthRoute,
   AuthorRoute,
-  Authorization,
   ContentRoute,
   ContentTypeRoute,
   FeedRoute,
@@ -71,14 +71,14 @@ object BootStrap extends IOApp {
 
   Migration.migrate(Modules.contentTypeService)
 
-  val authMiddleware: Authorization = new Authorization(Modules.authService)
+  val authorizationProvider: AuthorizationProvider = new AuthorizationProvider(Modules.authService)
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
-  val cacheRoute: CacheRoute = new CacheRoute(Modules.authService, Modules.cacheService)
+  val cacheRoute: CacheRoute = new CacheRoute(authorizationProvider, Modules.cacheService)
   val contentRoute: ContentRoute = new ContentRoute(Modules.authService, Modules.contentService)
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
 

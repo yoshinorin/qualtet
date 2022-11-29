@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http
 
 import cats.effect.IO
 import cats.implicits._
@@ -8,14 +8,14 @@ import org.http4s.server._
 import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.dsl.impl.Auth
-import org.http4s.headers.{ Authorization => http4sAuth }
+import org.http4s.headers.Authorization
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.auth.AuthService
 import scala.util.control.NonFatal
 import scala.reflect.internal.FatalError
 import net.yoshinorin.qualtet.syntax._
 
-class Authorization(
+class AuthorizationProvider(
   authService: AuthService
 ) {
 
@@ -23,10 +23,10 @@ class Authorization(
     Kleisli({ request =>
       try {
         for {
-          auth <- IO(request.headers.get[http4sAuth].orThrow(new RuntimeException("TODO: Authorization header is none")))
+          auth <- IO(request.headers.get[Authorization].orThrow(new RuntimeException("TODO: Authorization header is none")))
           author <- authService.findAuthorFromJwtString(auth.credentials.renderString.replace("Bearer ", ""))
-          _ = println(author)
         } yield author match {
+          // TODO: logging
           case None => Left("TODO")
           case Some(value) => Right(value)
         }
@@ -43,5 +43,5 @@ class Authorization(
     })
 
   val onFailure: AuthedRoutes[String, IO] = Kleisli(req => OptionT.liftF(Forbidden(req.context)))
-  val authMiddleware: AuthMiddleware[IO, ResponseAuthor] = AuthMiddleware(authUserHeader, onFailure)
+  val authenticate: AuthMiddleware[IO, ResponseAuthor] = AuthMiddleware(authUserHeader, onFailure)
 }
