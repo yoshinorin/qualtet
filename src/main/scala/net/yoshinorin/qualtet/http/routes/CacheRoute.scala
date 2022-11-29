@@ -30,18 +30,18 @@ class CacheRoute(
   }
   */
 
-  // とりあえず動く（Unautorizedにはなる）コード
   val authUserHeader: Kleisli[IO, Request[IO], Either[String, ResponseAuthor]] =
     Kleisli({ request =>
-      val c = for {
-        t <- request.headers.get[Authorization].toRight("todo1")
-      } yield t
       for {
-        // TODO: ここからBearerだけ抜き出す
-        a <- authService.findAuthorFromJwtString(c.toString())
-      } yield a match {
-        case None => Left("todo2")
-        case Some(v) => Right(v)
+        auth <- IO(request.headers.get[Authorization])
+        // _ = println(auth)
+        _ = println(auth.get.credentials.renderString.replace("Bearer ", ""))
+        // TODO: avoid using get
+        author <- authService.findAuthorFromJwtString(auth.get.credentials.renderString.replace("Bearer ", ""))
+        _ = println(author)
+      } yield author match {
+        case None => Left("TODO")
+        case Some(value) => Right(value)
       }
     })
 
