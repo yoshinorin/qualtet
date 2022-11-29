@@ -30,7 +30,7 @@ jobs:
       - name: Create log file
         working-directory: .
         # Workaround for suddenly happen permission denied
-        run: touch ./logs/test.log
+        run: mkdir logs && touch ./logs/test.log
 
       - name: Run tests
         working-directory: .
