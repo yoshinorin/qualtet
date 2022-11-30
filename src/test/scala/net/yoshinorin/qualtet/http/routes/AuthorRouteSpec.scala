@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.routes
 
+/*
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, ResponseAuthor}
@@ -69,3 +70,4 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   }
 
 }
+*/

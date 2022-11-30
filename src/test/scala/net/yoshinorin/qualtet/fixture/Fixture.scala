@@ -58,6 +58,7 @@ object Fixture {
   val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
   val feedService: FeedService = new FeedService(feedCache, Modules.articleService)
 
+  /*
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
@@ -70,6 +71,7 @@ object Fixture {
   val sitemapRoute: SitemapRoute = new SitemapRoute(sitemapService)
   val feedRoute: FeedRoute = new FeedRoute(feedService)
   val cacheRoute: CacheRoute = new CacheRoute(Modules.authService, Modules.cacheService)
+  */
 
   val authorId: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754a")
   val authorId2: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754b")

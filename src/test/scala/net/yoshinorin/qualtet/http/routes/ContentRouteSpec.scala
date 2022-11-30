@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.routes
 
+/*
 import akka.http.scaladsl.model.headers.OAuth2BearerToken
 import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.server.AuthenticationFailedRejection
@@ -279,3 +280,4 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   }
 
 }
+*/

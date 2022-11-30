@@ -6,11 +6,12 @@ import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.Modules._
-import net.yoshinorin.qualtet.fixture.Fixture.{articleRoute, author}
+// import net.yoshinorin.qualtet.fixture.Fixture.{articleRoute, author}
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.ArticleRouteSpec
+/*
 class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
   val requestContents: List[RequestContent] = {
@@ -72,3 +73,4 @@ class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   }
 
 }
+*/
