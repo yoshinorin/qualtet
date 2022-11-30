@@ -2,6 +2,8 @@ package net.yoshinorin.qualtet.fixture
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
+import org.http4s.server.Router
+import net.yoshinorin.qualtet.http.AuthorizationProvider
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.archives._
 import net.yoshinorin.qualtet.domains.articles._
@@ -58,20 +60,27 @@ object Fixture {
   val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
   val feedService: FeedService = new FeedService(feedCache, Modules.articleService)
 
-  /*
+  val authorizationProvider: AuthorizationProvider = new AuthorizationProvider(Modules.authService)
+
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
-  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
-  val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
-  val contentRoute: ContentRoute = new ContentRoute(Modules.authService, Modules.contentService)
-  val tagRoute: TagRoute = new TagRoute(Modules.authService, Modules.tagService, Modules.articleService)
-  val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
-  val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
-  val sitemapRoute: SitemapRoute = new SitemapRoute(sitemapService)
-  val feedRoute: FeedRoute = new FeedRoute(feedService)
-  val cacheRoute: CacheRoute = new CacheRoute(Modules.authService, Modules.cacheService)
-  */
+  val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
+  val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
+  val cacheRoute: CacheRoute = new CacheRoute(authorizationProvider, Modules.cacheService)
+  val contentRoute: ContentRoute = new ContentRoute(Modules.authService, Modules.contentService)
+  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
+
+  val httpApp = Router(
+    "/" -> homeRoute.route,
+    "/status" -> apiStatusRoute.route,
+    "/archives" -> archiveRoute.route,
+    "/articles" -> articleRoute.route,
+    "/authors" -> authorRoute.route,
+    "/caches" -> cacheRoute.route,
+    // "/contents" -> contentRoute.route,
+    "/token" -> authRoute.route
+  ).orNotFound
 
   val authorId: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754a")
   val authorId2: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754b")

@@ -67,6 +67,7 @@ libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-effect" % "3.4.1",
   "org.http4s" %% "http4s-dsl" % http4sVersion,
   "org.http4s" %% "http4s-ember-server" % http4sVersion,
+  "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
   "ch.megard" %% "akka-http-cors" % "1.1.3",
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
