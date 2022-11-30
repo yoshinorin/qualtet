@@ -16,7 +16,6 @@ import net.yoshinorin.qualtet.syntax._
 class AuthorizationProvider(
   authService: AuthService
 ) {
-
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
   private def authUser: Kleisli[IO, Request[IO], Either[String, ResponseAuthor]] =
@@ -25,7 +24,6 @@ class AuthorizationProvider(
           auth <- IO(request.headers.get[Authorization].orThrow(Unauthorized("Authorization header is none")))
           author <- authService.findAuthorFromJwtString(auth.credentials.renderString.replace("Bearer ", ""))
         } yield author match {
-          // TODO: logging
           case None =>
             logger.error(s"Invalid author: ${author}")
             Left("Unauthorized")
