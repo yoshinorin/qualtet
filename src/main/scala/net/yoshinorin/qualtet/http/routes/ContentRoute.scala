@@ -20,7 +20,9 @@ class ContentRoute(
 ) extends RequestDecoder {
 
   // contents
-  def route: HttpRoutes[IO] = authorizationProvider.authenticate(authedRoute)
+  def route: HttpRoutes[IO] =
+    // authorizationProvider.authenticate(authedRoute) <+> nonAuthedRoute
+    nonAuthRoute
 
   val authedRoute: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
     case request @ POST -> Root as payload => {
@@ -37,47 +39,28 @@ class ContentRoute(
         }
       }
     }
-  }
-
-  /*
-  def route: Route = {
-    // TODO: logging (who create a content)
-    pathPrefix("contents") {
-
-      } ~ {
-        pathPrefix(".+".r) { id =>
-          pathEndOrSingleSlash {
-            delete {
-              authenticate { _ =>
-                onSuccess(
-                  contentService
-                    .delete(ContentId(id))
-                    .handleErrorWith { e => IO.pure(e) }
-                    .unsafeToFuture()
-                ) {
-                  case e: Exception =>
-                    httpResponse(e)
-                  case _ => httpResponse(NoContent)
-                }
-              }
-            }
-          }
-        }
-      } ~ {
-        // NOTE: need slash on the prefix but it is required on the suffix
-        // example: /yyyy/mm/dd/content-name/
-        path(Remaining) { path =>
-          get {
-            onSuccess(contentService.findByPathWithMeta(Path(path)).unsafeToFuture()) {
-              case Some(content) =>
-                httpResponse(OK, content)
-              case _ => httpResponse(Fail.NotFound("Not found"))
-            }
-          }
-        }
-      }
+    // TODO: manually test
+    case DELETE -> "TODO" /: id as payload => {
+      for {
+        // TODO: `id.segments.last` is correct way?
+        _ <- contentService.delete(ContentId(id.segments.last.toString))
+        // TODO: logging
+        response <- NoContent()
+      } yield response
     }
   }
-   */
+
+  val nonAuthRoute = HttpRoutes.of[IO] {
+    // need slash on the prefix and suffix.
+    // example: /yyyy/mm/dd/content-name/
+    case GET -> "TODO" /: path => {
+      for {
+        // TODO: avoid to add slash to prefix and suffix
+        contents <- contentService.findByPathWithMeta(Path(s"/${path.toString()}/"))
+        // TODO: return `NotFound` if contents is None
+        response <- Ok(contents.get.asJson, `Content-Type`(MediaType.application.json))
+      } yield response
+    }
+  }
 
 }
