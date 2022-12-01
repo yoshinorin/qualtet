@@ -68,7 +68,7 @@ object Fixture {
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
   val cacheRoute: CacheRoute = new CacheRoute(authorizationProvider, Modules.cacheService)
-  val contentRoute: ContentRoute = new ContentRoute(Modules.authService, Modules.contentService)
+  val contentRoute: ContentRoute = new ContentRoute(authorizationProvider, Modules.contentService)
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
 
   val httpApp = Router(
@@ -78,7 +78,7 @@ object Fixture {
     "/articles" -> articleRoute.route,
     "/authors" -> authorRoute.route,
     "/caches" -> cacheRoute.route,
-    // "/contents" -> contentRoute.route,
+    "/contents" -> contentRoute.route,
     "/token" -> authRoute.route
   ).orNotFound
 
