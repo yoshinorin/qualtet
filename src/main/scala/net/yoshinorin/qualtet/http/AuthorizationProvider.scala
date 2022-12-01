@@ -20,17 +20,17 @@ class AuthorizationProvider(
 
   private def authUser: Kleisli[IO, Request[IO], Either[String, ResponseAuthor]] =
     Kleisli({ request =>
-        for {
-          auth <- IO(request.headers.get[Authorization].orThrow(Unauthorized("Authorization header is none")))
-          author <- authService.findAuthorFromJwtString(auth.credentials.renderString.replace("Bearer ", ""))
-        } yield author match {
-          case None =>
-            logger.error(s"Invalid author: ${author}")
-            Left("Unauthorized")
-          case Some(author) =>
-            logger.info(s"Authorization succeeded: ${author}")
-            Right(author)
-        }
+      for {
+        auth <- IO(request.headers.get[Authorization].orThrow(Unauthorized("Authorization header is none")))
+        author <- authService.findAuthorFromJwtString(auth.credentials.renderString.replace("Bearer ", ""))
+      } yield author match {
+        case None =>
+          logger.error(s"Invalid author: ${author}")
+          Left("Unauthorized")
+        case Some(author) =>
+          logger.info(s"Authorization succeeded: ${author}")
+          Right(author)
+      }
     })
 
   private def onFailure: AuthedRoutes[String, IO] = Kleisli(req => OptionT.liftF(Forbidden(req.context)))

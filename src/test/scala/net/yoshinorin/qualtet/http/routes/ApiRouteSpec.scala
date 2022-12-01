@@ -21,13 +21,13 @@ class ApiRouteSpec extends AnyWordSpec {
   "ApiStatusRoute" should {
 
     "return operational JSON" in {
-      val response = client.expect[String](request).unsafeRunSync()
-      assert(response.replaceAll("\n", "").replaceAll(" ", "") === "{\"status\":\"operational\"}")
-
-      //assert(r.status === Ok)
-      //assert(r.contentType.get === `Content-Type`(MediaType.application.json))
-
+        client.run(request).use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "") === "{\"status\":\"operational\"}")
+          }
+        }.unsafeRunSync()
       }
     }
   }
-
