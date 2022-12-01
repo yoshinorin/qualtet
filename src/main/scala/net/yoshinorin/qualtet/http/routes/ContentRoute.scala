@@ -6,60 +6,44 @@ import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.auth.AuthService
+import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{Content, ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.contents.ResponseContent._
 import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.http.{Authentication, RequestDecoder, ResponseHandler}
+import net.yoshinorin.qualtet.http.{AuthorizationProvider, RequestDecoder}
+import net.yoshinorin.qualtet.syntax._
 
 class ContentRoute(
-  authService: AuthService,
+  authorizationProvider: AuthorizationProvider,
   contentService: ContentService
-) extends Authentication(authService)
-    with RequestDecoder
-    with ResponseHandler {
+) extends RequestDecoder {
 
   // contents
-  /*
-  def route: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case request @ POST -> Root => {
-      for {
-        stringifyRequest <- request.as[String]
-        _ <- contentService.createContentFromRequest()
+  def route: HttpRoutes[IO] = authorizationProvider.authenticate(authedRoute)
+
+  val authedRoute: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
+    case request @ POST -> Root as payload => {
+      val maybeContent = for {
+        maybeContent <- IO(decode[RequestContent](payload._2))
+      } yield maybeContent
+
+      maybeContent.flatMap { c =>
+        c match {
+          case Left(f) => throw f
+          case Right(c) => contentService.createContentFromRequest(payload._1.name, c).flatMap { r =>
+            Ok(c.asJson, `Content-Type`(MediaType.application.json))
+          }
+        }
       }
     }
   }
-   */
 
   /*
   def route: Route = {
     // TODO: logging (who create a content)
     pathPrefix("contents") {
-      pathEndOrSingleSlash {
-        post {
-          authenticate { author =>
-            entity(as[String]) { payload =>
-              decode[RequestContent](payload) match {
-                case Right(v) =>
-                  onSuccess(
-                    contentService
-                      .createContentFromRequest(author.name, v)
-                      .handleErrorWith { e => IO.pure(e) }
-                      .unsafeToFuture()
-                  ) {
-                    case c: Content =>
-                      httpResponse(Created, c)
-                    case e: Exception =>
-                      httpResponse(e)
-                    case _ =>
-                      httpResponse(Fail.InternalServerError("Internal server error"))
-                  }
-                case Left(message) =>
-                  httpResponse(message)
-              }
-            }
-          }
-        }
+
       } ~ {
         pathPrefix(".+".r) { id =>
           pathEndOrSingleSlash {

@@ -19,7 +19,7 @@ class CacheRoute(
 
   def route: HttpRoutes[IO] = authorizationProvider.authenticate(authedRoutes)
   // caches
-  val authedRoutes: AuthedRoutes[ResponseAuthor, IO] =
+  val authedRoutes: AuthedRoutes[(ResponseAuthor, String), IO] =
     AuthedRoutes.of { case DELETE -> Root as author =>
       for {
         _ <- cacheService.invalidateAll()
