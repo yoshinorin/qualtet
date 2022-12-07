@@ -1,6 +1,9 @@
 package net.yoshinorin.qualtet.http.routes
 
-import cats.effect.IO
+import cats.effect._, cats.implicits._
+import org.http4s._
+import org.http4s.dsl.io._
+import org.http4s.server._
 import org.http4s.HttpRoutes
 import org.http4s.headers.`Content-Type`
 import org.http4s._
@@ -13,6 +16,7 @@ import net.yoshinorin.qualtet.domains.contents.ResponseContent._
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.http.{AuthorizationProvider, RequestDecoder}
 import net.yoshinorin.qualtet.syntax._
+import org.http4s.server.Router
 
 class ContentRoute(
   authorizationProvider: AuthorizationProvider,
@@ -20,9 +24,8 @@ class ContentRoute(
 ) extends RequestDecoder {
 
   // contents
-  def route: HttpRoutes[IO] =
-    // authorizationProvider.authenticate(authedRoute) <+> nonAuthedRoute
-    nonAuthRoute
+  // NOTE: must be compose `auth route` after `Non auth route`.
+  def route: HttpRoutes[IO] = nonAuthRoute <+> authorizationProvider.authenticate(authedRoute)
 
   val authedRoute: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
     case request @ POST -> Root as payload => {
@@ -50,13 +53,14 @@ class ContentRoute(
     }
   }
 
-  val nonAuthRoute = HttpRoutes.of[IO] {
+  val nonAuthRoute: HttpRoutes[IO] = HttpRoutes.of[IO] {
     // need slash on the prefix and suffix.
     // example: /yyyy/mm/dd/content-name/
     case GET -> "TODO" /: path => {
       for {
         // TODO: avoid to add slash to prefix and suffix
         contents <- contentService.findByPathWithMeta(Path(s"/${path.toString()}/"))
+        _ = println(path)
         // TODO: return `NotFound` if contents is None
         response <- Ok(contents.get.asJson, `Content-Type`(MediaType.application.json))
       } yield response
