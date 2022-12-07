@@ -37,6 +37,7 @@ An example of architecture.
 * [Set up](./docs/setup.md)
 * [Remarks](./docs/remarks.md)
 * [Examples](./docs/examples.md)
+* [ER Diagram](./docs/erd.md)
 * [Development](./docs/development.md)
 
 ## License
