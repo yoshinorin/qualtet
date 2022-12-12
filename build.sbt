@@ -182,5 +182,5 @@ val testEnvCommands = {
 }
 addCommandAlias("testEnvUp", testEnvCommands)
 
-coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration; net.yoshinorin.qualtet.http.HttpServer;"
+coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration;"
 //org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")

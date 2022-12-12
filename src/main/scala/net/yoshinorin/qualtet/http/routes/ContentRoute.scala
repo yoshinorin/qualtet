@@ -19,52 +19,43 @@ import net.yoshinorin.qualtet.syntax._
 import org.http4s.server.Router
 
 class ContentRoute(
-  authorizationProvider: AuthorizationProvider,
   contentService: ContentService
 ) extends RequestDecoder {
 
-  // contents
-  // NOTE: must be compose `auth route` after `Non auth route`.
-  def route: HttpRoutes[IO] = nonAuthRoute <+> authorizationProvider.authenticate(authedRoute)
+  def post(payload: (ResponseAuthor, String)) = {
+    val maybeContent = for {
+      maybeContent <- IO(decode[RequestContent](payload._2))
+    } yield maybeContent
 
-  val authedRoute: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
-    case request @ POST -> Root as payload => {
-      val maybeContent = for {
-        maybeContent <- IO(decode[RequestContent](payload._2))
-      } yield maybeContent
-
-      maybeContent.flatMap { c =>
-        c match {
-          case Left(f) => throw f
-          case Right(c) => contentService.createContentFromRequest(payload._1.name, c).flatMap { r =>
+    maybeContent.flatMap { c =>
+      c match {
+        case Left(f) => throw f
+        case Right(c) =>
+          contentService.createContentFromRequest(payload._1.name, c).flatMap { r =>
             Ok(c.asJson, `Content-Type`(MediaType.application.json))
           }
-        }
       }
-    }
-    // TODO: manually test
-    case DELETE -> "TODO" /: id as payload => {
-      for {
-        // TODO: `id.segments.last` is correct way?
-        _ <- contentService.delete(ContentId(id.segments.last.toString))
-        // TODO: logging
-        response <- NoContent()
-      } yield response
     }
   }
 
-  val nonAuthRoute: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    // need slash on the prefix and suffix.
-    // example: /yyyy/mm/dd/content-name/
-    case GET -> "TODO" /: path => {
-      for {
-        // TODO: avoid to add slash to prefix and suffix
-        contents <- contentService.findByPathWithMeta(Path(s"/${path.toString()}/"))
-        _ = println(path)
-        // TODO: return `NotFound` if contents is None
-        response <- Ok(contents.get.asJson, `Content-Type`(MediaType.application.json))
-      } yield response
-    }
+  def delete(id: String) = {
+    for {
+      // TODO: `id.segments.last` is correct way?
+      _ <- contentService.delete(ContentId(id))
+      // TODO: logging
+      response <- NoContent()
+    } yield response
+  }
+
+  def get(path: String) = {
+    for {
+      // TODO: avoid to add slash to prefix and suffix
+      // TODO: should be configurlize for append suffix or prefix
+      contents <- contentService.findByPathWithMeta(Path(s"/${path}"))
+      _ = println(path)
+      // TODO: return `NotFound` if contents is None
+      response <- Ok(contents.get.asJson, `Content-Type`(MediaType.application.json))
+    } yield response
   }
 
 }

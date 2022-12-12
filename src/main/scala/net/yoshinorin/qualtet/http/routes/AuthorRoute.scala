@@ -16,24 +16,22 @@ class AuthorRoute(
 ) extends ResponseHandler {
 
   // authors
-  def route: HttpRoutes[IO] = HttpRoutes[IO] {
-    {
-      case GET -> Root =>
-        for {
-          authors <- OptionT.liftF(authorService.getAll)
-          response <- OptionT.liftF(Ok(authors.asJson, `Content-Type`(MediaType.application.json)))
-        } yield response
-      // TODO: refactor
-      case GET -> Root / authorName =>
-        val maybeAuthor = for {
-          maybeAuthor <- authorService.findByName(AuthorName(authorName))
-        } yield maybeAuthor
-        OptionT.liftF(maybeAuthor.flatMap { author =>
-          author match {
-            case Some(author) => Ok(author.asJson, `Content-Type`(MediaType.application.json))
-            case None => NotFound("Not Found")
-          }
-        })
+  def get = {
+    for {
+      authors <- authorService.getAll
+      response <- Ok(authors.asJson, `Content-Type`(MediaType.application.json))
+    } yield response
+  }
+
+  def get(authorName: String) = {
+    val maybeAuthor = for {
+      maybeAuthor <- authorService.findByName(AuthorName(authorName))
+    } yield maybeAuthor
+    maybeAuthor.flatMap { author =>
+      author match {
+        case Some(author) => Ok(author.asJson, `Content-Type`(MediaType.application.json))
+        case None => NotFound("Not Found")
+      }
     }
   }
 

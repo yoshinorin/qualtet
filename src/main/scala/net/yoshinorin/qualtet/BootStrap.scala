@@ -25,7 +25,6 @@ import net.yoshinorin.qualtet.http.routes.{
   SitemapRoute,
   TagRoute
 }
-import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.http.routes.CacheRoute
 import org.http4s.server.Router
@@ -59,11 +58,30 @@ object BootStrap extends IOApp {
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
   val cacheRoute: CacheRoute = new CacheRoute(authorizationProvider, Modules.cacheService)
-  val contentRoute: ContentRoute = new ContentRoute(authorizationProvider, Modules.contentService)
+  val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
 
-  // TOOD: move somewhere
-  // val routes: Kleisli[IO, Request[IO], Response[IO]] = apiStatusRoute.route <+> homeRoute.route
+  val router = new net.yoshinorin.qualtet.http.Router(
+    authorizationProvider,
+    homeRoute,
+    apiStatusRoute,
+    archiveRoute,
+    articleRoute,
+    authorRoute,
+    cacheRoute,
+    contentRoute,
+    authRoute
+  )
+
+  val httpApp = Router(
+    "/" -> router.route,
+    "/authors" -> router.authors,
+    "/caches" -> router.caches,
+    "/contents" -> router.contents,
+    "/token" -> router.token
+  ).orNotFound
+
+  /*
   val httpApp = Router(
     "/" -> homeRoute.route,
     "/status" -> apiStatusRoute.route,
@@ -74,6 +92,7 @@ object BootStrap extends IOApp {
     "/contents" -> contentRoute.route,
     "/token" -> authRoute.route
   ).orNotFound
+   */
 
   def run(args: List[String]): IO[ExitCode] = {
 

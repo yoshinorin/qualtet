@@ -26,4 +26,11 @@ class CacheRoute(
         response <- NoContent()
       } yield response
     }
+
+  def delete(author: ResponseAuthor) = {
+    for {
+      _ <- cacheService.invalidateAll()
+      response <- NoContent()
+    } yield response
+  }
 }
