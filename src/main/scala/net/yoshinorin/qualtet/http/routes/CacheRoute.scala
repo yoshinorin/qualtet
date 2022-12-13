@@ -4,16 +4,16 @@ import cats.effect.IO
 import org.http4s.HttpRoutes
 import org.http4s._
 import org.http4s.dsl.io._
-import net.yoshinorin.qualtet.http.AuthorizationProvider
+import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.cache.CacheService
 
 class CacheRoute(
-  authorizationProvider: AuthorizationProvider,
+  authProvider: AuthProvider,
   cacheService: CacheService
 ) {
 
-  def route: HttpRoutes[IO] = authorizationProvider.authenticate(authedRoutes)
+  def route: HttpRoutes[IO] = authProvider.authenticate(authedRoutes)
   // caches
   val authedRoutes: AuthedRoutes[(ResponseAuthor, String), IO] =
     AuthedRoutes.of { case DELETE -> Root as author =>

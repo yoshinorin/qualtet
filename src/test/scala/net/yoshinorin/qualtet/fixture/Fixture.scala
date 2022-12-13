@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.fixture
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import org.http4s.server.Router
-import net.yoshinorin.qualtet.http.AuthorizationProvider
+import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.archives._
 import net.yoshinorin.qualtet.domains.articles._
@@ -60,15 +60,15 @@ object Fixture {
   val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
   val feedService: FeedService = new FeedService(feedCache, Modules.articleService)
 
-  val authorizationProvider: AuthorizationProvider = new AuthorizationProvider(Modules.authService)
+  val authProvider: AuthProvider = new AuthProvider(Modules.authService)
 
   val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
-  val cacheRoute: CacheRoute = new CacheRoute(authorizationProvider, Modules.cacheService)
-  val contentRoute: ContentRoute = new ContentRoute(authorizationProvider, Modules.contentService)
+  val cacheRoute: CacheRoute = new CacheRoute(authProvider, Modules.cacheService)
+  val contentRoute: ContentRoute = new ContentRoute(authProvider, Modules.contentService)
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
 
   val httpApp = Router(

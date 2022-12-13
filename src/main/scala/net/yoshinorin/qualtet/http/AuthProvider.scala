@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
 import net.yoshinorin.qualtet.syntax._
 
-class AuthorizationProvider(
+class AuthProvider(
   authService: AuthService
 ) {
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
@@ -35,5 +35,6 @@ class AuthorizationProvider(
     })
 
   private def onFailure: AuthedRoutes[String, IO] = Kleisli(req => OptionT.liftF(Forbidden(req.context)))
+
   def authenticate: AuthMiddleware[IO, (ResponseAuthor, String)] = AuthMiddleware(authUser, onFailure)
 }

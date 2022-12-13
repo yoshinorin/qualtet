@@ -1,17 +1,14 @@
 package net.yoshinorin.qualtet
 
-import cats._
-import cats.implicits._
 import cats.effect.IOApp
 import cats.effect.ExitCode
-import cats.data.Kleisli
 import cats.effect.IO
 import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.server.middleware.Logger
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.config.Config
-import net.yoshinorin.qualtet.http.AuthorizationProvider
+import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,
@@ -40,14 +37,14 @@ object BootStrap extends IOApp {
 
   Migration.migrate(Modules.contentTypeService)
 
-  val authorizationProvider: AuthorizationProvider = new AuthorizationProvider(Modules.authService)
+  val authProvider: AuthProvider = new AuthProvider(Modules.authService)
 
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
-  val cacheRoute: CacheRoute = new CacheRoute(authorizationProvider, Modules.cacheService)
+  val cacheRoute: CacheRoute = new CacheRoute(authProvider, Modules.cacheService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
   val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
   val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
@@ -58,7 +55,7 @@ object BootStrap extends IOApp {
   logger.info("created all instances")
 
   val router = new net.yoshinorin.qualtet.http.Router(
-    authorizationProvider,
+    authProvider,
     apiStatusRoute,
     archiveRoute,
     articleRoute,

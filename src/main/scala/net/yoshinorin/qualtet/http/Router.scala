@@ -28,7 +28,7 @@ object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page")
 object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit")
 
 class Router(
-  authorizationProvider: AuthorizationProvider,
+  authProvider: AuthProvider,
   apiStatusRoute: ApiStatusRoute,
   archiveRoute: ArchiveRoute,
   articleRoute: ArticleRoute,
@@ -97,7 +97,7 @@ class Router(
     // TODO: return 404
   }
 
-  private[http] def caches: HttpRoutes[IO] = authorizationProvider.authenticate(AuthedRoutes.of {
+  private[http] def caches: HttpRoutes[IO] = authProvider.authenticate(AuthedRoutes.of {
     case DELETE -> Root as author =>
       cacheRoute.delete(author._1)
     case request @ _ =>
@@ -109,7 +109,7 @@ class Router(
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def contents: HttpRoutes[IO] =
     contentWithoutAuth <+>
-      authorizationProvider.authenticate(contentWithAuthed)
+      authProvider.authenticate(contentWithAuthed)
 
   private[this] def contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     // need slash on the prefix and suffix.
@@ -177,7 +177,7 @@ class Router(
 
   private[http] def tags: HttpRoutes[IO] =
     tagsWithoutAuth <+>
-      authorizationProvider.authenticate(tagsWithAuthed)
+      authProvider.authenticate(tagsWithAuthed)
 
   private[this] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => tagRoute.get
