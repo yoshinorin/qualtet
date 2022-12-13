@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.http.routes
 
-import org.http4s.HttpRoutes
 import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
@@ -15,12 +14,10 @@ class ArchiveRoute(
 ) extends ResponseHandler {
 
   // archives
-  def route: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    { case GET -> Root =>
-      for {
-        archives <- archiveService.get
-        response <- Ok(archives.asJson, `Content-Type`(MediaType.application.json))
-      } yield response
-    }
+  def get: IO[Response[IO]] = {
+    for {
+      archives <- archiveService.get
+      response <- Ok(archives.asJson, `Content-Type`(MediaType.application.json))
+    } yield response
   }
 }

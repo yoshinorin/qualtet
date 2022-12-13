@@ -14,8 +14,10 @@ import net.yoshinorin.qualtet.syntax._
 
 import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ArchiveRoute, ArticleRoute, AuthRoute, AuthorRoute, CacheRoute, ContentRoute, HomeRoute}
 
-// TODO: delete duplicated routes.
-// e.g) `POST -> Root / "token"` and `request @ POST -> Root / "token" / ""`
+// TODO: move somewhere
+object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page")
+object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit")
+
 class Router(
   authorizationProvider: AuthorizationProvider,
   homeRoute: HomeRoute,
@@ -30,22 +32,42 @@ class Router(
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  // NOTE: must be compose `auth route` after `Non auth route`.
-  /*
-  def route: HttpRoutes[IO] = nonAuthRoute <+>
-    cacheRouter <+>
-    authorizationProvider.authenticate(authedRoute)
-   */
+  def routes = Router(
+    "/" -> home,
+    "/archives" -> archives,
+    "/articles" -> articles,
+    "/authors" -> authors,
+    "/caches" -> caches,
+    "/contents" -> contents,
+    "/status" -> status,
+    "/token" -> token
+  ).orNotFound
 
-  def route: HttpRoutes[IO] = server.Router(
-    "/" -> HttpRoutes.of {
-      case GET -> Root => homeRoute.get
-      case request @ _ =>
-        logger.error(s"not implemented routes: ${request}")
-        ???
-      // TODO: return 404
-    }
-  )
+  def home: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root => homeRoute.get
+    case request @ _ =>
+      logger.error(s"not implemented routes: ${request}")
+      ???
+    // TODO: return 404
+  }
+
+  def archives: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root =>
+      archiveRoute.get
+    case request @ _ =>
+      logger.error(s"not implemented in authors routes: ${request}")
+      ???
+    // TODO: return 404
+  }
+
+  def articles: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root :? PageQueryParam(page) +& LimitQueryParam(limit) =>
+      articleRoute.get(page, limit)
+    case request @ _ =>
+      logger.error(s"not implemented in authors routes: ${request}")
+      ???
+    // TODO: return 404
+  }
 
   def authors: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root =>
@@ -58,7 +80,7 @@ class Router(
     // TODO: return 404
   }
 
-  def caches = authorizationProvider.authenticate(AuthedRoutes.of {
+  def caches: HttpRoutes[IO] = authorizationProvider.authenticate(AuthedRoutes.of {
     case DELETE -> Root as author =>
       cacheRoute.delete(author._1)
     case request @ _ =>
@@ -72,7 +94,7 @@ class Router(
     contentWithoutAuth <+>
       authorizationProvider.authenticate(contentWithAuthed)
 
-  val contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private def contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     // need slash on the prefix and suffix.
     // example: /yyyy/mm/dd/content-name/
     /* compile error
@@ -83,7 +105,7 @@ class Router(
       contentRoute.get(request.uri.path.toString().replace("/contents/", ""))
   }
 
-  val contentWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
+  private def contentWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
     case request @ POST -> Root as payload =>
       contentRoute.post(payload)
     case DELETE -> Root / id as payload =>
@@ -94,7 +116,15 @@ class Router(
     // TODO: return 404
   }
 
-  def token = HttpRoutes.of[IO] {
+  def status: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root => apiStatusRoute.get
+    case request @ _ =>
+      logger.error(s"not implemented routes: ${request}")
+      ???
+    // TODO: return 404
+  }
+
+  def token: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case request @ POST -> Root =>
       authRoute.post(request)
     case request @ _ =>

@@ -73,31 +73,12 @@ object BootStrap extends IOApp {
     authRoute
   )
 
-  val httpApp = Router(
-    "/" -> router.route,
-    "/authors" -> router.authors,
-    "/caches" -> router.caches,
-    "/contents" -> router.contents,
-    "/token" -> router.token
-  ).orNotFound
-
-  /*
-  val httpApp = Router(
-    "/" -> homeRoute.route,
-    "/status" -> apiStatusRoute.route,
-    "/archives" -> archiveRoute.route,
-    "/articles" -> articleRoute.route,
-    "/authors" -> authorRoute.route,
-    "/caches" -> cacheRoute.route,
-    "/contents" -> contentRoute.route,
-    "/token" -> authRoute.route
-  ).orNotFound
-   */
+  val httpRoutes = router.routes
 
   def run(args: List[String]): IO[ExitCode] = {
 
     // TODO: filter & format log
-    val httpAppWithLogger = Logger.httpApp(true, false)(httpApp)
+    val httpAppWithLogger = Logger.httpApp(true, false)(httpRoutes)
 
     logger.info("starting http server...")
     EmberServerBuilder
