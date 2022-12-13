@@ -15,8 +15,10 @@ import cats.effect.unsafe.implicits.global
 class ApiRouteSpec extends AnyWordSpec {
 
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
+  val router = Fixture.createRouter(apiStatusRoute = apiStatusRoute)
+
   val request: Request[IO] = Request(method = Method.GET, uri = uri"/status")
-  val client: Client[IO] = Client.fromHttpApp(Fixture.router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes)
 
   "ApiStatusRoute" should {
 
