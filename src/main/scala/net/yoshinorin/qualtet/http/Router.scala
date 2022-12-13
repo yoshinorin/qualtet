@@ -59,7 +59,7 @@ class Router(
     "/token" -> token
   ).orNotFound
 
-  def home: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private[http] def home: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => homeRoute.get
     case request @ _ =>
       logger.error(s"not implemented routes: ${request}")
@@ -67,7 +67,7 @@ class Router(
     // TODO: return 404
   }
 
-  def archives: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private[http] def archives: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root =>
       archiveRoute.get
     case request @ _ =>
@@ -76,7 +76,7 @@ class Router(
     // TODO: return 404
   }
 
-  def articles: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private[http] def articles: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root :? PageQueryParam(page) +& LimitQueryParam(limit) =>
       articleRoute.get(page, limit)
     case request @ _ =>
@@ -85,7 +85,7 @@ class Router(
     // TODO: return 404
   }
 
-  def authors: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private[http] def authors: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root =>
       authorRoute.get
     case GET -> Root / authorName =>
@@ -96,7 +96,7 @@ class Router(
     // TODO: return 404
   }
 
-  def caches: HttpRoutes[IO] = authorizationProvider.authenticate(AuthedRoutes.of {
+  private[http] def caches: HttpRoutes[IO] = authorizationProvider.authenticate(AuthedRoutes.of {
     case DELETE -> Root as author =>
       cacheRoute.delete(author._1)
     case request @ _ =>
@@ -106,11 +106,11 @@ class Router(
   })
 
   // NOTE: must be compose `auth route` after `Non auth route`.
-  def contents: HttpRoutes[IO] =
+  private[http] def contents: HttpRoutes[IO] =
     contentWithoutAuth <+>
       authorizationProvider.authenticate(contentWithAuthed)
 
-  private def contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private[this] def contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     // need slash on the prefix and suffix.
     // example: /yyyy/mm/dd/content-name/
     /* compile error
@@ -121,7 +121,7 @@ class Router(
       contentRoute.get(request.uri.path.toString().replace("/contents/", ""))
   }
 
-  private def contentWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
+  private[this] def contentWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
     case request @ POST -> Root as payload =>
       contentRoute.post(payload)
     case DELETE -> Root / id as payload =>
@@ -132,7 +132,7 @@ class Router(
     // TODO: return 404
   }
 
-  def contentTypes: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private[http] def contentTypes: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => contentTypeRoute.get
     case GET -> Root / name => contentTypeRoute.get(name)
     case request @ _ =>
@@ -141,7 +141,7 @@ class Router(
     // TODO: return 404
   }
 
-  def sitemaps: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private[http] def sitemaps: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => sitemapRoute.get
     case request @ _ =>
       logger.error(s"not implemented in token sitemaps routes: ${request}")
@@ -149,7 +149,7 @@ class Router(
     // TODO: return 404
   }
 
-  def status: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private[http] def status: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => apiStatusRoute.get
     case request @ _ =>
       logger.error(s"not implemented in status routes: ${request}")
@@ -157,7 +157,7 @@ class Router(
     // TODO: return 404
   }
 
-  def token: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private[http] def token: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case request @ POST -> Root =>
       authRoute.post(request)
     case request @ _ =>
@@ -166,11 +166,11 @@ class Router(
     // TODO: return 404
   }
 
-  def tags: HttpRoutes[IO] =
+  private[http] def tags: HttpRoutes[IO] =
     tagsWithoutAuth <+>
       authorizationProvider.authenticate(tagsWithAuthed)
 
-  private def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private[this] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => tagRoute.get
     case GET -> Root / nameOrId :? PageQueryParam(page) +& LimitQueryParam(limit) => tagRoute.get(nameOrId, page, limit)
     case request @ _ =>
@@ -179,7 +179,7 @@ class Router(
     // TODO: return 404
   }
 
-  private def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
+  private[this] def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
     case DELETE -> Root / nameOrId as payload =>
       tagRoute.delete(nameOrId)
     case request @ _ =>
