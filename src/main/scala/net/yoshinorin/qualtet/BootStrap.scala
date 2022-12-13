@@ -44,7 +44,7 @@ object BootStrap extends IOApp {
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
-  val cacheRoute: CacheRoute = new CacheRoute(authProvider, Modules.cacheService)
+  val cacheRoute: CacheRoute = new CacheRoute(Modules.cacheService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
   val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
   val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)

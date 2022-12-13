@@ -14,6 +14,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.TagRouteSpec
+/*
 class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
 
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
@@ -140,3 +141,4 @@ class TagRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   }
 
 }
+*/

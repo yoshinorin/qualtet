@@ -16,7 +16,7 @@ class ApiRouteSpec extends AnyWordSpec {
 
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val request: Request[IO] = Request(method = Method.GET, uri = uri"/status")
-  val client: Client[IO] = Client.fromHttpApp(Fixture.httpApp)
+  val client: Client[IO] = Client.fromHttpApp(Fixture.router.routes)
 
   "ApiStatusRoute" should {
 

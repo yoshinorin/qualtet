@@ -62,25 +62,34 @@ object Fixture {
 
   val authProvider: AuthProvider = new AuthProvider(Modules.authService)
 
-  val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
-  val cacheRoute: CacheRoute = new CacheRoute(authProvider, Modules.cacheService)
-  val contentRoute: ContentRoute = new ContentRoute(authProvider, Modules.contentService)
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
+  val cacheRoute: CacheRoute = new CacheRoute(Modules.cacheService)
+  val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
+  val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
+  val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
+  val homeRoute: HomeRoute = new HomeRoute()
+  val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
+  val tagRoute: TagRoute = new TagRoute(Modules.tagService, Modules.articleService)
 
-  val httpApp = Router(
-    "/" -> homeRoute.route,
-    "/status" -> apiStatusRoute.route,
-    "/archives" -> archiveRoute.route,
-    "/articles" -> articleRoute.route,
-    "/authors" -> authorRoute.route,
-    "/caches" -> cacheRoute.route,
-    "/contents" -> contentRoute.route,
-    "/token" -> authRoute.route
-  ).orNotFound
+  val router = new net.yoshinorin.qualtet.http.Router(
+    authProvider,
+    apiStatusRoute,
+    archiveRoute,
+    articleRoute,
+    authorRoute,
+    authRoute,
+    cacheRoute,
+    contentRoute,
+    contentTypeRoute,
+    feedRoute,
+    homeRoute,
+    sitemapRoute,
+    tagRoute
+  )
 
   val authorId: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754a")
   val authorId2: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754b")
