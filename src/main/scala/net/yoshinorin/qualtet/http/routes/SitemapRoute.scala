@@ -1,22 +1,20 @@
 package net.yoshinorin.qualtet.http.routes
 
-import akka.http.scaladsl.model.StatusCodes.OK
-import akka.http.scaladsl.server.Directives.{get, onSuccess, pathEndOrSingleSlash, pathPrefix}
-import akka.http.scaladsl.server.Route
+import cats.effect.IO
+import org.http4s.headers.`Content-Type`
+import org.http4s._
+import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.sitemaps.SitemapService
 import net.yoshinorin.qualtet.http.ResponseHandler
-import cats.effect.unsafe.implicits.global
+import net.yoshinorin.qualtet.syntax._
 
 class SitemapRoute(sitemapService: SitemapService) extends ResponseHandler {
 
-  def route: Route = {
-    pathPrefix("sitemaps") {
-      pathEndOrSingleSlash {
-        get {
-          onSuccess(sitemapService.get().unsafeToFuture()) { result => httpResponse(OK, result) }
-        }
-      }
-    }
+  def get: IO[Response[IO]] = {
+    for {
+      sitemaps <- sitemapService.get
+      response <- Ok(sitemaps.asJson, `Content-Type`(MediaType.application.json))
+    } yield response
   }
 
 }

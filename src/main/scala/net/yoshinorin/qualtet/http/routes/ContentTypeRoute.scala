@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.http.routes
 
-import cats.effect._
+import cats.effect.IO
 import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._

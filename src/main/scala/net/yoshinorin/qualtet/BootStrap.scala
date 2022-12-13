@@ -27,7 +27,6 @@ import net.yoshinorin.qualtet.http.routes.{
 }
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.http.routes.CacheRoute
-import org.http4s.server.Router
 import org.http4s.ember.server.EmberServerBuilder
 import com.comcast.ip4s._
 // import scala.io.StdIn
@@ -40,7 +39,7 @@ object BootStrap extends IOApp {
   logger.info("booting...")
 
   /*
-  val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
+
   val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
    */
 
@@ -55,23 +54,25 @@ object BootStrap extends IOApp {
   val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
+  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
   val cacheRoute: CacheRoute = new CacheRoute(authorizationProvider, Modules.cacheService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
   val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
-  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
+  val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
   val tagRoute: TagRoute = new TagRoute(Modules.tagService, Modules.articleService)
 
   val router = new net.yoshinorin.qualtet.http.Router(
     authorizationProvider,
-    homeRoute,
     apiStatusRoute,
     archiveRoute,
     articleRoute,
     authorRoute,
+    authRoute,
     cacheRoute,
     contentRoute,
     contentTypeRoute,
-    authRoute,
+    homeRoute,
+    sitemapRoute,
     tagRoute
   )
 

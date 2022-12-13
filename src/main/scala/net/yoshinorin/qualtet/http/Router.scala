@@ -9,9 +9,19 @@ import org.http4s._
 import org.http4s.dsl.io._
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ArchiveRoute, ArticleRoute, AuthRoute, AuthorRoute, CacheRoute, ContentRoute, ContentTypeRoute, HomeRoute}
+import net.yoshinorin.qualtet.http.routes.{
+  ApiStatusRoute,
+  ArchiveRoute,
+  ArticleRoute,
+  AuthRoute,
+  AuthorRoute,
+  CacheRoute,
+  ContentRoute,
+  ContentTypeRoute,
+  HomeRoute,
+  SitemapRoute
+}
 import net.yoshinorin.qualtet.http.routes.TagRoute
-
 import net.yoshinorin.qualtet.syntax._
 
 // TODO: move somewhere
@@ -20,15 +30,16 @@ object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit")
 
 class Router(
   authorizationProvider: AuthorizationProvider,
-  homeRoute: HomeRoute,
   apiStatusRoute: ApiStatusRoute,
   archiveRoute: ArchiveRoute,
   articleRoute: ArticleRoute,
   authorRoute: AuthorRoute,
+  authRoute: AuthRoute,
   cacheRoute: CacheRoute,
   contentRoute: ContentRoute,
   contentTypeRoute: ContentTypeRoute,
-  authRoute: AuthRoute,
+  homeRoute: HomeRoute,
+  sitemapRoute: SitemapRoute,
   tagRoute: TagRoute
 ) {
 
@@ -42,6 +53,7 @@ class Router(
     "/caches" -> caches,
     "/contents" -> contents,
     "/content-types" -> contentTypes,
+    "/sitemaps" -> sitemaps,
     "/status" -> status,
     "/tags" -> tags,
     "/token" -> token
@@ -129,6 +141,14 @@ class Router(
     // TODO: return 404
   }
 
+  def sitemaps: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root => sitemapRoute.get
+    case request @ _ =>
+      logger.error(s"not implemented in token sitemaps routes: ${request}")
+      ???
+    // TODO: return 404
+  }
+
   def status: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => apiStatusRoute.get
     case request @ _ =>
@@ -148,7 +168,7 @@ class Router(
 
   def tags: HttpRoutes[IO] =
     tagsWithoutAuth <+>
-    authorizationProvider.authenticate(tagsWithAuthed)
+      authorizationProvider.authenticate(tagsWithAuthed)
 
   private def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => tagRoute.get
@@ -167,46 +187,4 @@ class Router(
       ???
     // TODO: return 404
   }
-
-  /*
-  // caches routes
-  val c: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
-    case DELETE -> Root / "caches" as author =>
-      cacheRoute.delete(author._1)
-    case DELETE -> Root / "caches" / "" as author =>  // workaround for trailing slash
-      cacheRoute.delete(author._1)
-    case request @ _ =>
-      logger.error(s"not implemented: ${request}")
-      ???
-  }
-
-  val authedRoute: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
-    case request @ POST -> Root / "contents" as payload =>
-      contentRoute.post(payload)
-    case DELETE -> "contents" /: id as payload =>
-      contentRoute.delete(id)
-    case request @ _ =>
-      logger.error(s"not implemented: ${request}")
-      ???
-  }
-
-  val nonAuthRoute: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case request @ POST -> Root / "token" =>
-      authRoute.post(request)
-    case request @ POST -> Root / "token" / "" =>  // workaround for trailing slash
-      authRoute.post(request)
-    case GET -> Root / "authors" =>
-      authorRoute.get
-    case GET -> Root / "authors" / authorName =>
-      authorRoute.get(authorName)
-    // need slash on the prefix and suffix.
-    // example: /yyyy/mm/dd/content-name/
-    case GET -> "contents" /: path =>
-      contentRoute.get(path)
-    case request @ _ =>
-      logger.error(s"not implemented: ${request}")
-      ???
-  }
-   */
-
 }
