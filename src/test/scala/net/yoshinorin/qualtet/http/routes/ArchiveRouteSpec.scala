@@ -21,8 +21,10 @@ class ArchiveRouteSpec extends AnyWordSpec {
   val mockArchiveService: ArchiveService = Mockito.mock(classOf[ArchiveService])
   val archiveRoute: ArchiveRoute = new ArchiveRoute(mockArchiveService)
 
+  val router = Fixture.createRouter(archiveRoute = archiveRoute)
+
   val request: Request[IO] = Request(method = Method.GET, uri = uri"/archives")
-  val client: Client[IO] = Client.fromHttpApp(Fixture.router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes)
 
   when(mockArchiveService.get).thenReturn(
     IO(

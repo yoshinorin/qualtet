@@ -91,6 +91,36 @@ object Fixture {
     tagRoute
   )
 
+  def createRouter(
+    authProvider: AuthProvider = authProvider,
+    apiStatusRoute: ApiStatusRoute = apiStatusRoute,
+    archiveRoute: ArchiveRoute = archiveRoute,
+    articleRoute: ArticleRoute = articleRoute,
+    authorRoute: AuthorRoute = authorRoute,
+    authRoute: AuthRoute = authRoute,
+    cacheRoute: CacheRoute = cacheRoute,
+    contentRoute: ContentRoute = contentRoute,
+    contentTypeRoute: ContentTypeRoute = contentTypeRoute,
+    feedRoute: FeedRoute = feedRoute,
+    homeRoute: HomeRoute = homeRoute,
+    sitemapRoute: SitemapRoute = sitemapRoute,
+    tagRoute: TagRoute = tagRoute
+  ) = new net.yoshinorin.qualtet.http.Router(
+    authProvider = authProvider,
+    apiStatusRoute = apiStatusRoute,
+    archiveRoute = archiveRoute,
+    articleRoute = articleRoute,
+    authorRoute = authorRoute,
+    authRoute = authRoute,
+    cacheRoute = cacheRoute,
+    contentRoute = contentRoute,
+    contentTypeRoute = contentTypeRoute,
+    feedRoute = feedRoute,
+    homeRoute = homeRoute,
+    sitemapRoute = sitemapRoute,
+    tagRoute = tagRoute
+  )
+
   val authorId: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754a")
   val authorId2: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754b")
   // NOTE: `pass`
