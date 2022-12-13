@@ -9,10 +9,10 @@ import org.http4s._
 import org.http4s.dsl.io._
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.syntax._
-
-import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ArchiveRoute, ArticleRoute, AuthRoute, AuthorRoute, CacheRoute, ContentRoute, HomeRoute}
+import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ArchiveRoute, ArticleRoute, AuthRoute, AuthorRoute, CacheRoute, ContentRoute, ContentTypeRoute, HomeRoute}
 import net.yoshinorin.qualtet.http.routes.TagRoute
+
+import net.yoshinorin.qualtet.syntax._
 
 // TODO: move somewhere
 object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page")
@@ -27,6 +27,7 @@ class Router(
   authorRoute: AuthorRoute,
   cacheRoute: CacheRoute,
   contentRoute: ContentRoute,
+  contentTypeRoute: ContentTypeRoute,
   authRoute: AuthRoute,
   tagRoute: TagRoute
 ) {
@@ -40,6 +41,7 @@ class Router(
     "/authors" -> authors,
     "/caches" -> caches,
     "/contents" -> contents,
+    "/content-types" -> contentTypes,
     "/status" -> status,
     "/tags" -> tags,
     "/token" -> token
@@ -118,10 +120,19 @@ class Router(
     // TODO: return 404
   }
 
+  def contentTypes: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root => contentTypeRoute.get
+    case GET -> Root / name => contentTypeRoute.get(name)
+    case request @ _ =>
+      logger.error(s"not implemented in token contentTypes routes: ${request}")
+      ???
+    // TODO: return 404
+  }
+
   def status: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => apiStatusRoute.get
     case request @ _ =>
-      logger.error(s"not implemented routes: ${request}")
+      logger.error(s"not implemented in status routes: ${request}")
       ???
     // TODO: return 404
   }
@@ -143,7 +154,7 @@ class Router(
     case GET -> Root => tagRoute.get
     case GET -> Root / nameOrId :? PageQueryParam(page) +& LimitQueryParam(limit) => tagRoute.get(nameOrId, page, limit)
     case request @ _ =>
-      logger.error(s"not implemented in token routes: ${request}")
+      logger.error(s"not implemented in tags routes: ${request}")
       ???
     // TODO: return 404
   }
@@ -152,7 +163,7 @@ class Router(
     case DELETE -> Root / nameOrId as payload =>
       tagRoute.delete(nameOrId)
     case request @ _ =>
-      logger.error(s"not implemented in contents routes with auth: ${request}")
+      logger.error(s"not implemented in tags routes with auth: ${request}")
       ???
     // TODO: return 404
   }

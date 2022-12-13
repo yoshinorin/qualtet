@@ -40,7 +40,6 @@ object BootStrap extends IOApp {
   logger.info("booting...")
 
   /*
-  val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
   val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
   val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
    */
@@ -57,6 +56,7 @@ object BootStrap extends IOApp {
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
   val cacheRoute: CacheRoute = new CacheRoute(authorizationProvider, Modules.cacheService)
+  val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
   val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
   val tagRoute: TagRoute = new TagRoute(Modules.tagService, Modules.articleService)
@@ -70,16 +70,15 @@ object BootStrap extends IOApp {
     authorRoute,
     cacheRoute,
     contentRoute,
+    contentTypeRoute,
     authRoute,
     tagRoute
   )
 
-  val httpRoutes = router.routes
-
   def run(args: List[String]): IO[ExitCode] = {
 
     // TODO: filter & format log
-    val httpAppWithLogger = Logger.httpApp(true, false)(httpRoutes)
+    val httpAppWithLogger: HttpApp[IO] = Logger.httpApp(true, false)(router.routes)
 
     logger.info("starting http server...")
     EmberServerBuilder
