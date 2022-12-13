@@ -1,8 +1,6 @@
 package net.yoshinorin.qualtet.http
 
 import cats.effect._, cats.implicits._
-import org.http4s._
-import org.http4s.dsl.io._
 import org.http4s.server._
 import org.http4s.HttpRoutes
 import org.http4s._
@@ -18,6 +16,7 @@ import net.yoshinorin.qualtet.http.routes.{
   CacheRoute,
   ContentRoute,
   ContentTypeRoute,
+  FeedRoute,
   HomeRoute,
   SitemapRoute
 }
@@ -38,6 +37,7 @@ class Router(
   cacheRoute: CacheRoute,
   contentRoute: ContentRoute,
   contentTypeRoute: ContentTypeRoute,
+  feedRoute: FeedRoute,
   homeRoute: HomeRoute,
   sitemapRoute: SitemapRoute,
   tagRoute: TagRoute
@@ -53,6 +53,7 @@ class Router(
     "/caches" -> caches,
     "/contents" -> contents,
     "/content-types" -> contentTypes,
+    "/feeds" -> feeds,
     "/sitemaps" -> sitemaps,
     "/status" -> status,
     "/tags" -> tags,
@@ -136,7 +137,15 @@ class Router(
     case GET -> Root => contentTypeRoute.get
     case GET -> Root / name => contentTypeRoute.get(name)
     case request @ _ =>
-      logger.error(s"not implemented in token contentTypes routes: ${request}")
+      logger.error(s"not implemented in contentTypes routes: ${request}")
+      ???
+    // TODO: return 404
+  }
+
+  private[http] def feeds: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root / name => feedRoute.get(name)
+    case request @ _ =>
+      logger.error(s"not implemented in feed routes: ${request}")
       ???
     // TODO: return 404
   }
@@ -144,7 +153,7 @@ class Router(
   private[http] def sitemaps: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => sitemapRoute.get
     case request @ _ =>
-      logger.error(s"not implemented in token sitemaps routes: ${request}")
+      logger.error(s"not implemented in sitemaps routes: ${request}")
       ???
     // TODO: return 404
   }

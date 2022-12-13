@@ -38,18 +38,10 @@ object BootStrap extends IOApp {
 
   logger.info("booting...")
 
-  /*
-
-  val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
-   */
-
-  logger.info("created all instances")
-
   Migration.migrate(Modules.contentTypeService)
 
   val authorizationProvider: AuthorizationProvider = new AuthorizationProvider(Modules.authService)
 
-  val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
   val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
@@ -58,8 +50,12 @@ object BootStrap extends IOApp {
   val cacheRoute: CacheRoute = new CacheRoute(authorizationProvider, Modules.cacheService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
   val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
+  val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
+  val homeRoute: HomeRoute = new HomeRoute()
   val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
   val tagRoute: TagRoute = new TagRoute(Modules.tagService, Modules.articleService)
+
+  logger.info("created all instances")
 
   val router = new net.yoshinorin.qualtet.http.Router(
     authorizationProvider,
@@ -71,6 +67,7 @@ object BootStrap extends IOApp {
     cacheRoute,
     contentRoute,
     contentTypeRoute,
+    feedRoute,
     homeRoute,
     sitemapRoute,
     tagRoute
