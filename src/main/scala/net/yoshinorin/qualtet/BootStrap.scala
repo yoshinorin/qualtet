@@ -40,7 +40,6 @@ object BootStrap extends IOApp {
   logger.info("booting...")
 
   /*
-  val tagRoute: TagRoute = new TagRoute(Modules.authService, Modules.tagService, Modules.articleService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
   val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
   val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
@@ -60,6 +59,7 @@ object BootStrap extends IOApp {
   val cacheRoute: CacheRoute = new CacheRoute(authorizationProvider, Modules.cacheService)
   val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
   val authRoute: AuthRoute = new AuthRoute(Modules.authService)
+  val tagRoute: TagRoute = new TagRoute(Modules.tagService, Modules.articleService)
 
   val router = new net.yoshinorin.qualtet.http.Router(
     authorizationProvider,
@@ -70,7 +70,8 @@ object BootStrap extends IOApp {
     authorRoute,
     cacheRoute,
     contentRoute,
-    authRoute
+    authRoute,
+    tagRoute
   )
 
   val httpRoutes = router.routes

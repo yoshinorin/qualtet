@@ -1,8 +1,6 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
-import cats.data.OptionT
-import org.http4s.HttpRoutes
 import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
@@ -16,14 +14,14 @@ class AuthorRoute(
 ) extends ResponseHandler {
 
   // authors
-  def get = {
+  def get: IO[Response[IO]] = {
     for {
       authors <- authorService.getAll
       response <- Ok(authors.asJson, `Content-Type`(MediaType.application.json))
     } yield response
   }
 
-  def get(authorName: String) = {
+  def get(authorName: String): IO[Response[IO]] = {
     val maybeAuthor = for {
       maybeAuthor <- authorService.findByName(AuthorName(authorName))
     } yield maybeAuthor

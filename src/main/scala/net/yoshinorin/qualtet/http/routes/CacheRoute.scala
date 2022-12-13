@@ -1,11 +1,7 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
-import cats.implicits._
-import cats.data.Kleisli
-import cats.data.OptionT
 import org.http4s.HttpRoutes
-import org.http4s.server._
 import org.http4s._
 import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.http.AuthorizationProvider
@@ -27,7 +23,7 @@ class CacheRoute(
       } yield response
     }
 
-  def delete(author: ResponseAuthor) = {
+  def delete(author: ResponseAuthor): IO[Response[IO]] = {
     for {
       _ <- cacheService.invalidateAll()
       response <- NoContent()

@@ -1,28 +1,21 @@
 package net.yoshinorin.qualtet.http.routes
 
-import cats.effect._, cats.implicits._
-import org.http4s._
-import org.http4s.dsl.io._
-import org.http4s.server._
-import org.http4s.HttpRoutes
+import cats.effect._
 import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
-import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.contents.{Content, ContentService, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.contents.{ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.contents.ResponseContent._
-import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.http.{AuthorizationProvider, RequestDecoder}
+import net.yoshinorin.qualtet.http.RequestDecoder
 import net.yoshinorin.qualtet.syntax._
-import org.http4s.server.Router
 
 class ContentRoute(
   contentService: ContentService
 ) extends RequestDecoder {
 
-  def post(payload: (ResponseAuthor, String)) = {
+  def post(payload: (ResponseAuthor, String)): IO[Response[IO]] = {
     val maybeContent = for {
       maybeContent <- IO(decode[RequestContent](payload._2))
     } yield maybeContent
@@ -38,21 +31,19 @@ class ContentRoute(
     }
   }
 
-  def delete(id: String) = {
+  def delete(id: String): IO[Response[IO]] = {
     for {
-      // TODO: `id.segments.last` is correct way?
       _ <- contentService.delete(ContentId(id))
       // TODO: logging
       response <- NoContent()
     } yield response
   }
 
-  def get(path: String) = {
+  def get(path: String): IO[Response[IO]] = {
     for {
       // TODO: avoid to add slash to prefix and suffix
       // TODO: should be configurlize for append suffix or prefix
       contents <- contentService.findByPathWithMeta(Path(s"/${path}"))
-      _ = println(path)
       // TODO: return `NotFound` if contents is None
       response <- Ok(contents.get.asJson, `Content-Type`(MediaType.application.json))
     } yield response

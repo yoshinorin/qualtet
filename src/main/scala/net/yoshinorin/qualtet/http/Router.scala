@@ -5,7 +5,6 @@ import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.server._
 import org.http4s.HttpRoutes
-import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
 import org.slf4j.LoggerFactory
@@ -13,6 +12,7 @@ import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.syntax._
 
 import net.yoshinorin.qualtet.http.routes.{ApiStatusRoute, ArchiveRoute, ArticleRoute, AuthRoute, AuthorRoute, CacheRoute, ContentRoute, HomeRoute}
+import net.yoshinorin.qualtet.http.routes.TagRoute
 
 // TODO: move somewhere
 object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page")
@@ -27,7 +27,8 @@ class Router(
   authorRoute: AuthorRoute,
   cacheRoute: CacheRoute,
   contentRoute: ContentRoute,
-  authRoute: AuthRoute
+  authRoute: AuthRoute,
+  tagRoute: TagRoute
 ) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
@@ -40,6 +41,7 @@ class Router(
     "/caches" -> caches,
     "/contents" -> contents,
     "/status" -> status,
+    "/tags" -> tags,
     "/token" -> token
   ).orNotFound
 
@@ -129,6 +131,28 @@ class Router(
       authRoute.post(request)
     case request @ _ =>
       logger.error(s"not implemented in token routes: ${request}")
+      ???
+    // TODO: return 404
+  }
+
+  def tags: HttpRoutes[IO] =
+    tagsWithoutAuth <+>
+    authorizationProvider.authenticate(tagsWithAuthed)
+
+  private def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root => tagRoute.get
+    case GET -> Root / nameOrId :? PageQueryParam(page) +& LimitQueryParam(limit) => tagRoute.get(nameOrId, page, limit)
+    case request @ _ =>
+      logger.error(s"not implemented in token routes: ${request}")
+      ???
+    // TODO: return 404
+  }
+
+  private def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
+    case DELETE -> Root / nameOrId as payload =>
+      tagRoute.delete(nameOrId)
+    case request @ _ =>
+      logger.error(s"not implemented in contents routes with auth: ${request}")
       ???
     // TODO: return 404
   }
