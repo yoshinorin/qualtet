@@ -1,21 +1,26 @@
 package net.yoshinorin.qualtet.http.routes
 
-/*
-import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
-import akka.http.scaladsl.testkit.ScalatestRouteTest
+import cats.effect.IO
+import org.http4s.client.Client
+import org.http4s._
+import org.http4s.dsl.io._
+import org.http4s.headers.`Content-Type`
+import org.http4s.implicits._
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, ResponseAuthor}
-import net.yoshinorin.qualtet.fixture.Fixture.{author, author2}
+import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, router}
 import net.yoshinorin.qualtet.Modules._
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.AuthorRouteSpec
-class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
+class AuthorRouteSpec extends AnyWordSpec {
 
   val authorRoute: AuthorRoute = new AuthorRoute(authorService)
 
   val a: ResponseAuthor = authorService.findByName(AuthorName(author.name.value)).unsafeRunSync().get
   val a2: ResponseAuthor = authorService.findByName(AuthorName(author2.name.value)).unsafeRunSync().get
+
+  val client: Client[IO] = Client.fromHttpApp(router.routes)
 
   "AuthorRoute" should {
     "be return two authors" in {
@@ -35,10 +40,13 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      Get("/authors/") ~> authorRoute.route ~> check {
-        assert(status === StatusCodes.OK)
-        assert(contentType === ContentTypes.`application/json`)
-        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+      client.run(Request(method = Method.GET, uri = uri"/authors/")).use { response =>
+        IO {
+          assert(response.status === Ok)
+          assert(response.contentType === `Content-Type`(MediaType.application.json))
+          // TODO: assert json & it's count
+          assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+        }
       }
     }
 
@@ -53,21 +61,23 @@ class AuthorRouteSpec extends AnyWordSpec with ScalatestRouteTest {
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      Get("/authors/jhondue") ~> authorRoute.route ~> check {
-        assert(status === StatusCodes.OK)
-        assert(contentType === ContentTypes.`application/json`)
-        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+      client.run(Request(method = Method.GET, uri = uri"/authors/jhondue")).use { response =>
+        IO {
+          assert(response.status === Ok)
+          assert(response.contentType === `Content-Type`(MediaType.application.json))
+          // TODO: assert json & it's count
+          assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+        }
       }
     }
 
     "be return 404" in {
-      Get("/authors/jhondue-not-exists") ~> authorRoute.route ~> check {
-        assert(status === StatusCodes.NotFound)
-        assert(contentType === ContentTypes.`application/json`)
+      client.run(Request(method = Method.GET, uri = uri"/authors/jhondue-not-exists")).use { response =>
+        IO {
+          assert(response.status === NotFound)
+        }
       }
     }
 
   }
-
 }
- */
