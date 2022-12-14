@@ -40,14 +40,17 @@ class AuthorRouteSpec extends AnyWordSpec {
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      client.run(Request(method = Method.GET, uri = uri"/authors/")).use { response =>
-        IO {
-          assert(response.status === Ok)
-          assert(response.contentType === `Content-Type`(MediaType.application.json))
-          // TODO: assert json & it's count
-          assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+      client
+        .run(Request(method = Method.GET, uri = uri"/authors/"))
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            // TODO: assert json & it's count
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+          }
         }
-      }
+        .unsafeRunSync()
     }
 
     "be return specific author" in {
@@ -61,22 +64,28 @@ class AuthorRouteSpec extends AnyWordSpec {
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      client.run(Request(method = Method.GET, uri = uri"/authors/jhondue")).use { response =>
-        IO {
-          assert(response.status === Ok)
-          assert(response.contentType === `Content-Type`(MediaType.application.json))
-          // TODO: assert json & it's count
-          assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+      client
+        .run(Request(method = Method.GET, uri = uri"/authors/jhondue"))
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            // TODO: assert json & it's count
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+          }
         }
-      }
+        .unsafeRunSync()
     }
 
     "be return 404" in {
-      client.run(Request(method = Method.GET, uri = uri"/authors/jhondue-not-exists")).use { response =>
-        IO {
-          assert(response.status === NotFound)
+      client
+        .run(Request(method = Method.GET, uri = uri"/authors/jhondue-not-exists"))
+        .use { response =>
+          IO {
+            assert(response.status === NotFound)
+          }
         }
-      }
+        .unsafeRunSync()
     }
 
   }
