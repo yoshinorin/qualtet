@@ -15,7 +15,7 @@ import cats.effect.unsafe.implicits.global
 class ApiRouteSpec extends AnyWordSpec {
 
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
-  val router = Fixture.createRouter(apiStatusRoute = apiStatusRoute)
+  val router = Fixture.makeRouter(apiStatusRoute = apiStatusRoute)
 
   val request: Request[IO] = Request(method = Method.GET, uri = uri"/status")
   val client: Client[IO] = Client.fromHttpApp(router.routes)
@@ -23,13 +23,16 @@ class ApiRouteSpec extends AnyWordSpec {
   "ApiStatusRoute" should {
 
     "return operational JSON" in {
-        client.run(request).use { response =>
+      client
+        .run(request)
+        .use { response =>
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "") === "{\"status\":\"operational\"}")
           }
-        }.unsafeRunSync()
-      }
+        }
+        .unsafeRunSync()
     }
   }
+}

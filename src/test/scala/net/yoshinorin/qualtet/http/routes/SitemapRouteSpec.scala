@@ -46,4 +46,4 @@ class SitemapRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   }
 
 }
-*/
+ */

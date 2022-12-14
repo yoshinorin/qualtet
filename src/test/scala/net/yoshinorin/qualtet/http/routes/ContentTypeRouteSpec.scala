@@ -43,4 +43,4 @@ class ContentTypeRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   }
 
 }
-*/
+ */

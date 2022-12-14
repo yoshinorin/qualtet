@@ -110,4 +110,4 @@ class AuthRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   }
 
 }
-*/
+ */

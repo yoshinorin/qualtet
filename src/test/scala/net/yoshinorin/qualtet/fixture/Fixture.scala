@@ -91,7 +91,7 @@ object Fixture {
     tagRoute
   )
 
-  def createRouter(
+  def makeRouter(
     authProvider: AuthProvider = authProvider,
     apiStatusRoute: ApiStatusRoute = apiStatusRoute,
     archiveRoute: ArchiveRoute = archiveRoute,

@@ -258,7 +258,7 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
         assert(contentType === ContentTypes.`application/json`)
         // TODO: assert json
       }
-       */
+ */
     }
 
     // 401 Invalid JWT with POST
@@ -280,4 +280,4 @@ class ContentRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   }
 
 }
-*/
+ */

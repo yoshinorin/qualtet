@@ -21,7 +21,7 @@ class ArchiveRouteSpec extends AnyWordSpec {
   val mockArchiveService: ArchiveService = Mockito.mock(classOf[ArchiveService])
   val archiveRoute: ArchiveRoute = new ArchiveRoute(mockArchiveService)
 
-  val router = Fixture.createRouter(archiveRoute = archiveRoute)
+  val router = Fixture.makeRouter(archiveRoute = archiveRoute)
 
   val request: Request[IO] = Request(method = Method.GET, uri = uri"/archives")
   val client: Client[IO] = Client.fromHttpApp(router.routes)
@@ -61,13 +61,16 @@ class ArchiveRouteSpec extends AnyWordSpec {
           |]
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      client.run(request).use { response =>
-        IO {
-          assert(response.status === Ok)
-          assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-          assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "") === expectJson)
+      client
+        .run(request)
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "") === expectJson)
+          }
         }
-      }.unsafeRunSync()
+        .unsafeRunSync()
     }
   }
 }
