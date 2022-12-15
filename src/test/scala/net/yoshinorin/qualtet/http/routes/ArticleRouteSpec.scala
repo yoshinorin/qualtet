@@ -83,18 +83,16 @@ class ArticleRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    /* TODO
     "not be return articles with query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/articles/?page=9999&limit=10"))
         .use { response =>
           IO {
-            assert(response.status === NotFound)
+            // TODO: assert(response.status === NotFound)
           }
         }
-        .unsafeRunSync()
+      // TODO: .unsafeRunSync()
     }
-     */
 
   }
 

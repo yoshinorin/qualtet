@@ -43,7 +43,6 @@ class AuthRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    /*
     "be reject with bad request (wrong JSON format)" in {
       val wrongJsonFormat =
         s"""
@@ -53,10 +52,15 @@ class AuthRouteSpec extends AnyWordSpec {
           |}
         """.stripMargin
 
-      Post("/token/")
-        .withEntity(ContentTypes.`application/json`, wrongJsonFormat) ~> authRoute.route ~> check {
-        assert(status === StatusCodes.BadRequest)
-      }
+      val entity = EntityEncoder[IO, String].toEntity(wrongJsonFormat)
+      client
+        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .use { response =>
+          IO {
+            // TODO: assert(response.status === BadRequest)
+          }
+        }
+      // TODO: .unsafeRunSync()
     }
 
     "be reject with bad request (can not decode request JSON without password key)" in {
@@ -67,10 +71,15 @@ class AuthRouteSpec extends AnyWordSpec {
           |}
         """.stripMargin
 
-      Post("/token/")
-        .withEntity(ContentTypes.`application/json`, wrongJson) ~> authRoute.route ~> check {
-        assert(status === StatusCodes.BadRequest)
-      }
+      val entity = EntityEncoder[IO, String].toEntity(wrongJson)
+      client
+        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .use { response =>
+          IO {
+            // TODO: assert(response.status === BadRequest)
+          }
+        }
+      // TODO: .unsafeRunSync()
     }
 
     "be reject with bad request (can not decode request JSON without authorId key)" in {
@@ -81,10 +90,15 @@ class AuthRouteSpec extends AnyWordSpec {
           |}
         """.stripMargin
 
-      Post("/token/")
-        .withEntity(ContentTypes.`application/json`, wrongJson) ~> authRoute.route ~> check {
-        assert(status === StatusCodes.BadRequest)
-      }
+      val entity = EntityEncoder[IO, String].toEntity(wrongJson)
+      client
+        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .use { response =>
+          IO {
+            // TODO: assert(response.status === BadRequest)
+          }
+        }
+      // TODO: .unsafeRunSync()
     }
 
     "be reject with wrong-password" in {
@@ -96,10 +110,15 @@ class AuthRouteSpec extends AnyWordSpec {
            |}
         """.stripMargin
 
-      Post("/token/")
-        .withEntity(ContentTypes.`application/json`, json) ~> authRoute.route ~> check {
-        assert(status === StatusCodes.Unauthorized)
-      }
+      val entity = EntityEncoder[IO, String].toEntity(json)
+      client
+        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .use { response =>
+          IO {
+            // TODO: assert(response.status === Unauthorized)
+          }
+        }
+      // TODO: .unsafeRunSync()
     }
 
     "be return if user not exists" in {
@@ -111,13 +130,16 @@ class AuthRouteSpec extends AnyWordSpec {
            |}
         """.stripMargin
 
-      Post("/token/")
-        .withEntity(ContentTypes.`application/json`, json) ~> authRoute.route ~> check {
-        assert(status === StatusCodes.NotFound)
-      }
+      val entity = EntityEncoder[IO, String].toEntity(json)
+      client
+        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .use { response =>
+          IO {
+            // TODO: assert(response.status === NotFound)
+          }
+        }
+      // TODO: .unsafeRunSync()
     }
-     */
-
   }
 
 }
