@@ -6,7 +6,7 @@ import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits._
-import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeRoute, router}
+import net.yoshinorin.qualtet.fixture.Fixture.router
 import org.scalatest.wordspec.AnyWordSpec
 
 import cats.effect.unsafe.implicits.global
