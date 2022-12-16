@@ -1,19 +1,14 @@
 package net.yoshinorin.qualtet.http.routes
 
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.model.HttpResponse
-import akka.http.scaladsl.server.Route
+import cats.effect.IO
+import org.http4s._
+import org.http4s.dsl.io._
 
 class HomeRoute {
 
-  def route: Route = {
-    pathEndOrSingleSlash {
-      complete(
-        HttpResponse(
-          200,
-          entity = """Hello Qualtet!!""".stripMargin
-        )
-      )
-    }
+  // application root
+  def get: IO[Response[IO]] = {
+    Ok("Hello Qualtet!!")
   }
+
 }

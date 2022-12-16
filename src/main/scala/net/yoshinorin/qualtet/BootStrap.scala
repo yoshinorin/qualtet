@@ -1,10 +1,13 @@
 package net.yoshinorin.qualtet
 
-import scala.concurrent.ExecutionContextExecutor
-import scala.util.{Failure, Success}
-import akka.actor.ActorSystem
+import cats.effect.IOApp
+import cats.effect.ExitCode
+import cats.effect.IO
+import org.http4s._
+import org.http4s.server.middleware.Logger
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,
@@ -18,73 +21,68 @@ import net.yoshinorin.qualtet.http.routes.{
   SitemapRoute,
   TagRoute
 }
-import net.yoshinorin.qualtet.http.HttpServer
 import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.http.routes.CacheRoute
-
+import org.http4s.ember.server.EmberServerBuilder
+import com.comcast.ip4s._
 // import scala.io.StdIn
 
 @SuppressWarnings(Array("org.wartremover.warts.ScalaApp")) // Not yet migrate to Scala3
-object BootStrap extends App {
+object BootStrap extends IOApp {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
   logger.info("booting...")
 
-  implicit val actorSystem: ActorSystem = ActorSystem("qualtet")
-  implicit val executionContextExecutor: ExecutionContextExecutor = actorSystem.dispatcher
+  Migration.migrate(Modules.contentTypeService)
 
-  logger.info("dispatched: actorSystem")
+  val authProvider: AuthProvider = new AuthProvider(Modules.authService)
 
-  val homeRoute: HomeRoute = new HomeRoute()
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
-  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
-  val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
-  val contentRoute: ContentRoute = new ContentRoute(Modules.authService, Modules.contentService)
-  val tagRoute: TagRoute = new TagRoute(Modules.authService, Modules.tagService, Modules.articleService)
-  val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
+  val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
+  val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
+  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
+  val cacheRoute: CacheRoute = new CacheRoute(Modules.cacheService)
   val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
-  val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
+  val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
   val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
-  val cacheRoute: CacheRoute = new CacheRoute(Modules.authService, Modules.cacheService)
+  val homeRoute: HomeRoute = new HomeRoute()
+  val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
+  val tagRoute: TagRoute = new TagRoute(Modules.tagService, Modules.articleService)
 
   logger.info("created all instances")
 
-  Migration.migrate(Modules.contentTypeService)
+  val router: net.yoshinorin.qualtet.http.Router = new net.yoshinorin.qualtet.http.Router(
+    authProvider,
+    apiStatusRoute,
+    archiveRoute,
+    articleRoute,
+    authorRoute,
+    authRoute,
+    cacheRoute,
+    contentRoute,
+    contentTypeRoute,
+    feedRoute,
+    homeRoute,
+    sitemapRoute,
+    tagRoute
+  )
 
-  val httpServer: HttpServer =
-    new HttpServer(
-      homeRoute,
-      apiStatusRoute,
-      authRoute,
-      authorRoute,
-      contentRoute,
-      tagRoute,
-      articleRoute,
-      archiveRoute,
-      contentTypeRoute,
-      sitemapRoute,
-      feedRoute,
-      cacheRoute
-    )
+  def run(args: List[String]): IO[ExitCode] = {
 
-  logger.info("starting http server...")
+    // TODO: filter & format log
+    val httpAppWithLogger: HttpApp[IO] = Logger.httpApp(true, false)(router.routes)
 
-  httpServer.start(Config.httpHost, Config.httpPort).onComplete {
-    case Success(binding) =>
-      val address = binding.localAddress
-      logger.info(s"http server online at http://${address.getHostString}:${address.getPort}/")
-    // NOTE: docker & sbt-revolver does not work if below codes are enabled.
-    //       If do not user sbt-revolver when development below codes should be enable vice versa.
-    /*
-      StdIn.readLine()
-      binding
-        .unbind()
-        .onComplete(_ => actorSystem.terminate())
-     */
-    case Failure(ex) =>
-      println("Failed to bind HTTP endpoint, terminating system", ex)
-      actorSystem.terminate()
+    logger.info("starting http server...")
+    EmberServerBuilder
+      .default[IO]
+      .withHost(Ipv4Address.fromString(Config.httpHost).get)
+      .withPort(Port.fromInt(Config.httpPort).get)
+      .withHttpApp(httpAppWithLogger)
+      .withLogger(org.typelevel.log4cats.slf4j.Slf4jLogger.getLoggerFromSlf4j(logger))
+      .build
+      .use(_ => IO.never)
+      .as(ExitCode.Success)
   }
 }

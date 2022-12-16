@@ -1,8 +1,11 @@
 package net.yoshinorin.qualtet.fixture
 
+import org.http4s.Uri
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
+import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.cache.CacheModule
+import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.archives._
 import net.yoshinorin.qualtet.domains.articles._
 import net.yoshinorin.qualtet.domains.authors._
@@ -41,6 +44,10 @@ object Fixture {
     ULID.newULIDString.toLowerCase(Locale.ENGLISH)
   }
 
+  val h: String = Config.httpHost
+  val p: String = Config.httpPort.toString()
+  val host = Uri.unsafeFromString(s"http://${h}:${p}")
+
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
@@ -58,18 +65,66 @@ object Fixture {
   val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
   val feedService: FeedService = new FeedService(feedCache, Modules.articleService)
 
-  val homeRoute: HomeRoute = new HomeRoute()
+  val authProvider: AuthProvider = new AuthProvider(Modules.authService)
+
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
-  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
-  val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
-  val contentRoute: ContentRoute = new ContentRoute(Modules.authService, Modules.contentService)
-  val tagRoute: TagRoute = new TagRoute(Modules.authService, Modules.tagService, Modules.articleService)
-  val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
   val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
-  val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(contentTypeService)
-  val sitemapRoute: SitemapRoute = new SitemapRoute(sitemapService)
-  val feedRoute: FeedRoute = new FeedRoute(feedService)
-  val cacheRoute: CacheRoute = new CacheRoute(Modules.authService, Modules.cacheService)
+  val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
+  val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
+  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
+  val cacheRoute: CacheRoute = new CacheRoute(Modules.cacheService)
+  val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
+  val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
+  val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
+  val homeRoute: HomeRoute = new HomeRoute()
+  val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
+  val tagRoute: TagRoute = new TagRoute(Modules.tagService, Modules.articleService)
+
+  val router = new net.yoshinorin.qualtet.http.Router(
+    authProvider,
+    apiStatusRoute,
+    archiveRoute,
+    articleRoute,
+    authorRoute,
+    authRoute,
+    cacheRoute,
+    contentRoute,
+    contentTypeRoute,
+    feedRoute,
+    homeRoute,
+    sitemapRoute,
+    tagRoute
+  )
+
+  def makeRouter(
+    authProvider: AuthProvider = authProvider,
+    apiStatusRoute: ApiStatusRoute = apiStatusRoute,
+    archiveRoute: ArchiveRoute = archiveRoute,
+    articleRoute: ArticleRoute = articleRoute,
+    authorRoute: AuthorRoute = authorRoute,
+    authRoute: AuthRoute = authRoute,
+    cacheRoute: CacheRoute = cacheRoute,
+    contentRoute: ContentRoute = contentRoute,
+    contentTypeRoute: ContentTypeRoute = contentTypeRoute,
+    feedRoute: FeedRoute = feedRoute,
+    homeRoute: HomeRoute = homeRoute,
+    sitemapRoute: SitemapRoute = sitemapRoute,
+    tagRoute: TagRoute = tagRoute
+  ) = new net.yoshinorin.qualtet.http.Router(
+    authProvider = authProvider,
+    apiStatusRoute = apiStatusRoute,
+    archiveRoute = archiveRoute,
+    articleRoute = articleRoute,
+    authorRoute = authorRoute,
+    authRoute = authRoute,
+    cacheRoute = cacheRoute,
+    contentRoute = contentRoute,
+    contentTypeRoute = contentTypeRoute,
+    feedRoute = feedRoute,
+    homeRoute = homeRoute,
+    sitemapRoute = sitemapRoute,
+    tagRoute = tagRoute
+  )
 
   val authorId: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754a")
   val authorId2: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754b")
@@ -112,7 +167,7 @@ object Fixture {
     rawContent = "this is a raw content",
     htmlContent = "this is a html content",
     robotsAttributes = Attributes("noarchive, noimageindex"),
-    tags = List("Scala", "Akka"),
+    tags = List("Scala", "http4s"),
     externalResources = List(
       ExternalResources(
         ExternalResourceKind("js"),

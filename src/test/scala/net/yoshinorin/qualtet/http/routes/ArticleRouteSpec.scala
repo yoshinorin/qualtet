@@ -1,17 +1,22 @@
 package net.yoshinorin.qualtet.http.routes
 
-import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
-import akka.http.scaladsl.testkit.ScalatestRouteTest
+import cats.effect.IO
+import org.http4s.client.Client
+import org.http4s._
+import org.http4s.dsl.io._
+import org.http4s.headers.`Content-Type`
+import org.http4s.implicits._
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.Modules._
-import net.yoshinorin.qualtet.fixture.Fixture.{articleRoute, author}
+import net.yoshinorin.qualtet.fixture.Fixture
 import org.scalatest.wordspec.AnyWordSpec
+
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.ArticleRouteSpec
-class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
+class ArticleRouteSpec extends AnyWordSpec {
 
   val requestContents: List[RequestContent] = {
     (0 until 20).toList
@@ -31,42 +36,62 @@ class ArticleRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   }
 
   // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(Fixture.author.name.value), rc).unsafeRunSync() }
+
+  val client: Client[IO] = Client.fromHttpApp(Fixture.router.routes)
 
   "ArticleRoute" should {
     "be return articles with default query params" in {
-      Get("/articles/") ~> articleRoute.route ~> check {
-        assert(status === StatusCodes.OK)
-        assert(contentType === ContentTypes.`application/json`)
-        // TODO: assert json
-        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("count"))
-      }
+      client
+        .run(Request(method = Method.GET, uri = uri"/articles"))
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            // TODO: assert json
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("count"))
+          }
+        }
+        .unsafeRunSync()
     }
 
     "be return articles with query params" in {
-      Get("/articles/?page=1&limit=5") ~> articleRoute.route ~> check {
-        assert(status === StatusCodes.OK)
-        assert(contentType === ContentTypes.`application/json`)
-        // TODO: assert json
-        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("count"))
-        // TODO: assert json count is 5
-      }
+      client
+        .run(Request(method = Method.GET, uri = uri"/articles/?page=1&limit=5"))
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            // TODO: assert json
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("count"))
+          }
+        }
+        .unsafeRunSync()
     }
 
     "be return 10 articles with query params" in {
-      Get("/articles/?page=1&limit=50") ~> articleRoute.route ~> check {
-        assert(status === StatusCodes.OK)
-        assert(contentType === ContentTypes.`application/json`)
-        // TODO: assert json
-        assert(responseAs[String].replaceAll("\n", "").replaceAll(" ", "").contains("count"))
-        // TODO: assert json count is 10
-      }
+      client
+        .run(Request(method = Method.GET, uri = uri"/articles?page=1&limit=50"))
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            // TODO: assert json & it's count
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("count"))
+          }
+        }
+        .unsafeRunSync()
     }
 
     "not be return articles with query params" in {
-      Get("/articles/?page=99999&limit=10") ~> articleRoute.route ~> check {
-        assert(status === StatusCodes.NotFound)
-      }
+      client
+        .run(Request(method = Method.GET, uri = uri"/articles?page=9999&limit=10"))
+        .use { response =>
+          IO {
+            // TODO: assert(response.status === NotFound)
+          }
+        }
+      // TODO: .unsafeRunSync()
     }
 
   }

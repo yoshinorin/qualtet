@@ -1,39 +1,28 @@
 package net.yoshinorin.qualtet.http.routes
 
-import akka.http.scaladsl.model.StatusCodes._
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
+import cats.effect.IO
+import org.http4s.headers.`Content-Type`
+import org.http4s._
+import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.http.ResponseHandler
-import cats.effect.unsafe.implicits.global
+import net.yoshinorin.qualtet.syntax._
 
 class ContentTypeRoute(
   contentTypeService: ContentTypeService
-) extends ResponseHandler {
+) {
 
-  def route: Route = {
-    // TODO: use underscore instead of hyphen?
-    pathPrefix("content-types") {
-      pathEndOrSingleSlash {
-        get {
-          onSuccess(contentTypeService.getAll.unsafeToFuture()) { result => httpResponse(OK, result) }
-        }
-      } ~ {
-        // example: host/content-types/article
-        pathPrefix(".+".r) { conetntTypeName =>
-          pathEndOrSingleSlash {
-            get {
-              onSuccess(contentTypeService.findByName(conetntTypeName).unsafeToFuture()) {
-                case Some(contentType) =>
-                  httpResponse(OK, contentType)
-                case _ => httpResponse(Fail.NotFound("Not found"))
-              }
-            }
-          }
-        }
-      }
-    }
+  def get: IO[Response[IO]] = {
+    for {
+      allContentTypes <- contentTypeService.getAll
+      response <- Ok(allContentTypes.asJson, `Content-Type`(MediaType.application.json))
+    } yield response
   }
 
+  def get(name: String): IO[Response[IO]] = {
+    for {
+      maybeContent <- contentTypeService.findByName(name)
+      // TODO: return 404 if content is None.
+      response <- Ok(maybeContent.get.asJson, `Content-Type`(MediaType.application.json))
+    } yield response
+  }
 }

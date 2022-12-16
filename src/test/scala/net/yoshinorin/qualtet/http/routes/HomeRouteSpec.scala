@@ -1,22 +1,34 @@
 package net.yoshinorin.qualtet.http.routes
 
-import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
-import akka.http.scaladsl.testkit.ScalatestRouteTest
+import cats.effect.IO
+import org.http4s.client.Client
+import org.http4s._
+import org.http4s.dsl.io._
+import org.http4s.implicits._
+import net.yoshinorin.qualtet.fixture.Fixture.router
 import org.scalatest.wordspec.AnyWordSpec
 
-// testOnly net.yoshinorin.qualtet.http.routes.HomeRouteSpec
-class HomeRouteSpec extends AnyWordSpec with ScalatestRouteTest {
+import cats.effect.unsafe.implicits.global
 
-  val homeRoute = new HomeRoute()
+// testOnly net.yoshinorin.qualtet.http.routes.HomeRouteSpec
+class HomeRouteSpec extends AnyWordSpec {
+
+  val client: Client[IO] = Client.fromHttpApp(router.routes)
 
   "HomeRoute" should {
 
     "hello Qualtet!!" in {
-      Get("/") ~> homeRoute.route ~> check {
-        assert(status === StatusCodes.OK)
-        assert(contentType === ContentTypes.`text/plain(UTF-8)`)
-        assert(responseAs[String].contains("Hello Qualtet!!"))
-      }
+      client
+        .run(Request(method = Method.GET, uri = uri"/"))
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get.mediaType === MediaType.text.plain)
+            assert(response.contentType.get.charset.get === Charset.`UTF-8`)
+            assert(response.as[String].unsafeRunSync().contains("Hello Qualtet!!"))
+          }
+        }
+        .unsafeRunSync()
     }
   }
 

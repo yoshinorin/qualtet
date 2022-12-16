@@ -28,7 +28,7 @@ class ContentServiceSpec extends AnyWordSpec {
       val createdContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync()
       val createdTagNames = createdContent.get.tags.map(x => x.name.value)
       assert(createdTagNames.contains("Scala"))
-      assert(createdTagNames.contains("Akka"))
+      assert(createdTagNames.contains("http4s"))
 
       val createdAttributes = createdContent.get.robotsAttributes
       assert(createdAttributes.value === requestContent1.robotsAttributes.value)
@@ -48,7 +48,7 @@ class ContentServiceSpec extends AnyWordSpec {
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List("Scala", "Akka"),
+        tags = List("Scala", "http4s"),
         externalResources = List(
           ExternalResources(
             ExternalResourceKind("js"),
@@ -78,7 +78,7 @@ class ContentServiceSpec extends AnyWordSpec {
       val updatedTagNames = updatedContent.tags.map(x => x.name.value)
       assert(updatedTagNames.contains("Scala"))
       assert(updatedTagNames.contains("Scala3"))
-      assert(!updatedTagNames.contains("Akka"))
+      assert(!updatedTagNames.contains("http4s"))
 
       contentService.createContentFromRequest(AuthorName(author.name.value), requestContent.copy(tags = List())).unsafeRunSync()
 

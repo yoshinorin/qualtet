@@ -1,17 +1,22 @@
 package net.yoshinorin.qualtet.http.routes
 
-import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
-import akka.http.scaladsl.testkit.ScalatestRouteTest
+import cats.effect.IO
+import org.http4s.client.Client
+import org.http4s._
+import org.http4s.dsl.io._
+import org.http4s.headers.`Content-Type`
+import org.http4s.implicits._
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.fixture.Fixture.{author, feedRoute}
+import net.yoshinorin.qualtet.fixture.Fixture.{author, router}
 import net.yoshinorin.qualtet.Modules._
 import org.scalatest.wordspec.AnyWordSpec
+
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.FeedRouteSpec
-class FeedRouteSpec extends AnyWordSpec with ScalatestRouteTest {
+class FeedRouteSpec extends AnyWordSpec {
 
   val requestContents: List[RequestContent] = {
     (0 until 2).toList
@@ -33,13 +38,20 @@ class FeedRouteSpec extends AnyWordSpec with ScalatestRouteTest {
   // NOTE: create content and related data for test
   requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
 
+  val client: Client[IO] = Client.fromHttpApp(router.routes)
+
   "FeedRoute" should {
     "be return feeds" in {
-      Get("/feeds/index") ~> feedRoute.route ~> check {
-        assert(status === StatusCodes.OK)
-        assert(contentType === ContentTypes.`application/json`)
-        // TODO: assert response contents count
-      }
+      client
+        .run(Request(method = Method.GET, uri = uri"/feeds/index"))
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            // TODO: assert response contents count
+          }
+        }
+        .unsafeRunSync()
     }
   }
 
