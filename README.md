@@ -28,7 +28,7 @@ An example of architecture.
 
 * sbt 1.7.x
 * Scala 2.13.x
-* Java 11.x, 17.x
+* Java 17.x
 * MariaDB 10.6.x
 * docker & docker-compose 3.x (for test)
 
