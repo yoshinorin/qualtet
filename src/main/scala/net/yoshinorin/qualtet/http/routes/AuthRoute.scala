@@ -5,10 +5,10 @@ import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken}
-import net.yoshinorin.qualtet.http.{RequestDecoder, ResponseHandler}
+import net.yoshinorin.qualtet.http.RequestDecoder
 import net.yoshinorin.qualtet.syntax._
 
-class AuthRoute(authService: AuthService) extends RequestDecoder with ResponseHandler {
+class AuthRoute(authService: AuthService) extends RequestDecoder {
 
   // token
   def post(request: Request[IO]): IO[Response[IO]] = {

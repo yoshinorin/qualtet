@@ -6,12 +6,11 @@ import org.http4s._
 import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor._
-import net.yoshinorin.qualtet.http.ResponseHandler
 import net.yoshinorin.qualtet.syntax._
 
 class AuthorRoute(
   authorService: AuthorService
-) extends ResponseHandler {
+) {
 
   // authors
   def get: IO[Response[IO]] = {

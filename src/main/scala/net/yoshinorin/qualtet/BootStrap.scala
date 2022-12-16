@@ -4,7 +4,6 @@ import cats.effect.IOApp
 import cats.effect.ExitCode
 import cats.effect.IO
 import org.http4s._
-import org.http4s.dsl.io._
 import org.http4s.server.middleware.Logger
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.config.Config
@@ -54,7 +53,7 @@ object BootStrap extends IOApp {
 
   logger.info("created all instances")
 
-  val router = new net.yoshinorin.qualtet.http.Router(
+  val router: net.yoshinorin.qualtet.http.Router = new net.yoshinorin.qualtet.http.Router(
     authProvider,
     apiStatusRoute,
     archiveRoute,

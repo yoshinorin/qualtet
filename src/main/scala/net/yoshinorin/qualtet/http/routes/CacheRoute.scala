@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
-import org.http4s.HttpRoutes
 import org.http4s._
 import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor

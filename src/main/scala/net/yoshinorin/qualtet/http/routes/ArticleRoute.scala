@@ -6,12 +6,12 @@ import org.http4s._
 import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount._
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
+import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.syntax._
 
 class ArticleRoute(
   articleService: ArticleService
-) extends ResponseHandler {
+) {
 
   // articles?page=n&limit=m
   def get(page: Option[Int], limit: Option[Int]): IO[Response[IO]] = {

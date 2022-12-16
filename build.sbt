@@ -43,10 +43,6 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
   Wart.Nothing
 )
 
-// NOTE: do not bump 2.7.x for a LICENSE reasonse
-// https://www.lightbend.com/blog/why-we-are-changing-the-license-for-akka
-val akkaVersion = "2.6.20"
-val akkaHttpVersion = "10.2.10"
 val jsoniterVersion = "2.17.9"
 val doobieVersion = "1.0.0-RC2"
 val jwtScalaVersion = "9.1.2"
@@ -57,18 +53,11 @@ val http4sVersion = "1.0.0-M37"
 dependencyAllowPreRelease := true
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.2",
-  "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
-  "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
-  "com.typesafe.akka" %% "akka-stream" % akkaVersion,
-  "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
-  "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion,
-  "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
   // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4, but cats-effect keep fully compatibility with 3.x
   "org.typelevel" %% "cats-effect" % "3.4.1",
   "org.http4s" %% "http4s-dsl" % http4sVersion,
   "org.http4s" %% "http4s-ember-server" % http4sVersion,
   "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
-  "ch.megard" %% "akka-http-cors" % "1.1.3",
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",

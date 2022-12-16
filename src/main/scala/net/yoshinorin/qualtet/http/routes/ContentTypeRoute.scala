@@ -5,12 +5,11 @@ import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.http.ResponseHandler
 import net.yoshinorin.qualtet.syntax._
 
 class ContentTypeRoute(
   contentTypeService: ContentTypeService
-) extends ResponseHandler {
+) {
 
   def get: IO[Response[IO]] = {
     for {

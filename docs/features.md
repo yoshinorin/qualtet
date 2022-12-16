@@ -19,8 +19,8 @@
 
 - [ ] UA Filter
 - [ ] IP Filter
-- [ ] CORS: https://github.com/lomigmegard/akka-http-cors
-- [ ] DDOS: https://github.com/chatwork/akka-guard
+- [ ] CORS
+- [ ] DDOS
 
 ## Caching
 

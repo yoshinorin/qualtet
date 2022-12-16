@@ -5,10 +5,9 @@ import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.sitemaps.SitemapService
-import net.yoshinorin.qualtet.http.ResponseHandler
 import net.yoshinorin.qualtet.syntax._
 
-class SitemapRoute(sitemapService: SitemapService) extends ResponseHandler {
+class SitemapRoute(sitemapService: SitemapService) {
 
   def get: IO[Response[IO]] = {
     for {
