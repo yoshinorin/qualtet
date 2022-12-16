@@ -78,6 +78,7 @@ libraryDependencies ++= Seq(
   // NOTE: workaround: https://github.com/flyway/flyway/issues/3355
   "org.flywaydb" % "flyway-mysql" % flywayVersion,
   "ch.qos.logback" % "logback-classic" % "1.4.5",
+  "net.logstash.logback" % "logstash-logback-encoder" % "7.2",
   "org.codehaus.janino" % "janino" % "3.1.9",
   "org.springframework.security" % "spring-security-core" % "5.7.5",
   "org.slf4j" % "slf4j-api" % "2.0.4",
