@@ -40,6 +40,10 @@ An example of architecture.
 * [ER Diagram](./docs/erd.md)
 * [Development](./docs/development.md)
 
+## Branches
+
+The current master branch is for `v2.x`. `v1.x` branch is [here](https://github.com/yoshinorin/qualtet/tree/v1.x). But it will be not updated.
+
 ## License
 
 This code is open source software licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.html).
