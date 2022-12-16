@@ -71,7 +71,7 @@ class ArticleRouteSpec extends AnyWordSpec {
 
     "be return 10 articles with query params" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/articles/?page=1&limit=50"))
+        .run(Request(method = Method.GET, uri = uri"/articles?page=1&limit=50"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -85,7 +85,7 @@ class ArticleRouteSpec extends AnyWordSpec {
 
     "not be return articles with query params" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/articles/?page=9999&limit=10"))
+        .run(Request(method = Method.GET, uri = uri"/articles?page=9999&limit=10"))
         .use { response =>
           IO {
             // TODO: assert(response.status === NotFound)

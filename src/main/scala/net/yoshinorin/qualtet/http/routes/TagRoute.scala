@@ -1,22 +1,24 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
+import org.http4s.headers.`Content-Type`
+import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.Response
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, ResponseHandler}
+import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.syntax._
 
 class TagRoute(
   tagService: TagService,
   articleService: ArticleService
-) extends ResponseHandler {
+) {
 
   def get: IO[Response[IO]] = {
     for {
       allTags <- tagService.getAll
-      response <- Ok(allTags.asJson)
+      response <- Ok(allTags.asJson, `Content-Type`(MediaType.application.json))
     } yield response
   }
 
@@ -33,7 +35,7 @@ class TagRoute(
   def get(nameOrId: String, page: Option[Int], limit: Option[Int]): IO[Response[IO]] = {
     for {
       articles <- articleService.getByTagNameWithCount(TagName(nameOrId), ArticlesQueryParameter(page, limit))
-      response <- Ok(articles.asJson)
+      response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response
   }
 
