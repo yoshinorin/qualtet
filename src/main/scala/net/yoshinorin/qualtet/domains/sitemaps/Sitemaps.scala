@@ -36,7 +36,7 @@ object LastMod {
 final case class Url(
   loc: Loc,
   lastMod: LastMod
-  // TODO: consider below tags
+  // TODO: consider add below tags
   // https://www.sitemaps.org/protocol.html
   // changefreq: Option[String] = Option("daily"),
   // priolity: Option[Double] = Option(1.0)

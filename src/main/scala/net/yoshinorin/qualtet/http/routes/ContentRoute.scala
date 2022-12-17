@@ -41,7 +41,6 @@ class ContentRoute(
 
   def get(path: String): IO[Response[IO]] = {
     for {
-      // TODO: avoid to add slash to prefix and suffix
       // TODO: should be configurlize for append suffix or prefix
       contents <- contentService.findByPathWithMeta(Path(s"/${path}"))
       // TODO: return `NotFound` if contents is None

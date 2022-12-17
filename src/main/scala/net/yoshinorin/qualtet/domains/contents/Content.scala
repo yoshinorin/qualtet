@@ -58,7 +58,7 @@ object Content {
 final case class RequestContent(
   requestId: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH),
   contentType: String,
-  robotsAttributes: Attributes, // TODO: change to Option[Attributes]
+  robotsAttributes: Attributes, // TODO: Consider to use `Option[Attributes]`
   externalResources: List[ExternalResources] = List(),
   tags: List[String] = List(),
   path: Path,

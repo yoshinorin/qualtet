@@ -21,7 +21,7 @@ object ExternalResourceKind {
 final case class ExternalResource(
   contentId: ContentId,
   kind: ExternalResourceKind,
-  name: String // TODO: consider naming
+  name: String
 )
 
 final case class ExternalResources(
