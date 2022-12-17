@@ -26,6 +26,7 @@ class AuthorRoute(
     } yield maybeAuthor).flatMap { ma =>
       ma match {
         case Some(author) => Ok(author.asJson, `Content-Type`(MediaType.application.json))
+        // TODO: return as JSON format
         case None => NotFound("Not Found")
       }
     }
