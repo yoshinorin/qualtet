@@ -40,12 +40,16 @@ class ContentRoute(
   }
 
   def get(path: String): IO[Response[IO]] = {
-    for {
+    (for {
       // TODO: should be configurlize for append suffix or prefix
-      contents <- contentService.findByPathWithMeta(Path(s"/${path}"))
-      // TODO: return `NotFound` if contents is None
-      response <- Ok(contents.get.asJson, `Content-Type`(MediaType.application.json))
-    } yield response
+      maybeContent <- contentService.findByPathWithMeta(Path(s"/${path}"))
+    } yield maybeContent).flatMap { mc =>
+      mc match {
+        case Some(content) => Ok(content.asJson, `Content-Type`(MediaType.application.json))
+        // TODO: return JSON format
+        case None => NotFound("Not Found", `Content-Type`(MediaType.application.json))
+      }
+    }
   }
 
 }
