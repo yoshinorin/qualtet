@@ -43,10 +43,10 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
   Wart.Nothing
 )
 
-val jsoniterVersion = "2.17.9"
+val jsoniterVersion = "2.19.1"
 val doobieVersion = "1.0.0-RC2"
 val jwtScalaVersion = "9.1.2"
-val flywayVersion = "9.8.2"
+val flywayVersion = "9.10.1"
 val http4sVersion = "1.0.0-M37"
 
 // https://github.com/rtimush/sbt-updates
@@ -54,7 +54,7 @@ dependencyAllowPreRelease := true
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.2",
   // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4, but cats-effect keep fully compatibility with 3.x
-  "org.typelevel" %% "cats-effect" % "3.4.1",
+  "org.typelevel" %% "cats-effect" % "3.4.2",
   "org.http4s" %% "http4s-dsl" % http4sVersion,
   "org.http4s" %% "http4s-ember-server" % http4sVersion,
   "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
@@ -65,18 +65,18 @@ libraryDependencies ++= Seq(
   "org.mariadb.jdbc" % "mariadb-java-client" % "3.1.0",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-  "org.wvlet.airframe" %% "airframe-ulid" % "22.11.1",
-  "com.github.ben-manes.caffeine" % "caffeine" % "3.1.1",
+  "org.wvlet.airframe" %% "airframe-ulid" % "22.12.2",
+  "com.github.ben-manes.caffeine" % "caffeine" % "3.1.2",
   "org.flywaydb" % "flyway-core" % flywayVersion,
   // NOTE: workaround: https://github.com/flyway/flyway/issues/3355
   "org.flywaydb" % "flyway-mysql" % flywayVersion,
   "ch.qos.logback" % "logback-classic" % "1.4.5",
   "net.logstash.logback" % "logstash-logback-encoder" % "7.2",
   "org.codehaus.janino" % "janino" % "3.1.9",
-  "org.springframework.security" % "spring-security-core" % "5.7.5",
-  "org.slf4j" % "slf4j-api" % "2.0.4",
+  "org.springframework.security" % "spring-security-core" % "6.0.0",
+  "org.slf4j" % "slf4j-api" % "2.0.6",
   "org.scalatest" %% "scalatest" % "3.2.14" % "test",
-  "org.mockito" % "mockito-core" % "4.9.0" % "test"
+  "org.mockito" % "mockito-core" % "4.10.0" % "test"
 )
 
 val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
