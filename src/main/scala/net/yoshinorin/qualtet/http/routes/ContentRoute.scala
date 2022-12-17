@@ -4,6 +4,7 @@ import cats.effect._
 import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
+import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.contents.ContentId
@@ -14,6 +15,8 @@ import net.yoshinorin.qualtet.syntax._
 class ContentRoute(
   contentService: ContentService
 ) extends RequestDecoder {
+
+  private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
   def post(payload: (ResponseAuthor, String)): IO[Response[IO]] = {
     val maybeContent = for {
@@ -34,7 +37,7 @@ class ContentRoute(
   def delete(id: String): IO[Response[IO]] = {
     for {
       _ <- contentService.delete(ContentId(id))
-      // TODO: logging
+      _ = logger.info(s"deleted content: ${id}")
       response <- NoContent()
     } yield response
   }
