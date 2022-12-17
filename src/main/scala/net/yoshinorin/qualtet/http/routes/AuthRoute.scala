@@ -12,17 +12,15 @@ class AuthRoute(authService: AuthService) extends RequestDecoder {
 
   // token
   def post(request: Request[IO]): IO[Response[IO]] = {
-    val maybeRequestToken = for {
+    (for {
       stringifyRequest <- request.as[String]
       maybeRequestToken <- IO(decode[RequestToken](stringifyRequest))
-    } yield maybeRequestToken
-
-    maybeRequestToken.flatMap { requestToken =>
-      requestToken match {
+    } yield maybeRequestToken).flatMap { mrt =>
+      mrt match {
         // TODO: `Forbidden` to `Unauthorized`
         case Left(_) => Forbidden("Forbidden")
-        case Right(token) =>
-          authService.generateToken(token).flatMap { t =>
+        case Right(requestToken) =>
+          authService.generateToken(requestToken).flatMap { t =>
             Ok(t.asJson, `Content-Type`(MediaType.application.json))
           }
       }
