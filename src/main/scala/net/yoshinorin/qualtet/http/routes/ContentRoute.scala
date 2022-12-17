@@ -35,11 +35,11 @@ class ContentRoute(
   }
 
   def delete(id: String): IO[Response[IO]] = {
-    for {
+    (for {
       _ <- contentService.delete(ContentId(id))
       _ = logger.info(s"deleted content: ${id}")
       response <- NoContent()
-    } yield response
+    } yield response).handleErrorWith(_.asResponse)
   }
 
   def get(path: String): IO[Response[IO]] = {

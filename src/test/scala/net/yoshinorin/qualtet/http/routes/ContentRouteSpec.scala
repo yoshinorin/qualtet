@@ -73,13 +73,19 @@ class ContentRouteSpec extends AnyWordSpec {
 
       // 404 (second time)
       client
-        .run(Request(method = Method.DELETE, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))))
+        .run(
+          Request(
+            method = Method.DELETE,
+            uri = new Uri().withPath(s"/contents/${content.id.value}"),
+            headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
+          )
+        )
         .use { response =>
           IO {
-            // TODO: assert(response.status === NotFound)
+            assert(response.status === NotFound)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return 404 DELETE endopoint" in {
@@ -95,10 +101,10 @@ class ContentRouteSpec extends AnyWordSpec {
         )
         .use { response =>
           IO {
-            // TODO: assert(response.status === NotFound)
+            assert(response.status === NotFound)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be reject DELETE endpoint caused by invalid token" in {
