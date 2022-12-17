@@ -43,7 +43,7 @@ class AuthRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject with bad request (wrong JSON format)" in {
+    "be reject with unauthorized (wrong JSON format)" in {
       val wrongJsonFormat =
         s"""
           |{
@@ -57,13 +57,13 @@ class AuthRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === BadRequest)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
-    "be reject with bad request (can not decode request JSON without password key)" in {
+    "be reject with unauthorized (can not decode request JSON without password key)" in {
       val wrongJson =
         s"""
           |{
@@ -76,13 +76,13 @@ class AuthRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === BadRequest)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
-    "be reject with bad request (can not decode request JSON without authorId key)" in {
+    "be reject with unauthorized (can not decode request JSON without authorId key)" in {
       val wrongJson =
         """
           |{
@@ -95,10 +95,10 @@ class AuthRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === BadRequest)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be reject with wrong-password" in {
