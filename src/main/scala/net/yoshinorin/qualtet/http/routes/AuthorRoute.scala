@@ -21,11 +21,10 @@ class AuthorRoute(
   }
 
   def get(authorName: String): IO[Response[IO]] = {
-    val maybeAuthor = for {
+    (for {
       maybeAuthor <- authorService.findByName(AuthorName(authorName))
-    } yield maybeAuthor
-    maybeAuthor.flatMap { author =>
-      author match {
+    } yield maybeAuthor).flatMap { ma =>
+      ma match {
         case Some(author) => Ok(author.asJson, `Content-Type`(MediaType.application.json))
         case None => NotFound("Not Found")
       }
