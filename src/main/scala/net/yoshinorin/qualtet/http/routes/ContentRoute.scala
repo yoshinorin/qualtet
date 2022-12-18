@@ -31,7 +31,7 @@ class ContentRoute(
             Ok(c.asJson, `Content-Type`(MediaType.application.json))
           }
       }
-    }
+    }.handleErrorWith(_.asResponse)
   }
 
   def delete(id: String): IO[Response[IO]] = {
@@ -52,7 +52,7 @@ class ContentRoute(
         // TODO: return JSON format
         case None => NotFound("Not Found", `Content-Type`(MediaType.application.json))
       }
-    }
+    }.handleErrorWith(_.asResponse)
   }
 
 }

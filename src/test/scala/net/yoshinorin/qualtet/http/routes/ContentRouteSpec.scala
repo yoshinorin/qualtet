@@ -144,11 +144,11 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === BadRequest)
-            // TODO: assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.status === BadRequest)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return 400 BadRequest caused by empty rawContent" in {
@@ -171,11 +171,11 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === BadRequest)
-            // TODO: assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.status === BadRequest)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return 400 BadRequest caused by empty htmlContent" in {
@@ -198,11 +198,11 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === BadRequest)
-            // TODO: assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.status === BadRequest)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be reject caused by expired token" in {
@@ -295,10 +295,10 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === BadRequest)
+            assert(response.status === BadRequest)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be reject with bad request (lack of JSON key)" in {
@@ -316,10 +316,10 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === BadRequest)
+            assert(response.status === BadRequest)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return specific content" in {
@@ -407,7 +407,7 @@ class ContentRouteSpec extends AnyWordSpec {
       // TODO: .unsafeRunSync()
     }
 
-    "be return Method Not Allowed" in {
+    "return method not allowed" in {
       client
         .run(
           Request(
