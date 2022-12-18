@@ -88,5 +88,16 @@ class AuthorRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
+    "be return Method Not Allowed" in {
+      client
+        .run(Request(method = Method.DELETE, uri = uri"/authors"))
+        .use { response =>
+          IO {
+            assert(response.status === MethodNotAllowed)
+          }
+        }
+        .unsafeRunSync()
+    }
+
   }
 }

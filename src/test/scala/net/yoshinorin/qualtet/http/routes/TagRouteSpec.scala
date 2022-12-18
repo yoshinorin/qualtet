@@ -205,6 +205,24 @@ class TagRouteSpec extends AnyWordSpec {
       // TODO: .unsafeRunSync()
     }
 
+    "be return Method Not Allowed" in {
+      val tag = tagService.findByName(t(4).name).unsafeRunSync().get
+      client
+        .run(
+          Request(
+            method = Method.PATCH,
+            uri = new Uri().withPath(s"/tags/${tag.id.value}"),
+            headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
+          )
+        )
+        .use { response =>
+          IO {
+            assert(response.status === MethodNotAllowed)
+          }
+        }
+        .unsafeRunSync()
+    }
+
   }
 
 }

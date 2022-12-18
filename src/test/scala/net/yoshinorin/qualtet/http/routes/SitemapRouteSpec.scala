@@ -53,6 +53,17 @@ class SitemapRouteSpec extends AnyWordSpec {
         }
         .unsafeRunSync()
     }
+
+    "be return Method Not Allowed" in {
+      client
+        .run(Request(method = Method.DELETE, uri = uri"/sitemaps"))
+        .use { response =>
+          IO {
+            assert(response.status === MethodNotAllowed)
+          }
+        }
+        .unsafeRunSync()
+    }
   }
 
 }

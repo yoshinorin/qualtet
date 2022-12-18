@@ -407,6 +407,23 @@ class ContentRouteSpec extends AnyWordSpec {
       // TODO: .unsafeRunSync()
     }
 
+    "be return Method Not Allowed" in {
+      client
+        .run(
+          Request(
+            method = Method.PATCH,
+            uri = uri"/contents/this/is/a/404/",
+            headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
+          )
+        )
+        .use { response =>
+          IO {
+            assert(response.status === MethodNotAllowed)
+          }
+        }
+        .unsafeRunSync()
+    }
+
   }
 
 }

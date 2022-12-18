@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.http
 
 import cats.effect._, cats.implicits._
 import org.http4s.server._
+import org.http4s.headers.Allow
 import org.http4s.HttpRoutes
 import org.http4s._
 import org.http4s.dsl.io._
@@ -45,6 +46,11 @@ class Router(
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
+  private def methodNotAllowed(request: Request[IO], allow: Allow): IO[Response[IO]] = {
+    logger.error(s"method not allowed: ${request}")
+    MethodNotAllowed(allow)
+  }
+
   def routes = Router(
     "/" -> home,
     "/archives" -> archives,
@@ -63,27 +69,21 @@ class Router(
   private[http] def home: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => homeRoute.get
     case request @ _ =>
-      logger.error(s"not implemented routes: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def archives: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root =>
       archiveRoute.get
     case request @ _ =>
-      logger.error(s"not implemented in authors routes: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def articles: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root :? PageQueryParam(page) +& LimitQueryParam(limit) =>
       articleRoute.get(page, limit)
     case request @ _ =>
-      logger.error(s"not implemented in authors routes: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def authors: HttpRoutes[IO] = HttpRoutes.of[IO] {
@@ -92,18 +92,14 @@ class Router(
     case GET -> Root / authorName =>
       authorRoute.get(authorName)
     case request @ _ =>
-      logger.error(s"not implemented in authors routes: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def caches: HttpRoutes[IO] = authProvider.authenticate(AuthedRoutes.of {
     case DELETE -> Root as author =>
       cacheRoute.delete(author._1)
     case request @ _ =>
-      logger.error(s"not implemented in cache routes: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request.req, Allow(Set(DELETE)))
   })
 
   // NOTE: must be compose `auth route` after `Non auth route`.
@@ -128,51 +124,39 @@ class Router(
     case DELETE -> Root / id as payload =>
       contentRoute.delete(id)
     case request @ _ =>
-      logger.error(s"not implemented in contents routes with auth: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request.req, Allow(Set(GET, POST, DELETE)))
   }
 
   private[http] def contentTypes: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => contentTypeRoute.get
     case GET -> Root / name => contentTypeRoute.get(name)
     case request @ _ =>
-      logger.error(s"not implemented in contentTypes routes: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def feeds: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / name => feedRoute.get(name)
     case request @ _ =>
-      logger.error(s"not implemented in feed routes: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def sitemaps: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => sitemapRoute.get
     case request @ _ =>
-      logger.error(s"not implemented in sitemaps routes: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def status: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => apiStatusRoute.get
     case request @ _ =>
-      logger.error(s"not implemented in status routes: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def token: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case request @ POST -> Root =>
       authRoute.post(request)
     case request @ _ =>
-      logger.error(s"not implemented in token routes: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request, Allow(Set(POST)))
   }
 
   private[http] def tags: HttpRoutes[IO] =
@@ -182,18 +166,12 @@ class Router(
   private[this] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => tagRoute.get
     case GET -> Root / nameOrId :? PageQueryParam(page) +& LimitQueryParam(limit) => tagRoute.get(nameOrId, page, limit)
-    case request @ _ =>
-      logger.error(s"not implemented in tags routes: ${request}")
-      ???
-    // TODO: return 404
   }
 
   private[this] def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
     case DELETE -> Root / nameOrId as payload =>
       tagRoute.delete(nameOrId)
     case request @ _ =>
-      logger.error(s"not implemented in tags routes with auth: ${request}")
-      ???
-    // TODO: return 404
+      methodNotAllowed(request.req, Allow(Set(GET, DELETE)))
   }
 }

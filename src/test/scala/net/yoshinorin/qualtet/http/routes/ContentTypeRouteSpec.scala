@@ -66,6 +66,17 @@ class ContentTypeRouteSpec extends AnyWordSpec {
         }
       // TODO: .unsafeRunSync()
     }
+
+    "be return Method Not Allowed" in {
+      client
+        .run(Request(method = Method.DELETE, uri = uri"/content-types"))
+        .use { response =>
+          IO {
+            assert(response.status === MethodNotAllowed)
+          }
+        }
+        .unsafeRunSync()
+    }
   }
 
 }

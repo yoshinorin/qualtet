@@ -24,7 +24,7 @@ class ApiRouteSpec extends AnyWordSpec {
 
     "return operational JSON" in {
       client
-        .run(request)
+        .run(Request(method = Method.GET, uri = uri"/status"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -34,5 +34,16 @@ class ApiRouteSpec extends AnyWordSpec {
         }
         .unsafeRunSync()
     }
+  }
+
+  "be return Method Not Allowed" in {
+    client
+      .run(Request(method = Method.DELETE, uri = uri"/status"))
+      .use { response =>
+        IO {
+          assert(response.status === MethodNotAllowed)
+        }
+      }
+      .unsafeRunSync()
   }
 }
