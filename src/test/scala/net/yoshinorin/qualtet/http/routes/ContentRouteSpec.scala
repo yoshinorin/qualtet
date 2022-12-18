@@ -348,12 +348,12 @@ class ContentRouteSpec extends AnyWordSpec {
         )
         .use { response =>
           IO {
-            // TODO: assert(response.status === Ok)
-            // TODO: assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert json
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     /*
@@ -377,12 +377,11 @@ class ContentRouteSpec extends AnyWordSpec {
         )
         .use { response =>
           IO {
-            // TODO: assert(response.status === NotFound)
-            // TODO: assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json
+            assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return 404 with trailing slash" in {
@@ -395,12 +394,11 @@ class ContentRouteSpec extends AnyWordSpec {
         )
         .use { response =>
           IO {
-            // TODO: assert(response.status === NotFound)
-            // TODO: assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json
+            assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "return method not allowed" in {
