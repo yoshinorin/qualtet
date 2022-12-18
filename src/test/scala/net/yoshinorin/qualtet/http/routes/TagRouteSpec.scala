@@ -153,11 +153,11 @@ class TagRouteSpec extends AnyWordSpec {
         )
         .use { response =>
           IO {
-            // TODO: assert(response.status === NoContent)
+            assert(response.status === NoContent)
           }
         }
-      // TODO: .unsafeRunSync()
-      // TODO: assert(tagService.findByName(t(4).name).unsafeRunSync().isEmpty)
+        .unsafeRunSync()
+      assert(tagService.findByName(t(4).name).unsafeRunSync().isEmpty)
 
       // 404 (second time)
       client
@@ -170,10 +170,10 @@ class TagRouteSpec extends AnyWordSpec {
         )
         .use { response =>
           IO {
-            // TODO: assert(response.status === NotFound)
+            assert(response.status === NotFound)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return 404 DELETE endopoint" in {
@@ -188,10 +188,10 @@ class TagRouteSpec extends AnyWordSpec {
         )
         .use { response =>
           IO {
-            // TODO: assert(response.status === NotFound)
+            assert(response.status === NotFound)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be reject DELETE endpoint caused by invalid token" in {
@@ -206,7 +206,7 @@ class TagRouteSpec extends AnyWordSpec {
     }
 
     "be return Method Not Allowed" in {
-      val tag = tagService.findByName(t(4).name).unsafeRunSync().get
+      val tag = tagService.findByName(t(2).name).unsafeRunSync().get
       client
         .run(
           Request(

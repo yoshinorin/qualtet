@@ -43,10 +43,10 @@ class TagRoute(
   }
 
   def delete(nameOrId: String): IO[Response[IO]] = {
-    for {
+    (for {
       _ <- tagService.delete(TagId(nameOrId))
       _ = logger.info(s"deleted tag: ${nameOrId}")
       response <- NoContent()
-    } yield response
+    } yield response).handleErrorWith(_.asResponse)
   }
 }
