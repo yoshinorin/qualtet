@@ -5,6 +5,7 @@ import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.Response
+import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
@@ -14,6 +15,8 @@ class TagRoute(
   tagService: TagService,
   articleService: ArticleService
 ) {
+
+  private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
   def get: IO[Response[IO]] = {
     for {
@@ -42,7 +45,7 @@ class TagRoute(
   def delete(nameOrId: String): IO[Response[IO]] = {
     for {
       _ <- tagService.delete(TagId(nameOrId))
-      // TODO: logging
+      _ = logger.info(s"deleted tag: ${nameOrId}")
       response <- NoContent()
     } yield response
   }
