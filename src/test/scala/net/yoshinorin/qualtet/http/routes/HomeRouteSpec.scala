@@ -30,6 +30,17 @@ class HomeRouteSpec extends AnyWordSpec {
         }
         .unsafeRunSync()
     }
+
+    "be return Not Found" in {
+      client
+        .run(Request(method = Method.GET, uri = uri"/not-found"))
+        .use { response =>
+          IO {
+            assert(response.status === NotFound)
+          }
+        }
+        .unsafeRunSync()
+    }
   }
 
 }

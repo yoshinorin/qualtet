@@ -65,7 +65,7 @@ class Router(
   private[http] def home: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => homeRoute.get
     case request @ _ =>
-      methodNotAllowed(request, Allow(Set(GET)))
+      NotFound("Not found")
   }
 
   private[http] def archives: HttpRoutes[IO] = HttpRoutes.of[IO] {
