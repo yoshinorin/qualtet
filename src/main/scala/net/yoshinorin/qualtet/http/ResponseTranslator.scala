@@ -5,7 +5,7 @@ import org.http4s.dsl.io._
 import org.http4s.MediaType
 import org.http4s.Response
 import org.http4s.Challenge
-import org.http4s.headers.{`Content-Type`,`WWW-Authenticate`}
+import org.http4s.headers.{`Content-Type`, `WWW-Authenticate`}
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.message.Message
