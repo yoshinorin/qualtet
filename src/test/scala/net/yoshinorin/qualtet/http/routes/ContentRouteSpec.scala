@@ -343,8 +343,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.GET,
-            uri = uri"/contents/test/content/route/spec/2",
-            headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
+            uri = uri"/contents/test/content/route/spec/2"
           )
         )
         .use { response =>
@@ -373,8 +372,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.GET,
-            uri = uri"/contents/this/is/a/404",
-            headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
+            uri = uri"/contents/this/is/a/404"
           )
         )
         .use { response =>
@@ -392,8 +390,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.GET,
-            uri = uri"/contents/this/is/a/404/",
-            headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
+            uri = uri"/contents/this/is/a/404/"
           )
         )
         .use { response =>
