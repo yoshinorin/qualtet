@@ -36,10 +36,10 @@ class TagRoute(
       But, it can not. So, I have to find the tagging contents with tagName.
    */
   def get(nameOrId: String, page: Option[Int], limit: Option[Int]): IO[Response[IO]] = {
-    for {
+    (for {
       articles <- articleService.getByTagNameWithCount(TagName(nameOrId), ArticlesQueryParameter(page, limit))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response
+    } yield response).handleErrorWith(_.asResponse)
   }
 
   def delete(nameOrId: String): IO[Response[IO]] = {

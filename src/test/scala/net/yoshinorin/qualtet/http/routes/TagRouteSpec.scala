@@ -128,15 +128,15 @@ class TagRouteSpec extends AnyWordSpec {
     }
      */
 
-    "be return 500" in {
+    "be return 404" in {
       client
         .run(Request(method = Method.GET, uri = uri"/tags/not-exists"))
         .use { response =>
           IO {
-            // TODO: assert(response.status === NotFound)
+            assert(response.status === NotFound)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be delete a tag" in {
