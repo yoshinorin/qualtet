@@ -15,10 +15,10 @@ class ArticleRoute(
 
   // articles?page=n&limit=m
   def get(page: Option[Int], limit: Option[Int]): IO[Response[IO]] = {
-    for {
+    (for {
       articles <- articleService.getWithCount(ArticlesQueryParameter(page, limit))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response
+    } yield response).handleErrorWith(_.asResponse)
   }
 
 }

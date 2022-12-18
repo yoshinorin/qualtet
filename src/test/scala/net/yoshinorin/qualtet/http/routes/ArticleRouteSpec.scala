@@ -88,10 +88,10 @@ class ArticleRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.GET, uri = uri"/articles?page=9999&limit=10"))
         .use { response =>
           IO {
-            // TODO: assert(response.status === NotFound)
+            assert(response.status === NotFound)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return Method Not Allowed" in {
