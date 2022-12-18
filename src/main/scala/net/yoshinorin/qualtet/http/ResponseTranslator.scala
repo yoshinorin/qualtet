@@ -35,4 +35,11 @@ object ResponseTranslator {
     }
   }
 
+  def toResponse[T](a: Option[T])(implicit e: JsonValueCodec[T]): IO[Response[IO]] = {
+    a match {
+      case Some(x) => Ok(x.asJson, `Content-Type`(MediaType.application.json))
+      case None => NotFound(Message("Not Found").asJson, `Content-Type`(MediaType.application.json))
+    }
+  }
+
 }

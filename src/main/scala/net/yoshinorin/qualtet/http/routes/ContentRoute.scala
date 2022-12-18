@@ -46,13 +46,9 @@ class ContentRoute(
     (for {
       // TODO: should be configurlize for append suffix or prefix
       maybeContent <- contentService.findByPathWithMeta(Path(s"/${path}"))
-    } yield maybeContent).flatMap { mc =>
-      mc match {
-        case Some(content) => Ok(content.asJson, `Content-Type`(MediaType.application.json))
-        // TODO: return JSON format
-        case None => NotFound("Not Found", `Content-Type`(MediaType.application.json))
-      }
-    }.handleErrorWith(_.asResponse)
+    } yield maybeContent)
+      .flatMap(_.asResponse)
+      .handleErrorWith(_.asResponse)
   }
 
 }
