@@ -28,7 +28,7 @@ class ContentRoute(
         case Left(f) => throw f
         case Right(c) =>
           contentService.createContentFromRequest(payload._1.name, c).flatMap { _ =>
-            Ok(c.asJson, `Content-Type`(MediaType.application.json))
+            Created(c.asJson, `Content-Type`(MediaType.application.json))
           }
       }
     }.handleErrorWith(_.asResponse)

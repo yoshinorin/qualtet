@@ -43,8 +43,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
-            // MUST: update status code
-            // assert(response.status === Created)
+            assert(response.status === Created)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert response
           }
