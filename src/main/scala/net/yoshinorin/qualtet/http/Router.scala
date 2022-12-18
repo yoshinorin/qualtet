@@ -1,10 +1,9 @@
 package net.yoshinorin.qualtet.http
 
 import cats.effect._, cats.implicits._
-import org.http4s.server._
 import org.http4s.headers.Allow
 import org.http4s.HttpRoutes
-import org.http4s.server.{ Router => Http4sRouter }
+import org.http4s.server.{Router => Http4sRouter}
 import org.http4s._
 import org.http4s.dsl.io._
 import org.slf4j.LoggerFactory
