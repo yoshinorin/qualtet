@@ -19,10 +19,14 @@ class ContentTypeRoute(
   }
 
   def get(name: String): IO[Response[IO]] = {
-    for {
-      maybeContent <- contentTypeService.findByName(name)
-      // TODO: return 404 if content is None.
-      response <- Ok(maybeContent.get.asJson, `Content-Type`(MediaType.application.json))
-    } yield response
+    (for {
+      maybeContentType <- contentTypeService.findByName(name)
+    } yield maybeContentType).flatMap { mct =>
+      mct match {
+        case Some(contentType) => Ok(contentType.asJson, `Content-Type`(MediaType.application.json))
+        // TODO: return as JSON format
+        case None => NotFound("Not Found")
+      }
+    }
   }
 }
