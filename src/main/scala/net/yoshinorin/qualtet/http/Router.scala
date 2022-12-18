@@ -25,10 +25,6 @@ import net.yoshinorin.qualtet.http.routes.{
 import net.yoshinorin.qualtet.http.routes.TagRoute
 import net.yoshinorin.qualtet.syntax._
 
-// TODO: move somewhere
-object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page")
-object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit")
-
 class Router(
   authProvider: AuthProvider,
   apiStatusRoute: ApiStatusRoute,

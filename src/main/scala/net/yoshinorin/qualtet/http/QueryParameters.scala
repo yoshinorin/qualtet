@@ -1,6 +1,10 @@
 package net.yoshinorin.qualtet.http
 
 import cats.implicits.catsSyntaxEq
+import org.http4s.dsl.io.OptionalQueryParamDecoderMatcher
+
+object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page")
+object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit")
 
 final case class ArticlesQueryParameter(
   page: Int = 1,
