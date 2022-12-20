@@ -26,7 +26,7 @@ class DoobieContentTaggingRepository extends ContentTaggingRepository[Connection
     Read[(String, String)].map { case (contentId, tagId) => Some(ContentTagging(ContentId(contentId), TagId(tagId))) }
 
   implicit val contentTaggingWrite: Write[ContentTagging] =
-    Write[(String, String)].contramap(c => (c.ContentId.value, c.TagId.value))
+    Write[(String, String)].contramap(c => (c.contentId.value, c.tagId.value))
 
   override def bulkUpsert(data: List[ContentTagging]): ConnectionIO[Int] = {
     ContentTaggingQuery.bulkUpsert.updateMany(data)
