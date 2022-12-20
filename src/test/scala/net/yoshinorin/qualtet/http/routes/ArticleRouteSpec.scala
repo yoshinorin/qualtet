@@ -40,6 +40,7 @@ class ArticleRouteSpec extends AnyWordSpec {
 
   val client: Client[IO] = Client.fromHttpApp(Fixture.router.routes)
 
+  /*
   "ArticleRoute" should {
     "be return articles with default query params" in {
       client
@@ -54,6 +55,7 @@ class ArticleRouteSpec extends AnyWordSpec {
         }
         .unsafeRunSync()
     }
+    */
 
     /*
     "be return articles with query params" in {
@@ -95,7 +97,8 @@ class ArticleRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
     */
-
+\
+    /*
     "be return Method Not Allowed" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/articles"))
@@ -106,6 +109,7 @@ class ArticleRouteSpec extends AnyWordSpec {
         }
         .unsafeRunSync()
     }
+    */
 
   }
 
