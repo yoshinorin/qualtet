@@ -55,9 +55,9 @@ class ArticleRouteSpec extends AnyWordSpec {
         }
         .unsafeRunSync()
     }
-    */
+   */
 
-    /*
+  /*
     "be return articles with query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/articles/?page=1&limit=5"))
@@ -96,9 +96,9 @@ class ArticleRouteSpec extends AnyWordSpec {
         }
         .unsafeRunSync()
     }
-    */
-\
-    /*
+   */
+  \
+  /*
     "be return Method Not Allowed" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/articles"))
@@ -109,8 +109,6 @@ class ArticleRouteSpec extends AnyWordSpec {
         }
         .unsafeRunSync()
     }
-    */
-
-  }
+   */
 
 }
