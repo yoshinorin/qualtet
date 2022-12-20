@@ -37,26 +37,19 @@ jobs:
       - name: Run tests
         working-directory: .
         run: |
-            if ${{ "$RUNNER_OS" == "Linux" }}
-              source ./scripts/devenv.sh && sbt clean coverage testWithDb
-            elif ${{ "$RUNNER_OS" == "Windows" }}
+            if: runner.os == 'Windows'
               source ./scripts/devenv.bat && sbt clean coverage testWithDb
-            else
-              echo "$RUNNER_OS not supported"
-              exit 1
-            fi
+            else: runner.os == 'Linux'
+              source ./scripts/devenv.sh && sbt clean coverage testWithDb
+
 
       - name: Send Coverage Report
         working-directory: .
         run: |
-            if ${{ "$RUNNER_OS" == "Linux" }}
-              source ./scripts/devenv.sh && sbt clean coverage testWithDb
-            elif ${{ "$RUNNER_OS" == "Windows" }}
+            if: runner.os == 'Windows'
               source ./scripts/devenv.bat && sbt clean coverage testWithDb
-            else
-              echo "$RUNNER_OS not supported"
-              exit 1
-            fi
+            else: runner.os == 'Linux'
+              source ./scripts/devenv.sh && sbt clean coverage testWithDb
 
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
