@@ -1,11 +1,12 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
+import doobie.Read
 import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
 
 object SitemapsQuery {
 
-  def get: Query0[Url] = {
+  def get(implicit urlRead: Read[Url]): Query0[Url] = {
     sql"""
       SELECT path AS loc, updated_at AS lastmod
       FROM contents

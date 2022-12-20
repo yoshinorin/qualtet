@@ -11,7 +11,7 @@ class SitemapRoute(sitemapService: SitemapService) {
 
   def get: IO[Response[IO]] = {
     for {
-      sitemaps <- sitemapService.get
+      sitemaps <- sitemapService.get()
       response <- Ok(sitemaps.asJson, `Content-Type`(MediaType.application.json))
     } yield response
   }

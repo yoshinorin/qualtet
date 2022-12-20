@@ -4,11 +4,9 @@ import scala.sys.process.Process
 organization := "net.yoshinorin"
 name := "qualtet"
 version := "v1.13.0"
-scalaVersion := "2.13.10"
+scalaVersion := "3.2.1"
 
 scalacOptions ++= Seq(
-  "-Yrangepos",
-  "-Ywarn-unused",
   "-deprecation",
   "-feature",
   "-unchecked",
@@ -23,7 +21,7 @@ initialize := {
 }
 
 // https://scalacenter.github.io/scalafix/docs/users/installation.html
-ThisBuild / scalafixScalaBinaryVersion := "2.13"
+ThisBuild / scalafixScalaBinaryVersion := "3.2.1"
 // TODO: AggressiveMerge or Merge not working
 // ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 inThisBuild(

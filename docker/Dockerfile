@@ -1,4 +1,4 @@
-FROM ghcr.io/yoshinorin/docker-sbt:v1.8.0
+FROM ghcr.io/yoshinorin/docker-sbt:v1.8.0-scala3
 
 LABEL maintainer="yoshinorin"
 
@@ -18,7 +18,7 @@ COPY entry-point.sh entry-point.sh
 
 RUN rm -rf scripts docs docker .github .gitignore .editorconfig .git .env .env.example \
   && sbt assembly exit \
-  && cp ./target/scala-2.13/qualtet-assembly-v1.13.0.jar qualtet-assembly.jar \
+  && cp ./target/scala-3.2.1/qualtet-assembly-v1.13.0.jar qualtet-assembly.jar \
   && chmod +x entry-point.sh
 
 ENTRYPOINT [ "/usr/opt/qualtet/entry-point.sh" ]

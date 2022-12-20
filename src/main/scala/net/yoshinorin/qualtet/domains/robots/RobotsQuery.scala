@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.robots
 
+import doobie.Write
 import doobie.implicits.toSqlInterpolator
 import doobie.util.update.Update
 import doobie.util.query
@@ -7,7 +8,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object RobotsQuery {
 
-  def upsert: Update[Robots] = {
+  def upsert(implicit robotsWrite: Write[Robots]): Update[Robots] = {
     val q = s"""
           INSERT INTO robots (content_id, attributes)
             VALUES (?, ?)

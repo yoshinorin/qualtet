@@ -1,12 +1,13 @@
 package net.yoshinorin.qualtet.domains.contents
 
+import doobie.{Read, Write}
 import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
 import doobie.util.update.Update
 
 object ContentQuery {
 
-  def upsert: Update[Content] = {
+  def upsert(implicit contentWrite: Write[Content]): Update[Content] = {
     val q = s"""
           INSERT INTO contents (id, author_id, content_type_id, path, title, raw_content, html_content, published_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -26,17 +27,17 @@ object ContentQuery {
       .query[Unit]
   }
 
-  def findById(id: ContentId): Query0[Content] = {
+  def findById(id: ContentId)(implicit tagRead: Read[Content]): Query0[Content] = {
     sql"SELECT * FROM contents WHERE id = ${id.value}"
       .query[Content]
   }
 
-  def findByPath(path: Path): Query0[Content] = {
-    sql"SELECT * FROM contents WHERE path = $path"
+  def findByPath(path: Path)(implicit tagRead: Read[Content]): Query0[Content] = {
+    sql"SELECT * FROM contents WHERE path = ${path.value}"
       .query[Content]
   }
 
-  def findByPathWithMeta(path: Path): Query0[Option[ResponseContentDbRow]] = {
+  def findByPathWithMeta(path: Path)(implicit tagRead: Read[Option[ResponseContentDbRow]]): Query0[Option[ResponseContentDbRow]] = {
     // NOTE: Do not use `.option` use `.query[Option[T]].unique` instead
     //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
     sql"""
@@ -64,7 +65,7 @@ object ContentQuery {
        LEFT JOIN tags ON
          contents_tagging.tag_id = tags.id
        WHERE
-         path = $path
+         path = ${path.value}
     """
       .query[Option[ResponseContentDbRow]]
   }

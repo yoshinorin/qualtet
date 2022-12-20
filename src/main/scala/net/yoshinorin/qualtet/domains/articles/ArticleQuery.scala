@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.articles
 
+import doobie.{Read, Write}
 import doobie.implicits._
 import doobie.util.query.Query0
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
@@ -8,7 +9,9 @@ import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
 object ArticleQuery {
 
-  def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams): Query0[(Int, ResponseArticle)] = {
+  def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams)(implicit
+    resonseArticlesWithCount: Read[(Int, ResponseArticle)]
+  ): Query0[(Int, ResponseArticle)] = {
     sql"""
       SELECT
         count(1) OVER () AS count,
@@ -21,7 +24,7 @@ object ArticleQuery {
       FROM
         contents
       WHERE
-        content_type_id = $contentTypeId
+        content_type_id = ${contentTypeId.value}
       ORDER BY
         published_at DESC
       LIMIT
@@ -63,7 +66,9 @@ object ArticleQuery {
   }
    */
 
-  def findByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, sqlParams: SqlParams): Query0[(Int, ResponseArticle)] = {
+  def findByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, sqlParams: SqlParams)(implicit
+    resonseArticlesWithCount: Read[(Int, ResponseArticle)]
+  ): Query0[(Int, ResponseArticle)] = {
     sql"""
       SELECT
         count(1) OVER () AS count,
@@ -80,9 +85,9 @@ object ArticleQuery {
       LEFT JOIN tags ON
         contents_tagging.tag_id = tags.id
       WHERE
-        content_type_id = $contentTypeId
+        content_type_id = ${contentTypeId.value}
       AND
-        tags.name = $tagName
+        tags.name = ${tagName.value}
       ORDER BY
         published_at DESC
       LIMIT

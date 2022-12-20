@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
+import doobie.Write
 import doobie.implicits.toSqlInterpolator
 import doobie.util.update.Update
 import doobie.util.query
@@ -7,7 +8,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object ExternalResourceQuery {
 
-  def bulkUpsert: Update[ExternalResource] = {
+  def bulkUpsert(implicit externalResourceWrite: Write[ExternalResource]): Update[ExternalResource] = {
     val q = s"""
           INSERT INTO external_resources (content_id, kind, name)
             VALUES (?, ?, ?)

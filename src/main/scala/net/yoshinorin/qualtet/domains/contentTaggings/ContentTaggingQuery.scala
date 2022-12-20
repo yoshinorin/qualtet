@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
 import cats.data.NonEmptyList
+import doobie.{Read, Write}
 import doobie.implicits.toSqlInterpolator
 import doobie.util.update.Update
 import doobie.util.query
@@ -9,12 +10,12 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object ContentTaggingQuery {
 
-  def findByTagId(id: TagId): query.Query0[ContentTagging] = {
+  def findByTagId(id: TagId)(implicit contentTaggingRead: Read[ContentTagging]): query.Query0[ContentTagging] = {
     sql"SELECT * FROM contents_tagging FROM tag_id = ${id.value}"
       .query[ContentTagging]
   }
 
-  def bulkUpsert: Update[ContentTagging] = {
+  def bulkUpsert(implicit contentTaggingWrite: Write[ContentTagging]): Update[ContentTagging] = {
     val q = s"""
           INSERT INTO contents_tagging (content_id, tag_id)
             VALUES (?, ?)
@@ -46,7 +47,7 @@ object ContentTaggingQuery {
 
     (fr"""
       DELETE FROM contents_tagging
-      WHERE content_id = ${contentId}
+      WHERE content_id = ${contentId.value}
       AND """ ++ doobie.util.fragments.in(fr"tag_id", NonEmptyList.fromList(tagIds.toList.map(t => t.value)).get)).query[Unit]
   }
 

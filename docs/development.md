@@ -89,14 +89,6 @@ $ sbt
 
 > [Change the logging level for a specific task, configuration, or project](https://www.scala-sbt.org/1.x/docs/Howto-Logging.html#Change+the+logging+level+for+a+specific+task%2C+configuration%2C+or+project)
 
-## Check Scala 3
-
-```scala
-$ sbt migrate-libs root
-
-// https://scalacenter.github.io/scala-3-migration-guide/docs/tooling/scala-3-migrate-plugin.html
-```
-
 ## Generate commit log for release note
 
 ```sh
