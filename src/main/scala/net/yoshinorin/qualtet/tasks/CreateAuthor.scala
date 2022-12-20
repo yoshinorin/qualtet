@@ -4,7 +4,7 @@ import cats.effect.IO
 import cats.implicits.catsSyntaxEq
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, DoobieAuthorRepository, AuthorService, BCryptPassword}
+import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, AuthorRepositoryDoobieImpl, AuthorService, BCryptPassword}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
@@ -16,7 +16,7 @@ object CreateAuthor {
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
   implicit val doobieContext: DoobieContext = new DoobieContext()
-  val authorRepository: DoobieAuthorRepository = new DoobieAuthorRepository()
+  val authorRepository: AuthorRepositoryDoobieImpl = new AuthorRepositoryDoobieImpl()
   val authorService: AuthorService = new AuthorService(authorRepository)(doobieContext)
 
   def main(args: Array[String]): Unit = {

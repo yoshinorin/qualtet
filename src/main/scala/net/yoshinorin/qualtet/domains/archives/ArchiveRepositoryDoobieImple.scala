@@ -5,7 +5,7 @@ import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.contents.Path
 
-class DoobieArchiveRepository extends ArchiveRepository[ConnectionIO] {
+class ArchiveRepositoryDoobieImple extends ArchiveRepository[ConnectionIO] {
 
   implicit val responseArchivesRead: Read[ResponseArchive] =
     Read[(String, String, Long)].map { case (path, title, publishedAt) =>

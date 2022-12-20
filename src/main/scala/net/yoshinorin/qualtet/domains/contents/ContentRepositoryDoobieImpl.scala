@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 
-class DoobieContentRepository extends ContentRepository[ConnectionIO] {
+class ContentRepositoryDoobieImpl extends ContentRepository[ConnectionIO] {
 
   implicit val contentRead: Read[Content] =
     Read[(String, String, String, String, String, String, String, Long, Long)].map {

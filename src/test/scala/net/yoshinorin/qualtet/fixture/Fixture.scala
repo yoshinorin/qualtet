@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.domains.contents._
 import net.yoshinorin.qualtet.domains.contentTypes._
 import net.yoshinorin.qualtet.domains.externalResources._
 import net.yoshinorin.qualtet.domains.robots._
-import net.yoshinorin.qualtet.domains.sitemaps.{DoobieSitemapsRepository, SitemapService, Url}
+import net.yoshinorin.qualtet.domains.sitemaps.{SitemapsRepositoryDoobieImpl, SitemapService, Url}
 import net.yoshinorin.qualtet.domains.tags._
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
@@ -54,7 +54,7 @@ object Fixture {
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService: ContentTypeService = new ContentTypeService(Modules.contentTypeRepository, contentTypeCache)(Modules.doobieContext)
 
-  val sitemapRepository: DoobieSitemapsRepository = new DoobieSitemapsRepository()
+  val sitemapRepository: SitemapsRepositoryDoobieImpl = new SitemapsRepositoryDoobieImpl()
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)

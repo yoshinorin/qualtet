@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.sitemaps
 import doobie.Read
 import doobie.ConnectionIO
 
-class DoobieSitemapsRepository extends SitemapsRepository[ConnectionIO] {
+class SitemapsRepositoryDoobieImpl extends SitemapsRepository[ConnectionIO] {
 
   implicit val tagRead: Read[Url] =
     Read[(String, String)].map { case (loc, mod) => Url(Loc(loc), LastMod(mod)) }
