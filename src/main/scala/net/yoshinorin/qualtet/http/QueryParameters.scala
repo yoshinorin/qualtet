@@ -4,9 +4,15 @@ import cats.implicits.catsSyntaxEq
 import org.http4s.dsl.io.OptionalQueryParamDecoderMatcher
 
 object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page") {
+  def apply() = {
+    this
+  }
   override def unapply(params: Map[String, collection.Seq[String]]): Option[Option[Int]] = super.unapply(params)
 }
 object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit") {
+  def apply() = {
+    this
+  }
   override def unapply(params: Map[String, collection.Seq[String]]): Option[Option[Int]] = super.unapply(params)
 }
 
