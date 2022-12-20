@@ -36,11 +36,27 @@ jobs:
 
       - name: Run tests
         working-directory: .
-        run: source ./scripts/devenv.sh && sbt clean coverage testWithDb
+        run: |
+            if [ "$RUNNER_OS" == "Linux" ]; then
+              source ./scripts/devenv.sh && sbt clean coverage testWithDb
+            elif [ "$RUNNER_OS" == "Windows" ]; then
+              source ./scripts/devenv.bat && sbt clean coverage testWithDb
+            else
+              echo "$RUNNER_OS not supported"
+              exit 1
+            fi
 
       - name: Send Coverage Report
         working-directory: .
-        run: source ./scripts/devenv.sh && sbt coverageReport coveralls
+        run: |
+            if [ "$RUNNER_OS" == "Linux" ]; then
+              source ./scripts/devenv.sh && sbt clean coverage testWithDb
+            elif [ "$RUNNER_OS" == "Windows" ]; then
+              source ./scripts/devenv.bat && sbt clean coverage testWithDb
+            else
+              echo "$RUNNER_OS not supported"
+              exit 1
+            fi
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
