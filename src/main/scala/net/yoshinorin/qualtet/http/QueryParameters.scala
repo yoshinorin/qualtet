@@ -1,20 +1,26 @@
 package net.yoshinorin.qualtet.http
 
 import cats.implicits.catsSyntaxEq
-import org.http4s.dsl.io.OptionalQueryParamDecoderMatcher
+// import org.http4s.dsl.io.OptionalQueryParamDecoderMatcher
 
-object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page") {
-  def apply() = {
-    this
-  }
-  override def unapply(params: Map[String, collection.Seq[String]]): Option[Option[Int]] = super.unapply(params)
-}
-object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit") {
-  def apply() = {
-    this
-  }
-  override def unapply(params: Map[String, collection.Seq[String]]): Option[Option[Int]] = super.unapply(params)
-}
+/*
+
+NOTE: GitHub Actions failued with VerifyError if I use them.
+
+```
+[info]   java.lang.VerifyError: Constructor must call super() or this() before return
+[info] Exception Details:
+[info]   Location:
+[info]     net/yoshinorin/qualtet/http/PageQueryParam$.<init>()V @0: return
+[info]   Reason:
+[info]     Error exists in the bytecode
+[info]   Bytecode:
+[info]     0000000: b1
+```
+
+object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page")
+object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit")
+ */
 
 final case class ArticlesQueryParameter(
   page: Int = 1,
