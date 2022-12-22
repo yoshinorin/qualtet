@@ -59,7 +59,7 @@ libraryDependencies ++= Seq(
   "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
   "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
-  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % Test,
+  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "test-internal",
   "org.mariadb.jdbc" % "mariadb-java-client" % "3.1.0",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
