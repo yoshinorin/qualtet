@@ -14,7 +14,7 @@ object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit") {
     super.unapply(params)
   }
 }
-*/
+ */
 
 final case class ArticlesQueryParameter(
   page: Int = 1,
