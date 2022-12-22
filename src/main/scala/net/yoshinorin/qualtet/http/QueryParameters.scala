@@ -3,18 +3,18 @@ package net.yoshinorin.qualtet.http
 import cats.implicits.catsSyntaxEq
 import org.http4s.dsl.io.OptionalQueryParamDecoderMatcher
 
+/*
 object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page") {
   override def unapply(params: Map[String, collection.Seq[String]]): Option[Option[Int]] = {
-    this
     super.unapply(params)
   }
 }
 object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit") {
   override def unapply(params: Map[String, collection.Seq[String]]): Option[Option[Int]] = {
-    this
     super.unapply(params)
   }
 }
+*/
 
 final case class ArticlesQueryParameter(
   page: Int = 1,

@@ -24,6 +24,8 @@ import net.yoshinorin.qualtet.http.routes.{
 import net.yoshinorin.qualtet.http.routes.TagRoute
 import net.yoshinorin.qualtet.syntax._
 
+import scala.util.Try
+
 class Router(
   authProvider: AuthProvider,
   apiStatusRoute: ApiStatusRoute,
@@ -45,6 +47,14 @@ class Router(
   private def methodNotAllowed(request: Request[IO], allow: Allow): IO[Response[IO]] = {
     logger.error(s"method not allowed: ${request}")
     MethodNotAllowed(allow)
+  }
+
+  // TODO: move somewhere & refactor
+  private def queryParams(q: Map[String, String]): (Option[Int], Option[Int]) = {
+    val a = Try(q.getOrElse("page", 1).toString.trim.toInt)
+    val b = Try(q.getOrElse("limit", 1).toString.trim.toInt)
+
+    (Some(a.getOrElse(1)), Some(b.getOrElse(10)))
   }
 
   def routes = Http4sRouter(
@@ -76,8 +86,9 @@ class Router(
   }
 
   private[http] def articles: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root :? PageQueryParam(page) +& LimitQueryParam(limit) =>
-      articleRoute.get(page, limit)
+    case request @ GET -> Root =>
+      val qp = queryParams(request.uri.query.params)
+      articleRoute.get(qp._1, qp._2)
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }
@@ -161,7 +172,9 @@ class Router(
 
   private[this] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => tagRoute.get
-    case GET -> Root / nameOrId :? PageQueryParam(page) +& LimitQueryParam(limit) => tagRoute.get(nameOrId, page, limit)
+    case request @ GET -> Root / nameOrId =>
+      val qp = queryParams(request.uri.query.params)
+      tagRoute.get(nameOrId, qp._1, qp._2)
   }
 
   private[this] def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
