@@ -38,10 +38,14 @@ jobs:
         working-directory: .
         run: source ./scripts/devenv.sh && sbt clean coverage testWithDb
 
-      - name: Send Coverage Report
-        working-directory: .
-        run: source ./scripts/devenv.sh && sbt coverageReport coveralls
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
+      # NOTE:
+      #  Perhaps, same issue...
+      #    - https://github.com/scoverage/scalac-scoverage-plugin/pull/159
+      #
+      #- name: Send Coverage Report
+      #  working-directory: .
+      #  run: source ./scripts/devenv.sh && sbt coverageReport coveralls
+      #  env:
+      #    COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #    COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
 
