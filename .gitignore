@@ -32,7 +32,7 @@ project/plugins/project/
 
 # Documentation
 docs/api/dist
-index.html
+docs/dist
 
 # Docker
 docker/data

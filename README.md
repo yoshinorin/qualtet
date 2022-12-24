@@ -22,7 +22,7 @@
 
 An example of architecture.
 
-![](./docs/arch.svg)
+![](./docs/assets/arch.svg)
 
 ## Requirements
 

@@ -171,3 +171,14 @@ addCommandAlias("testEnvUp", testEnvCommands)
 
 coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration;"
 //org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
+
+// for Scaladoc3
+Compile / doc / target := file("./docs/dist")
+Compile / doc / scalacOptions ++= Seq(
+  "-project", "Qualtet",
+  "-social-links:github::https://github.com/yoshinorin/qualtet",
+  "-author",
+  "-project-footer", "Copyright (c) 2022 @yoshinorin",
+  "-groups",
+  "-siteroot", "docs"
+)
