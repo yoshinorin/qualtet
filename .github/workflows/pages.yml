@@ -21,6 +21,8 @@ jobs:
       - name: Generate REST API document
         working-directory: ./docs/rest-api
         run: npm run build
+      - name: Copy assets
+        run: cp ./docs/assets/* ./docs/dist
       - uses: actions/upload-pages-artifact@v1
         with:
           path: ./docs/dist
