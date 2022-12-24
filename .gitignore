@@ -31,8 +31,7 @@ project/plugins/project/
 .idea_modules/
 
 # Documentation
-docs/api/dist
-docs/dist
+docs/dist/*
 
 # Docker
 docker/data
