@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 16.x
       - name: Install dependencies
-        working-directory: ./docs/api
+        working-directory: ./docs/rest-api
         run: npm install
       - name: Generate website with Scaladoc
         run: sbt doc
