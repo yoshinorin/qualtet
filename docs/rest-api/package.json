@@ -11,7 +11,7 @@
   },
   "author": "yoshinorin",
   "devDependencies": {
-    "redoc-cli": "0.13.17"
+    "redoc-cli": "0.13.20"
   },
   "engines": {
     "npm": ">8"
