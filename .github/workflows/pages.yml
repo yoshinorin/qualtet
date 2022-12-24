@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Generate website with Scaladoc
+        run: sbt doc
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - name: Install dependencies
+      - name: Install npm dependencies
         working-directory: ./docs/rest-api
         run: npm install
-      - name: Generate website with Scaladoc
-        run: sbt doc
       - name: Generate REST API document
         working-directory: ./docs/rest-api
         run: npm run build
