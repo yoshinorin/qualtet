@@ -176,9 +176,12 @@ coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yosh
 Compile / doc / target := file("./docs/dist")
 Compile / doc / scalacOptions ++= Seq(
   "-project", "Qualtet",
+  "-siteroot", "docs",
   "-social-links:github::https://github.com/yoshinorin/qualtet",
   "-author",
+  "-project-version", version.value,
   "-project-footer", "Copyright (c) 2022 @yoshinorin",
   "-groups",
-  "-siteroot", "docs"
+  "-default-template", "static-site-main",
+  "-revision", "master"
 )

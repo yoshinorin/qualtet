@@ -1,19 +1,12 @@
-# Features
-
-## TypeSafe
-
-- [x] Value object
-- [ ] Endpoint typesafe: https://github.com/softwaremill/tapir
-- [ ] Refined: https://github.com/fthomas/refined
+---
+layout: doc-page
+title: Features
+---
 
 ## Auth
 
-- [x] Add Password column
-- [x] Key pair
-- [ ] Logging
-- [x] Generate JWT
-    - [x] Configurable expiration
-- [x] Validate JWT
+- [x] JWT
+  - [x] Configurable expiration
 
 ## Protection
 

@@ -1,4 +1,7 @@
-# Remarks
+---
+layout: doc-page
+title: Remarks
+---
 
 ## Private Key for JWT
 

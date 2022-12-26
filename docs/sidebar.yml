@@ -1,1 +1,26 @@
 index: index.md
+subsection:
+  - title: Requirements
+    directory: docs/requirements
+    index: requirements/index.md
+  - title: Getting Started
+    directory: docs/getting-started
+    index: getting-started/index.md
+  - title: Architecture
+    directory: docs/architecture
+    index: architecture/index.md
+  - title: Features
+    directory: docs/features
+    index: features/index.md
+  - title: Remarks
+    directory: docs/remarks
+    index: remarks/index.md
+  - title: REST API
+    directory: docs/restapi
+    index: restapi/index.md
+  - title: ER Diagram
+    directory: docs/er-diagram
+    index: er-diagram/index.md
+  - title: Development
+    directory: docs/development
+    index: development/index.md

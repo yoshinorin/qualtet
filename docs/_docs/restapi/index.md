@@ -1,10 +1,19 @@
-# Examples
+---
+layout: doc-page
+title: REST API
+---
 
-API execution examples.
+## Open API Docs
 
-## Generate ID Token
+Please see [other docs](https://yoshinorin.github.io/qualtet/rest-api/index.html).
 
-```
+## Examples
+
+REST API execution examples.
+
+### Generate ID Token
+
+```sh
 $ curl -D - -X POST -H "Content-Type: application/json" -d '{"authorId":"01fgvhkzpyghp23wvp4p87nx29","password":"pass"}' 127.0.0.1:9001/token/
 HTTP/1.1 201 Created
 Server: akka-http/10.2.4
@@ -17,6 +26,6 @@ Content-Length: 638
 }
 ```
 
-## POST a content
+### POST a content
 
 TODO

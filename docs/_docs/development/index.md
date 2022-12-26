@@ -1,4 +1,7 @@
-# Development
+---
+layout: doc-page
+title: Development
+---
 
 ## Compile
 
@@ -38,12 +41,25 @@ $ ~reStart
 $ sbt assembly
 ```
 
-## API Document
+## REST API Document
 
 ```sh
 $ cd ./docs/api
 $ npm run serve
 Server started: http://127.0.0.1:8080
+```
+
+## Generate Website
+
+```sh
+$ sbt doc
+```
+
+Serve generated docs locally.
+
+```sh
+$ cd ./docs/dist
+$ python -m http.server 8080
 ```
 
 ## Code format

@@ -1,5 +1,6 @@
 ---
 layout: index
+redirectFrom: /docs/index.html
 ---
 
 Qualtet is an API-based blogging system (server-side).
@@ -10,7 +11,7 @@ Qualtet is an API-based blogging system (server-side).
 
 An example of architecture.
 
-![](./docs/assets/arch.svg)
+![](./assets/arch.svg)
 
 ## Requirements
 
@@ -22,13 +23,7 @@ An example of architecture.
 
 ## Documentation
 
-* [API](./rest-api/index.html)
-* [Features](./docs/features.md)
-* [Set up](./docs/setup.md)
-* [Remarks](./docs/remarks.md)
-* [Examples](./docs/examples.md)
-* [ER Diagram](./docs/erd.md)
-* [Development](./docs/development.md)
+Please see left side-bar.
 
 ## Branches
 

@@ -22,25 +22,25 @@
 
 An example of architecture.
 
-![](./docs/assets/arch.svg)
+![](./docs/_assets/assets/arch.svg)
 
 ## Requirements
 
 * sbt 1.8.x
 * Scala 3.2.x
-* Java 17.x
+* Java 17.x (Perhaps works with 11.x)
 * MariaDB 10.6.x
 * docker & docker-compose 3.x (for test)
 
 ## Documentation
 
-* [API](https://yoshinorin.github.io/qualtet/)
-* [Features](./docs/features.md)
-* [Set up](./docs/setup.md)
-* [Remarks](./docs/remarks.md)
-* [Examples](./docs/examples.md)
-* [ER Diagram](./docs/erd.md)
-* [Development](./docs/development.md)
+Please see [website](https://yoshinorin.github.io/qualtet/docs/).
+
+* [Getting Started](./docs/_docs/getting-started/index.md)
+* [Remarks](./docs/_docs/remarks/index.md)
+* [REST API](https://yoshinorin.github.io/qualtet/rest-api/index.html)
+    * [Examples](./docs/_docs/restapi/index.md)
+* [Development](./docs/_docs/development/index.md)
 
 ## Branches
 

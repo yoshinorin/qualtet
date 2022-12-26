@@ -1,4 +1,9 @@
-# Set up
+---
+layout: doc-page
+title: Getting Started
+---
+
+## Create database
 
 Create a database schema before install an application. Also, schema name is anything will be fine.
 
