@@ -94,6 +94,18 @@ or
 $ sbt clean coverage testWithDb coverageReport
 ```
 
+## Check Dependency updates
+
+> [refs: sbt-updates](https://github.com/rtimush/sbt-updates)
+
+```
+sbt:qualtet> dependencyUpdates
+[info] Found 8 dependency updates for qualtet
+...
+[success] Total time: 3 s, completed 2022/12/27 12:00:26
+sbt:qualtet>
+```
+
 ## Change log level in sbt
 
 ```scala
