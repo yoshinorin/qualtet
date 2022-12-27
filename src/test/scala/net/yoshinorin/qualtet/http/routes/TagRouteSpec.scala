@@ -75,7 +75,7 @@ class TagRouteSpec extends AnyWordSpec {
 
     "be return specific tag" in {
       client
-        .run(Request(method = Method.GET, uri = new Uri().withPath(s"/tags/${t(0).name.value}")))
+        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${t(0).name.value}"))))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -86,7 +86,7 @@ class TagRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
 
       client
-        .run(Request(method = Method.GET, uri = new Uri().withPath(s"/tags/${t(1).name.value}")))
+        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${t(1).name.value}"))))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -147,7 +147,7 @@ class TagRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(s"/tags/${tag.id.value}"),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${tag.id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -164,7 +164,7 @@ class TagRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(s"/tags/${tag.id.value}"),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${tag.id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -182,7 +182,7 @@ class TagRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(s"/tags/${id.value}"),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -211,7 +211,7 @@ class TagRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.PATCH,
-            uri = new Uri().withPath(s"/tags/${tag.id.value}"),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${tag.id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )

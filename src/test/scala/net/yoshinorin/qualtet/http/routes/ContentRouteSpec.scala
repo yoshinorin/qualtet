@@ -59,7 +59,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(s"/contents/${content.id.value}"),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/contents/${content.id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -75,7 +75,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(s"/contents/${content.id.value}"),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/contents/${content.id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -94,7 +94,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(s"/contents/${id.value}"),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/contents/${id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
