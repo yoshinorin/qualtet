@@ -111,7 +111,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(s"/contents/reject"),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/contents/reject")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer invalid token"))
           )
         )
