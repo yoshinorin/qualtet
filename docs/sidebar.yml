@@ -6,6 +6,9 @@ subsection:
   - title: Getting Started
     directory: docs/getting-started
     index: getting-started/index.md
+  - title: Docker Integration
+    directory: docs/docker
+    index: docker/index.md
   - title: Architecture
     directory: docs/architecture
     index: architecture/index.md

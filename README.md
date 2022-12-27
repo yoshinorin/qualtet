@@ -37,6 +37,7 @@ An example of architecture.
 Please see [website](https://yoshinorin.github.io/qualtet/docs/).
 
 * [Getting Started](./docs/_docs/getting-started/index.md)
+    * [Docker Integration](./docs/_docs/docker/index.md)
 * [Remarks](./docs/_docs/remarks/index.md)
 * [REST API](https://yoshinorin.github.io/qualtet/rest-api/index.html)
     * [Examples](./docs/_docs/restapi/index.md)
