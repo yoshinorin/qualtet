@@ -1,5 +1,7 @@
 package net.yoshinorin.qualtet
 
+import cats.effect.IO
+import doobie.util.transactor.Transactor.Aux
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
@@ -18,6 +20,7 @@ import net.yoshinorin.qualtet.auth.Signature
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
+import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 import pdi.jwt.JwtAlgorithm
@@ -26,7 +29,7 @@ import java.util.concurrent.TimeUnit
 
 object Modules {
 
-  implicit val doobieContext: DoobieContext = new DoobieContext()
+  implicit val dbContext: DoobieContext = new DoobieContext()
 
   // NOTE: for generate JWT. They are reset when re-boot application.
   val keyPair: KeyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
@@ -35,7 +38,7 @@ object Modules {
   val jwtInstance: Jwt = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
 
   val authorRepository: AuthorRepositoryDoobieImpl = new AuthorRepositoryDoobieImpl()
-  val authorService: AuthorService = new AuthorService(authorRepository)(doobieContext)
+  val authorService: AuthorService = new AuthorService(authorRepository)(dbContext)
 
   val authService: AuthService = new AuthService(authorService, jwtInstance)
 
@@ -43,7 +46,7 @@ object Modules {
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheContentType, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache: CacheModule[String, ContentType] = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)(doobieContext)
+  val contentTypeService: ContentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)(dbContext)
 
   val robotsRepository: RobotsRepositoryDoobieImpl = new RobotsRepositoryDoobieImpl()
   val robotsService: RobotsService = new RobotsService(robotsRepository)
@@ -52,10 +55,10 @@ object Modules {
   val externalResourceService: ExternalResourceService = new ExternalResourceService(externalResourceRepository)
 
   val contentTaggingRepository: ContentTaggingRepositoryDoobieImple = new ContentTaggingRepositoryDoobieImple()
-  val contentTaggingService: ContentTaggingService = new ContentTaggingService(contentTaggingRepository)(doobieContext)
+  val contentTaggingService: ContentTaggingService = new ContentTaggingService(contentTaggingRepository)(dbContext)
 
   val tagRepository: TagRepositoryDoobieImpl = new TagRepositoryDoobieImpl()
-  val tagService: TagService = new TagService(tagRepository, contentTaggingService)(doobieContext)
+  val tagService: TagService = new TagService(tagRepository, contentTaggingService)(dbContext)
 
   val contentRepository: ContentRepositoryDoobieImpl = new ContentRepositoryDoobieImpl()
   val contentService: ContentService =
@@ -67,19 +70,19 @@ object Modules {
       externalResourceService,
       authorService,
       contentTypeService
-    )(doobieContext)
+    )(dbContext)
 
   val articleRepository: ArticleRepositoryDoobieImpl = new ArticleRepositoryDoobieImpl()
-  val articleService: ArticleService = new ArticleService(articleRepository, contentTypeService)(doobieContext)
+  val articleService: ArticleService = new ArticleService(articleRepository, contentTypeService)(dbContext)
 
   val archiveRepository: ArchiveRepositoryDoobieImple = new ArchiveRepositoryDoobieImple()
-  val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)(doobieContext)
+  val archiveService: ArchiveService = new ArchiveService(archiveRepository, contentTypeService)(dbContext)
 
   val sitemapRepository: SitemapsRepositoryDoobieImpl = new SitemapsRepositoryDoobieImpl()
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService: SitemapService = new SitemapService(sitemapRepository, sitemapCache)(doobieContext)
+  val sitemapService: SitemapService = new SitemapService(sitemapRepository, sitemapCache)(dbContext)
 
   val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
     Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]

@@ -52,13 +52,13 @@ object Fixture {
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService: ContentTypeService = new ContentTypeService(Modules.contentTypeRepository, contentTypeCache)(Modules.doobieContext)
+  val contentTypeService: ContentTypeService = new ContentTypeService(Modules.contentTypeRepository, contentTypeCache)(Modules.dbContext)
 
   val sitemapRepository: SitemapsRepositoryDoobieImpl = new SitemapsRepositoryDoobieImpl()
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService: SitemapService = new SitemapService(sitemapRepository, sitemapCache)(Modules.doobieContext)
+  val sitemapService: SitemapService = new SitemapService(sitemapRepository, sitemapCache)(Modules.dbContext)
 
   val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]

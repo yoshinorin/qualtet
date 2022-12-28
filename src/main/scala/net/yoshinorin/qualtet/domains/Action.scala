@@ -4,7 +4,8 @@ import cats.effect.IO
 import cats.implicits.catsSyntaxApplicativeId
 import doobie.implicits._
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import doobie.util.transactor.Transactor.Aux
+import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 
 sealed trait DoobieAction[R]
 final case class DoobieContinue[T, R](request: ConnectionIO[T], next: T => DoobieAction[R]) extends DoobieAction[R]
@@ -30,11 +31,11 @@ object DoobieAction {
   }
 
   implicit class ActionOps[R](serviceLogic: DoobieAction[R]) {
-    // def transact()(doobieContext: DoobieContext): IO[R] = Action.performWithTransaction(serviceLogic)(doobieContext)
+    // def transact()(dbContext: DataBaseContext[Aux[IO, Unit]]): IO[R] = Action.performWithTransaction(serviceLogic)(dbContext)
     def perform: ConnectionIO[R] = DoobieAction.performWithoutTransaction(serviceLogic)
   }
 
   implicit class ConnectionOps[T](connectionIO: ConnectionIO[T]) {
-    def andTransact(doobieContext: DoobieContext): IO[T] = connectionIO.transact(doobieContext.transactor)
+    def andTransact(dbContext: DataBaseContext[Aux[IO, Unit]]): IO[T] = connectionIO.transact(dbContext.transactor)
   }
 }

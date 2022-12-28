@@ -2,15 +2,16 @@ package net.yoshinorin.qualtet.domains.authors
 
 import cats.effect.IO
 import doobie.ConnectionIO
+import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.domains.DoobieAction._
 import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.syntax._
 
 class AuthorService(
   authorRepository: AuthorRepository[ConnectionIO]
-)(doobieContext: DoobieContext) {
+)(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def upsertActions(data: Author): DoobieAction[Int] = {
     DoobieContinue(authorRepository.upsert(data), DoobieAction.buildDoneWithoutAnyHandle[Int])
@@ -40,7 +41,7 @@ class AuthorService(
    */
   def create(data: Author): IO[ResponseAuthor] = {
     for {
-      _ <- upsertActions(data).perform.andTransact(doobieContext)
+      _ <- upsertActions(data).perform.andTransact(dbContext)
       a <- this.findByName(data.name).throwIfNone(InternalServerError("user not found"))
     } yield a
   }
@@ -51,7 +52,7 @@ class AuthorService(
    * @return Authors
    */
   def getAll: IO[Seq[ResponseAuthor]] = {
-    fetchActions.perform.andTransact(doobieContext)
+    fetchActions.perform.andTransact(dbContext)
   }
 
   /**
@@ -61,7 +62,7 @@ class AuthorService(
    * @return Author
    */
   def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
-    findByIdActions(id).perform.andTransact(doobieContext)
+    findByIdActions(id).perform.andTransact(dbContext)
   }
 
   /**
@@ -71,7 +72,7 @@ class AuthorService(
    * @return Author
    */
   def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
-    findByIdWithPasswordActions(id).perform.andTransact(doobieContext)
+    findByIdWithPasswordActions(id).perform.andTransact(dbContext)
   }
 
   /**
@@ -81,7 +82,7 @@ class AuthorService(
    * @return Author
    */
   def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
-    findByNameActions(name).perform.andTransact(doobieContext)
+    findByNameActions(name).perform.andTransact(dbContext)
   }
 
 }

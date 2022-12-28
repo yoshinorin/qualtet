@@ -6,7 +6,7 @@ import cats.effect.{Blocker, IO, Resource}
 import doobie.KleisliInterpreter
 import doobie.util.transactor.Transactor
 import doobie.util.transactor.Transactor.Aux
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 
 class DoobieStubContext extends DoobieContext {
 

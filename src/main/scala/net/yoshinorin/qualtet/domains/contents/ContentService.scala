@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.contents
 
 import cats.effect.IO
 import doobie.ConnectionIO
+import doobie.util.transactor.Transactor.Aux
 import doobie.implicits._
 import net.yoshinorin.qualtet.domains.DoobieAction._
 import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
@@ -12,7 +13,7 @@ import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 import wvlet.airframe.ulid.ULID
 import java.util.Locale
@@ -26,7 +27,7 @@ class ContentService(
   authorService: AuthorService,
   contentTypeService: ContentTypeService
 )(
-  doobieContext: DoobieContext
+  dbContext: DataBaseContext[Aux[IO, Unit]]
 ) {
 
   def upsertActions(data: Content): DoobieAction[Int] = {
@@ -123,7 +124,7 @@ class ContentService(
     } yield (contentUpsert, currentTags, tagsDiffDelete, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
 
     for {
-      _ <- queries.transact(doobieContext.transactor)
+      _ <- queries.transact(dbContext.transactor)
       c <- this.findByPath(data.path).throwIfNone(InternalServerError("content not found")) // NOTE: 404 is better?
     } yield c
   }
@@ -150,7 +151,7 @@ class ContentService(
 
     for {
       _ <- this.findById(id).throwIfNone(NotFound(s"content not found: ${id}"))
-      _ <- queries.transact(doobieContext.transactor)
+      _ <- queries.transact(dbContext.transactor)
     } yield ()
   }
 
@@ -161,7 +162,7 @@ class ContentService(
    * @return ResponseContent instance
    */
   def findByPath(path: Path): IO[Option[Content]] = {
-    findByPathActions(path).perform.andTransact(doobieContext)
+    findByPathActions(path).perform.andTransact(dbContext)
   }
 
   /**
@@ -181,14 +182,14 @@ class ContentService(
    * @return ResponseContent instance
    */
   def findById(id: ContentId): IO[Option[Content]] = {
-    findByIdActions(id).perform.andTransact(doobieContext)
+    findByIdActions(id).perform.andTransact(dbContext)
   }
 
   def findBy[A](data: A)(f: A => DoobieAction[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 
     import net.yoshinorin.qualtet.syntax._
 
-    f(data).perform.andTransact(doobieContext).flatMap {
+    f(data).perform.andTransact(dbContext).flatMap {
       case None => IO(None)
       case Some(x) =>
         val stripedContent = x.content.stripHtmlTags.replaceAll("\n", "")

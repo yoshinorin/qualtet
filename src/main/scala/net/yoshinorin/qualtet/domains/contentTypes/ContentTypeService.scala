@@ -2,18 +2,19 @@ package net.yoshinorin.qualtet.domains.contentTypes
 
 import cats.effect.IO
 import doobie.ConnectionIO
+import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.DoobieAction._
 import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.domains.Cacheable
 
 class ContentTypeService(
   contentRepository: ContentTypeRepository[ConnectionIO],
   cache: CacheModule[String, ContentType]
-)(doobieContext: DoobieContext)
+)(dbContext: DataBaseContext[Aux[IO, Unit]])
     extends Cacheable {
 
   def upsertActions(data: ContentType): DoobieAction[Int] = {
@@ -35,7 +36,7 @@ class ContentTypeService(
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
-          _ <- upsertActions(data).perform.andTransact(doobieContext)
+          _ <- upsertActions(data).perform.andTransact(dbContext)
           c <- this.findByName(data.name).throwIfNone(InternalServerError("contentType not found"))
         } yield c
     }
@@ -56,7 +57,7 @@ class ContentTypeService(
 
     def fromDB(name: String): IO[Option[ContentType]] = {
       for {
-        x <- actions(name).perform.andTransact(doobieContext)
+        x <- actions(name).perform.andTransact(dbContext)
       } yield (x, cache.put(name, x))._1
     }
 
@@ -73,7 +74,7 @@ class ContentTypeService(
    * @return ContentTypes
    */
   def getAll: IO[Seq[ContentType]] = {
-    getAllActions.perform.andTransact(doobieContext)
+    getAllActions.perform.andTransact(dbContext)
   }
 
   def invalidate(): IO[Unit] = {

@@ -4,10 +4,11 @@ import cats.effect.IO
 import cats.implicits._
 import doobie.implicits._
 import doobie.ConnectionIO
+import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.domains.DoobieAction._
 import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.domains.contents.ContentId
@@ -15,7 +16,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 class TagService(
   tagRepository: TagRepository[ConnectionIO],
   contentTaggingService: ContentTaggingService
-)(doobieContext: DoobieContext) {
+)(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def bulkUpsertActions(data: Option[List[Tag]]): DoobieAction[Int] = {
     data match {
@@ -50,7 +51,7 @@ class TagService(
    * @return tags
    */
   def getAll: IO[Seq[ResponseTag]] = {
-    getAllActions.perform.andTransact(doobieContext)
+    getAllActions.perform.andTransact(dbContext)
   }
 
   /**
@@ -60,7 +61,7 @@ class TagService(
    * @return maybe Tag
    */
   def findById(id: TagId): IO[Option[Tag]] = {
-    findByIdActions(id).perform.andTransact(doobieContext)
+    findByIdActions(id).perform.andTransact(dbContext)
   }
 
   /**
@@ -70,7 +71,7 @@ class TagService(
    * @return maybe Tag
    */
   def findByName(tagName: TagName): IO[Option[Tag]] = {
-    findByNameActions(tagName).perform.andTransact(doobieContext)
+    findByNameActions(tagName).perform.andTransact(dbContext)
   }
 
   /**
@@ -112,7 +113,7 @@ class TagService(
 
     for {
       _ <- this.findById(id).throwIfNone(NotFound(s"tag not found: ${id}"))
-      _ <- queries.transact(doobieContext.transactor)
+      _ <- queries.transact(dbContext.transactor)
     } yield ()
   }
 }

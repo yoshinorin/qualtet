@@ -8,10 +8,10 @@ import doobie.implicits._
 import net.yoshinorin.qualtet.domains.models.articles.ArticleRepositoryDoobieImpl
 import net.yoshinorin.qualtet.domains.models.contentTypes.{ContentType, ContentTypeRepositoryDoobieImpl}
 import net.yoshinorin.qualtet.domains.services.ContentTypeService
-import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeId, doobieContext}
+import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeId, dbContext}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.Migration
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.cache.Cache
 import org.scalatest.wordspec.AnyWordSpec
 

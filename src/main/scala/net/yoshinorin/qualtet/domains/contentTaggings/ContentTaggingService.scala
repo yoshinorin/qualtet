@@ -2,15 +2,16 @@ package net.yoshinorin.qualtet.domains.contentTaggings
 
 import cats.effect.IO
 import doobie.ConnectionIO
+import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.domains.DoobieAction._
 import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.tags.TagId
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 
 class ContentTaggingService(
   contentTaggingRepository: ContentTaggingRepository[ConnectionIO]
-)(doobieContext: DoobieContext) {
+)(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def findByTagIdActions(id: TagId): DoobieAction[Seq[ContentTagging]] = {
     DoobieContinue(contentTaggingRepository.findByTagId(id), DoobieAction.buildDoneWithoutAnyHandle[Seq[ContentTagging]])
@@ -43,6 +44,6 @@ class ContentTaggingService(
   }
 
   def findByTagId(id: TagId): IO[Seq[ContentTagging]] = {
-    findByTagIdActions(id).perform.andTransact(doobieContext)
+    findByTagIdActions(id).perform.andTransact(dbContext)
   }
 }
