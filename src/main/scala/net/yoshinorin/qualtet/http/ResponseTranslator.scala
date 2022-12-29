@@ -27,7 +27,7 @@ object ResponseTranslator {
     }
   }
 
-  def toFailureResponse(e: Throwable): IO[Response[IO]] = {
+  def toResponse(e: Throwable): IO[Response[IO]] = {
     logger.error(e.getMessage)
     e match {
       case f: Fail => this.failToResponse(f)

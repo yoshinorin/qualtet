@@ -9,7 +9,7 @@ trait http {
 
   implicit final class ResponseOps(e: Throwable) {
     def asResponse: IO[Response[IO]] = {
-      ResponseTranslator.toFailureResponse(e)
+      ResponseTranslator.toResponse(e)
     }
   }
 
