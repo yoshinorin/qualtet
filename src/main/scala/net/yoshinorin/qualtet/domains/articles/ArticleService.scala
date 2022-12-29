@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.domains.articles
 import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
-import net.yoshinorin.qualtet.domains.DoobieAction._
-import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
@@ -21,25 +21,25 @@ class ArticleService(
     contentTypeId: ContentTypeId,
     none: Unit = (),
     queryParams: ArticlesQueryParameter
-  ): DoobieAction[Seq[(Int, ResponseArticle)]] = {
-    DoobieContinue(articleRepository.getWithCount(contentTypeId, queryParams), DoobieAction.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]])
+  ): Action[Seq[(Int, ResponseArticle)]] = {
+    Continue(articleRepository.getWithCount(contentTypeId, queryParams), Action.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]])
   }
 
   def actions(
     contentTypeId: ContentTypeId,
     tagName: TagName,
     queryParams: ArticlesQueryParameter
-  ): DoobieAction[Seq[(Int, ResponseArticle)]] = {
-    DoobieContinue(
+  ): Action[Seq[(Int, ResponseArticle)]] = {
+    Continue(
       articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams),
-      DoobieAction.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]]
+      Action.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]]
     )
   }
 
   def get[A](
     data: A = (),
     queryParam: ArticlesQueryParameter
-  )(f: (ContentTypeId, A, ArticlesQueryParameter) => DoobieAction[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
+  )(f: (ContentTypeId, A, ArticlesQueryParameter) => Action[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
       c <- contentTypeService.findByName("article").throwIfNone(NotFound(s"content-type not found: article"))
       articlesWithCount <- f(c.id, data, queryParam).perform.andTransact(dbContext)

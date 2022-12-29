@@ -3,11 +3,12 @@ package net.yoshinorin.qualtet.domains.sitemaps
 import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
-import net.yoshinorin.qualtet.domains.DoobieAction._
-import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.domains.Cacheable
+import net.yoshinorin.qualtet.syntax._
 
 class SitemapService(
   sitemapRepository: SitemapsRepository[ConnectionIO],
@@ -17,8 +18,8 @@ class SitemapService(
 
   private val cacheKey = "sitemaps-full-cache"
 
-  def getActions: DoobieAction[Seq[Url]] = {
-    DoobieContinue(sitemapRepository.get(), DoobieAction.buildDoneWithoutAnyHandle[Seq[Url]])
+  def getActions: Action[Seq[Url]] = {
+    Continue(sitemapRepository.get(), Action.buildDoneWithoutAnyHandle[Seq[Url]])
   }
 
   def get(): IO[Seq[Url]] = {

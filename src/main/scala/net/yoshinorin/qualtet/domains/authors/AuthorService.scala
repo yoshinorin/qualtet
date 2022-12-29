@@ -5,32 +5,32 @@ import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
-import net.yoshinorin.qualtet.domains.DoobieAction._
-import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.syntax._
 
 class AuthorService(
   authorRepository: AuthorRepository[ConnectionIO]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
-  def upsertActions(data: Author): DoobieAction[Int] = {
-    DoobieContinue(authorRepository.upsert(data), DoobieAction.buildDoneWithoutAnyHandle[Int])
+  def upsertActions(data: Author): Action[Int] = {
+    Continue(authorRepository.upsert(data), Action.buildDoneWithoutAnyHandle[Int])
   }
 
-  def fetchActions: DoobieAction[Seq[ResponseAuthor]] = {
-    DoobieContinue(authorRepository.getAll(), DoobieAction.buildDoneWithoutAnyHandle[Seq[ResponseAuthor]])
+  def fetchActions: Action[Seq[ResponseAuthor]] = {
+    Continue(authorRepository.getAll(), Action.buildDoneWithoutAnyHandle[Seq[ResponseAuthor]])
   }
 
-  def findByIdActions(id: AuthorId): DoobieAction[Option[ResponseAuthor]] = {
-    DoobieContinue(authorRepository.findById(id), DoobieAction.buildDoneWithoutAnyHandle[Option[ResponseAuthor]])
+  def findByIdActions(id: AuthorId): Action[Option[ResponseAuthor]] = {
+    Continue(authorRepository.findById(id), Action.buildDoneWithoutAnyHandle[Option[ResponseAuthor]])
   }
 
-  def findByIdWithPasswordActions(id: AuthorId): DoobieAction[Option[Author]] = {
-    DoobieContinue(authorRepository.findByIdWithPassword(id), DoobieAction.buildDoneWithoutAnyHandle[Option[Author]])
+  def findByIdWithPasswordActions(id: AuthorId): Action[Option[Author]] = {
+    Continue(authorRepository.findByIdWithPassword(id), Action.buildDoneWithoutAnyHandle[Option[Author]])
   }
 
-  def findByNameActions(name: AuthorName): DoobieAction[Option[ResponseAuthor]] = {
-    DoobieContinue(authorRepository.findByName(name), DoobieAction.buildDoneWithoutAnyHandle[Option[ResponseAuthor]])
+  def findByNameActions(name: AuthorName): Action[Option[ResponseAuthor]] = {
+    Continue(authorRepository.findByName(name), Action.buildDoneWithoutAnyHandle[Option[ResponseAuthor]])
   }
 
   /**

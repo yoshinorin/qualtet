@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.domains.archives
 import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
-import net.yoshinorin.qualtet.domains.DoobieAction._
-import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
@@ -16,8 +16,8 @@ class ArchiveService(
   contentTypeService: ContentTypeService
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
-  def actions(contentTypeId: ContentTypeId): DoobieAction[Seq[ResponseArchive]] = {
-    DoobieContinue(archiveRepository.get(contentTypeId), DoobieAction.buildDoneWithoutAnyHandle[Seq[ResponseArchive]])
+  def actions(contentTypeId: ContentTypeId): Action[Seq[ResponseArchive]] = {
+    Continue(archiveRepository.get(contentTypeId), Action.buildDoneWithoutAnyHandle[Seq[ResponseArchive]])
   }
 
   def get: IO[Seq[ResponseArchive]] = {

@@ -4,8 +4,8 @@ import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
 import doobie.implicits._
-import net.yoshinorin.qualtet.domains.DoobieAction._
-import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
@@ -30,24 +30,24 @@ class ContentService(
   dbContext: DataBaseContext[Aux[IO, Unit]]
 ) {
 
-  def upsertActions(data: Content): DoobieAction[Int] = {
-    DoobieContinue(contentRepository.upsert(data), DoobieAction.buildDoneWithoutAnyHandle[Int])
+  def upsertActions(data: Content): Action[Int] = {
+    Continue(contentRepository.upsert(data), Action.buildDoneWithoutAnyHandle[Int])
   }
 
-  def deleteActions(id: ContentId): DoobieAction[Unit] = {
-    DoobieContinue(contentRepository.delete(id), DoobieAction.buildDoneWithoutAnyHandle[Unit])
+  def deleteActions(id: ContentId): Action[Unit] = {
+    Continue(contentRepository.delete(id), Action.buildDoneWithoutAnyHandle[Unit])
   }
 
-  def findByIdActions(id: ContentId): DoobieAction[Option[Content]] = {
-    DoobieContinue(contentRepository.findById(id), DoobieAction.buildDoneWithoutAnyHandle[Option[Content]])
+  def findByIdActions(id: ContentId): Action[Option[Content]] = {
+    Continue(contentRepository.findById(id), Action.buildDoneWithoutAnyHandle[Option[Content]])
   }
 
-  def findByPathActions(path: Path): DoobieAction[Option[Content]] = {
-    DoobieContinue(contentRepository.findByPath(path), DoobieAction.buildDoneWithoutAnyHandle[Option[Content]])
+  def findByPathActions(path: Path): Action[Option[Content]] = {
+    Continue(contentRepository.findByPath(path), Action.buildDoneWithoutAnyHandle[Option[Content]])
   }
 
-  def findByPathWithMetaActions(path: Path): DoobieAction[Option[ResponseContentDbRow]] = {
-    DoobieContinue(contentRepository.findByPathWithMeta(path), DoobieAction.buildDoneWithoutAnyHandle[Option[ResponseContentDbRow]])
+  def findByPathWithMetaActions(path: Path): Action[Option[ResponseContentDbRow]] = {
+    Continue(contentRepository.findByPathWithMeta(path), Action.buildDoneWithoutAnyHandle[Option[ResponseContentDbRow]])
   }
 
   /**
@@ -185,7 +185,7 @@ class ContentService(
     findByIdActions(id).perform.andTransact(dbContext)
   }
 
-  def findBy[A](data: A)(f: A => DoobieAction[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
+  def findBy[A](data: A)(f: A => Action[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 
     import net.yoshinorin.qualtet.syntax._
 

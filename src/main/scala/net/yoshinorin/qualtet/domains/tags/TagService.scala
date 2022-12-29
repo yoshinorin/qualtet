@@ -5,44 +5,44 @@ import cats.implicits._
 import doobie.implicits._
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
-import net.yoshinorin.qualtet.domains.DoobieAction._
-import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.message.Fail.NotFound
-import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.domains.contents.ContentId
+import net.yoshinorin.qualtet.syntax._
 
 class TagService(
   tagRepository: TagRepository[ConnectionIO],
   contentTaggingService: ContentTaggingService
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
-  def bulkUpsertActions(data: Option[List[Tag]]): DoobieAction[Int] = {
+  def bulkUpsertActions(data: Option[List[Tag]]): Action[Int] = {
     data match {
-      case Some(d) => DoobieContinue(tagRepository.bulkUpsert(d), DoobieAction.buildDoneWithoutAnyHandle[Int])
-      case None => DoobieContinue(tagRepository.fakeRequest(), DoobieAction.buildDoneWithoutAnyHandle[Int])
+      case Some(d) => Continue(tagRepository.bulkUpsert(d), Action.buildDoneWithoutAnyHandle[Int])
+      case None => Continue(tagRepository.fakeRequest(), Action.buildDoneWithoutAnyHandle[Int])
     }
   }
 
-  def getAllActions: DoobieAction[Seq[ResponseTag]] = {
-    DoobieContinue(tagRepository.getAll(), DoobieAction.buildDoneWithoutAnyHandle[Seq[ResponseTag]])
+  def getAllActions: Action[Seq[ResponseTag]] = {
+    Continue(tagRepository.getAll(), Action.buildDoneWithoutAnyHandle[Seq[ResponseTag]])
   }
 
-  def findByIdActions(id: TagId): DoobieAction[Option[Tag]] = {
-    DoobieContinue(tagRepository.findById(id), DoobieAction.buildDoneWithoutAnyHandle[Option[Tag]])
+  def findByIdActions(id: TagId): Action[Option[Tag]] = {
+    Continue(tagRepository.findById(id), Action.buildDoneWithoutAnyHandle[Option[Tag]])
   }
 
-  def findByNameActions(tagName: TagName): DoobieAction[Option[Tag]] = {
-    DoobieContinue(tagRepository.findByName(tagName), DoobieAction.buildDoneWithoutAnyHandle[Option[Tag]])
+  def findByNameActions(tagName: TagName): Action[Option[Tag]] = {
+    Continue(tagRepository.findByName(tagName), Action.buildDoneWithoutAnyHandle[Option[Tag]])
   }
 
-  def findByContentIdActions(contenId: ContentId): DoobieAction[Seq[Tag]] = {
-    DoobieContinue(tagRepository.findByContentId(contenId), DoobieAction.buildDoneWithoutAnyHandle[Seq[Tag]])
+  def findByContentIdActions(contenId: ContentId): Action[Seq[Tag]] = {
+    Continue(tagRepository.findByContentId(contenId), Action.buildDoneWithoutAnyHandle[Seq[Tag]])
   }
 
-  def deleteActions(id: TagId): DoobieAction[Unit] = {
-    DoobieContinue(tagRepository.delete(id), DoobieAction.buildDoneWithoutAnyHandle[Unit])
+  def deleteActions(id: TagId): Action[Unit] = {
+    Continue(tagRepository.delete(id), Action.buildDoneWithoutAnyHandle[Unit])
   }
 
   /**

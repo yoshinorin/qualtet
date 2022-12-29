@@ -4,8 +4,8 @@ import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.domains.DoobieAction._
-import net.yoshinorin.qualtet.domains.{DoobieAction, DoobieContinue}
+import net.yoshinorin.qualtet.domains.Action._
+import net.yoshinorin.qualtet.domains.{Action, Continue}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
@@ -17,12 +17,12 @@ class ContentTypeService(
 )(dbContext: DataBaseContext[Aux[IO, Unit]])
     extends Cacheable {
 
-  def upsertActions(data: ContentType): DoobieAction[Int] = {
-    DoobieContinue(contentRepository.upsert(data), DoobieAction.buildDoneWithoutAnyHandle[Int])
+  def upsertActions(data: ContentType): Action[Int] = {
+    Continue(contentRepository.upsert(data), Action.buildDoneWithoutAnyHandle[Int])
   }
 
-  def getAllActions: DoobieAction[Seq[ContentType]] = {
-    DoobieContinue(contentRepository.getAll(), DoobieAction.buildDoneWithoutAnyHandle[Seq[ContentType]])
+  def getAllActions: Action[Seq[ContentType]] = {
+    Continue(contentRepository.getAll(), Action.buildDoneWithoutAnyHandle[Seq[ContentType]])
   }
 
   /**
@@ -51,8 +51,8 @@ class ContentTypeService(
    */
   def findByName(name: String): IO[Option[ContentType]] = {
 
-    def actions(name: String): DoobieAction[Option[ContentType]] = {
-      DoobieContinue(contentRepository.findByName(name), DoobieAction.buildDoneWithoutAnyHandle[Option[ContentType]])
+    def actions(name: String): Action[Option[ContentType]] = {
+      Continue(contentRepository.findByName(name), Action.buildDoneWithoutAnyHandle[Option[ContentType]])
     }
 
     def fromDB(name: String): IO[Option[ContentType]] = {
