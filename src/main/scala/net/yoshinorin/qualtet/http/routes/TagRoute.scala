@@ -39,7 +39,7 @@ class TagRoute(
     (for {
       articles <- articleService.getByTagNameWithCount(TagName(nameOrId), ArticlesQueryParameter(page, limit))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.asResponse)
+    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
   }
 
   def delete(nameOrId: String): IO[Response[IO]] = {
@@ -47,6 +47,6 @@ class TagRoute(
       _ <- tagService.delete(TagId(nameOrId))
       _ = logger.info(s"deleted tag: ${nameOrId}")
       response <- NoContent()
-    } yield response).handleErrorWith(_.asResponse)
+    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
   }
 }

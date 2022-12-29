@@ -18,7 +18,7 @@ class ArticleRoute(
     (for {
       articles <- articleService.getWithCount(ArticlesQueryParameter(page, limit))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.asResponse)
+    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
   }
 
 }

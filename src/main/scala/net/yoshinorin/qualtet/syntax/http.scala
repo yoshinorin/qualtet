@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.syntax
 import cats.effect.IO
 import org.http4s.Response
 import net.yoshinorin.qualtet.http.ResponseTranslator
-import com.github.plokhotnyuk.jsoniter_scala.core._
 
 trait http {
 
@@ -13,7 +12,15 @@ trait http {
     }
   }
 
+  implicit final class ResponseIOOps(e: IO[Throwable]) {
+    def andResponse: IO[Response[IO]] = {
+      e.flatMap(_.asResponse)
+    }
+  }
+
   implicit final class OptionalResponseOps[T](a: Option[T]) {
+    import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
+
     def asResponse(implicit e: JsonValueCodec[T]): IO[Response[IO]] = {
       ResponseTranslator.toResponse[T](a)
     }
