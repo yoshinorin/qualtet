@@ -40,7 +40,7 @@ jobs:
 
       # NOTE:
       #  Perhaps, same issue...
-      #    - https://github.com/scoverage/scalac-scoverage-plugin/pull/159
+      #    - https://github.com/scoverage/sbt-scoverage/issues/470
       #
       #- name: Send Coverage Report
       #  working-directory: .
