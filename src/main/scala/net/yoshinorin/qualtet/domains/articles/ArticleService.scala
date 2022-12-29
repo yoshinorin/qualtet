@@ -22,7 +22,7 @@ class ArticleService(
     none: Unit = (),
     queryParams: ArticlesQueryParameter
   ): Action[Seq[(Int, ResponseArticle)]] = {
-    Continue(articleRepository.getWithCount(contentTypeId, queryParams), Action.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]])
+    Continue(articleRepository.getWithCount(contentTypeId, queryParams), Action.done[Seq[(Int, ResponseArticle)]])
   }
 
   def actions(
@@ -32,7 +32,7 @@ class ArticleService(
   ): Action[Seq[(Int, ResponseArticle)]] = {
     Continue(
       articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams),
-      Action.buildDoneWithoutAnyHandle[Seq[(Int, ResponseArticle)]]
+      Action.done[Seq[(Int, ResponseArticle)]]
     )
   }
 

@@ -9,11 +9,11 @@ class ExternalResourceService(
 ) {
 
   def bulkUpsertActions(data: List[ExternalResource]): Action[Int] = {
-    Continue(externalResourceRepository.bulkUpsert(data), Action.buildDoneWithoutAnyHandle[Int])
+    Continue(externalResourceRepository.bulkUpsert(data), Action.done[Int])
   }
 
   def deleteActions(contentId: ContentId): Action[Unit] = {
-    Continue(externalResourceRepository.delete(contentId), Action.buildDoneWithoutAnyHandle[Unit])
+    Continue(externalResourceRepository.delete(contentId), Action.done[Unit])
   }
 
 }

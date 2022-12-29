@@ -8,10 +8,10 @@ class RobotsService(
   robotsRepository: RobotsRepository[ConnectionIO]
 ) {
   def upsertActions(data: Robots): Action[Int] = {
-    Continue(robotsRepository.upsert(data), Action.buildDoneWithoutAnyHandle[Int])
+    Continue(robotsRepository.upsert(data), Action.done[Int])
   }
 
   def deleteActions(contentId: ContentId): Action[Unit] = {
-    Continue(robotsRepository.delete(contentId), Action.buildDoneWithoutAnyHandle[Unit])
+    Continue(robotsRepository.delete(contentId), Action.done[Unit])
   }
 }

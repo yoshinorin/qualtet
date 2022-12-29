@@ -14,23 +14,23 @@ class AuthorService(
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def upsertActions(data: Author): Action[Int] = {
-    Continue(authorRepository.upsert(data), Action.buildDoneWithoutAnyHandle[Int])
+    Continue(authorRepository.upsert(data), Action.done[Int])
   }
 
   def fetchActions: Action[Seq[ResponseAuthor]] = {
-    Continue(authorRepository.getAll(), Action.buildDoneWithoutAnyHandle[Seq[ResponseAuthor]])
+    Continue(authorRepository.getAll(), Action.done[Seq[ResponseAuthor]])
   }
 
   def findByIdActions(id: AuthorId): Action[Option[ResponseAuthor]] = {
-    Continue(authorRepository.findById(id), Action.buildDoneWithoutAnyHandle[Option[ResponseAuthor]])
+    Continue(authorRepository.findById(id), Action.done[Option[ResponseAuthor]])
   }
 
   def findByIdWithPasswordActions(id: AuthorId): Action[Option[Author]] = {
-    Continue(authorRepository.findByIdWithPassword(id), Action.buildDoneWithoutAnyHandle[Option[Author]])
+    Continue(authorRepository.findByIdWithPassword(id), Action.done[Option[Author]])
   }
 
   def findByNameActions(name: AuthorName): Action[Option[ResponseAuthor]] = {
-    Continue(authorRepository.findByName(name), Action.buildDoneWithoutAnyHandle[Option[ResponseAuthor]])
+    Continue(authorRepository.findByName(name), Action.done[Option[ResponseAuthor]])
   }
 
   /**

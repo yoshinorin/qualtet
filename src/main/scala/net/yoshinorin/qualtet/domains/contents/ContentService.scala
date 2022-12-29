@@ -31,23 +31,23 @@ class ContentService(
 ) {
 
   def upsertActions(data: Content): Action[Int] = {
-    Continue(contentRepository.upsert(data), Action.buildDoneWithoutAnyHandle[Int])
+    Continue(contentRepository.upsert(data), Action.done[Int])
   }
 
   def deleteActions(id: ContentId): Action[Unit] = {
-    Continue(contentRepository.delete(id), Action.buildDoneWithoutAnyHandle[Unit])
+    Continue(contentRepository.delete(id), Action.done[Unit])
   }
 
   def findByIdActions(id: ContentId): Action[Option[Content]] = {
-    Continue(contentRepository.findById(id), Action.buildDoneWithoutAnyHandle[Option[Content]])
+    Continue(contentRepository.findById(id), Action.done[Option[Content]])
   }
 
   def findByPathActions(path: Path): Action[Option[Content]] = {
-    Continue(contentRepository.findByPath(path), Action.buildDoneWithoutAnyHandle[Option[Content]])
+    Continue(contentRepository.findByPath(path), Action.done[Option[Content]])
   }
 
   def findByPathWithMetaActions(path: Path): Action[Option[ResponseContentDbRow]] = {
-    Continue(contentRepository.findByPathWithMeta(path), Action.buildDoneWithoutAnyHandle[Option[ResponseContentDbRow]])
+    Continue(contentRepository.findByPathWithMeta(path), Action.done[Option[ResponseContentDbRow]])
   }
 
   /**

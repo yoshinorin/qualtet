@@ -19,7 +19,7 @@ class SitemapService(
   private val cacheKey = "sitemaps-full-cache"
 
   def getActions: Action[Seq[Url]] = {
-    Continue(sitemapRepository.get(), Action.buildDoneWithoutAnyHandle[Seq[Url]])
+    Continue(sitemapRepository.get(), Action.done[Seq[Url]])
   }
 
   def get(): IO[Seq[Url]] = {

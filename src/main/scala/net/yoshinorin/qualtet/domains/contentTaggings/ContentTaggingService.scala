@@ -15,31 +15,31 @@ class ContentTaggingService(
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def findByTagIdActions(id: TagId): Action[Seq[ContentTagging]] = {
-    Continue(contentTaggingRepository.findByTagId(id), Action.buildDoneWithoutAnyHandle[Seq[ContentTagging]])
+    Continue(contentTaggingRepository.findByTagId(id), Action.done[Seq[ContentTagging]])
   }
 
   def bulkUpsertActions(data: Option[List[ContentTagging]]): Action[Int] = {
     data match {
-      case Some(d) => Continue(contentTaggingRepository.bulkUpsert(d), Action.buildDoneWithoutAnyHandle[Int])
-      case None => Continue(contentTaggingRepository.fakeRequestInt, Action.buildDoneWithoutAnyHandle[Int])
+      case Some(d) => Continue(contentTaggingRepository.bulkUpsert(d), Action.done[Int])
+      case None => Continue(contentTaggingRepository.fakeRequestInt, Action.done[Int])
     }
   }
 
   def deleteByContentIdActions(id: ContentId): Action[Unit] = {
-    Continue(contentTaggingRepository.deleteByContentId(id), Action.buildDoneWithoutAnyHandle[Unit])
+    Continue(contentTaggingRepository.deleteByContentId(id), Action.done[Unit])
   }
 
   def deleteByTagIdActions(id: TagId): Action[Unit] = {
-    Continue(contentTaggingRepository.deleteByTagId(id), Action.buildDoneWithoutAnyHandle[Unit])
+    Continue(contentTaggingRepository.deleteByTagId(id), Action.done[Unit])
   }
 
   def deleteActions(contentId: ContentId, tagIds: Seq[TagId]): Action[Unit] = {
-    Continue(contentTaggingRepository.delete(contentId, tagIds), Action.buildDoneWithoutAnyHandle[Unit])
+    Continue(contentTaggingRepository.delete(contentId, tagIds), Action.done[Unit])
   }
 
   def bulkDeleteActions(data: (ContentId, Seq[TagId])): Action[Unit] = {
     data._2.size match {
-      case 0 => Continue(contentTaggingRepository.fakeRequestUnit, Action.buildDoneWithoutAnyHandle[Unit])
+      case 0 => Continue(contentTaggingRepository.fakeRequestUnit, Action.done[Unit])
       case _ => this.deleteActions(data._1, data._2)
     }
   }

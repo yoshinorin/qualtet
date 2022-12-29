@@ -18,11 +18,11 @@ class ContentTypeService(
     extends Cacheable {
 
   def upsertActions(data: ContentType): Action[Int] = {
-    Continue(contentRepository.upsert(data), Action.buildDoneWithoutAnyHandle[Int])
+    Continue(contentRepository.upsert(data), Action.done[Int])
   }
 
   def getAllActions: Action[Seq[ContentType]] = {
-    Continue(contentRepository.getAll(), Action.buildDoneWithoutAnyHandle[Seq[ContentType]])
+    Continue(contentRepository.getAll(), Action.done[Seq[ContentType]])
   }
 
   /**
@@ -52,7 +52,7 @@ class ContentTypeService(
   def findByName(name: String): IO[Option[ContentType]] = {
 
     def actions(name: String): Action[Option[ContentType]] = {
-      Continue(contentRepository.findByName(name), Action.buildDoneWithoutAnyHandle[Option[ContentType]])
+      Continue(contentRepository.findByName(name), Action.done[Option[ContentType]])
     }
 
     def fromDB(name: String): IO[Option[ContentType]] = {

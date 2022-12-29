@@ -20,29 +20,29 @@ class TagService(
 
   def bulkUpsertActions(data: Option[List[Tag]]): Action[Int] = {
     data match {
-      case Some(d) => Continue(tagRepository.bulkUpsert(d), Action.buildDoneWithoutAnyHandle[Int])
-      case None => Continue(tagRepository.fakeRequest(), Action.buildDoneWithoutAnyHandle[Int])
+      case Some(d) => Continue(tagRepository.bulkUpsert(d), Action.done[Int])
+      case None => Continue(tagRepository.fakeRequest(), Action.done[Int])
     }
   }
 
   def getAllActions: Action[Seq[ResponseTag]] = {
-    Continue(tagRepository.getAll(), Action.buildDoneWithoutAnyHandle[Seq[ResponseTag]])
+    Continue(tagRepository.getAll(), Action.done[Seq[ResponseTag]])
   }
 
   def findByIdActions(id: TagId): Action[Option[Tag]] = {
-    Continue(tagRepository.findById(id), Action.buildDoneWithoutAnyHandle[Option[Tag]])
+    Continue(tagRepository.findById(id), Action.done[Option[Tag]])
   }
 
   def findByNameActions(tagName: TagName): Action[Option[Tag]] = {
-    Continue(tagRepository.findByName(tagName), Action.buildDoneWithoutAnyHandle[Option[Tag]])
+    Continue(tagRepository.findByName(tagName), Action.done[Option[Tag]])
   }
 
   def findByContentIdActions(contenId: ContentId): Action[Seq[Tag]] = {
-    Continue(tagRepository.findByContentId(contenId), Action.buildDoneWithoutAnyHandle[Seq[Tag]])
+    Continue(tagRepository.findByContentId(contenId), Action.done[Seq[Tag]])
   }
 
   def deleteActions(id: TagId): Action[Unit] = {
-    Continue(tagRepository.delete(id), Action.buildDoneWithoutAnyHandle[Unit])
+    Continue(tagRepository.delete(id), Action.done[Unit])
   }
 
   /**

@@ -17,7 +17,7 @@ class ArchiveService(
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def actions(contentTypeId: ContentTypeId): Action[Seq[ResponseArchive]] = {
-    Continue(archiveRepository.get(contentTypeId), Action.buildDoneWithoutAnyHandle[Seq[ResponseArchive]])
+    Continue(archiveRepository.get(contentTypeId), Action.done[Seq[ResponseArchive]])
   }
 
   def get: IO[Seq[ResponseArchive]] = {
