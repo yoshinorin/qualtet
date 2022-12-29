@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.robots
 
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.{Action, Continue}
+import net.yoshinorin.qualtet.utils.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
 class RobotsService(

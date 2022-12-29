@@ -1,8 +1,7 @@
-package net.yoshinorin.qualtet.domains
+package net.yoshinorin.qualtet.utils
 
 import cats.implicits.catsSyntaxApplicativeId
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.{Action, Continue, Done}
 
 object ActionDoobieImpl {
 

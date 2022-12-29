@@ -4,7 +4,7 @@ import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.implicits._
 import doobie.util.transactor.Transactor.Aux
-import net.yoshinorin.qualtet.domains.{Action, ActionDoobieImpl => Impl}
+import net.yoshinorin.qualtet.utils.{Action, ActionDoobieImpl => Impl}
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 
 trait doobie {
