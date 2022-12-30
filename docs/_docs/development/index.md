@@ -35,6 +35,22 @@ $ sbt
 $ ~reStart
 ```
 
+Run `scalafmt` & `kill current server` start server(Hot reload)
+
+```
+$ sbt
+$ runs
+```
+
+## Kill current server process
+
+Require [npm kill-port](https://github.com/tiaanduplessis/kill-port) globally.
+
+```
+$ sbt
+$ kills
+```
+
 ## Assembly
 
 ```

@@ -1,3 +1,4 @@
+import sbt.protocol.ExecCommand
 import java.io.File
 import scala.sys.process.Process
 
@@ -168,6 +169,26 @@ val testEnvCommands = {
     |""".stripMargin
 }
 addCommandAlias("testEnvUp", testEnvCommands)
+
+val forceKillServer = TaskKey[Unit]("forceKillServer","force kill http server")
+forceKillServer := {
+  // NOTE: require global installed https://github.com/tiaanduplessis/kill-port
+  ExecCommand("kill-port 9001 -y")
+}
+val killCommands = {
+  ";forceKillServer"
+}
+addCommandAlias("kills", killCommands)
+
+val startServerCommands = {
+  """
+    |;scalafmt
+    |;Test / scalafmt
+    |;forceKillServer
+    |;~reStart
+    |""".stripMargin
+}
+addCommandAlias("runs", startServerCommands)
 
 coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration;"
 //org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
