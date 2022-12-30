@@ -26,6 +26,8 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <!--TODO: devenv only -->
+            <jsonGeneratorDecorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
             <charset>UTF-8</charset>
             <timeZone>UTC</timeZone>
             <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSS</timestampPattern>
