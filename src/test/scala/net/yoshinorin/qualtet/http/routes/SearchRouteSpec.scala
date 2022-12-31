@@ -32,18 +32,17 @@ class SearchRouteSpec extends AnyWordSpec {
           tags = List(s"searchRoute${i}"),
           externalResources = List()
         )
-      )
+      ) :+ RequestContent(
+      contentType = "article",
+      path = Path(s"/test/searchServiceLast"),
+      title = s"this is a searchService titleLast",
+      rawContent = s"this is a searchService raw contentLast",
+      htmlContent = s"this is a searchService html contentLast",
+      robotsAttributes = Attributes("noarchive, noimageindex"),
+      tags = List(s"searchServiceLast"),
+      externalResources = List()
+    )
   }
-  requestContents :+ RequestContent(
-    contentType = "article",
-    path = Path(s"/test/searchRouteLast"),
-    title = s"this is a searchRoute titleLast",
-    rawContent = s"this is a searchRoute raw contentLast",
-    htmlContent = s"this is a searchRoute html contentLast",
-    robotsAttributes = Attributes("noarchive, noimageindex"),
-    tags = List(s"searchServiceLast"),
-    externalResources = List()
-  )
 
   // NOTE: create content and related data for test
   requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(Fixture.author.name.value), rc).unsafeRunSync() }
