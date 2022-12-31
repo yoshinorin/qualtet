@@ -22,6 +22,10 @@ trait string {
       }
       s2
     }
+
+    def position(word: String): Seq[(Int, Int)] = {
+      word.r.findAllMatchIn(s).map(m => (m.start, m.end)).toSeq
+    }
   }
 
 }

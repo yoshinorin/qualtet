@@ -50,9 +50,13 @@ title: Features
 
 ## Search
 
-- [ ] Imple Full-text search
-- [ ] Select
-    - [ ] By QueryParams
+- [x] Imple Full-text search
+- [x] Select
+    - [x] By QueryParams
+    - [ ] By Tag
+    - [ ] Order by option
+    - [ ] Limit option
+    - [ ] Pagination option
 
 ## Tests
 

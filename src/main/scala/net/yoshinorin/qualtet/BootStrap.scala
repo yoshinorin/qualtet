@@ -18,6 +18,7 @@ import net.yoshinorin.qualtet.http.routes.{
   ContentTypeRoute,
   FeedRoute,
   HomeRoute,
+  SearchRoute,
   SitemapRoute,
   TagRoute
 }
@@ -48,6 +49,7 @@ object BootStrap extends IOApp {
   val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
   val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
   val homeRoute: HomeRoute = new HomeRoute()
+  val searchRoute: SearchRoute = new SearchRoute(Modules.searchService)
   val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
   val tagRoute: TagRoute = new TagRoute(Modules.tagService, Modules.articleService)
 
@@ -65,6 +67,7 @@ object BootStrap extends IOApp {
     contentTypeRoute,
     feedRoute,
     homeRoute,
+    searchRoute,
     sitemapRoute,
     tagRoute
   )

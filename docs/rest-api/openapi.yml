@@ -298,6 +298,35 @@ paths:
           description: Caches are invalidated
         401:
           description: Unauthorized
+  /search:
+    get:
+      summary: Search contents
+      tags:
+        - search
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    description: The number of hits contents.
+                    type: integer
+                    example: 99
+                  contents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/responseSearch'
+        422:
+          description: Unprocess request
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: Word for seach contents.
 components:
   securitySchemes:
     basicAuth:
@@ -528,6 +557,27 @@ components:
         lastMod:
           type: string
           example: "YYYY-MM-DD"
+    responseSearch:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Post Title"
+        path:
+          type: string
+          format: url(excludes domain part)
+          example: "/post/test-article"
+        content:
+          type: string
+          example: "Content.... without specific characters (e.g: HTML) strings"
+        publishedAt:
+          type: long
+          description: Unix time
+          example: 1625065509
+        updatedAt:
+          type: long
+          description: Unix time
+          example: 1627095819
     errorMessage:
       type: object
       properties:

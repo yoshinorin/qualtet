@@ -14,6 +14,7 @@ import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepositoryD
 import net.yoshinorin.qualtet.domains.contents.{ContentRepositoryDoobieImpl, ContentService}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceRepositoryDoobieImpl, ExternalResourceService}
 import net.yoshinorin.qualtet.domains.robots.{RobotsRepositoryDoobieImpl, RobotsService}
+import net.yoshinorin.qualtet.domains.search.{SearchRepositoryDoobieImpl, SearchService}
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapsRepositoryDoobieImpl, SitemapService, Url}
 import net.yoshinorin.qualtet.domains.tags.{TagRepositoryDoobieImpl, TagService}
 import net.yoshinorin.qualtet.auth.Signature
@@ -59,6 +60,9 @@ object Modules {
 
   val tagRepository: TagRepositoryDoobieImpl = new TagRepositoryDoobieImpl()
   val tagService: TagService = new TagService(tagRepository, contentTaggingService)(dbContext)
+
+  val searchRepository: SearchRepositoryDoobieImpl = new SearchRepositoryDoobieImpl()
+  val searchService: SearchService = new SearchService(searchRepository)(dbContext)
 
   val contentRepository: ContentRepositoryDoobieImpl = new ContentRepositoryDoobieImpl()
   val contentService: ContentService =

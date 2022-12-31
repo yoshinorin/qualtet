@@ -36,4 +36,12 @@ trait tuple {
     }
   }
 
+  implicit class IntTupleOps(t: (Int, Int)) {
+    def spread(s: Int, e: Int, limit: Int): (Int, Int) = {
+      val r1 = if (t._1 - s) > 0 then (t._1 - s) else 0
+      val r2 = if (t._2 + e) > limit then limit else (t._2 + e)
+      (r1, r2)
+    }
+  }
+
 }

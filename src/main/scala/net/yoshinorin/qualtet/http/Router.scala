@@ -19,6 +19,7 @@ import net.yoshinorin.qualtet.http.routes.{
   ContentTypeRoute,
   FeedRoute,
   HomeRoute,
+  SearchRoute,
   SitemapRoute
 }
 import net.yoshinorin.qualtet.http.routes.TagRoute
@@ -38,6 +39,7 @@ class Router(
   contentTypeRoute: ContentTypeRoute,
   feedRoute: FeedRoute,
   homeRoute: HomeRoute,
+  searchRoute: SearchRoute,
   sitemapRoute: SitemapRoute,
   tagRoute: TagRoute
 ) {
@@ -66,6 +68,7 @@ class Router(
     "/contents" -> contents,
     "/content-types" -> contentTypes,
     "/feeds" -> feeds,
+    "/search" -> search,
     "/sitemaps" -> sitemaps,
     "/status" -> status,
     "/tags" -> tags,
@@ -143,6 +146,13 @@ class Router(
 
   private[http] def feeds: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / name => feedRoute.get(name)
+    case request @ _ =>
+      methodNotAllowed(request, Allow(Set(GET)))
+  }
+
+  private[http] def search: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case request @ GET -> _ =>
+      searchRoute.search(request.uri.query.multiParams)
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }

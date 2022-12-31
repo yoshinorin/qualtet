@@ -83,4 +83,16 @@ class StringSpec extends AnyWordSpec {
 
   }
 
+  "position" should {
+
+    "be return any word's start and end position in string" in {
+      val pos = "あいうえおかきくけこ。あい。あいう。うえお。かきく。あいうおお".position("あいう")
+      assert(Seq((0, 3), (14, 17), (26, 29)) === pos)
+
+      val pos2 = "".position("a")
+      assert(Seq() === pos2)
+    }
+
+  }
+
 }
