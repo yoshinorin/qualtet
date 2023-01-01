@@ -77,6 +77,7 @@ class Router(
 
   private[http] def home: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => homeRoute.get
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       NotFound("Not found")
   }
@@ -84,6 +85,7 @@ class Router(
   private[http] def archives: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root =>
       archiveRoute.get
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }
@@ -92,6 +94,7 @@ class Router(
     case request @ GET -> Root =>
       val qp = queryParams(request.uri.query.params)
       articleRoute.get(qp._1, qp._2)
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }
@@ -101,6 +104,7 @@ class Router(
       authorRoute.get
     case GET -> Root / authorName =>
       authorRoute.get(authorName)
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }
@@ -140,12 +144,14 @@ class Router(
   private[http] def contentTypes: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => contentTypeRoute.get
     case GET -> Root / name => contentTypeRoute.get(name)
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def feeds: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / name => feedRoute.get(name)
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }
@@ -153,18 +159,21 @@ class Router(
   private[http] def search: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case request @ GET -> _ =>
       searchRoute.search(request.uri.query.multiParams)
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def sitemaps: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => sitemapRoute.get
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }
 
   private[http] def status: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => apiStatusRoute.get
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }
@@ -172,6 +181,7 @@ class Router(
   private[http] def token: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case request @ POST -> Root =>
       authRoute.post(request)
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(POST)))
   }
@@ -182,6 +192,7 @@ class Router(
 
   private[this] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => tagRoute.get
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ GET -> Root / nameOrId =>
       val qp = queryParams(request.uri.query.params)
       tagRoute.get(nameOrId, qp._1, qp._2)
