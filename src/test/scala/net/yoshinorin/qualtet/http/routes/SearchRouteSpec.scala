@@ -52,7 +52,7 @@ class SearchRouteSpec extends AnyWordSpec {
   "SearchRoute" should {
     "be return search result" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/search/?q=route"))
+        .run(Request(method = Method.GET, uri = uri"/search/?q=searchRoute"))
         .use { response =>
           IO {
             assert(response.status === Ok)
