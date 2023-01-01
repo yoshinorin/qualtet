@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.utils
+package net.yoshinorin.qualtet.actions
 
 import cats.implicits.catsSyntaxApplicativeId
 import doobie.ConnectionIO

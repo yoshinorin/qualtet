@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.utils
+package net.yoshinorin.qualtet.actions
 
 sealed trait Action[R]
 final case class Continue[T, R, F[_]](request: F[T], next: T => Action[R]) extends Action[R]

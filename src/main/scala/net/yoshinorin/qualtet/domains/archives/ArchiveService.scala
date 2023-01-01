@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.domains.archives
 import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
-import net.yoshinorin.qualtet.utils.Action._
-import net.yoshinorin.qualtet.utils.{Action, Continue}
+import net.yoshinorin.qualtet.actions.Action._
+import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext

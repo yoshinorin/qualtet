@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.utils.{Action, Continue}
+import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
 class ExternalResourceService(

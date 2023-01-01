@@ -5,8 +5,8 @@ import cats.implicits._
 import doobie.implicits._
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
-import net.yoshinorin.qualtet.utils.Action._
-import net.yoshinorin.qualtet.utils.{Action, Continue}
+import net.yoshinorin.qualtet.actions.Action._
+import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.message.Fail.NotFound

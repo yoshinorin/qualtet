@@ -4,8 +4,8 @@ import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
 import doobie.implicits._
-import net.yoshinorin.qualtet.utils.Action._
-import net.yoshinorin.qualtet.utils.{Action, Continue}
+import net.yoshinorin.qualtet.actions.Action._
+import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}

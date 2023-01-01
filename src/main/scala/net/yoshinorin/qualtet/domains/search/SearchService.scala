@@ -4,8 +4,8 @@ import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
 import org.slf4j.LoggerFactory
-import net.yoshinorin.qualtet.utils.Action._
-import net.yoshinorin.qualtet.utils.{Action, Continue}
+import net.yoshinorin.qualtet.actions.Action._
+import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
