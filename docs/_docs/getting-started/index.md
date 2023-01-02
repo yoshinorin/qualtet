@@ -38,7 +38,7 @@ Qualtet uses JWT for auth endpoint. You have to set `ISS` and `AUD` for generati
 |---|---|---|---|---|
 |`QUALTET_JWT_ISS `|jwt iss|`string`|-|-|
 |`QUALTET_JWT_AUD `|jwt aud|`string`|-|-|
-|`QUALTET_JWT_EXPIRATION `|AWS Cognito application Id|`int`|`3600`|-|
+|`QUALTET_JWT_EXPIRATION `|jwt expiration time (sec)|`int`|`3600`|-|
 
 ### Cacheing
 
@@ -46,9 +46,9 @@ Some of endpoint has in-memory cache.
 
 |Property|Description|Type|Default|Example|
 |---|---|---|---|---|
-|`QUALTET_CACHE_CONTENT_TYPE `|content type cache|`int`|`604800`|-|
-|`QUALTET_CACHE_SITEMAP `|sitemap cache|`int`|`3600`|-|
-|`QUALTET_CACHE_FEED `|feed cache|`int`|`7200`|-|
+|`QUALTET_CACHE_CONTENT_TYPE `|content type cache (sec)|`int`|`604800`|-|
+|`QUALTET_CACHE_SITEMAP `|sitemap cache (sec)|`int`|`3600`|-|
+|`QUALTET_CACHE_FEED `|feed cache (sec)|`int`|`7200`|-|
 
 ## Create an author
 

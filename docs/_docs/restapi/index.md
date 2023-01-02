@@ -31,7 +31,7 @@ Content-Length: 638
 $ curl -D - -X POST -H "Authorization: Bearer <token>" -d '{"TODO"}' 127.0.0.1:9001/contents
 ```
 
-## DELETE a content
+### DELETE a content
 
 ```sh
 $ curl -D - -X DELETE -H "Authorization: Bearer <token>" 127.0.0.1:9001/contents/<contentsId>
