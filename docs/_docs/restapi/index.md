@@ -39,3 +39,49 @@ HTTP/1.1 204 No Content
 Date: Mon, 26 Dec 2022 13:40:44 GMT
 Connection: keep-alive
 ```
+
+### Search
+
+The search endpoint validates query parameters. Not all, but some examples are below.
+
+```sh
+# OK
+$ curl -D - -X GET 127.0.0.1:9231/search?q=test&q=hoge&q=fuga
+HTTP/1.1 200 OK
+Date: Mon, 02 Jan 2023 13:14:43 GMT
+Connection: keep-alive
+Content-Type: application/json
+Content-Length: 7815
+
+{"count":19,"contents":[{"path":"....}]}
+
+# NG1
+$ curl -D - -X GET 127.0.0.1:9231/search?q=tes
+HTTP/1.1 400 Bad Request
+Date: Mon, 02 Jan 2023 13:16:50 GMT
+Connection: keep-alive
+Content-Type: application/json
+Content-Length: 42
+
+{"message":"SEARCH_CHAR_LENGTH_TOO_SHORT"}
+
+# NG2
+$ curl -D - -X GET 127.0.0.1:9231/search
+HTTP/1.1 400 Bad Request
+Date: Mon, 02 Jan 2023 13:17:32 GMT
+Connection: keep-alive
+Content-Type: application/json
+Content-Length: 35
+
+{"message":"SEARCH_QUERY_REQUIRED"}
+
+# NG3
+$ curl -D - -X GET 127.0.0.1:9231/search?q=a.b.c
+HTTP/1.1 400 Bad Request
+Date: Mon, 02 Jan 2023 13:19:23 GMT
+Connection: keep-alive
+Content-Type: application/json
+Content-Length: 36
+
+{"message":"INVALID_CHARS_INCLUDED"}
+```
