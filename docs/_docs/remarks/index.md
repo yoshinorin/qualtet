@@ -5,7 +5,7 @@ title: Remarks
 
 ## Private Key for JWT
 
-Qualtet has a private-key in-memory for generating/validating JWT. It's generated when booting the http-server (qualtet). It means JWT will be invalid if the http-server reboot.
+Qualtet has a private-key with an in-memory for generating/validating JWT. It's generated when booting the http-server (qualtet). It means JWT will be invalid if the http-server reboot.
 
 ## Escape HTML
 
