@@ -47,7 +47,7 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
       issuer = Some(Config.jwtIss),
       audience = Some(Set(Config.jwtAud)),
       subject = Some(author.id.value),
-      jwtId = Some(ULID.newULIDString.toLowerCase(Locale.ENGLISH)),
+      jwtId = Some(ULID.newULIDString.toLowerCase(Locale.ROOT)),
       expiration = Some(Instant.now.plusSeconds(Config.jwtExpiration).getEpochSecond),
       issuedAt = Some(Instant.now.getEpochSecond)
     )

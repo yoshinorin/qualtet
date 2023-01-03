@@ -70,7 +70,7 @@ class ContentService(
       c <- contentTypeService.findByName(request.contentType).throwIfNone(NotFound(s"content-type not found: ${request.contentType}"))
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
-        case None => ContentId(ULID.newULIDString.toLowerCase(Locale.ENGLISH))
+        case None => ContentId(ULID.newULIDString.toLowerCase(Locale.ROOT))
         case Some(x) => x.id
       }
       maybeTags <- tagService.getTags(Some(request.tags))

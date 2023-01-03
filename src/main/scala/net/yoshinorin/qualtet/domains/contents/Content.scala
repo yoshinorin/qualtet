@@ -14,7 +14,7 @@ import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax._
 import java.util.Locale
 
-final case class ContentId(value: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH)) extends AnyVal
+final case class ContentId(value: String = ULID.newULIDString.toLowerCase(Locale.ROOT)) extends AnyVal
 object ContentId {
   implicit val codecContentId: JsonValueCodec[ContentId] = JsonCodecMaker.make
 
@@ -56,7 +56,7 @@ object Content {
 }
 
 final case class RequestContent(
-  requestId: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH),
+  requestId: String = ULID.newULIDString.toLowerCase(Locale.ROOT),
   contentType: String,
   robotsAttributes: Attributes, // TODO: Consider to use `Option[Attributes]`
   externalResources: List[ExternalResources] = List(),
@@ -91,7 +91,7 @@ object RequestContent {
   implicit val codecRequestContents: JsonValueCodec[List[RequestContent]] = JsonCodecMaker.make
 
   def apply(
-    requestId: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH),
+    requestId: String = ULID.newULIDString.toLowerCase(Locale.ROOT),
     contentType: String,
     robotsAttributes: Attributes,
     externalResources: List[ExternalResources] = List(),

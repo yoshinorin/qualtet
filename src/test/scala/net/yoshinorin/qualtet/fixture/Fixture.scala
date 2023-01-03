@@ -42,7 +42,7 @@ import net.yoshinorin.qualtet.Modules
 object Fixture {
 
   def generateUlid(): String = {
-    ULID.newULIDString.toLowerCase(Locale.ENGLISH)
+    ULID.newULIDString.toLowerCase(Locale.ROOT)
   }
 
   val h: String = Config.httpHost

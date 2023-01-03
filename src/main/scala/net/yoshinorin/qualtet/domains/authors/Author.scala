@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
 import scala.util.matching.Regex
 import java.util.Locale
 
-final case class AuthorId(value: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH)) extends AnyVal
+final case class AuthorId(value: String = ULID.newULIDString.toLowerCase(Locale.ROOT)) extends AnyVal
 object AuthorId {
   implicit val codecAuthorId: JsonValueCodec[AuthorId] = JsonCodecMaker.make
 
@@ -28,7 +28,7 @@ object AuthorName {
     if (!authorNamePattern.matches(value)) {
       throw UnprocessableEntity("authorName must be number, alphabet and underscore.")
     }
-    new AuthorName(value.toLowerCase(Locale.ENGLISH))
+    new AuthorName(value.toLowerCase(Locale.ROOT))
   }
 }
 

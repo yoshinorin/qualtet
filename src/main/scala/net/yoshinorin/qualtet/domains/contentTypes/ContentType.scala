@@ -5,7 +5,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros._
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import java.util.Locale
 
-final case class ContentTypeId(value: String = ULID.newULIDString.toLowerCase(Locale.ENGLISH)) extends AnyVal
+final case class ContentTypeId(value: String = ULID.newULIDString.toLowerCase(Locale.ROOT)) extends AnyVal
 object ContentTypeId {
   implicit val codecContentTypeId: JsonValueCodec[ContentTypeId] = JsonCodecMaker.make
 
