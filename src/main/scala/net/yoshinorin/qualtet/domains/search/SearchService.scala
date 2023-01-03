@@ -11,10 +11,10 @@ import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
+import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.syntax._
 
 import java.util.Locale
-import net.yoshinorin.qualtet.message.Fail.BadRequest
 
 import scala.util.Try
 import scala.annotation.tailrec
@@ -32,7 +32,7 @@ class SearchService(
   // TODO: move constant values
   private[search] def validateAndExtractQueryString(query: Map[String, List[String]]): List[String] = {
     val qs = query.getOrElse("q", List()).map(_.trim.toLowerCase(Locale.ENGLISH))
-    val v: (Boolean, String) => Unit = (b, s) => { if b then throw new BadRequest(s) else () }
+    val v: (Boolean, String) => Unit = (b, s) => { if b then throw new UnprocessableEntity(s) else () }
     v(qs.isEmpty, "SEARCH_QUERY_REQUIRED")
     v(qs.sizeIs > 3, "TOO_MANY_SEARCH_WORDS")
     qs.map { q =>

@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.fixture.Fixture._
 import net.yoshinorin.qualtet.Modules._
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.message.Fail.BadRequest
+import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.syntax._
 
 import cats.effect.unsafe.implicits.global
@@ -71,38 +71,38 @@ class SearchServiceSpec extends AnyWordSpec {
 
     // TODO: in-casesensitive assertion
 
-    "be throw BadRequest Exception if query string is empty" in {
-      assertThrows[BadRequest] {
+    "be throw UnprocessableEntity Exception if query string is empty" in {
+      assertThrows[UnprocessableEntity] {
         searchService.validateAndExtractQueryString(Map(("", List())))
       }
     }
 
-    "be throw BadRequest Exception if query value is empty" in {
-      assertThrows[BadRequest] {
+    "be throw UnprocessableEntity Exception if query value is empty" in {
+      assertThrows[UnprocessableEntity] {
         searchService.validateAndExtractQueryString(Map(("q", List())))
       }
     }
 
-    "be throw BadRequest Exception if query key is wrong" in {
-      assertThrows[BadRequest] {
+    "be throw UnprocessableEntity Exception if query key is wrong" in {
+      assertThrows[UnprocessableEntity] {
         searchService.validateAndExtractQueryString(Map(("wrong", List("abcde"))))
       }
     }
 
-    "be throw BadRequest Exception if many query requested" in {
-      assertThrows[BadRequest] {
+    "be throw UnprocessableEntity Exception if many query requested" in {
+      assertThrows[UnprocessableEntity] {
         searchService.validateAndExtractQueryString(Map(("q", List("abcde", "abcde", "abcde", "abcde"))))
       }
     }
 
-    "be throw BadRequest Exception if query contains too short value" in {
-      assertThrows[BadRequest] {
+    "be throw UnprocessableEntity Exception if query contains too short value" in {
+      assertThrows[UnprocessableEntity] {
         searchService.validateAndExtractQueryString(Map(("q", List("abcd", "abc", "abcd"))))
       }
     }
 
-    "be throw BadRequest Exception if query contains invalid char" in {
-      assertThrows[BadRequest] {
+    "be throw UnprocessableEntity Exception if query contains invalid char" in {
+      assertThrows[UnprocessableEntity] {
         searchService.validateAndExtractQueryString(Map(("q", List("abcd", "ab(d", "abcd"))))
       }
     }

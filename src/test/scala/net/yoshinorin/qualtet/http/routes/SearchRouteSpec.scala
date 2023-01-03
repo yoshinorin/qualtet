@@ -65,56 +65,56 @@ class SearchRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return BadRequest without query params" in {
+    "be return UnprocessableEntity without query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/search/"))
         .use { response =>
           IO {
-            assert(response.status === BadRequest)
+            assert(response.status === UnprocessableEntity)
           }
         }
         .unsafeRunSync()
     }
 
-    "be return BadRequest with query param short value" in {
+    "be return UnprocessableEntity with query param short value" in {
       client
         .run(Request(method = Method.GET, uri = uri"/search/?q=abc"))
         .use { response =>
           IO {
-            assert(response.status === BadRequest)
+            assert(response.status === UnprocessableEntity)
           }
         }
         .unsafeRunSync()
     }
 
-    "be return BadRequest with invalid query param" in {
+    "be return UnprocessableEntity with invalid query param" in {
       client
         .run(Request(method = Method.GET, uri = uri"/search/?invalid=abcd"))
         .use { response =>
           IO {
-            assert(response.status === BadRequest)
+            assert(response.status === UnprocessableEntity)
           }
         }
         .unsafeRunSync()
     }
 
-    "be return BadRequest with query param contains invalid values" in {
+    "be return UnprocessableEntity with query param contains invalid values" in {
       client
         .run(Request(method = Method.GET, uri = uri"/search/?q=a.b.c"))
         .use { response =>
           IO {
-            assert(response.status === BadRequest)
+            assert(response.status === UnprocessableEntity)
           }
         }
         .unsafeRunSync()
     }
 
-    "be return BadRequest with too many query params" in {
+    "be return UnprocessableEntity with too many query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/search/?q=abcd&q=abcd&q=abcd&q=abcd"))
         .use { response =>
           IO {
-            assert(response.status === BadRequest)
+            assert(response.status === UnprocessableEntity)
           }
         }
         .unsafeRunSync()
