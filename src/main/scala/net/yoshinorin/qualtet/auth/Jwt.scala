@@ -14,7 +14,6 @@ import pdi.jwt.JwtOptions
 import wvlet.airframe.ulid.ULID
 
 import java.time.Instant
-import java.util.Locale
 import scala.util.Try
 
 final case class JwtClaim(
@@ -47,7 +46,7 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
       issuer = Some(Config.jwtIss),
       audience = Some(Set(Config.jwtAud)),
       subject = Some(author.id.value),
-      jwtId = Some(ULID.newULIDString.toLowerCase(Locale.ROOT)),
+      jwtId = Some(ULID.newULIDString.toLower),
       expiration = Some(Instant.now.plusSeconds(Config.jwtExpiration).getEpochSecond),
       issuedAt = Some(Instant.now.getEpochSecond)
     )

@@ -1,5 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
+import java.util.Locale
+
 trait string {
 
   implicit final class StringOps(val s: String) {
@@ -25,6 +27,10 @@ trait string {
 
     def position(word: String): Seq[(Int, Int)] = {
       word.r.findAllMatchIn(s).map(m => (m.start, m.end)).toSeq
+    }
+
+    def toLower: String = {
+      s.toLowerCase(Locale.ROOT)
     }
   }
 

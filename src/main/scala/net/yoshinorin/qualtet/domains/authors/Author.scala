@@ -5,11 +5,11 @@ import wvlet.airframe.ulid.ULID
 import com.github.plokhotnyuk.jsoniter_scala.macros._
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
+import net.yoshinorin.qualtet.syntax._
 
 import scala.util.matching.Regex
-import java.util.Locale
 
-final case class AuthorId(value: String = ULID.newULIDString.toLowerCase(Locale.ROOT)) extends AnyVal
+final case class AuthorId(value: String = ULID.newULIDString.toLower) extends AnyVal
 object AuthorId {
   implicit val codecAuthorId: JsonValueCodec[AuthorId] = JsonCodecMaker.make
 
@@ -28,7 +28,7 @@ object AuthorName {
     if (!authorNamePattern.matches(value)) {
       throw UnprocessableEntity("authorName must be number, alphabet and underscore.")
     }
-    new AuthorName(value.toLowerCase(Locale.ROOT))
+    new AuthorName(value.toLower)
   }
 }
 

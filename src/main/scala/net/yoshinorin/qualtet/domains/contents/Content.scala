@@ -12,9 +12,8 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.Tag
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax._
-import java.util.Locale
 
-final case class ContentId(value: String = ULID.newULIDString.toLowerCase(Locale.ROOT)) extends AnyVal
+final case class ContentId(value: String = ULID.newULIDString.toLower) extends AnyVal
 object ContentId {
   implicit val codecContentId: JsonValueCodec[ContentId] = JsonCodecMaker.make
 
@@ -56,7 +55,7 @@ object Content {
 }
 
 final case class RequestContent(
-  requestId: String = ULID.newULIDString.toLowerCase(Locale.ROOT),
+  requestId: String = ULID.newULIDString.toLower,
   contentType: String,
   robotsAttributes: Attributes, // TODO: Consider to use `Option[Attributes]`
   externalResources: List[ExternalResources] = List(),
@@ -91,7 +90,7 @@ object RequestContent {
   implicit val codecRequestContents: JsonValueCodec[List[RequestContent]] = JsonCodecMaker.make
 
   def apply(
-    requestId: String = ULID.newULIDString.toLowerCase(Locale.ROOT),
+    requestId: String = ULID.newULIDString.toLower,
     contentType: String,
     robotsAttributes: Attributes,
     externalResources: List[ExternalResources] = List(),

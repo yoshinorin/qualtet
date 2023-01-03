@@ -3,9 +3,9 @@ package net.yoshinorin.qualtet.domains.tags
 import com.github.plokhotnyuk.jsoniter_scala.macros._
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import wvlet.airframe.ulid.ULID
-import java.util.Locale
+import net.yoshinorin.qualtet.syntax._
 
-final case class TagId(value: String = ULID.newULIDString.toLowerCase(Locale.ROOT)) extends AnyVal
+final case class TagId(value: String = ULID.newULIDString.toLower) extends AnyVal
 object TagId {
   implicit val codecTagId: JsonValueCodec[TagId] = JsonCodecMaker.make
   def apply(value: String): TagId = {

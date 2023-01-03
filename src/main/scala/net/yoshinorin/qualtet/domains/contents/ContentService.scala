@@ -16,7 +16,6 @@ import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 import wvlet.airframe.ulid.ULID
-import java.util.Locale
 
 class ContentService(
   contentRepository: ContentRepository[ConnectionIO],
@@ -70,7 +69,7 @@ class ContentService(
       c <- contentTypeService.findByName(request.contentType).throwIfNone(NotFound(s"content-type not found: ${request.contentType}"))
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
-        case None => ContentId(ULID.newULIDString.toLowerCase(Locale.ROOT))
+        case None => ContentId(ULID.newULIDString.toLower)
         case Some(x) => x.id
       }
       maybeTags <- tagService.getTags(Some(request.tags))

@@ -30,19 +30,19 @@ import net.yoshinorin.qualtet.http.routes.{
   TagRoute
 }
 import java.util.concurrent.TimeUnit
-import java.util.Locale
 import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
 import net.yoshinorin.qualtet.http.routes.CacheRoute
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.Modules
+import net.yoshinorin.qualtet.syntax._
 
 // Just test data
 object Fixture {
 
   def generateUlid(): String = {
-    ULID.newULIDString.toLowerCase(Locale.ROOT)
+    ULID.newULIDString.toLower
   }
 
   val h: String = Config.httpHost

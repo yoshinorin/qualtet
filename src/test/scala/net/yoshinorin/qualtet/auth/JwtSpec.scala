@@ -9,6 +9,8 @@ import net.yoshinorin.qualtet.validator.Validator
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.exceptions.JwtValidationException
 import wvlet.airframe.ulid.ULID
+import net.yoshinorin.qualtet.syntax._
+
 import cats.effect.unsafe.implicits.global
 
 import java.time.Instant
@@ -27,7 +29,7 @@ class JwtSpec extends AnyWordSpec {
 
   "Jwt" should {
     "be encode and decode" in {
-      val id = ULID.newULIDString.toLowerCase
+      val id = ULID.newULIDString.toLower
       val jwtString = jwtInstance.encode(
         Author(
           id = AuthorId(id),

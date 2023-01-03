@@ -14,8 +14,6 @@ import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.syntax._
 
-import java.util.Locale
-
 import scala.util.Try
 import scala.annotation.tailrec
 
@@ -31,7 +29,7 @@ class SearchService(
 
   // TODO: move constant values
   private[search] def validateAndExtractQueryString(query: Map[String, List[String]]): List[String] = {
-    val qs = query.getOrElse("q", List()).map(_.trim.toLowerCase(Locale.ROOT))
+    val qs = query.getOrElse("q", List()).map(_.trim.toLower)
     val v: (Boolean, String) => Unit = (b, s) => { if b then throw new UnprocessableEntity(s) else () }
     v(qs.isEmpty, "SEARCH_QUERY_REQUIRED")
     v(qs.sizeIs > 3, "TOO_MANY_SEARCH_WORDS")
@@ -85,7 +83,7 @@ class SearchService(
     } yield
       if (searchResult.nonEmpty) {
         val r = searchResult.map { x =>
-          val stripedContent = x._2.content.stripHtmlTags.filterIgnoreChars.toLowerCase
+          val stripedContent = x._2.content.stripHtmlTags.filterIgnoreChars.toLower
           x._2.copy(content = substrRecursively(stripedContent, calcSubStrRanges(positions(qs, stripedContent))))
         }
         ResponseSearchWithCount(searchResult.map(_._1).headOption.getOrElse(0), r)
