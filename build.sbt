@@ -42,18 +42,18 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
   Wart.Nothing
 )
 
-val jsoniterVersion = "2.20.0"
+val jsoniterVersion = "2.20.1"
 val doobieVersion = "1.0.0-RC2"
 val jwtScalaVersion = "9.1.2"
-val flywayVersion = "9.10.2"
-val http4sVersion = "1.0.0-M37"
+val flywayVersion = "9.11.0"
+val http4sVersion = "1.0.0-M38"
 
 // https://github.com/rtimush/sbt-updates
 dependencyAllowPreRelease := true
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.2",
   // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4, but cats-effect keep fully compatibility with 3.x
-  "org.typelevel" %% "cats-effect" % "3.4.3",
+  "org.typelevel" %% "cats-effect" % "3.4.4",
   "org.http4s" %% "http4s-dsl" % http4sVersion,
   "org.http4s" %% "http4s-ember-server" % http4sVersion,
   "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
@@ -75,7 +75,7 @@ libraryDependencies ++= Seq(
   "org.springframework.security" % "spring-security-core" % "6.0.1",
   "org.slf4j" % "slf4j-api" % "2.0.6",
   "org.scalatest" %% "scalatest" % "3.2.14" % "test",
-  "org.mockito" % "mockito-core" % "4.10.0" % "test"
+  "org.mockito" % "mockito-core" % "4.11.0" % "test"
 )
 
 val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
