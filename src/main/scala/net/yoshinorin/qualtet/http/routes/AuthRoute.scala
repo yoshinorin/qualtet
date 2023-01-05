@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
+import cats.Monad
 import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.headers.{`Content-Type`, `WWW-Authenticate`}
@@ -9,7 +10,7 @@ import net.yoshinorin.qualtet.auth.{AuthService, RequestToken}
 import net.yoshinorin.qualtet.http.RequestDecoder
 import net.yoshinorin.qualtet.syntax._
 
-class AuthRoute(authService: AuthService) extends RequestDecoder {
+class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder {
 
   // token
   def post(request: Request[IO]): IO[Response[IO]] = {

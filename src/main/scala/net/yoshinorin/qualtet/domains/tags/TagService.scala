@@ -1,9 +1,9 @@
 package net.yoshinorin.qualtet.domains.tags
 
 import cats.effect.IO
+import cats.Monad
 import cats.implicits._
 import doobie.implicits._
-import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
@@ -13,9 +13,9 @@ import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.syntax._
 
-class TagService(
-  tagRepository: TagRepository[ConnectionIO],
-  contentTaggingService: ContentTaggingService
+class TagService[F[_]: Monad](
+  tagRepository: TagRepository[F],
+  contentTaggingService: ContentTaggingService[F]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def bulkUpsertActions(data: Option[List[Tag]]): Action[Int] = {

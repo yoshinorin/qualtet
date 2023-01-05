@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contentTypes
 import doobie.{Read, Write}
 import doobie.ConnectionIO
 
-class ContentTypeRepositoryDoobieImpl extends ContentTypeRepository[ConnectionIO] {
+class ContentTypeRepositoryDoobieInterpreter extends ContentTypeRepository[ConnectionIO] {
 
   implicit val contentTypeRead: Read[ContentType] =
     Read[(String, String)].map { case (id, name) => ContentType(ContentTypeId(id), name) }

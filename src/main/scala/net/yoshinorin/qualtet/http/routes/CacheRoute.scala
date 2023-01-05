@@ -1,13 +1,14 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
+import cats.Monad
 import org.http4s._
 import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.cache.CacheService
 
-class CacheRoute(
-  cacheService: CacheService
+class CacheRoute[F[_]: Monad](
+  cacheService: CacheService[F]
 ) {
 
   // caches

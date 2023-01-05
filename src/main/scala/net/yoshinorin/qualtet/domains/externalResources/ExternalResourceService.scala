@@ -1,11 +1,11 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
-import doobie.ConnectionIO
+import cats.Monad
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-class ExternalResourceService(
-  externalResourceRepository: ExternalResourceRepository[ConnectionIO]
+class ExternalResourceService[F[_]: Monad](
+  externalResourceRepository: ExternalResourceRepository[F]
 ) {
 
   def bulkUpsertActions(data: List[ExternalResource]): Action[Int] = {

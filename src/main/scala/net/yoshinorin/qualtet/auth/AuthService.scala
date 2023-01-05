@@ -1,13 +1,14 @@
 package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
+import cats.Monad
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorService, BCryptPassword, ResponseAuthor}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
 import net.yoshinorin.qualtet.syntax._
 import org.slf4j.LoggerFactory
 
-class AuthService(authorService: AuthorService, jwt: Jwt) {
+class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
   private[this] val bcryptPasswordEncoder = new BCryptPasswordEncoder()

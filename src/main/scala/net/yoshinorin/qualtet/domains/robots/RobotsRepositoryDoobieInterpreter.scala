@@ -4,7 +4,7 @@ import doobie.Write
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-class RobotsRepositoryDoobieImpl extends RobotsRepository[ConnectionIO] {
+class RobotsRepositoryDoobieInterpreter extends RobotsRepository[ConnectionIO] {
 
   implicit val robotsWrite: Write[Robots] =
     Write[(String, String)].contramap(p => (p.contentId.value, p.attributes.value))

@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
+import cats.Monad
 import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
@@ -8,8 +9,8 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor._
 import net.yoshinorin.qualtet.syntax._
 
-class AuthorRoute(
-  authorService: AuthorService
+class AuthorRoute[F[_]: Monad](
+  authorService: AuthorService[F]
 ) {
 
   // authors

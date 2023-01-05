@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contents
 
 import cats.effect.IO
-import doobie.ConnectionIO
+import cats.Monad
 import doobie.util.transactor.Transactor.Aux
 import doobie.implicits._
 import net.yoshinorin.qualtet.actions.Action._
@@ -17,14 +17,14 @@ import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 import wvlet.airframe.ulid.ULID
 
-class ContentService(
-  contentRepository: ContentRepository[ConnectionIO],
-  tagService: TagService,
-  contentTaggingService: ContentTaggingService,
-  robotsService: RobotsService,
-  externalResourceService: ExternalResourceService,
-  authorService: AuthorService,
-  contentTypeService: ContentTypeService
+class ContentService[F[_]: Monad](
+  contentRepository: ContentRepository[F],
+  tagService: TagService[F],
+  contentTaggingService: ContentTaggingService[F],
+  robotsService: RobotsService[F],
+  externalResourceService: ExternalResourceService[F],
+  authorService: AuthorService[F],
+  contentTypeService: ContentTypeService[F]
 )(
   dbContext: DataBaseContext[Aux[IO, Unit]]
 ) {

@@ -1,11 +1,11 @@
 package net.yoshinorin.qualtet.domains.robots
 
-import doobie.ConnectionIO
+import cats.Monad
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-class RobotsService(
-  robotsRepository: RobotsRepository[ConnectionIO]
+class RobotsService[F[_]: Monad](
+  robotsRepository: RobotsRepository[F]
 ) {
   def upsertActions(data: Robots): Action[Int] = {
     Continue(robotsRepository.upsert(data), Action.done[Int])

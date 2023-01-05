@@ -5,7 +5,7 @@ import doobie.ConnectionIO
 import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-class TagRepositoryDoobieImpl extends TagRepository[ConnectionIO] with ConnectionIOFaker {
+class TagRepositoryDoobieInterpreter extends TagRepository[ConnectionIO] with ConnectionIOFaker {
 
   implicit val responseTagRead: Read[ResponseTag] =
     Read[(String, String)].map { case (id, name) => ResponseTag(TagId(id), TagName(name)) }

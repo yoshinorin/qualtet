@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
+import doobie.ConnectionIO
 import org.http4s.client.Client
 import org.http4s._
 import org.http4s.dsl.io._
@@ -18,8 +19,8 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.ArchiveRouteSpec
 class ArchiveRouteSpec extends AnyWordSpec {
 
-  val mockArchiveService: ArchiveService = Mockito.mock(classOf[ArchiveService])
-  val archiveRoute: ArchiveRoute = new ArchiveRoute(mockArchiveService)
+  val mockArchiveService = Mockito.mock(classOf[ArchiveService[ConnectionIO]])
+  val archiveRoute = new ArchiveRoute(mockArchiveService)
 
   val router = Fixture.makeRouter(archiveRoute = archiveRoute)
 

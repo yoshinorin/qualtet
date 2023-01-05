@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect._
+import cats.Monad
 import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
@@ -12,8 +13,8 @@ import net.yoshinorin.qualtet.domains.contents.ResponseContent._
 import net.yoshinorin.qualtet.http.RequestDecoder
 import net.yoshinorin.qualtet.syntax._
 
-class ContentRoute(
-  contentService: ContentService
+class ContentRoute[F[_]: Monad](
+  contentService: ContentService[F]
 ) extends RequestDecoder {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

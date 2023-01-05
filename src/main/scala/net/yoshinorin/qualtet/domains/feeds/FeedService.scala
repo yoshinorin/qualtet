@@ -1,13 +1,17 @@
 package net.yoshinorin.qualtet.domains.feeds
 
 import cats.effect.IO
+import cats.Monad
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.domains.Cacheable
 
-class FeedService(cache: CacheModule[String, ResponseArticleWithCount], articleService: ArticleService) extends Cacheable {
+class FeedService[F[_]: Monad](
+  cache: CacheModule[String, ResponseArticleWithCount],
+  articleService: ArticleService[F]
+) extends Cacheable {
 
   private val cacheKey = "feed-full-cache"
 

@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.actions
 import cats.implicits.catsSyntaxApplicativeId
 import doobie.ConnectionIO
 
-object ActionDoobieImpl {
+object ActionDoobieInterpreter {
 
   // without transaction
   def performWithoutTransaction[R](serviceLogic: Action[R]): ConnectionIO[R] = serviceLogic match {

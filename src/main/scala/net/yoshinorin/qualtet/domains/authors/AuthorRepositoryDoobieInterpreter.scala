@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.authors
 import doobie.{Read, Write}
 import doobie.ConnectionIO
 
-class AuthorRepositoryDoobieImpl extends AuthorRepository[ConnectionIO] {
+class AuthorRepositoryDoobieInterpreter extends AuthorRepository[ConnectionIO] {
 
   implicit val responseAuthorRead: Read[ResponseAuthor] =
     Read[(String, String, String, Long)].map { case (id, name, displayName, createdAt) =>

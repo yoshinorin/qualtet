@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
-class SearchRepositoryDoobieImpl extends SearchRepository[ConnectionIO] {
+class SearchRepositoryDoobieInterpreter extends SearchRepository[ConnectionIO] {
 
   implicit val responseArticleWithCountRead: Read[(Int, ResponseSearch)] =
     Read[(Int, (String, String, String, Long, Long))].map { case (cnt, (path, title, content, publishedAt, updatedAt)) =>

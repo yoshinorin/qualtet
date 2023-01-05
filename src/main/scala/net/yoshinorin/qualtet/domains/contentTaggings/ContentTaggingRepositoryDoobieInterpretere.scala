@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.tags.TagId
 
-class ContentTaggingRepositoryDoobieImple extends ContentTaggingRepository[ConnectionIO] with ConnectionIOFaker {
+class ContentTaggingRepositoryDoobieInterpretere extends ContentTaggingRepository[ConnectionIO] with ConnectionIOFaker {
 
   implicit val contentTaggingRead: Read[ContentTagging] =
     Read[(String, String)].map { case (contentId, tagId) => ContentTagging(ContentId(contentId), TagId(tagId)) }

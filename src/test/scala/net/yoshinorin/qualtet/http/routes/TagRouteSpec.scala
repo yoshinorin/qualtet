@@ -44,7 +44,7 @@ class TagRouteSpec extends AnyWordSpec {
   val t: Seq[ResponseTag] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.contains("tagRoute-"))
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
-  val tagRoute: TagRoute = new TagRoute(tagService, articleService)
+  val tagRoute = new TagRoute(tagService, articleService)
   val client: Client[IO] = Client.fromHttpApp(makeRouter(tagRoute = tagRoute).routes)
 
   "TagRoute" should {

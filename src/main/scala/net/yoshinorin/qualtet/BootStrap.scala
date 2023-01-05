@@ -37,25 +37,25 @@ object BootStrap extends IOApp {
 
   Migration.migrate(Modules.contentTypeService)
 
-  val authProvider: AuthProvider = new AuthProvider(Modules.authService)
+  val authProvider = new AuthProvider(Modules.authService)
 
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
-  val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
-  val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
-  val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
-  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
-  val cacheRoute: CacheRoute = new CacheRoute(Modules.cacheService)
-  val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
-  val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
-  val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
+  val archiveRoute = new ArchiveRoute(Modules.archiveService)
+  val articleRoute = new ArticleRoute(Modules.articleService)
+  val authorRoute = new AuthorRoute(Modules.authorService)
+  val authRoute = new AuthRoute(Modules.authService)
+  val cacheRoute = new CacheRoute(Modules.cacheService)
+  val contentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
+  val contentRoute = new ContentRoute(Modules.contentService)
+  val feedRoute = new FeedRoute(Modules.feedService)
   val homeRoute: HomeRoute = new HomeRoute()
-  val searchRoute: SearchRoute = new SearchRoute(Modules.searchService)
-  val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
-  val tagRoute: TagRoute = new TagRoute(Modules.tagService, Modules.articleService)
+  val searchRoute = new SearchRoute(Modules.searchService)
+  val sitemapRoute = new SitemapRoute(Modules.sitemapService)
+  val tagRoute = new TagRoute(Modules.tagService, Modules.articleService)
 
   logger.info("created all instances")
 
-  val router: net.yoshinorin.qualtet.http.Router = new net.yoshinorin.qualtet.http.Router(
+  val router = new net.yoshinorin.qualtet.http.Router(
     authProvider,
     apiStatusRoute,
     archiveRoute,

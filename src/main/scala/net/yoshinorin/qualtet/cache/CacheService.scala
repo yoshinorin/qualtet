@@ -6,10 +6,10 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import org.slf4j.LoggerFactory
 
-class CacheService(
-  sitemapService: SitemapService,
-  contentTypeService: ContentTypeService,
-  feedService: FeedService
+class CacheService[F[_]](
+  sitemapService: SitemapService[F],
+  contentTypeService: ContentTypeService[F],
+  feedService: FeedService[F]
 ) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

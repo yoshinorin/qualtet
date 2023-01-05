@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.archives
 
 import cats.effect.IO
-import doobie.ConnectionIO
 import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
@@ -10,10 +9,11 @@ import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.syntax._
+import cats.Monad
 
-class ArchiveService(
-  archiveRepository: ArchiveRepository[ConnectionIO],
-  contentTypeService: ContentTypeService
+class ArchiveService[F[_]: Monad](
+  archiveRepository: ArchiveRepository[F],
+  contentTypeService: ContentTypeService[F]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def actions(contentTypeId: ContentTypeId): Action[Seq[ResponseArchive]] = {

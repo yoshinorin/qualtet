@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.authors
 
 import cats.effect.IO
-import doobie.ConnectionIO
+import cats.Monad
 import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
@@ -9,8 +9,8 @@ import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.syntax._
 
-class AuthorService(
-  authorRepository: AuthorRepository[ConnectionIO]
+class AuthorService[F[_]: Monad](
+  authorRepository: AuthorRepository[F]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def upsertActions(data: Author): Action[Int] = {

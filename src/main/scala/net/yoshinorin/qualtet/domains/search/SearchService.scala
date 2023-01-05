@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.search
 
 import cats.effect.IO
-import doobie.ConnectionIO
+import cats.Monad
 import doobie.util.transactor.Transactor.Aux
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.actions.Action._
@@ -17,8 +17,8 @@ import net.yoshinorin.qualtet.syntax._
 import scala.util.Try
 import scala.annotation.tailrec
 
-class SearchService(
-  searchRepository: SearchRepository[ConnectionIO]
+class SearchService[F[_]: Monad](
+  searchRepository: SearchRepository[F]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
 import cats.effect.IO
-import doobie.ConnectionIO
+import cats.Monad
 import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.actions.Action._
@@ -11,8 +11,8 @@ import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.domains.Cacheable
 
-class ContentTypeService(
-  contentRepository: ContentTypeRepository[ConnectionIO],
+class ContentTypeService[F[_]: Monad](
+  contentRepository: ContentTypeRepository[F],
   cache: CacheModule[String, ContentType]
 )(dbContext: DataBaseContext[Aux[IO, Unit]])
     extends Cacheable {

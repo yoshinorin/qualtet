@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http
 
+import cats.Monad
 import cats.effect._, cats.implicits._
 import org.http4s.headers.Allow
 import org.http4s.HttpRoutes
@@ -27,21 +28,21 @@ import net.yoshinorin.qualtet.syntax._
 
 import scala.util.Try
 
-class Router(
-  authProvider: AuthProvider,
+class Router[F[_]: Monad](
+  authProvider: AuthProvider[F],
   apiStatusRoute: ApiStatusRoute,
-  archiveRoute: ArchiveRoute,
-  articleRoute: ArticleRoute,
-  authorRoute: AuthorRoute,
-  authRoute: AuthRoute,
-  cacheRoute: CacheRoute,
-  contentRoute: ContentRoute,
-  contentTypeRoute: ContentTypeRoute,
-  feedRoute: FeedRoute,
+  archiveRoute: ArchiveRoute[F],
+  articleRoute: ArticleRoute[F],
+  authorRoute: AuthorRoute[F],
+  authRoute: AuthRoute[F],
+  cacheRoute: CacheRoute[F],
+  contentRoute: ContentRoute[F],
+  contentTypeRoute: ContentTypeRoute[F],
+  feedRoute: FeedRoute[F],
   homeRoute: HomeRoute,
-  searchRoute: SearchRoute,
-  sitemapRoute: SitemapRoute,
-  tagRoute: TagRoute
+  searchRoute: SearchRoute[F],
+  sitemapRoute: SitemapRoute[F],
+  tagRoute: TagRoute[F]
 ) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

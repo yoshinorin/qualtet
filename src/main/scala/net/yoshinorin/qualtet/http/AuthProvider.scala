@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http
 
 import cats.effect.IO
+import cats.Monad
 import cats.data.Kleisli
 import cats.data.OptionT
 import org.http4s.server._
@@ -13,8 +14,8 @@ import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
 import net.yoshinorin.qualtet.syntax._
 
-class AuthProvider(
-  authService: AuthService
+class AuthProvider[F[_]: Monad](
+  authService: AuthService[F]
 ) {
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 

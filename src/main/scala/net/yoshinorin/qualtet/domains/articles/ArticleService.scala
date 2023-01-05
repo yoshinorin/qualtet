@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.articles
 
 import cats.effect.IO
-import doobie.ConnectionIO
+import cats.Monad
 import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
@@ -12,9 +12,9 @@ import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 
-class ArticleService(
-  articleRepository: ArticleRepository[ConnectionIO],
-  contentTypeService: ContentTypeService
+class ArticleService[F[_]: Monad](
+  articleRepository: ArticleRepository[F],
+  contentTypeService: ContentTypeService[F]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def actions(

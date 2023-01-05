@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
 import cats.effect.IO
-import doobie.ConnectionIO
+import cats.Monad
 import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
@@ -10,8 +10,8 @@ import net.yoshinorin.qualtet.domains.tags.TagId
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 
-class ContentTaggingService(
-  contentTaggingRepository: ContentTaggingRepository[ConnectionIO]
+class ContentTaggingService[F[_]: Monad](
+  contentTaggingRepository: ContentTaggingRepository[F]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def findByTagIdActions(id: TagId): Action[Seq[ContentTagging]] = {

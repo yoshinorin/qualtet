@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
+import cats.Monad
 import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
@@ -9,8 +10,8 @@ import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount._
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.syntax._
 
-class ArticleRoute(
-  articleService: ArticleService
+class ArticleRoute[F[_]: Monad](
+  articleService: ArticleService[F]
 ) {
 
   // articles?page=n&limit=m

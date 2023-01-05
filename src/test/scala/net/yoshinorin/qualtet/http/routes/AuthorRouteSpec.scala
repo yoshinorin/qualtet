@@ -15,7 +15,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.AuthorRouteSpec
 class AuthorRouteSpec extends AnyWordSpec {
 
-  val authorRoute: AuthorRoute = new AuthorRoute(authorService)
+  val authorRoute = new AuthorRoute(authorService)
 
   val a: ResponseAuthor = authorService.findByName(AuthorName(author.name.value)).unsafeRunSync().get
   val a2: ResponseAuthor = authorService.findByName(AuthorName(author2.name.value)).unsafeRunSync().get

@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect._
+import cats.Monad
 import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
@@ -8,8 +9,8 @@ import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.search.SearchService
 import net.yoshinorin.qualtet.syntax._
 
-class SearchRoute(
-  searchService: SearchService
+class SearchRoute[F[_]: Monad](
+  searchService: SearchService[F]
 ) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

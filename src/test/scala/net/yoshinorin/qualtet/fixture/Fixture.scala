@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.fixture
 
+import cats.Monad
 import org.http4s.Uri
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
@@ -13,7 +14,7 @@ import net.yoshinorin.qualtet.domains.contents._
 import net.yoshinorin.qualtet.domains.contentTypes._
 import net.yoshinorin.qualtet.domains.externalResources._
 import net.yoshinorin.qualtet.domains.robots._
-import net.yoshinorin.qualtet.domains.sitemaps.{SitemapsRepositoryDoobieImpl, SitemapService, Url}
+import net.yoshinorin.qualtet.domains.sitemaps.{SitemapsRepositoryDoobieInterpreter, SitemapService, Url}
 import net.yoshinorin.qualtet.domains.tags._
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
@@ -53,34 +54,34 @@ object Fixture {
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService: ContentTypeService = new ContentTypeService(Modules.contentTypeRepository, contentTypeCache)(Modules.dbContext)
+  val contentTypeService = new ContentTypeService(Modules.contentTypeRepository, contentTypeCache)(Modules.dbContext)
 
-  val sitemapRepository: SitemapsRepositoryDoobieImpl = new SitemapsRepositoryDoobieImpl()
+  val sitemapRepository: SitemapsRepositoryDoobieInterpreter = new SitemapsRepositoryDoobieInterpreter()
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService: SitemapService = new SitemapService(sitemapRepository, sitemapCache)(Modules.dbContext)
+  val sitemapService = new SitemapService(sitemapRepository, sitemapCache)(Modules.dbContext)
 
   val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
   val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
-  val feedService: FeedService = new FeedService(feedCache, Modules.articleService)
+  val feedService = new FeedService(feedCache, Modules.articleService)
 
-  val authProvider: AuthProvider = new AuthProvider(Modules.authService)
+  val authProvider = new AuthProvider(Modules.authService)
 
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
-  val archiveRoute: ArchiveRoute = new ArchiveRoute(Modules.archiveService)
-  val articleRoute: ArticleRoute = new ArticleRoute(Modules.articleService)
-  val authorRoute: AuthorRoute = new AuthorRoute(Modules.authorService)
-  val authRoute: AuthRoute = new AuthRoute(Modules.authService)
-  val cacheRoute: CacheRoute = new CacheRoute(Modules.cacheService)
-  val contentTypeRoute: ContentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
-  val contentRoute: ContentRoute = new ContentRoute(Modules.contentService)
-  val feedRoute: FeedRoute = new FeedRoute(Modules.feedService)
+  val archiveRoute = new ArchiveRoute(Modules.archiveService)
+  val articleRoute = new ArticleRoute(Modules.articleService)
+  val authorRoute = new AuthorRoute(Modules.authorService)
+  val authRoute = new AuthRoute(Modules.authService)
+  val cacheRoute = new CacheRoute(Modules.cacheService)
+  val contentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
+  val contentRoute = new ContentRoute(Modules.contentService)
+  val feedRoute = new FeedRoute(Modules.feedService)
   val homeRoute: HomeRoute = new HomeRoute()
-  val searchRoute: SearchRoute = new SearchRoute(Modules.searchService)
-  val sitemapRoute: SitemapRoute = new SitemapRoute(Modules.sitemapService)
-  val tagRoute: TagRoute = new TagRoute(Modules.tagService, Modules.articleService)
+  val searchRoute = new SearchRoute(Modules.searchService)
+  val sitemapRoute = new SitemapRoute(Modules.sitemapService)
+  val tagRoute = new TagRoute(Modules.tagService, Modules.articleService)
 
   val router = new net.yoshinorin.qualtet.http.Router(
     authProvider,
@@ -99,21 +100,21 @@ object Fixture {
     tagRoute
   )
 
-  def makeRouter(
-    authProvider: AuthProvider = authProvider,
+  def makeRouter[F[_]: Monad](
+    authProvider: AuthProvider[F] = authProvider,
     apiStatusRoute: ApiStatusRoute = apiStatusRoute,
-    archiveRoute: ArchiveRoute = archiveRoute,
-    articleRoute: ArticleRoute = articleRoute,
-    authorRoute: AuthorRoute = authorRoute,
-    authRoute: AuthRoute = authRoute,
-    cacheRoute: CacheRoute = cacheRoute,
-    contentRoute: ContentRoute = contentRoute,
-    contentTypeRoute: ContentTypeRoute = contentTypeRoute,
-    feedRoute: FeedRoute = feedRoute,
+    archiveRoute: ArchiveRoute[F] = archiveRoute,
+    articleRoute: ArticleRoute[F] = articleRoute,
+    authorRoute: AuthorRoute[F] = authorRoute,
+    authRoute: AuthRoute[F] = authRoute,
+    cacheRoute: CacheRoute[F] = cacheRoute,
+    contentRoute: ContentRoute[F] = contentRoute,
+    contentTypeRoute: ContentTypeRoute[F] = contentTypeRoute,
+    feedRoute: FeedRoute[F] = feedRoute,
     homeRoute: HomeRoute = homeRoute,
-    searchRoute: SearchRoute = searchRoute,
-    sitemapRoute: SitemapRoute = sitemapRoute,
-    tagRoute: TagRoute = tagRoute
+    searchRoute: SearchRoute[F] = searchRoute,
+    sitemapRoute: SitemapRoute[F] = sitemapRoute,
+    tagRoute: TagRoute[F] = tagRoute
   ) = new net.yoshinorin.qualtet.http.Router(
     authProvider = authProvider,
     apiStatusRoute = apiStatusRoute,
