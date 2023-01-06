@@ -33,15 +33,6 @@ inThisBuild(
   )
 )
 
-// https://www.wartremover.org/
-Compile / compile / wartremoverWarnings ++= Warts.allBut(
-  Wart.StringPlusAny,
-  Wart.Throw,
-  Wart.DefaultArguments,
-  Wart.Overloading,
-  Wart.Nothing
-)
-
 // https://github.com/rtimush/sbt-updates
 dependencyAllowPreRelease := true
 
@@ -57,6 +48,9 @@ lazy val root = (project in file("."))
   )
   .settings(
     libraryDependencies ++= Dependencies.dependencies
+  )
+  .settings(
+    Compile / compile / wartremoverWarnings ++= Wartremover.rules
   )
   .settings(
     assembly / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
