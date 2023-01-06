@@ -54,7 +54,21 @@ lazy val root = (project in file("."))
   )
   .settings(
     assembly / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
-    // assembly /assemblyJarName := "qualtet.jar"
+  )
+  .settings(
+    // for Scaladoc3
+    Compile / doc / target := file("./docs/dist"),
+    Compile / doc / scalacOptions ++= Seq(
+      "-project", "Qualtet",
+      "-siteroot", "docs",
+      "-social-links:github::https://github.com/yoshinorin/qualtet",
+      "-author",
+      "-project-version", version.value,
+      "-project-footer", "Copyright (c) 2022 @yoshinorin",
+      "-groups",
+      "-default-template", "static-site-main",
+      "-revision", "master"
+    )
   )
 
 reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
@@ -65,8 +79,6 @@ assembly / test := {}
 // https://github.com/sbt/sbt-assembly#merge-strategy
 // https://github.com/sbt/sbt-assembly/issues/146#issuecomment-601134577
 assembly / assemblyMergeStrategy := {
-  // case PathList("spring-beans-5.3.14.jar", xs @ _*) => MergeStrategy.last
-  // case PathList("spring-context-5.3.14.jar", xs @ _*) => MergeStrategy.last
   case x if Assembly.isConfigFile(x) =>
     MergeStrategy.concat
   case PathList(ps @ _*) if Assembly.isReadme(ps.last) || Assembly.isLicenseFile(ps.last) =>
@@ -156,17 +168,3 @@ addCommandAlias("runs", startServerCommands)
 
 coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration;"
 //org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
-
-// for Scaladoc3
-Compile / doc / target := file("./docs/dist")
-Compile / doc / scalacOptions ++= Seq(
-  "-project", "Qualtet",
-  "-siteroot", "docs",
-  "-social-links:github::https://github.com/yoshinorin/qualtet",
-  "-author",
-  "-project-version", version.value,
-  "-project-footer", "Copyright (c) 2022 @yoshinorin",
-  "-groups",
-  "-default-template", "static-site-main",
-  "-revision", "master"
-)
