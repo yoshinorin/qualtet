@@ -42,41 +42,8 @@ Compile / compile / wartremoverWarnings ++= Warts.allBut(
   Wart.Nothing
 )
 
-val jsoniterVersion = "2.20.1"
-val doobieVersion = "1.0.0-RC2"
-val jwtScalaVersion = "9.1.2"
-val flywayVersion = "9.11.0"
-val http4sVersion = "1.0.0-M38"
-
 // https://github.com/rtimush/sbt-updates
 dependencyAllowPreRelease := true
-libraryDependencies ++= Seq(
-  "com.typesafe" % "config" % "1.4.2",
-  // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4, but cats-effect keep fully compatibility with 3.x
-  "org.typelevel" %% "cats-effect" % "3.4.4",
-  "org.http4s" %% "http4s-dsl" % http4sVersion,
-  "org.http4s" %% "http4s-ember-server" % http4sVersion,
-  "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
-  "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
-  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
-  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
-  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "test-internal",
-  "org.mariadb.jdbc" % "mariadb-java-client" % "3.1.0",
-  "org.tpolecat" %% "doobie-core" % doobieVersion,
-  "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-  "org.wvlet.airframe" %% "airframe-ulid" % "22.12.6",
-  "com.github.ben-manes.caffeine" % "caffeine" % "3.1.2",
-  "org.flywaydb" % "flyway-core" % flywayVersion,
-  // NOTE: workaround: https://github.com/flyway/flyway/issues/3355
-  "org.flywaydb" % "flyway-mysql" % flywayVersion,
-  "ch.qos.logback" % "logback-classic" % "1.4.5",
-  "net.logstash.logback" % "logstash-logback-encoder" % "7.2",
-  "org.codehaus.janino" % "janino" % "3.1.9",
-  "org.springframework.security" % "spring-security-core" % "6.0.1",
-  "org.slf4j" % "slf4j-api" % "2.0.6",
-  "org.scalatest" %% "scalatest" % "3.2.14" % "test",
-  "org.mockito" % "mockito-core" % "4.11.0" % "test"
-)
 
 val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
 lazy val root = (project in file("."))
@@ -87,6 +54,9 @@ lazy val root = (project in file("."))
       val task = (Compile / runMain).toTask(s" net.yoshinorin.qualtet.tasks.CreateAuthor ${args.mkString(" ")}")
       task
     }.evaluated
+  )
+  .settings(
+    libraryDependencies ++= Dependencies.dependencies
   )
   .settings(
     assembly / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
