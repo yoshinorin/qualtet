@@ -22,7 +22,6 @@ import net.yoshinorin.qualtet.http.routes.{
   SitemapRoute,
   TagRoute
 }
-import net.yoshinorin.qualtet.infrastructure.db.Migration
 import net.yoshinorin.qualtet.http.routes.CacheRoute
 import org.http4s.ember.server.EmberServerBuilder
 import com.comcast.ip4s._
@@ -35,7 +34,7 @@ object BootStrap extends IOApp {
 
   logger.info("booting...")
 
-  Migration.migrate(Modules.contentTypeService)
+  Modules.migrator.migrate(Modules.contentTypeService)
 
   val authProvider = new AuthProvider(Modules.authService)
 

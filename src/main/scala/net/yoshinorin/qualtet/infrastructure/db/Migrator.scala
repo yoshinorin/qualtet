@@ -7,7 +7,7 @@ import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.FluentConfiguration
 import cats.effect.unsafe.implicits.global
 
-object Migration {
+class Migrator {
 
   private[this] val flywayConfig: FluentConfiguration = Flyway.configure().dataSource(Config.dbUrl, Config.dbUser, Config.dbPassword)
   private[this] val flyway: Flyway = new Flyway(flywayConfig)

@@ -22,6 +22,7 @@ import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
+import net.yoshinorin.qualtet.infrastructure.db.Migrator
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 import pdi.jwt.JwtAlgorithm
@@ -31,6 +32,8 @@ import java.util.concurrent.TimeUnit
 object Modules {
 
   implicit val dbContext: DoobieContext = new DoobieContext()
+
+  val migrator: Migrator = new Migrator()
 
   // NOTE: for generate JWT. They are reset when re-boot application.
   val keyPair: KeyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)

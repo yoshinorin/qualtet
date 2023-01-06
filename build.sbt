@@ -128,7 +128,7 @@ val testCommands = {
     |;scalafmt
     |;Test / scalafmt
     |;runTestDbContainer
-    |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigrationSpec
+    |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
     |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
     |;test
     |;shutDownTestDbContainer
@@ -140,7 +140,7 @@ addCommandAlias("testWithDB", testCommands)
 // NOTE: Sometimes I want to run testOnly xyz manually.
 val testEnvCommands = {
   """;runTestDbContainer
-    |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigrationSpec
+    |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
     |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
     |""".stripMargin
 }
@@ -166,5 +166,5 @@ val startServerCommands = {
 }
 addCommandAlias("runs", startServerCommands)
 
-coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migration;"
+coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migrator;"
 //org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
