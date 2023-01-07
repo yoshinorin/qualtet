@@ -2,11 +2,11 @@ package net.yoshinorin.qualtet.config
 
 import com.typesafe.config.{Config => TypeSafeConfig, ConfigFactory}
 
-case class DBConfig(url: String, user: String, password: String)
-case class HttpConfig(host: String, port: Int)
-case class JwtConfig(iss: String, aud: String, expiration: Long)
-case class CacheConfig(contentType: Long, sitemap: Long, feed: Long)
-case class ApplicationConfig(
+final case class DBConfig(url: String, user: String, password: String)
+final case class HttpConfig(host: String, port: Int)
+final case class JwtConfig(iss: String, aud: String, expiration: Long)
+final case class CacheConfig(contentType: Long, sitemap: Long, feed: Long)
+final case class ApplicationConfig(
   db: DBConfig,
   http: HttpConfig,
   jwt: JwtConfig,
