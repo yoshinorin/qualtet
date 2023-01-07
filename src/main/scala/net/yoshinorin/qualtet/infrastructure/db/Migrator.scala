@@ -1,15 +1,15 @@
 package net.yoshinorin.qualtet.infrastructure.db
 
 import cats.Monad
-import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.config.DBConfig
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.FluentConfiguration
 import cats.effect.unsafe.implicits.global
 
-class Migrator {
+class Migrator(config: DBConfig) {
 
-  private[this] val flywayConfig: FluentConfiguration = Flyway.configure().dataSource(Config.dbUrl, Config.dbUser, Config.dbPassword)
+  private[this] val flywayConfig: FluentConfiguration = Flyway.configure().dataSource(config.url, config.user, config.password)
   private[this] val flyway: Flyway = new Flyway(flywayConfig)
 
   /**

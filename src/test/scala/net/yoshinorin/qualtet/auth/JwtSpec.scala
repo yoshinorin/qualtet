@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.auth
 
-import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
 import net.yoshinorin.qualtet.Modules._
@@ -19,8 +18,8 @@ import java.time.Instant
 class JwtSpec extends AnyWordSpec {
 
   val jc: JwtClaim = JwtClaim(
-    iss = Config.jwtIss,
-    aud = Config.jwtAud,
+    iss = config.jwt.iss,
+    aud = config.jwt.aud,
     sub = "01fy9g4m9wsg7frfct8m5rtxz0",
     jti = "01fy9g4n10sf2vxmhmxq7h9x42",
     exp = Instant.now.getEpochSecond,
@@ -41,8 +40,8 @@ class JwtSpec extends AnyWordSpec {
 
       jwtInstance.decode(jwtString).unsafeRunSync() match {
         case Right(j) => {
-          assert(j.iss === Config.jwtIss)
-          assert(j.aud === Config.jwtAud)
+          assert(j.iss === config.jwt.iss)
+          assert(j.aud === config.jwt.aud)
           assert(j.sub === id)
 
         }
@@ -61,8 +60,8 @@ class JwtSpec extends AnyWordSpec {
     }
 
     "be return Right if JWT is correct" in {
-      assert(Validator.validate(jc)(x => x.aud === Config.jwtAud)(Unauthorized()).value.unsafeRunSync().isRight)
-      assert(Validator.validate(jc)(x => x.iss === Config.jwtIss)(Unauthorized()).value.unsafeRunSync().isRight)
+      assert(Validator.validate(jc)(x => x.aud === config.jwt.aud)(Unauthorized()).value.unsafeRunSync().isRight)
+      assert(Validator.validate(jc)(x => x.iss === config.jwt.iss)(Unauthorized()).value.unsafeRunSync().isRight)
       assert(Validator.validate(jc)(x => x.exp > Instant.now.getEpochSecond - 1000)(Unauthorized()).value.unsafeRunSync().isRight)
     }
 
@@ -74,9 +73,9 @@ class JwtSpec extends AnyWordSpec {
 
     "be return Left if JWT is incorrect in for-comprehension: pattern-one" in {
       val r = for {
-        _ <- Validator.validate(jc)(x => x.aud === Config.jwtAud)(Unauthorized())
-        _ <- Validator.validate(jc)(x => x.iss === Config.jwtIss)(Unauthorized())
-        result <- Validator.validate(jc)(x => x.exp > (x.exp + Config.jwtExpiration + 1))(Unauthorized())
+        _ <- Validator.validate(jc)(x => x.aud === config.jwt.aud)(Unauthorized())
+        _ <- Validator.validate(jc)(x => x.iss === config.jwt.iss)(Unauthorized())
+        result <- Validator.validate(jc)(x => x.exp > (x.exp + config.jwt.expiration + 1))(Unauthorized())
       } yield result
 
       assert(r.value.unsafeRunSync().isLeft)
@@ -84,7 +83,7 @@ class JwtSpec extends AnyWordSpec {
 
     "be return Left if JWT is incorrect in for-comprehension: pattern-two" in {
       val r = for {
-        _ <- Validator.validate(jc)(x => x.aud === Config.jwtAud)(Unauthorized())
+        _ <- Validator.validate(jc)(x => x.aud === config.jwt.aud)(Unauthorized())
         _ <- Validator.validate(jc)(x => x.iss === "incorrect iss")(Unauthorized())
         result <- Validator.validate(jc)(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
       } yield result
@@ -95,7 +94,7 @@ class JwtSpec extends AnyWordSpec {
     "be return Left if JWT is incorrect in for-comprehension: pattern-three" in {
       val r = for {
         _ <- Validator.validate(jc)(x => x.aud === "incorrect aud")(Unauthorized())
-        _ <- Validator.validate(jc)(x => x.iss === Config.jwtIss)(Unauthorized())
+        _ <- Validator.validate(jc)(x => x.iss === config.jwt.iss)(Unauthorized())
         result <- Validator.validate(jc)(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
       } yield result
 

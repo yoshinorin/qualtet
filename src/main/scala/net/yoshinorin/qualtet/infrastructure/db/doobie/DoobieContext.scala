@@ -5,10 +5,10 @@ import scala.concurrent.ExecutionContextExecutor
 import doobie._
 import doobie.util.transactor.Transactor.Aux
 import cats.effect._
-import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.config.DBConfig
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 
-class DoobieContext extends DataBaseContext[Aux[IO, Unit]] {
+class DoobieContext(config: DBConfig) extends DataBaseContext[Aux[IO, Unit]] {
 
   val executors: ExecutorService = Executors.newCachedThreadPool()
   val executionContexts: ExecutionContextExecutor = scala.concurrent.ExecutionContext.fromExecutor(executors)
@@ -18,9 +18,9 @@ class DoobieContext extends DataBaseContext[Aux[IO, Unit]] {
 
   val transactor: Aux[IO, Unit] = Transactor.fromDriverManager[IO](
     "org.mariadb.jdbc.Driver",
-    Config.dbUrl,
-    Config.dbUser,
-    Config.dbPassword
+    config.url,
+    config.user,
+    config.password
   )
 
 }

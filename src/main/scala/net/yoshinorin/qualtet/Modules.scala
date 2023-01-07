@@ -5,7 +5,7 @@ import doobie.util.transactor.Transactor.Aux
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepositoryDoobieInterpreter, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.{ArticleRepositoryDoobieInterpreter, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepositoryDoobieInterpreter, AuthorService}
@@ -31,15 +31,16 @@ import java.util.concurrent.TimeUnit
 
 object Modules {
 
-  implicit val dbContext: DoobieContext = new DoobieContext()
+  val config = ApplicationConfig.load
 
-  val migrator: Migrator = new Migrator()
+  implicit val dbContext: DoobieContext = new DoobieContext(config.db)
+  val migrator: Migrator = new Migrator(config.db)
 
   // NOTE: for generate JWT. They are reset when re-boot application.
   val keyPair: KeyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
   val message: Array[Byte] = SecureRandom.getInstanceStrong.toString.getBytes("UTF-8")
   val signature: Signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
-  val jwtInstance: Jwt = new Jwt(JwtAlgorithm.RS256, keyPair, signature)
+  val jwtInstance: Jwt = new Jwt(config.jwt, JwtAlgorithm.RS256, keyPair, signature)
 
   val authorRepository: AuthorRepositoryDoobieInterpreter = new AuthorRepositoryDoobieInterpreter()
   val authorService = new AuthorService(authorRepository)(dbContext)
@@ -48,7 +49,7 @@ object Modules {
 
   val contentTypeRepository: ContentTypeRepositoryDoobieInterpreter = new ContentTypeRepositoryDoobieInterpreter()
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
-    Caffeine.newBuilder().expireAfterAccess(Config.cacheContentType, TimeUnit.SECONDS).build[String, ContentType]
+    Caffeine.newBuilder().expireAfterAccess(config.cache.contentType, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache: CacheModule[String, ContentType] = new CacheModule[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)(dbContext)
 
@@ -87,12 +88,12 @@ object Modules {
 
   val sitemapRepository: SitemapsRepositoryDoobieInterpreter = new SitemapsRepositoryDoobieInterpreter()
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
-    Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
+    Caffeine.newBuilder().expireAfterAccess(config.cache.sitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService = new SitemapService(sitemapRepository, sitemapCache)(dbContext)
 
   val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
-    Caffeine.newBuilder().expireAfterAccess(Config.cacheSitemap, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
+    Caffeine.newBuilder().expireAfterAccess(config.cache.sitemap, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
   val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
   val feedService = new FeedService(feedCache, articleService)
 

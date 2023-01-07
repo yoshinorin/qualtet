@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, AuthorRepositoryDoobieInterpreter, AuthorService, BCryptPassword}
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.Modules._
 import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 
@@ -17,7 +18,7 @@ object CreateAuthor {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  implicit val dbContext: DoobieContext = new DoobieContext()
+  implicit val dbContext: DoobieContext = new DoobieContext(config.db)
   val authorRepository: AuthorRepositoryDoobieInterpreter = new AuthorRepositoryDoobieInterpreter()
   val authorService = new AuthorService(authorRepository)(dbContext)
 

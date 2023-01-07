@@ -11,7 +11,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.auth.AuthServiceSpec
 class AuthServiceSpec extends AnyWordSpec {
 
-  implicit val dbContext: DoobieContext = new DoobieContext()
+  implicit val dbContext: DoobieContext = new DoobieContext(config.db)
 
   val a: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val a2: ResponseAuthor = authorService.findByName(author2.name).unsafeRunSync().get

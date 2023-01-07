@@ -4,7 +4,7 @@ import cats.effect.IO
 import cats.implicits.catsSyntaxEq
 import com.github.plokhotnyuk.jsoniter_scala.macros._
 import com.github.plokhotnyuk.jsoniter_scala.core._
-import net.yoshinorin.qualtet.config.Config
+import net.yoshinorin.qualtet.config.JwtConfig
 import net.yoshinorin.qualtet.domains.authors.Author
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
 import net.yoshinorin.qualtet.syntax._
@@ -29,7 +29,7 @@ object JwtClaim {
   implicit val codecJwtClaim: JsonValueCodec[JwtClaim] = JsonCodecMaker.make
 }
 
-class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signature) {
+class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signature) {
 
   import JwtClaim._
 
@@ -43,11 +43,11 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
    */
   def encode(author: Author): String = {
     val claim = pdi.jwt.JwtClaim(
-      issuer = Some(Config.jwtIss),
-      audience = Some(Set(Config.jwtAud)),
+      issuer = Some(config.iss),
+      audience = Some(Set(config.aud)),
       subject = Some(author.id.value),
       jwtId = Some(ULID.newULIDString.toLower),
-      expiration = Some(Instant.now.plusSeconds(Config.jwtExpiration).getEpochSecond),
+      expiration = Some(Instant.now.plusSeconds(config.expiration).getEpochSecond),
       issuedAt = Some(Instant.now.getEpochSecond)
     )
     pdi.jwt.Jwt.encode(claim, signature.signedPrivateKey, algorithm)
@@ -81,8 +81,8 @@ class Jwt(algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signat
         IO(Left(t))
       case Right(jc) => {
         (for {
-          _ <- jc.toEitherIO(x => x.aud === Config.jwtAud)(Unauthorized())
-          _ <- jc.toEitherIO(x => x.iss === Config.jwtIss)(Unauthorized())
+          _ <- jc.toEitherIO(x => x.aud === config.aud)(Unauthorized())
+          _ <- jc.toEitherIO(x => x.iss === config.iss)(Unauthorized())
           result <- jc.toEitherIO(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
         } yield result).value
       }

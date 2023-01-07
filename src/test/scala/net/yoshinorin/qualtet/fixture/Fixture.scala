@@ -6,7 +6,6 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.domains.archives._
 import net.yoshinorin.qualtet.domains.articles._
 import net.yoshinorin.qualtet.domains.authors._
@@ -46,8 +45,8 @@ object Fixture {
     ULID.newULIDString.toLower
   }
 
-  val h: String = Config.httpHost
-  val p: String = Config.httpPort.toString()
+  val h: String = Modules.config.http.host
+  val p: String = Modules.config.http.port.toString()
   val host = Uri.unsafeFromString(s"http://${h}:${p}")
 
   // TODO: from config for cache options

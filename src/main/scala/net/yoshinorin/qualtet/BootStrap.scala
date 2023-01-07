@@ -6,7 +6,6 @@ import cats.effect.IO
 import org.http4s._
 import org.http4s.server.middleware.Logger
 import org.slf4j.LoggerFactory
-import net.yoshinorin.qualtet.config.Config
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
@@ -79,8 +78,8 @@ object BootStrap extends IOApp {
     logger.info("starting http server...")
     EmberServerBuilder
       .default[IO]
-      .withHost(Ipv4Address.fromString(Config.httpHost).get)
-      .withPort(Port.fromInt(Config.httpPort).get)
+      .withHost(Ipv4Address.fromString(Modules.config.http.host).get)
+      .withPort(Port.fromInt(Modules.config.http.port).get)
       .withHttpApp(httpAppWithLogger)
       .withLogger(org.typelevel.log4cats.slf4j.Slf4jLogger.getLoggerFromSlf4j(logger))
       .build

@@ -76,8 +76,8 @@ object MariaDBSpec {
     val container: MariaDBContainer = new MariaDBContainer(
       dockerImageName = myImage,
       dbName = "qualtet_testing",
-      dbUsername = Config.dbUser,
-      dbPassword = Config.dbPassword
+      dbUsername = config.db.user,
+      dbPassword = config.db.password
     )
  */
 }
