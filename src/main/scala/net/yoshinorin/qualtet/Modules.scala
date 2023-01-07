@@ -93,7 +93,7 @@ object Modules {
   val sitemapService = new SitemapService(sitemapRepository, sitemapCache)(dbContext)
 
   val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
-    Caffeine.newBuilder().expireAfterAccess(config.cache.sitemap, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
+    Caffeine.newBuilder().expireAfterAccess(config.cache.feed, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
   val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
   val feedService = new FeedService(feedCache, articleService)
 
