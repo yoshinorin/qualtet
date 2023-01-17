@@ -43,7 +43,7 @@ class SearchService[F[_]: Monad](
   }
 
   private[search] def positions(words: List[String], sentence: String): Seq[Points] = {
-    words.flatMap(w => sentence.position(w).map(x => x.spread(8, 24, sentence.length)))
+    words.flatMap(w => sentence.position(w).map(x => x.expand(8, 24, sentence.length)))
   }
 
   @tailrec
