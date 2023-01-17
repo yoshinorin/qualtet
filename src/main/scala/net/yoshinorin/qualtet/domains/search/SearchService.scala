@@ -12,6 +12,7 @@ import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.types.Points
 import net.yoshinorin.qualtet.syntax._
 
 import scala.util.Try
@@ -41,12 +42,12 @@ class SearchService[F[_]: Monad](
     }
   }
 
-  private[search] def positions(words: List[String], sentence: String): Seq[(Int, Int)] = {
+  private[search] def positions(words: List[String], sentence: String): Seq[Points] = {
     words.flatMap(w => sentence.position(w).map(x => x.spread(8, 24, sentence.length)))
   }
 
   @tailrec
-  private def calcSubStrRanges(idxes: Seq[(Int, Int)], acc: Seq[(Int, Int)] = Nil): Seq[(Int, Int)] = {
+  private def calcSubStrRanges(idxes: Seq[Points], acc: Seq[Points] = Nil): Seq[Points] = {
     idxes.headOption match {
       case None => acc
       case Some(h) =>
@@ -62,7 +63,7 @@ class SearchService[F[_]: Monad](
   }
 
   @tailrec
-  private def substrRecursively(sentence: String, idxes: Seq[(Int, Int)], current: Int = 0, acc: String = ""): String = {
+  private def substrRecursively(sentence: String, idxes: Seq[Points], current: Int = 0, acc: String = ""): String = {
     if (idxes.sizeIs > current) {
       val currentIdx = idxes(current)
       substrRecursively(

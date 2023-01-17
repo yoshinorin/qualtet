@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import java.util.Locale
+import net.yoshinorin.qualtet.types.Points
 
 trait string {
 
@@ -25,7 +26,7 @@ trait string {
       s2
     }
 
-    def position(word: String): Seq[(Int, Int)] = {
+    def position(word: String): Seq[Points] = {
       word.r.findAllMatchIn(s).map(m => (m.start, m.end)).toSeq
     }
 
