@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Local Checker</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <h1>Local Checker</h1>
+      <ul>
+        <li id="port"></li>
+      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>Result</th>
+            <th>CORS</th>
+            <th>Endpoints</th>
+            <th>Method</th>
+            <th>Status Code</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="status-result">N/A</td>
+            <td id="status-cors">N/A</td>
+            <td>status</td>
+            <td id="status-method">-</td>
+            <td id="status-statuscode">-</td>
+            <td id="status-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="token-result">N/A</td>
+            <td id="token-cors">N/A</td>
+            <td>token</td>
+            <td id="token-method">-</td>
+            <td id="token-statuscode">-</td>
+            <td id="token-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="archives-result">N/A</td>
+            <td id="archives-cors">N/A</td>
+            <td>archives</td>
+            <td id="archives-method">-</td>
+            <td id="archives-statuscode">-</td>
+            <td id="archives-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="articles-result">N/A</td>
+            <td id="articles-cors">N/A</td>
+            <td>articles</td>
+            <td id="articles-method">-</td>
+            <td id="articles-statuscode">-</td>
+            <td id="articles-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="authors-result">N/A</td>
+            <td id="authors-cors">N/A</td>
+            <td>authors</td>
+            <td id="authors-method">-</td>
+            <td id="authors-statuscode">-</td>
+            <td id="authors-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="contents-result">N/A</td>
+            <td id="contents-cors">N/A</td>
+            <td>contents</td>
+            <td id="contents-method">-</td>
+            <td id="contents-statuscode">-</td>
+            <td id="contents-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="tags-result">N/A</td>
+            <td id="tags-cors">N/A</td>
+            <td>tags</td>
+            <td id="tags-method">-</td>
+            <td id="tags-statuscode">-</td>
+            <td id="tags-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="content-types-result">N/A</td>
+            <td id="content-types-cors">N/A</td>
+            <td>content-types</td>
+            <td id="content-types-method">-</td>
+            <td id="content-types-statuscode">-</td>
+            <td id="content-types-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="sitemaps-result">N/A</td>
+            <td id="sitemaps-cors">N/A</td>
+            <td>sitemaps</td>
+            <td id="sitemaps-method">-</td>
+            <td id="sitemaps-statuscode">-</td>
+            <td id="sitemaps-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="feeds-result">N/A</td>
+            <td id="feeds-cors">N/A</td>
+            <td>feed</td>
+            <td id="feeds-method">-</td>
+            <td id="feeds-statuscode">-</td>
+            <td id="feeds-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="cache-result">N/A</td>
+            <td id="cache-cors">N/A</td>
+            <td>cache</td>
+            <td id="cache-method">-</td>
+            <td id="cache-statuscode">-</td>
+            <td id="cache-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="search-result">N/A</td>
+            <td id="search-cors">N/A</td>
+            <td>search</td>
+            <td id="search-method">-</td>
+            <td id="search-statuscode">-</td>
+            <td id="search-remarks">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+  <script>
+    const port = 9001;
+    document.getElementById("port").innerHTML = `port: ${port}`
+    let errors = '';
+
+    const validator = (endpoint, method) => {
+      document.getElementById(`${endpoint}-method`).innerHTML = method;
+      fetch(`http://localhost:9001/${endpoint}`, {
+        method: method
+      })
+      .then((response) => {
+        document.getElementById(`${endpoint}-statuscode`).innerHTML = response.status;
+        document.getElementById(`${endpoint}-result`).style.color = 'white';
+        if (response.status === 200) {
+          document.getElementById(`${endpoint}-result`).innerHTML = 'OK';
+          document.getElementById(`${endpoint}-result`).style.background = 'green';
+        } else {
+          document.getElementById(`${endpoint}-result`).innerHTML = 'NG';
+          document.getElementById(`${endpoint}-result`).style.background = 'red';
+          document.getElementById(`${endpoint}-remarks`).innerHTML = response.body;
+        }
+        document.getElementById(`${endpoint}-cors`).innerHTML = 'OK';
+        document.getElementById(`${endpoint}-cors`).style.color = 'white';
+        document.getElementById(`${endpoint}-cors`).style.background = 'green';
+      })
+      .catch((error) => {
+        document.getElementById(`${endpoint}-result`).innerHTML = 'NG';
+        document.getElementById(`${endpoint}-result`).style.color = 'white';
+        document.getElementById(`${endpoint}-result`).style.background = 'red';
+
+        document.getElementById(`${endpoint}-cors`).innerHTML = 'NG';
+        document.getElementById(`${endpoint}-cors`).style.color = 'white';
+        document.getElementById(`${endpoint}-cors`).style.background = 'red';
+
+        document.getElementById(`${endpoint}-remarks`).innerHTML = error;
+      });
+    }
+
+    validator('status', 'GET');
+    validator('token', 'POST');
+    validator('archives', 'GET');
+    validator('articles', 'GET');
+    validator('authors', 'GET');
+    validator('contents', 'POST');
+    validator('tags', 'GET');
+    validator('content-types', 'GET');
+    validator('sitemaps', 'GET');
+    validator('feeds', 'GET');
+    validator('cache', 'GET');
+    validator('search', 'GET');
+  </script>
+  <style>
+    .wrapper {
+      margin: 4rem 0rem 0rem 4rem;
+    }
+    h1 {
+      font-size: 20px;
+    }
+    table {
+      margin-top: 3rem;
+    }
+    th {
+      padding-right: 3rem;
+    }
+  </style>
+</html>
+
+
