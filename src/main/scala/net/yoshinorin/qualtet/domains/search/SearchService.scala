@@ -31,13 +31,13 @@ class SearchService[F[_]: Monad](
   // TODO: move constant values
   private[search] def validateAndExtractQueryString(query: Map[String, List[String]]): List[String] = {
     val qs = query.getOrElse("q", List()).map(_.trim.toLower)
-    val v: (Boolean, String) => Unit = (b, s) => { if b then throw new UnprocessableEntity(s) else () }
-    v(qs.isEmpty, "SEARCH_QUERY_REQUIRED")
-    v(qs.sizeIs > 3, "TOO_MANY_SEARCH_WORDS")
+    val validator: (Boolean, String) => Unit = (b, s) => { if b then throw new UnprocessableEntity(s) else () }
+    validator(qs.isEmpty, "SEARCH_QUERY_REQUIRED")
+    validator(qs.sizeIs > 3, "TOO_MANY_SEARCH_WORDS")
     qs.map { q =>
-      v(q.hasIgnoreChars, "INVALID_CHARS_INCLUDED")
-      v(q.length < 4, "SEARCH_CHAR_LENGTH_TOO_SHORT")
-      v(q.length > 15, "SEARCH_CHAR_LENGTH_TOO_LONG")
+      validator(q.hasIgnoreChars, "INVALID_CHARS_INCLUDED")
+      validator(q.length < 4, "SEARCH_CHAR_LENGTH_TOO_SHORT")
+      validator(q.length > 15, "SEARCH_CHAR_LENGTH_TOO_LONG")
       q
     }
   }
