@@ -29,6 +29,12 @@ class ConfigSpec extends AnyWordSpec {
       assert(config.cache.sitemap === 3601)
       assert(config.cache.feed === 7200)
     }
+
+    "search configuration gettable from application.conf" in {
+      assert(config.search.maxWords === 3)
+      assert(config.search.minWordLength === 4)
+      assert(config.search.maxWordLength === 15)
+    }
   }
 
 }

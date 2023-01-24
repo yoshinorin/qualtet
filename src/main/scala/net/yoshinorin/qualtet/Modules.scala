@@ -66,7 +66,7 @@ object Modules {
   val tagService = new TagService(tagRepository, contentTaggingService)(dbContext)
 
   val searchRepository: SearchRepositoryDoobieInterpreter = new SearchRepositoryDoobieInterpreter()
-  val searchService = new SearchService(searchRepository)(dbContext)
+  val searchService = new SearchService(config.search, searchRepository)(dbContext)
 
   val contentRepository: ContentRepositoryDoobieInterpreter = new ContentRepositoryDoobieInterpreter()
   val contentService =

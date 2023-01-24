@@ -6,6 +6,7 @@ import doobie.util.transactor.Transactor.Aux
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
+import net.yoshinorin.qualtet.config.SearchConfig
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
@@ -19,6 +20,7 @@ import scala.util.Try
 import scala.annotation.tailrec
 
 class SearchService[F[_]: Monad](
+  searchConfig: SearchConfig,
   searchRepository: SearchRepository[F]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
@@ -33,11 +35,11 @@ class SearchService[F[_]: Monad](
     val qs = query.getOrElse("q", List()).map(_.trim.toLower)
     val validator: (Boolean, String) => Unit = (b, s) => { if b then throw new UnprocessableEntity(s) else () }
     validator(qs.isEmpty, "SEARCH_QUERY_REQUIRED")
-    validator(qs.sizeIs > 3, "TOO_MANY_SEARCH_WORDS")
+    validator(qs.sizeIs > searchConfig.maxWords, "TOO_MANY_SEARCH_WORDS")
     qs.map { q =>
       validator(q.hasIgnoreChars, "INVALID_CHARS_INCLUDED")
-      validator(q.length < 4, "SEARCH_CHAR_LENGTH_TOO_SHORT")
-      validator(q.length > 15, "SEARCH_CHAR_LENGTH_TOO_LONG")
+      validator(q.length < searchConfig.minWordLength, "SEARCH_CHAR_LENGTH_TOO_SHORT")
+      validator(q.length > searchConfig.maxWordLength, "SEARCH_CHAR_LENGTH_TOO_LONG")
       q
     }
   }

@@ -50,6 +50,16 @@ Some of endpoint has in-memory cache.
 |`QUALTET_CACHE_SITEMAP `|sitemap cache (sec)|`int`|`3600`|-|
 |`QUALTET_CACHE_FEED `|feed cache (sec)|`int`|`7200`|-|
 
+### Search
+
+Qualtet using `full-text-search`. So, please specify `--innodb-ft-min-token-size=<n>` on your MariaDB.
+
+|Property|Description|Type|Default|Example|
+|---|---|---|---|---|
+|`QUALTET_SEARCH_MAX_NUM_OF_WORDS `|Maximum specifiable search words|`int`|`3`|-|
+|`QUALTET_SEARCH_WORD_MIN_LENGTH `|Minimum length of search word|`int`|`2`|-|
+|`QUALTET_SEARCH_WORD_MAX_LENGTH `|Maximum length of search word|`int`|`15`|-|
+
 ## Create an author
 
 Qualtet does not support the signup endpoint. Need to create an author with `sbt task`, like below.
