@@ -30,6 +30,22 @@ Qualtet reads all settings from the system environment variable. You have to set
 |`QUALTET_HTTP_BIND_ADDRESS`|Http server bind address.|`string`|`127.0.0.1`|`0.0.0.0`|
 |`QUALTET_HTTP_PORT`|Http server port.|`int`|`9001`|`9001`|
 
+### CORS
+
+|Property|Description|Type|Default|Example|
+|---|---|---|---|---|
+|`QUALTET_CORS_ALLOW_ORIGINS.<n>`|CORS allow origin|`string`|`http://localhost`|`http://localhost:8080`|
+
+Qualtet can specify multiple allow-origins.
+
+```sh
+# example
+export QUALTET_CORS_ALLOW_ORIGINS.0 = "http://localhost:8080"
+export QUALTET_CORS_ALLOW_ORIGINS.1 = "http://127.0.0.1:8080"
+export QUALTET_CORS_ALLOW_ORIGINS.2 = "http://localhost:3000"
+...
+```
+
 ### Authentication
 
 Qualtet uses JWT for auth endpoint. You have to set `ISS` and `AUD` for generationg JWT.

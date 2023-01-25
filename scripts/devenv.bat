@@ -8,3 +8,7 @@ setx QUALTET_HTTP_PORT 9001
 setx QUALTET_JWT_ISS "http://localhost:9001"
 setx QUALTET_JWT_AUD "qualtet_dev_1111"
 
+setx QUALTET_CORS_ALLOW_ORIGINS.0 = "http://localhost:8080"
+setx QUALTET_CORS_ALLOW_ORIGINS.1 = "http://127.0.0.1:8080"
+setx QUALTET_CORS_ALLOW_ORIGINS.2 = "http://localhost:3000"
+setx QUALTET_CORS_ALLOW_ORIGINS.3 = "http://127.0.0.1:8080"

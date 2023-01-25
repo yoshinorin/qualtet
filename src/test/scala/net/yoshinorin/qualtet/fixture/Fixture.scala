@@ -5,6 +5,7 @@ import org.http4s.Uri
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import net.yoshinorin.qualtet.http.AuthProvider
+import net.yoshinorin.qualtet.http.CorsProvider
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.archives._
 import net.yoshinorin.qualtet.domains.articles._
@@ -67,6 +68,7 @@ object Fixture {
   val feedService = new FeedService(feedCache, Modules.articleService)
 
   val authProvider = new AuthProvider(Modules.authService)
+  val corsProvider = new CorsProvider(Modules.config.cors)
 
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val archiveRoute = new ArchiveRoute(Modules.archiveService)
@@ -84,6 +86,7 @@ object Fixture {
 
   val router = new net.yoshinorin.qualtet.http.Router(
     authProvider,
+    corsProvider,
     apiStatusRoute,
     archiveRoute,
     articleRoute,
@@ -116,6 +119,7 @@ object Fixture {
     tagRoute: TagRoute[F] = tagRoute
   ) = new net.yoshinorin.qualtet.http.Router(
     authProvider = authProvider,
+    corsProvider = corsProvider,
     apiStatusRoute = apiStatusRoute,
     archiveRoute = archiveRoute,
     articleRoute = articleRoute,

@@ -7,6 +7,8 @@ import org.http4s.HttpRoutes
 import org.http4s.server.{Router => Http4sRouter}
 import org.http4s._
 import org.http4s.dsl.io._
+import org.http4s.server.middleware._
+import org.http4s.headers.Origin
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.http.routes.{
@@ -30,6 +32,7 @@ import scala.util.Try
 
 class Router[F[_]: Monad](
   authProvider: AuthProvider[F],
+  corsProvider: CorsProvider,
   apiStatusRoute: ApiStatusRoute,
   archiveRoute: ArchiveRoute[F],
   articleRoute: ArticleRoute[F],
@@ -60,20 +63,22 @@ class Router[F[_]: Monad](
     (Some(a.getOrElse(1)), Some(b.getOrElse(10)))
   }
 
+  // val corsService = CORS.policy.withAllowOriginAll(service)
+
   def routes = Http4sRouter(
-    "/" -> home,
-    "/archives" -> archives,
-    "/articles" -> articles,
-    "/authors" -> authors,
-    "/caches" -> caches,
-    "/contents" -> contents,
-    "/content-types" -> contentTypes,
-    "/feeds" -> feeds,
-    "/search" -> search,
-    "/sitemaps" -> sitemaps,
-    "/status" -> status,
-    "/tags" -> tags,
-    "/token" -> token
+    "/" -> corsProvider.apply(home),
+    "/archives" -> corsProvider.apply(archives),
+    "/articles" -> corsProvider.apply(articles),
+    "/authors" -> corsProvider.apply(authors),
+    "/caches" -> corsProvider.apply(caches),
+    "/contents" -> corsProvider.apply(contents),
+    "/content-types" -> corsProvider.apply(contentTypes),
+    "/feeds" -> corsProvider.apply(feeds),
+    "/search" -> corsProvider.apply(search),
+    "/sitemaps" -> corsProvider.apply(sitemaps),
+    "/status" -> corsProvider.apply(status),
+    "/tags" -> corsProvider.apply(tags),
+    "/token" -> corsProvider.apply(token)
   ).orNotFound
 
   private[http] def home: HttpRoutes[IO] = HttpRoutes.of[IO] {

@@ -18,6 +18,13 @@ class ConfigSpec extends AnyWordSpec {
       assert(config.http.port === 9001)
     }
 
+    "cors configuration gettable from application.conf" in {
+      assert(config.cors.allowOrigins.contains("http://localhost:8080"))
+      assert(config.cors.allowOrigins.contains("http://127.0.0.1:8080"))
+      assert(config.cors.allowOrigins.contains("http://localhost:3000"))
+      assert(config.cors.allowOrigins.contains("http://127.0.0.1:8080"))
+    }
+
     "jwt configuration gettable from application.conf" in {
       assert(config.jwt.iss === "http://localhost:9001")
       assert(config.jwt.aud === "qualtet_dev_1111")

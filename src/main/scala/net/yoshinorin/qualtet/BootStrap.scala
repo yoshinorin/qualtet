@@ -7,6 +7,7 @@ import org.http4s._
 import org.http4s.server.middleware.Logger
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.http.AuthProvider
+import net.yoshinorin.qualtet.http.CorsProvider
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,
@@ -24,6 +25,7 @@ import net.yoshinorin.qualtet.http.routes.{
 import net.yoshinorin.qualtet.http.routes.CacheRoute
 import org.http4s.ember.server.EmberServerBuilder
 import com.comcast.ip4s._
+
 // import scala.io.StdIn
 
 @SuppressWarnings(Array("org.wartremover.warts.ScalaApp")) // Not yet migrate to Scala3
@@ -36,6 +38,7 @@ object BootStrap extends IOApp {
   Modules.migrator.migrate(Modules.contentTypeService)
 
   val authProvider = new AuthProvider(Modules.authService)
+  val corsProvider = new CorsProvider(Modules.config.cors)
 
   val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val archiveRoute = new ArchiveRoute(Modules.archiveService)
@@ -55,6 +58,7 @@ object BootStrap extends IOApp {
 
   val router = new net.yoshinorin.qualtet.http.Router(
     authProvider,
+    corsProvider,
     apiStatusRoute,
     archiveRoute,
     articleRoute,
