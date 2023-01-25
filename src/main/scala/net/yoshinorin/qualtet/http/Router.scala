@@ -63,8 +63,6 @@ class Router[F[_]: Monad](
     (Some(a.getOrElse(1)), Some(b.getOrElse(10)))
   }
 
-  // val corsService = CORS.policy.withAllowOriginAll(service)
-
   def routes = Http4sRouter(
     "/" -> corsProvider.apply(home),
     "/archives" -> corsProvider.apply(archives),
