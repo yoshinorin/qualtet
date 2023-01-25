@@ -36,7 +36,7 @@ jobs:
 
       - name: Run tests
         working-directory: .
-        run: source ./scripts/devenv.sh && sbt clean coverage testWithDb
+        run: cp .env.example .env && sbt clean coverage testWithDb
 
       # NOTE:
       #  Perhaps, same issue...
