@@ -10,7 +10,7 @@ export QUALTET_HTTP_PORT=9001
 export QUALTET_JWT_ISS="http://localhost:9001"
 export QUALTET_JWT_AUD="qualtet_dev_1111"
 
-export QUALTET_CORS_ALLOW_ORIGINS.0 = "http://localhost:8080"
-export QUALTET_CORS_ALLOW_ORIGINS.1 = "http://127.0.0.1:8080"
-export QUALTET_CORS_ALLOW_ORIGINS.2 = "http://localhost:3000"
-export QUALTET_CORS_ALLOW_ORIGINS.3 = "http://127.0.0.1:8080"
+env 'QUALTET_CORS_ALLOW_ORIGINS.0'="http://localhost:8080"
+env 'QUALTET_CORS_ALLOW_ORIGINS.1'="http://127.0.0.1:8080"
+env 'QUALTET_CORS_ALLOW_ORIGINS.2'="http://localhost:3000"
+env 'QUALTET_CORS_ALLOW_ORIGINS.3'="http://127.0.0.1:8080"

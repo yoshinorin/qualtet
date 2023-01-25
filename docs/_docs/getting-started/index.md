@@ -40,9 +40,9 @@ Qualtet can specify multiple allow-origins.
 
 ```sh
 # example
-export QUALTET_CORS_ALLOW_ORIGINS.0 = "http://localhost:8080"
-export QUALTET_CORS_ALLOW_ORIGINS.1 = "http://127.0.0.1:8080"
-export QUALTET_CORS_ALLOW_ORIGINS.2 = "http://localhost:3000"
+env 'QUALTET_CORS_ALLOW_ORIGINS.0'="http://localhost:8080"
+env 'QUALTET_CORS_ALLOW_ORIGINS.1'="http://127.0.0.1:8080"
+env 'QUALTET_CORS_ALLOW_ORIGINS.2'="http://localhost:3000"
 ...
 ```
 
