@@ -5,7 +5,7 @@ object Dependencies {
   val jsoniterVersion = "2.20.6"
   val doobieVersion = "1.0.0-RC2"
   val jwtScalaVersion = "9.1.2"
-  val flywayVersion = "9.11.0"
+  val flywayVersion = "9.14.1"
   val http4sVersion = "1.0.0-M39"
 
   val dependencies = Seq(
