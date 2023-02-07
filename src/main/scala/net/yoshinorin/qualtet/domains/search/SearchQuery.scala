@@ -15,7 +15,10 @@ object SearchQuery {
     // TODO: LIMIT should be configurable
     // TODO: ORDER BY asc, title...etc
     // TODO: AND, OR
-    val qs = query.map(q => fr"raw_content LIKE ${"%" + q + "%"}").reduce((a, b) => a ++ fr" AND " ++ b)
+    // TODO: configurable REGEXP_REPLACE
+    // TODO: exclude relative path in the site
+    val likeQuerySub = query.map(q => fr"raw_content LIKE ${"%" + q + "%"}").reduce((a, b) => a ++ fr" AND " ++ b)
+    val likeQuery = query.map(q => fr"filterd_contents.raw_content LIKE ${"%" + q + "%"}").reduce((a, b) => a ++ fr" AND " ++ b)
     sql"""
       SELECT
         count(1) OVER () AS count,
@@ -25,9 +28,20 @@ object SearchQuery {
         published_at,
         updated_at
       FROM
-        contents
+        (
+          SELECT
+            path,
+            title,
+            REGEXP_REPLACE(raw_content, 'https?:.*?(?=\s)', '') as raw_content,
+            published_at,
+            updated_at
+          FROM
+            contents
+          WHERE
+            ${likeQuerySub}
+        ) AS filterd_contents
       WHERE
-        ${qs}
+        ${likeQuery}
       ORDER BY
         published_at DESC
       LIMIT 30

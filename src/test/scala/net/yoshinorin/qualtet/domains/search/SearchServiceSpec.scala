@@ -38,6 +38,42 @@ class SearchServiceSpec extends AnyWordSpec {
       robotsAttributes = Attributes("noarchive, noimageindex"),
       tags = List(s"searchServiceLast"),
       externalResources = List()
+    ) :+ RequestContent(
+      contentType = "article",
+      path = Path(s"/test/searchServiceIncludesUrl1"),
+      title = s"this is a searchService IncludesUrl1",
+      rawContent = s"this is a searchService raw contentIncludesUrl1 https://example.com aaabbbccc",
+      htmlContent = s"this is a searchService html contentIncludesUrl1 https://example.com aaabbbccc",
+      robotsAttributes = Attributes("noarchive, noimageindex"),
+      tags = List(s"IncludesUrl1"),
+      externalResources = List()
+    ) :+ RequestContent(
+      contentType = "article",
+      path = Path(s"/test/searchServiceIncludesUrl2"),
+      title = s"this is a searchService IncludesUrl2",
+      rawContent = s"this is a searchService raw contentIncludesUrl2 http://example.com aaabbbccc",
+      htmlContent = s"this is a searchService html contentIncludesUrl2 http://example.com aaabbbccc",
+      robotsAttributes = Attributes("noarchive, noimageindex"),
+      tags = List(s"IncludesUrl2"),
+      externalResources = List()
+    ) :+ RequestContent(
+      contentType = "article",
+      path = Path(s"/test/searchServiceIncludesWrongUrl"),
+      title = s"this is a searchService IncludesWrongUrl1",
+      rawContent = s"this is a searchService raw contentIncludesWrongUrl1 htt://example.com aaabbbccc",
+      htmlContent = s"this is a searchService html contentIncludesWrongUrl1 htt://example.com aaabbbccc",
+      robotsAttributes = Attributes("noarchive, noimageindex"),
+      tags = List(s"IncludesWrongUrl1"),
+      externalResources = List()
+    ) :+ RequestContent(
+      contentType = "article",
+      path = Path(s"/test/searchServiceIncludesHttpString"),
+      title = s"this is a searchService IncludesHttpString",
+      rawContent = s"this is a searchService raw contentIncludesHttp String http://example.com aaabbbccc http",
+      htmlContent = s"this is a searchService html contentIncludesHttp String http://example.com aaabbbccc http",
+      robotsAttributes = Attributes("noarchive, noimageindex"),
+      tags = List(s"IncludesHttpString"),
+      externalResources = List()
     )
   }
 
@@ -53,7 +89,7 @@ class SearchServiceSpec extends AnyWordSpec {
 
     "be return sarch result" in {
       val s = searchService.search(Map(("q", List("searchService")))).unsafeRunSync()
-      assert(s.count === 50)
+      assert(s.count === 54)
       assert(s.contents.size === 30)
     }
 
@@ -62,6 +98,20 @@ class SearchServiceSpec extends AnyWordSpec {
       assert(s.count === 0)
       assert(s.contents.size === 0)
     }
+
+    /* TODO:
+    "be filtered http url" in {
+      val s = searchService.search(Map(("q", List("http")))).unsafeRunSync()
+      assert(s.count === 1)
+      assert(s.contents.size === 1)
+    }
+
+    "be filtered https url" in {
+      val s = searchService.search(Map(("q", List("https")))).unsafeRunSync()
+      assert(s.count === 0)
+      assert(s.contents.size === 0)
+    }
+     */
 
     "be return `AND` sarch result" in {
       val s = searchService.search(Map(("q", List("searchService", "Last")))).unsafeRunSync()
