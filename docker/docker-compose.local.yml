@@ -1,0 +1,17 @@
+version: '3'
+services:
+  qualtet_test_db:
+    image: ghcr.io/yoshinorin/docker-mariadb:v10.6.10
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_USER: root
+      MYSQL_PASSWORD: pass
+      MYSQL_DATABASE: qualtet
+    volumes:
+      - ./data/local:/var/lib/mysql
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    command: ["mysqld", "--character-set-server=utf8mb4", "--general_log=1", "--general_log_file=/var/log/mysql/general.log", "--innodb-ft-min-token-size=2"]
+    restart: unless-stopped

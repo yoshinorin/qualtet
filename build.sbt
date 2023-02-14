@@ -146,6 +146,34 @@ val testEnvCommands = {
 }
 addCommandAlias("testEnvUp", testEnvCommands)
 
+
+val runLocalDbContainer = TaskKey[Unit]("runLocalDbContainer", "Run DB container for local development.")
+val localdockerComposeFilePath = new File("docker/docker-compose.local.yml")
+runLocalDbContainer := {
+  println("\n ---- db container starting")
+  val dockerCommand = Process(s"docker-compose -f ${localdockerComposeFilePath.getAbsolutePath} up -d")
+  dockerCommand.run
+
+  // workaround
+  Thread.sleep(20000)
+  println("\n ---- db container started")
+}
+val shutDownLocalDbContainer = TaskKey[Unit]("shutDownLocalDbContainer", "Shut down DB container for testing.")
+shutDownLocalDbContainer := {
+  println("\n ---- db container stopping")
+  val dockerDownCommand = Process(s"docker-compose -f ${localdockerComposeFilePath.getAbsolutePath} down")
+  dockerDownCommand.run
+  println(" ---- db container stopped\n")
+}
+val runLocalDbCommands = {
+  ";runLocalDbContainer"
+}
+val downLocalDbCommands = {
+  ";shutDownLocalDbContainer"
+}
+addCommandAlias("localDbUp", runLocalDbCommands)
+addCommandAlias("localDbDown", downLocalDbCommands)
+
 val forceKillServer = TaskKey[Unit]("forceKillServer","force kill http server")
 forceKillServer := {
   // NOTE: require global installed https://github.com/tiaanduplessis/kill-port
