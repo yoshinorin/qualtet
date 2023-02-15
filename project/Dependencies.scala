@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
 
-  val jsoniterVersion = "2.20.6"
+  val jsoniterVersion = "2.20.7"
   val doobieVersion = "1.0.0-RC2"
   val jwtScalaVersion = "9.1.2"
   val flywayVersion = "9.14.1"
@@ -11,7 +11,7 @@ object Dependencies {
   val dependencies = Seq(
     "com.typesafe" % "config" % "1.4.2",
     // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4, but cats-effect keep fully compatibility with 3.x
-    "org.typelevel" %% "cats-effect" % "3.4.5",
+    "org.typelevel" %% "cats-effect" % "3.4.7",
     "org.http4s" %% "http4s-dsl" % http4sVersion,
     "org.http4s" %% "http4s-ember-server" % http4sVersion,
     "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
@@ -22,8 +22,8 @@ object Dependencies {
     "org.mariadb.jdbc" % "mariadb-java-client" % "3.1.2",
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "23.1.4",
-    "com.github.ben-manes.caffeine" % "caffeine" % "3.1.2",
+    "org.wvlet.airframe" %% "airframe-ulid" % "23.2.4",
+    "com.github.ben-manes.caffeine" % "caffeine" % "3.1.3",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
     "ch.qos.logback" % "logback-classic" % "1.4.5",
