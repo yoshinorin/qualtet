@@ -12,7 +12,7 @@ title: Features
 
 - [ ] UA Filter
 - [ ] IP Filter
-- [ ] CORS
+- [x] CORS
 - [ ] DDOS
 
 ## Caching
@@ -50,13 +50,14 @@ title: Features
 
 ## Search
 
-- [x] Imple Full-text search
+- [ ] Imple Full-text search
+    - [ ] Optional Search Mode
 - [x] Select
     - [x] By QueryParams
     - [ ] By Tag
-    - [ ] Order by option
-    - [ ] Limit option
-    - [ ] Pagination option
+    - [ ] Optional Order BY
+    - [ ] Optional Limit
+    - [ ] Optional Pagination
 
 ## Tests
 
