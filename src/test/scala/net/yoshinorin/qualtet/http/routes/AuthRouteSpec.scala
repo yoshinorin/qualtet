@@ -115,10 +115,10 @@ class AuthRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === Unauthorized)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return if user not exists" in {
@@ -135,10 +135,10 @@ class AuthRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === NotFound)
+            assert(response.status === NotFound)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return Method Not Allowed" in {

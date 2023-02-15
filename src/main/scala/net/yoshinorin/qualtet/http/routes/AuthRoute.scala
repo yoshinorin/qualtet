@@ -25,7 +25,7 @@ class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder
             Ok(t.asJson, `Content-Type`(MediaType.application.json))
           }
       }
-    }
+    }.handleErrorWith(_.logWithStackTrace.andResponse)
   }
 
 }
