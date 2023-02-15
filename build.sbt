@@ -4,7 +4,7 @@ import scala.sys.process.Process
 
 organization := "net.yoshinorin"
 name := "qualtet"
-version := "v2.2.0"
+version := "v2.3.0"
 scalaVersion := "3.2.1"
 
 scalacOptions ++= Seq(
