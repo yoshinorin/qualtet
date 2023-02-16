@@ -1,3 +1,4 @@
+import Docker._
 import sbt.protocol.ExecCommand
 import java.io.File
 import scala.sys.process.Process
@@ -101,78 +102,32 @@ assembly / assemblyMergeStrategy := {
   case _ => MergeStrategy.first
 }
 
-// NOTE: testcontiners does not works well...
-// https://stackoverflow.com/questions/22321500/how-to-run-task-before-all-tests-from-all-modules-in-sbt
+
+// Register Task and its Commands for testing with container.
 val runTestDbContainer = TaskKey[Unit]("runTestDbContainer", "Run DB container for testing.")
-val dockerComposeFilePath = new File("src/test/resources/docker-compose.yml")
-runTestDbContainer := {
-  println("\n ---- db container starting")
-  val dockerCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} up -d")
-  dockerCommand.run
-
-  // workaround
-  Thread.sleep(20000)
-  println("\n ---- db container started")
-}
-
 val shutDownTestDbContainer = TaskKey[Unit]("shutDownTestDbContainer", "Shut down DB container for testing.")
-shutDownTestDbContainer := {
-  println("\n ---- db container stopping")
-  val dockerDownCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} down")
-  dockerDownCommand.run
-  println(" ---- db container stopped\n")
-}
-// TODO: The DB container does not seems to shutdown if the tests are fails.
-val testCommands = {
-  """
-    |;scalafmt
-    |;Test / scalafmt
-    |;runTestDbContainer
-    |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
-    |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
-    |;test
-    |;shutDownTestDbContainer
-    |""".stripMargin
-}
-addCommandAlias("testWithDb", testCommands)
-addCommandAlias("testWithDB", testCommands)
 
-// NOTE: Sometimes I want to run testOnly xyz manually.
-val testEnvCommands = {
-  """;runTestDbContainer
-    |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
-    |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
-    |""".stripMargin
-}
-addCommandAlias("testEnvUp", testEnvCommands)
+Docker.Testing.tasks
+runTestDbContainer := Def.sequential(Docker.Testing.up).value
+shutDownTestDbContainer := Def.sequential(Docker.Testing.down).value
+addCommandAlias("testWithDb", Docker.Testing.Commands.runAll)
+addCommandAlias("testWithDB", Docker.Testing.Commands.runAll)
+addCommandAlias("testDbUp", Docker.Testing.Commands.upDbAndCreateMinData)
+addCommandAlias("testDBUp", Docker.Testing.Commands.upDbAndCreateMinData)
 
 
+// Register Task and its Commands for run local db with container.
 val runLocalDbContainer = TaskKey[Unit]("runLocalDbContainer", "Run DB container for local development.")
-val localdockerComposeFilePath = new File("docker/docker-compose.local.yml")
-runLocalDbContainer := {
-  println("\n ---- db container starting")
-  val dockerCommand = Process(s"docker-compose -f ${localdockerComposeFilePath.getAbsolutePath} up -d")
-  dockerCommand.run
+val shutDownLocalDbContainer = TaskKey[Unit]("shutDownLocalDbContainer", "Shut down DB container for local development.")
 
-  // workaround
-  Thread.sleep(20000)
-  println("\n ---- db container started")
-}
-val shutDownLocalDbContainer = TaskKey[Unit]("shutDownLocalDbContainer", "Shut down DB container for testing.")
-shutDownLocalDbContainer := {
-  println("\n ---- db container stopping")
-  val dockerDownCommand = Process(s"docker-compose -f ${localdockerComposeFilePath.getAbsolutePath} down")
-  dockerDownCommand.run
-  println(" ---- db container stopped\n")
-}
-val runLocalDbCommands = {
-  ";runLocalDbContainer"
-}
-val downLocalDbCommands = {
-  ";shutDownLocalDbContainer"
-}
-addCommandAlias("localDbUp", runLocalDbCommands)
-addCommandAlias("localDbDown", downLocalDbCommands)
+Docker.Local.tasks
+runLocalDbContainer := Def.sequential(Docker.Local.up).value
+shutDownLocalDbContainer := Def.sequential(Docker.Local.down).value
+addCommandAlias("localDbUp", Docker.Local.Commands.up)
+addCommandAlias("localDBUp", Docker.Local.Commands.up)
+addCommandAlias("localDbDown", Docker.Local.Commands.down)
+addCommandAlias("localDBDown", Docker.Local.Commands.down)
+
 
 val forceKillServer = TaskKey[Unit]("forceKillServer","force kill http server")
 forceKillServer := {
