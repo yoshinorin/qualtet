@@ -1,8 +1,5 @@
 import Docker._
 import LocalProcesses._
-import sbt.protocol.ExecCommand
-import java.io.File
-import scala.sys.process.Process
 
 organization := "net.yoshinorin"
 name := "qualtet"

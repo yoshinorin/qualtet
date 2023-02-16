@@ -1,5 +1,4 @@
 import sbt._
-import sbt.protocol.ExecCommand
 import java.io.File
 import scala.sys.process.Process
 
