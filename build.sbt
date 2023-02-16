@@ -1,4 +1,5 @@
 import Docker._
+import LocalProcesses._
 import sbt.protocol.ExecCommand
 import java.io.File
 import scala.sys.process.Process
@@ -129,25 +130,13 @@ addCommandAlias("localDbDown", Docker.Local.Commands.down)
 addCommandAlias("localDBDown", Docker.Local.Commands.down)
 
 
+// Register Task and its Commands for kill server and run server locally.
 val forceKillServer = TaskKey[Unit]("forceKillServer","force kill http server")
-forceKillServer := {
-  // NOTE: require global installed https://github.com/tiaanduplessis/kill-port
-  ExecCommand("kill-port 9001 -y")
-}
-val killCommands = {
-  ";forceKillServer"
-}
-addCommandAlias("kills", killCommands)
 
-val startServerCommands = {
-  """
-    |;scalafmt
-    |;Test / scalafmt
-    |;forceKillServer
-    |;~reStart
-    |""".stripMargin
-}
-addCommandAlias("runs", startServerCommands)
+LocalProcesses.tasks
+forceKillServer := Def.sequential(LocalProcesses.kill).value
+addCommandAlias("kills", LocalProcesses.Commands.kill)
+addCommandAlias("runs", LocalProcesses.Commands.startLocalServer)
 
 coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migrator;"
 //org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
