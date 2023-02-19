@@ -2,6 +2,7 @@ import sbt._
 import scala.sys.process._
 import java.lang.ProcessHandle
 import java.util.NoSuchElementException
+import scala.Console.{ BLACK_B, GREEN_B, RED_B, WHITE, RESET }
 
 object LocalProcesses {
 
@@ -20,9 +21,9 @@ object LocalProcesses {
 
   def killLocalServer(maybePid: Option[Long]): Unit = {
     maybePid match {
-      case None => println(s" ---- Local server is not running")
+      case None => println(s"${RESET}${RED_B}${WHITE}\n ---- Local server is not running ${RESET}")
       case Some(pid) => {
-        println(s"\n ---- killing PID: ${pid}")
+        println(s"${RESET}${GREEN_B}${WHITE}\n ---- killing PID: ${pid} ${RESET}")
         try {
           ProcessHandle
             .allProcesses
@@ -30,13 +31,13 @@ object LocalProcesses {
             .findFirst()
             .get()
             .destroy()
-          println(s"\n ---- killed PID: ${pid}")
+          println(s"${RESET}${GREEN_B}${WHITE}\n ---- killed PID: ${pid} ${RESET}")
         } catch {
           case ne: NoSuchElementException => {
-            println(s" ---- Local server is not running")
+            println(s"${RESET}${RED_B}${WHITE}\n ---- Local server is not running ${RESET}")
           }
           case _: Throwable => {
-            println(" ---- Something went to wrong...")
+            println(s"${RESET}${RED_B}${WHITE}\n ---- Something went to wrong... ${RESET}")
           }
         }
       }
