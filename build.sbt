@@ -1,4 +1,4 @@
-import Docker._
+import docker._
 import LocalProcesses._
 
 organization := "net.yoshinorin"
@@ -104,27 +104,29 @@ assembly / assemblyMergeStrategy := {
 // Register Task and its Commands for testing with container.
 val runTestDbContainer = TaskKey[Unit]("runTestDbContainer", "Run DB container for testing.")
 val shutDownTestDbContainer = TaskKey[Unit]("shutDownTestDbContainer", "Shut down DB container for testing.")
+val testingDocker = new Testing()
 
-Docker.Testing.tasks
-runTestDbContainer := Def.sequential(Docker.Testing.up).value
-shutDownTestDbContainer := Def.sequential(Docker.Testing.down).value
-addCommandAlias("testWithDb", Docker.Testing.Commands.runAll)
-addCommandAlias("testWithDB", Docker.Testing.Commands.runAll)
-addCommandAlias("testDbUp", Docker.Testing.Commands.upDbAndCreateMinData)
-addCommandAlias("testDBUp", Docker.Testing.Commands.upDbAndCreateMinData)
+testingDocker.tasks
+runTestDbContainer := Def.sequential(testingDocker.upTesting).value
+shutDownTestDbContainer := Def.sequential(testingDocker.downTesting).value
+addCommandAlias("testWithDb", testingDocker.Commands.runAll)
+addCommandAlias("testWithDB", testingDocker.Commands.runAll)
+addCommandAlias("testDbUp", testingDocker.Commands.upDbAndCreateMinData)
+addCommandAlias("testDBUp", testingDocker.Commands.upDbAndCreateMinData)
 
 
 // Register Task and its Commands for run local db with container.
 val runLocalDbContainer = TaskKey[Unit]("runLocalDbContainer", "Run DB container for local development.")
 val shutDownLocalDbContainer = TaskKey[Unit]("shutDownLocalDbContainer", "Shut down DB container for local development.")
+val localDocker = new Local()
 
-Docker.Local.tasks
-runLocalDbContainer := Def.sequential(Docker.Local.up).value
-shutDownLocalDbContainer := Def.sequential(Docker.Local.down).value
-addCommandAlias("localDbUp", Docker.Local.Commands.up)
-addCommandAlias("localDBUp", Docker.Local.Commands.up)
-addCommandAlias("localDbDown", Docker.Local.Commands.down)
-addCommandAlias("localDBDown", Docker.Local.Commands.down)
+localDocker.tasks
+runLocalDbContainer := Def.sequential(localDocker.upLocal).value
+shutDownLocalDbContainer := Def.sequential(localDocker.downLocal).value
+addCommandAlias("localDbUp", localDocker.Commands.up)
+addCommandAlias("localDBUp", localDocker.Commands.up)
+addCommandAlias("localDbDown", localDocker.Commands.down)
+addCommandAlias("localDBDown", localDocker.Commands.down)
 
 
 // Register Task and its Commands for kill server and run server locally.
