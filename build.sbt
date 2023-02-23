@@ -14,12 +14,6 @@ scalacOptions ++= Seq(
   "UTF-8"
 )
 
-initialize := {
-  val _ = initialize.value
-  // Process("git config --local core.hooksPath .githooks").run()
-  // println("set the git pre-commit hooks.")
-}
-
 // https://github.com/rtimush/sbt-updates
 dependencyAllowPreRelease := true
 
