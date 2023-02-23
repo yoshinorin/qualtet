@@ -24,19 +24,22 @@
         </filter>
     </appender>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <!--TODO: devenv only -->
-            <jsonGeneratorDecorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
-            <charset>UTF-8</charset>
-            <timeZone>UTC</timeZone>
-            <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSS</timestampPattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
-            <onMatch>DENY</onMatch>
-        </filter>
-    </appender>
+    <if condition='property("QUALTET_ENV").contains("dev")'>
+        <then>
+            <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                    <jsonGeneratorDecorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
+                    <charset>UTF-8</charset>
+                    <timeZone>UTC</timeZone>
+                    <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSS</timestampPattern>
+                </encoder>
+                <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                    <level>DEBUG</level>
+                    <onMatch>DENY</onMatch>
+                </filter>
+            </appender>
+        </then>
+    </if>
 
     <if condition='property("QUALTET_ENV").contains("dev")'>
         <then>
