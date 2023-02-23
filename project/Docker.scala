@@ -3,24 +3,24 @@ package docker
 import sbt._
 import java.io.File
 import scala.sys.process.Process
-import scala.Console.{ BLACK_B, GREEN_B, WHITE, RESET }
+import console.{ Console => Console_ }
 
 trait Docker {
   def up_(dockerComposeFilePath: File) ={
-    println(s"${RESET}${GREEN_B}${WHITE}\n ---- db container starting ${RESET}")
+    Console_.info("db container starting")
     val dockerCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} up -d")
     dockerCommand.run
 
     // workaround
     Thread.sleep(20000)
-    println(s"${RESET}${GREEN_B}${WHITE}\n ---- db container started ${RESET}")
+    Console_.info("db container started")
   }
 
   def down_(dockerComposeFilePath: File) = {
-    println(s"${RESET}${GREEN_B}${WHITE}\n ---- db container stopping ${RESET}")
+    Console_.info("db container stopping")
     val dockerDownCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} down")
     dockerDownCommand.run
-    println(s"${RESET}${GREEN_B}${WHITE}\n ---- db container stopped ${RESET}")
+    Console_.info("db container stopped")
   }
 }
 
