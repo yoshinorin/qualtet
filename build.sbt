@@ -20,18 +20,6 @@ initialize := {
   // println("set the git pre-commit hooks.")
 }
 
-// https://scalacenter.github.io/scalafix/docs/users/installation.html
-ThisBuild / scalafixScalaBinaryVersion := "3.2.1"
-// TODO: AggressiveMerge or Merge not working
-// ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
-inThisBuild(
-  List(
-    scalaVersion := scalaVersion.value,
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision
-  )
-)
-
 // https://github.com/rtimush/sbt-updates
 dependencyAllowPreRelease := true
 

@@ -16,7 +16,7 @@ WORKDIR /usr/opt/qualtet
 
 COPY entry-point.sh entry-point.sh
 
-RUN rm -rf scripts docs docker .github .gitignore .editorconfig .git .env .env.example Makefile .githooks target .scalafix .scalafmt.conf tools \
+RUN rm -rf scripts docs docker .github .gitignore .editorconfig .git .env .env.example Makefile .githooks target .scalafmt.conf tools \
   && sbt assembly exit \
   && cp ./target/scala-3.2.1/qualtet-assembly-v2.3.0.jar qualtet-assembly.jar \
   && chmod +x entry-point.sh
