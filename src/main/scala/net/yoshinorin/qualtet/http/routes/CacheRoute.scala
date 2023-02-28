@@ -7,8 +7,8 @@ import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.cache.CacheService
 
-class CacheRoute[F[_]: Monad](
-  cacheService: CacheService[F]
+class CacheRoute[M[_]: Monad](
+  cacheService: CacheService[M]
 ) {
 
   // caches

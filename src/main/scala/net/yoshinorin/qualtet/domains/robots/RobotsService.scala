@@ -4,8 +4,8 @@ import cats.Monad
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-class RobotsService[F[_]: Monad](
-  robotsRepository: RobotsRepository[F]
+class RobotsService[M[_]: Monad](
+  robotsRepository: RobotsRepository[M]
 ) {
   def upsertActions(data: Robots): Action[Int] = {
     Continue(robotsRepository.upsert(data), Action.done[Int])

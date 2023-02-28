@@ -9,8 +9,8 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor._
 import net.yoshinorin.qualtet.syntax._
 
-class AuthorRoute[F[_]: Monad](
-  authorService: AuthorService[F]
+class AuthorRoute[M[_]: Monad](
+  authorService: AuthorService[M]
 ) {
 
   // authors

@@ -10,8 +10,8 @@ import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.syntax._
 
-class SitemapService[F[_]: Monad](
-  sitemapRepository: SitemapsRepository[F],
+class SitemapService[M[_]: Monad](
+  sitemapRepository: SitemapsRepository[M],
   cache: CacheModule[String, Seq[Url]]
 )(dbContext: DataBaseContext[Aux[IO, Unit]])
     extends Cacheable {

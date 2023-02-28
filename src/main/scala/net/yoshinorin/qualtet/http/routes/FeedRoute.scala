@@ -10,8 +10,8 @@ import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.domains.feeds.ResponseFeed._
 import net.yoshinorin.qualtet.syntax._
 
-class FeedRoute[F[_]: Monad](
-  feedService: FeedService[F]
+class FeedRoute[M[_]: Monad](
+  feedService: FeedService[M]
 ) {
 
   def get(name: String): IO[Response[IO]] = {

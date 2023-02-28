@@ -8,7 +8,7 @@ import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.sitemaps.SitemapService
 import net.yoshinorin.qualtet.syntax._
 
-class SitemapRoute[F[_]: Monad](sitemapService: SitemapService[F]) {
+class SitemapRoute[M[_]: Monad](sitemapService: SitemapService[M]) {
 
   def get: IO[Response[IO]] = {
     for {

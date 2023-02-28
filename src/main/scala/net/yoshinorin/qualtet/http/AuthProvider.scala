@@ -14,8 +14,8 @@ import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
 import net.yoshinorin.qualtet.syntax._
 
-class AuthProvider[F[_]: Monad](
-  authService: AuthService[F]
+class AuthProvider[M[_]: Monad](
+  authService: AuthService[M]
 ) {
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 

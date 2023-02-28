@@ -10,8 +10,8 @@ import net.yoshinorin.qualtet.domains.tags.TagId
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 
-class ContentTaggingService[F[_]: Monad](
-  contentTaggingRepository: ContentTaggingRepository[F]
+class ContentTaggingService[M[_]: Monad](
+  contentTaggingRepository: ContentTaggingRepository[M]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def findByTagIdActions(id: TagId): Action[Seq[ContentTagging]] = {

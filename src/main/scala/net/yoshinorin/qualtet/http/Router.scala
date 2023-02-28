@@ -30,22 +30,22 @@ import net.yoshinorin.qualtet.syntax._
 
 import scala.util.Try
 
-class Router[F[_]: Monad](
-  authProvider: AuthProvider[F],
+class Router[M[_]: Monad](
+  authProvider: AuthProvider[M],
   corsProvider: CorsProvider,
   apiStatusRoute: ApiStatusRoute,
-  archiveRoute: ArchiveRoute[F],
-  articleRoute: ArticleRoute[F],
-  authorRoute: AuthorRoute[F],
-  authRoute: AuthRoute[F],
-  cacheRoute: CacheRoute[F],
-  contentRoute: ContentRoute[F],
-  contentTypeRoute: ContentTypeRoute[F],
-  feedRoute: FeedRoute[F],
+  archiveRoute: ArchiveRoute[M],
+  articleRoute: ArticleRoute[M],
+  authorRoute: AuthorRoute[M],
+  authRoute: AuthRoute[M],
+  cacheRoute: CacheRoute[M],
+  contentRoute: ContentRoute[M],
+  contentTypeRoute: ContentTypeRoute[M],
+  feedRoute: FeedRoute[M],
   homeRoute: HomeRoute,
-  searchRoute: SearchRoute[F],
-  sitemapRoute: SitemapRoute[F],
-  tagRoute: TagRoute[F]
+  searchRoute: SearchRoute[M],
+  sitemapRoute: SitemapRoute[M],
+  tagRoute: TagRoute[M]
 ) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

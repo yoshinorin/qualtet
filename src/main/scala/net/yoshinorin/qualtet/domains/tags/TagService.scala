@@ -13,9 +13,9 @@ import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.syntax._
 
-class TagService[F[_]: Monad](
-  tagRepository: TagRepository[F],
-  contentTaggingService: ContentTaggingService[F]
+class TagService[M[_]: Monad](
+  tagRepository: TagRepository[M],
+  contentTaggingService: ContentTaggingService[M]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def bulkUpsertActions(data: Option[List[Tag]]): Action[Int] = {

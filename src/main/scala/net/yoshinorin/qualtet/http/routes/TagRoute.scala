@@ -12,9 +12,9 @@ import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.syntax._
 
-class TagRoute[F[_]: Monad](
-  tagService: TagService[F],
-  articleService: ArticleService[F]
+class TagRoute[M[_]: Monad](
+  tagService: TagService[M],
+  articleService: ArticleService[M]
 ) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

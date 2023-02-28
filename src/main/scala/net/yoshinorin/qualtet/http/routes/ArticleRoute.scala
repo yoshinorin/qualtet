@@ -10,8 +10,8 @@ import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount._
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.syntax._
 
-class ArticleRoute[F[_]: Monad](
-  articleService: ArticleService[F]
+class ArticleRoute[M[_]: Monad](
+  articleService: ArticleService[M]
 ) {
 
   // articles?page=n&limit=m

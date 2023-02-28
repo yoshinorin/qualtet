@@ -13,8 +13,8 @@ import net.yoshinorin.qualtet.domains.contents.ResponseContent._
 import net.yoshinorin.qualtet.http.RequestDecoder
 import net.yoshinorin.qualtet.syntax._
 
-class ContentRoute[F[_]: Monad](
-  contentService: ContentService[F]
+class ContentRoute[M[_]: Monad](
+  contentService: ContentService[M]
 ) extends RequestDecoder {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

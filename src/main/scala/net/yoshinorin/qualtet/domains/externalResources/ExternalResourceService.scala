@@ -4,8 +4,8 @@ import cats.Monad
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-class ExternalResourceService[F[_]: Monad](
-  externalResourceRepository: ExternalResourceRepository[F]
+class ExternalResourceService[M[_]: Monad](
+  externalResourceRepository: ExternalResourceRepository[M]
 ) {
 
   def bulkUpsertActions(data: List[ExternalResource]): Action[Int] = {

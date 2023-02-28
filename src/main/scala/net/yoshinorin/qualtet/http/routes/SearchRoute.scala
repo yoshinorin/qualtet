@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.search.SearchService
 import net.yoshinorin.qualtet.syntax._
 
-class SearchRoute[F[_]: Monad](
-  searchService: SearchService[F]
+class SearchRoute[M[_]: Monad](
+  searchService: SearchService[M]
 ) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

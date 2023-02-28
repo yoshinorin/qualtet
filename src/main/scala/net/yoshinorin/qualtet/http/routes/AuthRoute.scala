@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.auth.{AuthService, RequestToken}
 import net.yoshinorin.qualtet.http.RequestDecoder
 import net.yoshinorin.qualtet.syntax._
 
-class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder {
+class AuthRoute[M[_]: Monad](authService: AuthService[M]) extends RequestDecoder {
 
   // token
   def post(request: Request[IO]): IO[Response[IO]] = {

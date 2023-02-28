@@ -12,9 +12,9 @@ import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 
-class ArticleService[F[_]: Monad](
-  articleRepository: ArticleRepository[F],
-  contentTypeService: ContentTypeService[F]
+class ArticleService[M[_]: Monad](
+  articleRepository: ArticleRepository[M],
+  contentTypeService: ContentTypeService[M]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   def actions(

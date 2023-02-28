@@ -8,8 +8,8 @@ import org.http4s.dsl.io._
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.syntax._
 
-class ContentTypeRoute[F[_]: Monad](
-  contentTypeService: ContentTypeService[F]
+class ContentTypeRoute[M[_]: Monad](
+  contentTypeService: ContentTypeService[M]
 ) {
 
   def get: IO[Response[IO]] = {

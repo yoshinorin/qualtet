@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
 import net.yoshinorin.qualtet.syntax._
 import org.slf4j.LoggerFactory
 
-class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt) {
+class AuthService[M[_]: Monad](authorService: AuthorService[M], jwt: Jwt) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
   private[this] val bcryptPasswordEncoder = new BCryptPasswordEncoder()

@@ -17,14 +17,14 @@ import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 import wvlet.airframe.ulid.ULID
 
-class ContentService[F[_]: Monad](
-  contentRepository: ContentRepository[F],
-  tagService: TagService[F],
-  contentTaggingService: ContentTaggingService[F],
-  robotsService: RobotsService[F],
-  externalResourceService: ExternalResourceService[F],
-  authorService: AuthorService[F],
-  contentTypeService: ContentTypeService[F]
+class ContentService[M[_]: Monad](
+  contentRepository: ContentRepository[M],
+  tagService: TagService[M],
+  contentTaggingService: ContentTaggingService[M],
+  robotsService: RobotsService[M],
+  externalResourceService: ExternalResourceService[M],
+  authorService: AuthorService[M],
+  contentTypeService: ContentTypeService[M]
 )(
   dbContext: DataBaseContext[Aux[IO, Unit]]
 ) {

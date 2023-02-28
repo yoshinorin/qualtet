@@ -9,8 +9,8 @@ import net.yoshinorin.qualtet.domains.archives.ArchiveService
 import net.yoshinorin.qualtet.domains.archives.ResponseArchive._
 import net.yoshinorin.qualtet.syntax._
 
-class ArchiveRoute[F[_]: Monad](
-  archiveService: ArchiveService[F]
+class ArchiveRoute[M[_]: Monad](
+  archiveService: ArchiveService[M]
 ) {
 
   // archives

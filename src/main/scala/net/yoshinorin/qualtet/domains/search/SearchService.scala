@@ -19,9 +19,9 @@ import net.yoshinorin.qualtet.syntax._
 import scala.util.Try
 import scala.annotation.tailrec
 
-class SearchService[F[_]: Monad](
+class SearchService[M[_]: Monad](
   searchConfig: SearchConfig,
-  searchRepository: SearchRepository[F]
+  searchRepository: SearchRepository[M]
 )(dbContext: DataBaseContext[Aux[IO, Unit]]) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

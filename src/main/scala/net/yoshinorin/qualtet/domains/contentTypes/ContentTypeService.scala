@@ -11,8 +11,8 @@ import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.domains.Cacheable
 
-class ContentTypeService[F[_]: Monad](
-  contentRepository: ContentTypeRepository[F],
+class ContentTypeService[M[_]: Monad](
+  contentRepository: ContentTypeRepository[M],
   cache: CacheModule[String, ContentType]
 )(dbContext: DataBaseContext[Aux[IO, Unit]])
     extends Cacheable {
