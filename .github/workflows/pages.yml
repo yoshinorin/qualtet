@@ -19,7 +19,7 @@ jobs:
         run: sbt doc
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
       - name: Install npm dependencies
         working-directory: ./docs/rest-api
         run: npm install
