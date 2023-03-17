@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 360
     strategy:
       matrix:
         os: [ubuntu-latest]
