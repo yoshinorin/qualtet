@@ -119,5 +119,5 @@ forceKillServer := Def.sequential(LocalProcesses.kill).value
 addCommandAlias("kills", LocalProcesses.Commands.kill)
 addCommandAlias("runs", LocalProcesses.Commands.startLocalServer)
 
+// TODO: maybe ignored need update
 coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migrator;"
-//org.scoverage.coveralls.Imports.CoverallsKeys.coverallsGitRepoLocation := Some("..")
