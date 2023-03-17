@@ -6,6 +6,9 @@ on:
       - master
     paths:
       - 'docs/**'
+      - '.gihub/workflows/**'
+      - LICENSE
+      - README.md
 
 jobs:
   build:
