@@ -6,7 +6,7 @@ on:
       - master
     paths:
       - 'docs/**'
-      - '.gihub/workflows/**'
+      - '.github/workflows/pages.yml'
       - LICENSE
       - README.md
 
