@@ -4,16 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "redoc-cli bundle openapi.yml -o ../dist/rest-api/index.html",
-    "server": "redoc-cli serve openapi.yml",
+    "build": "redocly build-docs openapi.yml -o ../dist/rest-api/index.html",
+    "server": "redocly preview-docs openapi.yml",
     "serve": "npm run server",
     "publish": "npm run build && cd ../../ && git checkout gh-pages && node copy.js && git add index.html && git commit index.html -m \"docs: update api document\" && git push && git checkout master"
   },
   "author": "yoshinorin",
-  "devDependencies": {
-    "redoc-cli": "0.13.20"
-  },
   "engines": {
     "npm": ">8"
+  },
+  "dependencies": {
+    "@redocly/cli": "^1.0.0-beta.124"
   }
 }
