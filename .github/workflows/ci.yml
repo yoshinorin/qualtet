@@ -49,6 +49,8 @@ jobs:
         working-directory: .
         run: cp .env.example .env && sbt coverageReport coveralls
         env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # NOTE: send coverage report failed caused by `Couldn't find a repository matching this job.`
+          # COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
 
