@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.validator.Validator
 
 trait validator {
 
-  implicit final class ValidateOps[A, F](a: A) {
+  extension [A, F](a: A) {
     def toEitherIO(cond: A => Boolean)(left: F): EitherT[IO, F, A] = {
       Validator.validate(a)(cond)(left)
     }

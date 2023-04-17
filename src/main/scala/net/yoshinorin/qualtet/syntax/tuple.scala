@@ -18,7 +18,7 @@ trait tuple {
     }
   }
 
-  implicit class KeyValueCommaSeparatedStringOps(kv: (Option[String], Option[String])) {
+  extension (kv: (Option[String], Option[String])) {
 
     // equally: def zip[A](k: Option[String], v: Option[String])(f: (String, String) => A)
     def zip[A](f: (String, String) => A): Option[List[A]] = {

@@ -7,7 +7,7 @@ trait throwable {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  implicit final class ThrowableOps(e: Throwable) {
+  extension (e: Throwable) {
     def withLog: IO[Throwable] = {
       logger.error(e.getMessage)
       IO(e)

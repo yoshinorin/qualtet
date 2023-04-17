@@ -6,7 +6,7 @@ import scala.reflect.ClassTag
 
 trait eitherT {
 
-  implicit final class EitherTOps[A: ClassTag, F <: Throwable](v: EitherT[IO, F, A]) {
+  extension [A: ClassTag, F <: Throwable](v: EitherT[IO, F, A]) {
     def andThrow: IO[A] = {
       v.value.flatMap {
         case Right(v) => IO(v)
