@@ -5,11 +5,11 @@ import java.nio.charset.Charset
 
 trait json {
 
-  implicit final class DecodeOps[T](val s: String)(implicit j: JsonValueCodec[T]) {
+  implicit final class DecodeOps[T](val s: String)(using j: JsonValueCodec[T]) {
     def decode: T = readFromArray(s.getBytes(Charset.forName("UTF-8")))
   }
 
-  implicit final class AsJsonOps[T](val t: T)(implicit j: JsonValueCodec[T]) {
+  implicit final class AsJsonOps[T](val t: T)(using j: JsonValueCodec[T]) {
     def asJson: String = new String(writeToArray(t), Charset.forName("UTF-8"))
   }
 
