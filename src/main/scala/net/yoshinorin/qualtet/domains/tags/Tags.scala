@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.syntax._
 
 final case class TagId(value: String = ULID.newULIDString.toLower) extends AnyVal
 object TagId {
-  implicit val codecTagId: JsonValueCodec[TagId] = JsonCodecMaker.make
+  given codecTagId: JsonValueCodec[TagId] = JsonCodecMaker.make
   def apply(value: String): TagId = {
     val _ = ULID.fromString(value)
     new TagId(value)
@@ -16,8 +16,8 @@ object TagId {
 
 final case class TagName(value: String) extends AnyVal
 object TagName {
-  implicit val codecTagName: JsonValueCodec[TagName] = JsonCodecMaker.make
-  implicit val codecTagNames: JsonValueCodec[Seq[TagName]] = JsonCodecMaker.make
+  given codecTagName: JsonValueCodec[TagName] = JsonCodecMaker.make
+  given codecTagNames: JsonValueCodec[Seq[TagName]] = JsonCodecMaker.make
 }
 
 final case class Tag(
@@ -25,8 +25,8 @@ final case class Tag(
   name: TagName
 )
 object Tag {
-  implicit val codecTag: JsonValueCodec[Tag] = JsonCodecMaker.make
-  implicit val codecTags: JsonValueCodec[Option[Seq[Tag]]] = JsonCodecMaker.make
+  given codecTag: JsonValueCodec[Tag] = JsonCodecMaker.make
+  given codecTags: JsonValueCodec[Option[Seq[Tag]]] = JsonCodecMaker.make
 }
 
 final case class ResponseTag(
@@ -34,6 +34,6 @@ final case class ResponseTag(
   name: TagName
 )
 object ResponseTag {
-  implicit val codecResponseTag: JsonValueCodec[ResponseTag] = JsonCodecMaker.make
-  implicit val codecResponseTags: JsonValueCodec[Seq[ResponseTag]] = JsonCodecMaker.make
+  given codecResponseTag: JsonValueCodec[ResponseTag] = JsonCodecMaker.make
+  given codecResponseTags: JsonValueCodec[Seq[ResponseTag]] = JsonCodecMaker.make
 }

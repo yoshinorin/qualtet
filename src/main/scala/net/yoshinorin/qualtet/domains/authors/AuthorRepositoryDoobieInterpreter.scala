@@ -5,27 +5,27 @@ import doobie.ConnectionIO
 
 class AuthorRepositoryDoobieInterpreter extends AuthorRepository[ConnectionIO] {
 
-  implicit val responseAuthorRead: Read[ResponseAuthor] =
+  given responseAuthorRead: Read[ResponseAuthor] =
     Read[(String, String, String, Long)].map { case (id, name, displayName, createdAt) =>
       ResponseAuthor(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), createdAt)
     }
 
-  implicit val responseAuthorWithOptionRead: Read[Option[ResponseAuthor]] =
+  given responseAuthorWithOptionRead: Read[Option[ResponseAuthor]] =
     Read[(String, String, String, Long)].map { case (id, name, displayName, createdAt) =>
       Some(ResponseAuthor(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), createdAt))
     }
 
-  implicit val authorRead: Read[Author] =
+  given authorRead: Read[Author] =
     Read[(String, String, String, String, Long)].map { case (id, name, displayName, password, createdAt) =>
       Author(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt)
     }
 
-  implicit val authorWithOptionRead: Read[Option[Author]] =
+  given authorWithOptionRead: Read[Option[Author]] =
     Read[(String, String, String, String, Long)].map { case (id, name, displayName, password, createdAt) =>
       Some(Author(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt))
     }
 
-  implicit val responseAuthorWrite: Write[Author] =
+  given responseAuthorWrite: Write[Author] =
     Write[(String, String, String, String, Long)]
       .contramap(a => (a.id.value, a.name.value, a.displayName.value, a.password.value, a.createdAt))
 

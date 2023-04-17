@@ -16,8 +16,8 @@ final case class ResponseSearch(
 )
 
 object ResponseSearch {
-  implicit val codecResponseSearch: JsonValueCodec[ResponseSearch] = JsonCodecMaker.make
-  implicit val codecResponseSearchs: JsonValueCodec[Seq[ResponseSearch]] = JsonCodecMaker.make
+  given codecResponseSearch: JsonValueCodec[ResponseSearch] = JsonCodecMaker.make
+  given codecResponseSearchs: JsonValueCodec[Seq[ResponseSearch]] = JsonCodecMaker.make
 
   def apply(path: Path, title: String, content: String, publishedAt: Long, updatedAt: Long): ResponseSearch = {
     val stripedContent = content.stripHtmlTags
@@ -37,6 +37,6 @@ final case class ResponseSearchWithCount(
 )
 
 object ResponseSearchWithCount {
-  implicit val codecResponseSearchWithCount: JsonValueCodec[ResponseSearchWithCount] = JsonCodecMaker.make
-  implicit val codecResponseSearchsWithCount: JsonValueCodec[Seq[ResponseSearchWithCount]] = JsonCodecMaker.make
+  given codecResponseSearchWithCount: JsonValueCodec[ResponseSearchWithCount] = JsonCodecMaker.make
+  given codecResponseSearchsWithCount: JsonValueCodec[Seq[ResponseSearchWithCount]] = JsonCodecMaker.make
 }

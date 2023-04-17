@@ -5,6 +5,7 @@ import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.fixture.Fixture._
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.Modules._
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.syntax._
@@ -13,6 +14,8 @@ import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingServiceSpec
 class ContentTaggingServiceSpec extends AnyWordSpec {
+
+  given dbContext: DoobieContext = new DoobieContext(config.db)
 
   val requestContents: List[RequestContent] = {
     List(1, 2)

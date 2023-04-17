@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
 class SearchRepositoryDoobieInterpreter extends SearchRepository[ConnectionIO] {
 
-  implicit val responseArticleWithCountRead: Read[(Int, ResponseSearch)] =
+  given responseArticleWithCountRead: Read[(Int, ResponseSearch)] =
     Read[(Int, (String, String, String, Long, Long))].map { case (cnt, (path, title, content, publishedAt, updatedAt)) =>
       (cnt, ResponseSearch(Path(path), title, content, publishedAt, updatedAt))
     }

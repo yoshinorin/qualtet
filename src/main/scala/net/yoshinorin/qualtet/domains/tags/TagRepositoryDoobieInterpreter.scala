@@ -7,19 +7,19 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 class TagRepositoryDoobieInterpreter extends TagRepository[ConnectionIO] with ConnectionIOFaker {
 
-  implicit val responseTagRead: Read[ResponseTag] =
+  given responseTagRead: Read[ResponseTag] =
     Read[(String, String)].map { case (id, name) => ResponseTag(TagId(id), TagName(name)) }
 
-  implicit val responseTagReadWithOption: Read[Option[ResponseTag]] =
+  given responseTagReadWithOption: Read[Option[ResponseTag]] =
     Read[(String, String)].map { case (id, name) => Some(ResponseTag(TagId(id), TagName(name))) }
 
-  implicit val tagRead: Read[Tag] =
+  given tagRead: Read[Tag] =
     Read[(String, String)].map { case (id, name) => Tag(TagId(id), TagName(name)) }
 
-  implicit val tagReadWithOption: Read[Option[Tag]] =
+  given tagReadWithOption: Read[Option[Tag]] =
     Read[(String, String)].map { case (id, name) => Some(Tag(TagId(id), TagName(name))) }
 
-  implicit val tagWrite: Write[Tag] =
+  given tagWrite: Write[Tag] =
     Write[(String, String)].contramap(p => (p.id.value, p.name.value))
 
   override def bulkUpsert(data: List[Tag]): ConnectionIO[Int] = {

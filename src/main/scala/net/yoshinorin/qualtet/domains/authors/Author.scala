@@ -11,7 +11,7 @@ import scala.util.matching.Regex
 
 final case class AuthorId(value: String = ULID.newULIDString.toLower) extends AnyVal
 object AuthorId {
-  implicit val codecAuthorId: JsonValueCodec[AuthorId] = JsonCodecMaker.make
+  given codecAuthorId: JsonValueCodec[AuthorId] = JsonCodecMaker.make
 
   def apply(value: String): AuthorId = {
     val _ = ULID.fromString(value)
@@ -21,7 +21,7 @@ object AuthorId {
 
 final case class AuthorName(value: String) extends AnyVal
 object AuthorName {
-  implicit val codecAuthorName: JsonValueCodec[AuthorName] = JsonCodecMaker.make
+  given codecAuthorName: JsonValueCodec[AuthorName] = JsonCodecMaker.make
   val authorNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
   def apply(value: String): AuthorName = {
@@ -34,7 +34,7 @@ object AuthorName {
 
 final case class AuthorDisplayName(value: String) extends AnyVal
 object AuthorDisplayName {
-  implicit val codecAuthorDisplayName: JsonValueCodec[AuthorDisplayName] = JsonCodecMaker.make
+  given codecAuthorDisplayName: JsonValueCodec[AuthorDisplayName] = JsonCodecMaker.make
   val authorDisplayNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
   def apply(value: String): AuthorDisplayName = {
@@ -72,6 +72,6 @@ final case class ResponseAuthor(
 )
 
 object ResponseAuthor {
-  implicit val codecAuthor: JsonValueCodec[ResponseAuthor] = JsonCodecMaker.make
-  implicit val codecAuthors: JsonValueCodec[Seq[ResponseAuthor]] = JsonCodecMaker.make
+  given codecAuthor: JsonValueCodec[ResponseAuthor] = JsonCodecMaker.make
+  given codecAuthors: JsonValueCodec[Seq[ResponseAuthor]] = JsonCodecMaker.make
 }

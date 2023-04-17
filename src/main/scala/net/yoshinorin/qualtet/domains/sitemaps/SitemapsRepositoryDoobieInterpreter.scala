@@ -5,7 +5,7 @@ import doobie.ConnectionIO
 
 class SitemapsRepositoryDoobieInterpreter extends SitemapsRepository[ConnectionIO] {
 
-  implicit val tagRead: Read[Url] =
+  given tagRead: Read[Url] =
     Read[(String, String)].map { case (loc, mod) => Url(Loc(loc), LastMod(mod)) }
 
   override def get(): ConnectionIO[Seq[Url]] = {

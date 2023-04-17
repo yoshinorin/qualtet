@@ -8,13 +8,13 @@ import net.yoshinorin.qualtet.domains.tags.TagId
 
 class ContentTaggingRepositoryDoobieInterpretere extends ContentTaggingRepository[ConnectionIO] with ConnectionIOFaker {
 
-  implicit val contentTaggingRead: Read[ContentTagging] =
+  given contentTaggingRead: Read[ContentTagging] =
     Read[(String, String)].map { case (contentId, tagId) => ContentTagging(ContentId(contentId), TagId(tagId)) }
 
-  implicit val contentTaggingWithOptionRead: Read[Option[ContentTagging]] =
+  given contentTaggingWithOptionRead: Read[Option[ContentTagging]] =
     Read[(String, String)].map { case (contentId, tagId) => Some(ContentTagging(ContentId(contentId), TagId(tagId))) }
 
-  implicit val contentTaggingWrite: Write[ContentTagging] =
+  given contentTaggingWrite: Write[ContentTagging] =
     Write[(String, String)].contramap(c => (c.contentId.value, c.tagId.value))
 
   override def bulkUpsert(data: List[ContentTagging]): ConnectionIO[Int] = {

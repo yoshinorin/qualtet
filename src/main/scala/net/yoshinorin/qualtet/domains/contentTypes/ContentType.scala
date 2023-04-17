@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.syntax._
 
 final case class ContentTypeId(value: String = ULID.newULIDString.toLower) extends AnyVal
 object ContentTypeId {
-  implicit val codecContentTypeId: JsonValueCodec[ContentTypeId] = JsonCodecMaker.make
+  given codecContentTypeId: JsonValueCodec[ContentTypeId] = JsonCodecMaker.make
 
   def apply(value: String): ContentTypeId = {
     val _ = ULID.fromString(value)
@@ -21,6 +21,6 @@ final case class ContentType(
 )
 
 object ContentType {
-  implicit val codecContentType: JsonValueCodec[ContentType] = JsonCodecMaker.make
-  implicit val codecContentTypes: JsonValueCodec[Seq[ContentType]] = JsonCodecMaker.make
+  given codecContentType: JsonValueCodec[ContentType] = JsonCodecMaker.make
+  given codecContentTypes: JsonValueCodec[Seq[ContentType]] = JsonCodecMaker.make
 }

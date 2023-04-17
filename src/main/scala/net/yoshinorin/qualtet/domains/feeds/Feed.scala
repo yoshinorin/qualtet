@@ -13,6 +13,6 @@ final case class ResponseFeed(
   updated: Long
 )
 object ResponseFeed {
-  implicit val codecResponseFeed: JsonValueCodec[ResponseFeed] = JsonCodecMaker.make
-  implicit val codecResponseFeeds: JsonValueCodec[Seq[ResponseFeed]] = JsonCodecMaker.make
+  given codecResponseFeed: JsonValueCodec[ResponseFeed] = JsonCodecMaker.make
+  given codecResponseFeeds: JsonValueCodec[Seq[ResponseFeed]] = JsonCodecMaker.make
 }

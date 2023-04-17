@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.ConnectionIOFaker
 
 class ExternalResourceRepositoryDoobieInterpreter extends ExternalResourceRepository[ConnectionIO] with ConnectionIOFaker {
 
-  implicit val tagWrite: Write[ExternalResource] =
+  given tagWrite: Write[ExternalResource] =
     Write[(String, String, String)].contramap(p => (p.contentId.value, p.kind.value, p.name))
 
   override def bulkUpsert(data: List[ExternalResource]): ConnectionIO[Int] = ExternalResourceQuery.bulkUpsert.updateMany(data)

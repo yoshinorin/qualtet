@@ -13,7 +13,7 @@ final case class RequestToken(
 }
 
 object RequestToken {
-  implicit val codecTokenRequest: JsonValueCodec[RequestToken] = JsonCodecMaker.make
+  given codecTokenRequest: JsonValueCodec[RequestToken] = JsonCodecMaker.make
 }
 
 final case class ResponseToken(
@@ -21,5 +21,5 @@ final case class ResponseToken(
 )
 
 object ResponseToken {
-  implicit val codecTokenResponse: JsonValueCodec[ResponseToken] = JsonCodecMaker.make
+  given codecTokenResponse: JsonValueCodec[ResponseToken] = JsonCodecMaker.make
 }

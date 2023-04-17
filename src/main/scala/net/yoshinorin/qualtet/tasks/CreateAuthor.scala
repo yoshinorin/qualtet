@@ -18,7 +18,7 @@ object CreateAuthor {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  implicit val dbContext: DoobieContext = new DoobieContext(config.db)
+  given dbContext: DoobieContext = new DoobieContext(config.db)
   val authorRepository: AuthorRepositoryDoobieInterpreter = new AuthorRepositoryDoobieInterpreter()
   val authorService = new AuthorService(authorRepository)(dbContext)
 

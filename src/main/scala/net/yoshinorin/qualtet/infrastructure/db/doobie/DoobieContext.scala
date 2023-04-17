@@ -14,7 +14,7 @@ class DoobieContext(config: DBConfig) extends DataBaseContext[Aux[IO, Unit]] {
   val executionContexts: ExecutionContextExecutor = scala.concurrent.ExecutionContext.fromExecutor(executors)
 
   // NOTE: No-need ContextShift: https://typelevel.org/cats-effect/docs/migration-guide#contextshift
-  // implicit val cs: ContextShift[IO] = IO.contextShift(executionContexts)
+  // given cs: ContextShift[IO] = IO.contextShift(executionContexts)
 
   val transactor: Aux[IO, Unit] = Transactor.fromDriverManager[IO](
     "org.mariadb.jdbc.Driver",

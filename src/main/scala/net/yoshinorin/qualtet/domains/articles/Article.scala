@@ -17,8 +17,8 @@ final case class ResponseArticle(
 )
 
 object ResponseArticle {
-  implicit val codecResponseArticle: JsonValueCodec[ResponseArticle] = JsonCodecMaker.make
-  implicit val codecResponseArticles: JsonValueCodec[Seq[ResponseArticle]] = JsonCodecMaker.make
+  given codecResponseArticle: JsonValueCodec[ResponseArticle] = JsonCodecMaker.make
+  given codecResponseArticles: JsonValueCodec[Seq[ResponseArticle]] = JsonCodecMaker.make
 
   def apply(id: ContentId, path: Path, title: String, content: String, publishedAt: Long, updatedAt: Long): ResponseArticle = {
     val stripedContent = content.stripHtmlTags
@@ -40,6 +40,6 @@ final case class ResponseArticleWithCount(
 )
 
 object ResponseArticleWithCount {
-  implicit val codecResponseArticleWithCount: JsonValueCodec[ResponseArticleWithCount] = JsonCodecMaker.make
-  implicit val codecResponseArticlesWithCount: JsonValueCodec[Seq[ResponseArticleWithCount]] = JsonCodecMaker.make
+  given codecResponseArticleWithCount: JsonValueCodec[ResponseArticleWithCount] = JsonCodecMaker.make
+  given codecResponseArticlesWithCount: JsonValueCodec[Seq[ResponseArticleWithCount]] = JsonCodecMaker.make
 }

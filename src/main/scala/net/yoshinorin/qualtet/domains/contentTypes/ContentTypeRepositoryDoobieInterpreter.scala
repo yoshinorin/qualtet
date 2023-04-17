@@ -5,13 +5,13 @@ import doobie.ConnectionIO
 
 class ContentTypeRepositoryDoobieInterpreter extends ContentTypeRepository[ConnectionIO] {
 
-  implicit val contentTypeRead: Read[ContentType] =
+  given contentTypeRead: Read[ContentType] =
     Read[(String, String)].map { case (id, name) => ContentType(ContentTypeId(id), name) }
 
-  implicit val contentTypeWithOptionRead: Read[Option[ContentType]] =
+  given contentTypeWithOptionRead: Read[Option[ContentType]] =
     Read[(String, String)].map { case (id, name) => Some(ContentType(ContentTypeId(id), name)) }
 
-  implicit val contentTypeWrite: Write[ContentType] =
+  given contentTypeWrite: Write[ContentType] =
     Write[(String, String)].contramap(c => (c.id.value, c.name))
 
   // TODO: do not `run` here

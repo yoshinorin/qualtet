@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 
 final case class ExternalResourceKind(value: String) extends AnyVal
 object ExternalResourceKind {
-  implicit val codecExternalResources: JsonValueCodec[ExternalResourceKind] = JsonCodecMaker.make
+  given codecExternalResources: JsonValueCodec[ExternalResourceKind] = JsonCodecMaker.make
 
   val allowedKinds: List[String] = List("js", "css")
   def apply(value: String): ExternalResourceKind = {
@@ -29,5 +29,5 @@ final case class ExternalResources(
   values: List[String]
 )
 object ExternalResources {
-  implicit val codecExternalResources: JsonValueCodec[ExternalResources] = JsonCodecMaker.make
+  given codecExternalResources: JsonValueCodec[ExternalResources] = JsonCodecMaker.make
 }

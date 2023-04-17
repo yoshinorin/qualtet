@@ -33,7 +33,7 @@ object Modules {
 
   val config = ApplicationConfig.load
 
-  implicit val dbContext: DoobieContext = new DoobieContext(config.db)
+  given dbContext: DoobieContext = new DoobieContext(config.db)
   val migrator: Migrator = new Migrator(config.db)
 
   // NOTE: for generate JWT. They are reset when re-boot application.

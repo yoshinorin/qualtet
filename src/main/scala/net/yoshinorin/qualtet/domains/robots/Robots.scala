@@ -9,7 +9,7 @@ final case class Attributes(value: String) extends AnyVal {
   def sort: Attributes = new Attributes(value.split(",").map(x => x.trim).sorted.mkString(", "))
 }
 object Attributes {
-  implicit val codecAttributes: JsonValueCodec[Attributes] = JsonCodecMaker.make
+  given codecAttributes: JsonValueCodec[Attributes] = JsonCodecMaker.make
 
   // https://developers.google.com/search/docs/advanced/robots/robots_meta_tag
   // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
@@ -35,5 +35,5 @@ final case class Robots(
 )
 
 object Robots {
-  implicit val codecRobots: JsonValueCodec[Robots] = JsonCodecMaker.make
+  given codecRobots: JsonValueCodec[Robots] = JsonCodecMaker.make
 }

@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 
 class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO] {
 
-  implicit val contentRead: Read[Content] =
+  given contentRead: Read[Content] =
     Read[(String, String, String, String, String, String, String, Long, Long)].map {
       case (contentId, authorId, contentTypeId, path, title, rawContent, htmlContent, publishedAt, updatedAt) =>
         Content(
@@ -24,7 +24,7 @@ class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO]
         )
     }
 
-  implicit val contentWithOptionRead: Read[Option[Content]] =
+  given contentWithOptionRead: Read[Option[Content]] =
     Read[(String, String, String, String, String, String, String, Long, Long)].map {
       case (contentId, authorId, contentTypeId, path, title, rawContent, htmlContent, publishedAt, updatedAt) =>
         Some(
@@ -42,7 +42,7 @@ class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO]
         )
     }
 
-  implicit val contentDbRawRead: Read[ResponseContentDbRow] =
+  given contentDbRawRead: Read[ResponseContentDbRow] =
     Read[(String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
       case (title, robotsAttributes, externalResourceKindKeys, externalResourceKindValues, tagIds, tagNames, content, authorName, publishedAt, updatedAt) =>
         ResponseContentDbRow(
@@ -59,7 +59,7 @@ class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO]
         )
     }
 
-  implicit val contentDbRawWithOptionRead: Read[Option[ResponseContentDbRow]] =
+  given contentDbRawWithOptionRead: Read[Option[ResponseContentDbRow]] =
     Read[(String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
       case (title, robotsAttributes, externalResourceKindKeys, externalResourceKindValues, tagIds, tagNames, content, authorName, publishedAt, updatedAt) =>
         Some(
@@ -78,7 +78,7 @@ class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO]
         )
     }
 
-  implicit val contentWrite: Write[Content] =
+  given contentWrite: Write[Content] =
     Write[(String, String, String, String, String, String, String, Long, Long)].contramap(c =>
       (
         c.id.value,

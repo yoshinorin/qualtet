@@ -9,7 +9,7 @@ import java.time.{Instant, ZoneId}
 // https://www.sitemaps.org/index.html
 final case class Loc(value: String) extends AnyVal
 object Loc {
-  implicit val codecLastMod: JsonValueCodec[Loc] = JsonCodecMaker.make
+  given codecLastMod: JsonValueCodec[Loc] = JsonCodecMaker.make
 
   def apply(value: String): Loc = {
     // TODO: add url to prefix like https://example.com/....
@@ -20,7 +20,7 @@ object Loc {
 
 final case class LastMod(value: String) extends AnyVal
 object LastMod {
-  implicit val codecLastMod: JsonValueCodec[LastMod] = JsonCodecMaker.make
+  given codecLastMod: JsonValueCodec[LastMod] = JsonCodecMaker.make
 
   def apply(value: String): LastMod = {
     // TODO: validate YYYY-MM-DD string or not
@@ -43,6 +43,6 @@ final case class Url(
 )
 
 object Url {
-  implicit val codecUrl: JsonValueCodec[Url] = JsonCodecMaker.make
-  implicit val codecUrls: JsonValueCodec[Seq[Url]] = JsonCodecMaker.make
+  given codecUrl: JsonValueCodec[Url] = JsonCodecMaker.make
+  given codecUrls: JsonValueCodec[Seq[Url]] = JsonCodecMaker.make
 }

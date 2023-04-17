@@ -11,6 +11,6 @@ final case class ResponseArchive(
 )
 
 object ResponseArchive {
-  implicit val codecContent: JsonValueCodec[ResponseArchive] = JsonCodecMaker.make
-  implicit val codecContents: JsonValueCodec[Seq[ResponseArchive]] = JsonCodecMaker.make
+  given codecContent: JsonValueCodec[ResponseArchive] = JsonCodecMaker.make
+  given codecContents: JsonValueCodec[Seq[ResponseArchive]] = JsonCodecMaker.make
 }

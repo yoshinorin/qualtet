@@ -8,5 +8,5 @@ final case class Message(
 )
 
 object Message {
-  implicit val codecMessage: JsonValueCodec[Message] = JsonCodecMaker.make
+  given codecMessage: JsonValueCodec[Message] = JsonCodecMaker.make
 }

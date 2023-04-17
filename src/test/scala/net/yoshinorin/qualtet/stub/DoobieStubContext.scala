@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
 
 class DoobieStubContext extends DoobieContext {
 
-  implicit val applicative: Applicative[IO] = Applicative[IO]
+  given applicative: Applicative[IO] = Applicative[IO]
 
 
   override val transactor: Aux[IO, Unit] = Transactor(

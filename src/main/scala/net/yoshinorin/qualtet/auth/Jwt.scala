@@ -26,6 +26,8 @@ final case class JwtClaim(
 )
 
 object JwtClaim {
+  // TODO: use `given`
+  // given codecJwtClaim: JsonValueCodec[JwtClaim] = JsonCodecMaker.make
   implicit val codecJwtClaim: JsonValueCodec[JwtClaim] = JsonCodecMaker.make
 }
 

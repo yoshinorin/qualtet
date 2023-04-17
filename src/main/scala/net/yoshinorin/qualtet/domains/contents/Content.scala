@@ -15,7 +15,7 @@ import net.yoshinorin.qualtet.syntax._
 
 final case class ContentId(value: String = ULID.newULIDString.toLower) extends AnyVal
 object ContentId {
-  implicit val codecContentId: JsonValueCodec[ContentId] = JsonCodecMaker.make
+  given codecContentId: JsonValueCodec[ContentId] = JsonCodecMaker.make
 
   def apply(value: String): ContentId = {
     val _ = ULID.fromString(value)
@@ -25,7 +25,7 @@ object ContentId {
 
 final case class Path(value: String) extends AnyVal
 object Path {
-  implicit val codecPath: JsonValueCodec[Path] = JsonCodecMaker.make
+  given codecPath: JsonValueCodec[Path] = JsonCodecMaker.make
 
   def apply(value: String): Path = {
     // TODO: check valid url https://www.ietf.org/rfc/rfc3986.txt
@@ -50,8 +50,8 @@ final case class Content(
 )
 
 object Content {
-  implicit val codecContent: JsonValueCodec[Content] = JsonCodecMaker.make
-  implicit val codecContents: JsonValueCodec[List[Content]] = JsonCodecMaker.make
+  given codecContent: JsonValueCodec[Content] = JsonCodecMaker.make
+  given codecContents: JsonValueCodec[List[Content]] = JsonCodecMaker.make
 }
 
 final case class RequestContent(
@@ -86,8 +86,8 @@ final case class RequestContent(
 }
 
 object RequestContent {
-  implicit val codecRequestContent: JsonValueCodec[RequestContent] = JsonCodecMaker.make
-  implicit val codecRequestContents: JsonValueCodec[List[RequestContent]] = JsonCodecMaker.make
+  given codecRequestContent: JsonValueCodec[RequestContent] = JsonCodecMaker.make
+  given codecRequestContents: JsonValueCodec[List[RequestContent]] = JsonCodecMaker.make
 
   def apply(
     requestId: String = ULID.newULIDString.toLower,
@@ -131,7 +131,7 @@ final case class ResponseContent(
 )
 
 object ResponseContent {
-  implicit val codecResponseContent: JsonValueCodec[ResponseContent] = JsonCodecMaker.make(
+  given codecResponseContent: JsonValueCodec[ResponseContent] = JsonCodecMaker.make(
     CodecMakerConfig
       .withRequireCollectionFields(true)
       .withTransientEmpty(false)
@@ -140,7 +140,7 @@ object ResponseContent {
       .withTransientEmpty(false)
       .withTransientDefault(false)
   )
-  implicit val codecResponseContents: JsonValueCodec[Seq[ResponseContent]] = JsonCodecMaker.make
+  given codecResponseContents: JsonValueCodec[Seq[ResponseContent]] = JsonCodecMaker.make
 }
 final case class ResponseContentDbRow(
   title: String,
