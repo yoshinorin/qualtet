@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.services.ContentTypeService
 import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeId, dbContext}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.Migrator
-import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
+import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.cache.Cache
 import org.scalatest.wordspec.AnyWordSpec
 

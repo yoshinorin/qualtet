@@ -4,9 +4,12 @@ import net.yoshinorin.qualtet.fixture.Fixture.contentTypeService
 import net.yoshinorin.qualtet.Modules
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 // testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
 class MigratorSpec extends AnyWordSpec {
+
+  given dbContext: DoobieContext = new DoobieContext(Modules.config.db)
 
   "Migrator" should {
 

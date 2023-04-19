@@ -38,6 +38,7 @@ import net.yoshinorin.qualtet.http.routes.CacheRoute
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 
 // Just test data
 object Fixture {
@@ -50,17 +51,19 @@ object Fixture {
   val p: String = Modules.config.http.port.toString()
   val host = Uri.unsafeFromString(s"http://${h}:${p}")
 
+  given dbContext2: DoobieContext = new DoobieContext(Modules.config.db)
+
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService = new ContentTypeService(Modules.contentTypeRepository, contentTypeCache)(Modules.dbContext)
+  val contentTypeService = new ContentTypeService(Modules.contentTypeRepository, contentTypeCache)
 
   val sitemapRepository: SitemapsRepositoryDoobieInterpreter = new SitemapsRepositoryDoobieInterpreter()
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService = new SitemapService(sitemapRepository, sitemapCache)(Modules.dbContext)
+  val sitemapService = new SitemapService(sitemapRepository, sitemapCache)
 
   val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]

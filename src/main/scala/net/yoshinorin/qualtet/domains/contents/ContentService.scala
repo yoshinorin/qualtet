@@ -2,8 +2,7 @@ package net.yoshinorin.qualtet.domains.contents
 
 import cats.effect.IO
 import cats.Monad
-import doobie.util.transactor.Transactor.Aux
-import doobie.implicits._
+import cats.implicits._
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
@@ -13,7 +12,7 @@ import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
-import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
+import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.syntax._
 import wvlet.airframe.ulid.ULID
 
@@ -25,8 +24,8 @@ class ContentService[M[_]: Monad](
   externalResourceService: ExternalResourceService[M],
   authorService: AuthorService[M],
   contentTypeService: ContentTypeService[M]
-)(
-  dbContext: DataBaseContext[Aux[IO, Unit]]
+)(using
+  transactor: Transactor[M]
 ) {
 
   def upsertActions(data: Content): Action[Int] = {
@@ -111,19 +110,19 @@ class ContentService[M[_]: Monad](
     val maybeExternalResources = externalResources.flatMap(a => a.values.map(v => ExternalResource(data.id, a.kind, v)))
 
     val queries = for {
-      contentUpsert <- upsertActions(data).perform
-      robotsUpsert <- robotsService.upsertActions(Robots(data.id, robotsAttributes)).perform
-      currentTags <- tagService.findByContentIdActions(data.id).perform
-      tagsDiffDelete <- contentTaggingService.bulkDeleteActions(data.id, currentTags.map(_.id).diff(tags.getOrElse(List()).map(t => t.id))).perform
-      tagsBulkUpsert <- tagService.bulkUpsertActions(tags).perform
+      contentUpsert <- transactor.perform(upsertActions(data))
+      robotsUpsert <- transactor.perform(robotsService.upsertActions(Robots(data.id, robotsAttributes)))
+      currentTags <- transactor.perform(tagService.findByContentIdActions(data.id))
+      tagsDiffDelete <- transactor.perform(contentTaggingService.bulkDeleteActions(data.id, currentTags.map(_.id).diff(tags.getOrElse(List()).map(t => t.id))))
+      tagsBulkUpsert <- transactor.perform(tagService.bulkUpsertActions(tags))
       // TODO: check diff and clean up contentTagging before upsert
-      contentTaggingBulkUpsert <- contentTaggingService.bulkUpsertActions(contentTagging).perform
+      contentTaggingBulkUpsert <- transactor.perform(contentTaggingService.bulkUpsertActions(contentTagging))
       // TODO: check diff and clean up external_resources before upsert
-      externalResourceBulkUpsert <- externalResourceService.bulkUpsertActions(maybeExternalResources).perform
+      externalResourceBulkUpsert <- transactor.perform(externalResourceService.bulkUpsertActions(maybeExternalResources))
     } yield (contentUpsert, currentTags, tagsDiffDelete, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
 
     for {
-      _ <- queries.transact(dbContext.transactor)
+      _ <- transactor.transact7[Int, Seq[Tag], Unit, Int, Int, Int, Int](queries)
       c <- this.findByPath(data.path).throwIfNone(InternalServerError("content not found")) // NOTE: 404 is better?
     } yield c
   }
@@ -136,11 +135,11 @@ class ContentService[M[_]: Monad](
   def delete(id: ContentId): IO[Unit] = {
 
     val queries = for {
-      externalResourcesDelete <- externalResourceService.deleteActions(id).perform
+      externalResourcesDelete <- transactor.perform(externalResourceService.deleteActions(id))
       // TODO: Tags should be deleted automatically after delete a content which are not refer from other contents.
-      contentTaggingDelete <- contentTaggingService.deleteByContentIdActions(id).perform
-      robotsDelete <- robotsService.deleteActions(id).perform
-      contentDelete <- deleteActions(id).perform
+      contentTaggingDelete <- transactor.perform(contentTaggingService.deleteByContentIdActions(id))
+      robotsDelete <- transactor.perform(robotsService.deleteActions(id))
+      contentDelete <- transactor.perform(deleteActions(id))
     } yield (
       externalResourcesDelete,
       contentTaggingDelete,
@@ -150,7 +149,7 @@ class ContentService[M[_]: Monad](
 
     for {
       _ <- this.findById(id).throwIfNone(NotFound(s"content not found: ${id}"))
-      _ <- queries.transact(dbContext.transactor)
+      _ <- transactor.transact4[Unit, Unit, Unit, Unit](queries)
     } yield ()
   }
 
@@ -161,7 +160,7 @@ class ContentService[M[_]: Monad](
    * @return ResponseContent instance
    */
   def findByPath(path: Path): IO[Option[Content]] = {
-    findByPathActions(path).perform.andTransact(dbContext)
+    transactor.transact(findByPathActions(path))
   }
 
   /**
@@ -181,14 +180,14 @@ class ContentService[M[_]: Monad](
    * @return ResponseContent instance
    */
   def findById(id: ContentId): IO[Option[Content]] = {
-    findByIdActions(id).perform.andTransact(dbContext)
+    transactor.transact(findByIdActions(id))
   }
 
   def findBy[A](data: A)(f: A => Action[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 
     import net.yoshinorin.qualtet.syntax._
 
-    f(data).perform.andTransact(dbContext).flatMap {
+    transactor.transact(f(data)).flatMap {
       case None => IO(None)
       case Some(x) =>
         val stripedContent = x.content.stripHtmlTags.replaceAll("\n", "")

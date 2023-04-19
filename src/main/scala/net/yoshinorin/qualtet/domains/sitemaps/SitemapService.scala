@@ -2,18 +2,17 @@ package net.yoshinorin.qualtet.domains.sitemaps
 
 import cats.effect.IO
 import cats.Monad
-import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
+import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.syntax._
 
 class SitemapService[M[_]: Monad](
   sitemapRepository: SitemapsRepository[M],
   cache: CacheModule[String, Seq[Url]]
-)(dbContext: DataBaseContext[Aux[IO, Unit]])
+)(using transactor: Transactor[M])
     extends Cacheable {
 
   private val cacheKey = "sitemaps-full-cache"
@@ -27,7 +26,7 @@ class SitemapService[M[_]: Monad](
       case Some(x: Seq[Url]) => IO(x)
       case _ =>
         for {
-          x <- getActions.perform.andTransact(dbContext)
+          x <- transactor.transact(getActions)
         } yield (x, cache.put(cacheKey, x))._1
     }
   }

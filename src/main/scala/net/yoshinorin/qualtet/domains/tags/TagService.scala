@@ -3,12 +3,10 @@ package net.yoshinorin.qualtet.domains.tags
 import cats.effect.IO
 import cats.Monad
 import cats.implicits._
-import doobie.implicits._
-import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
-import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
+import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.syntax._
@@ -16,7 +14,7 @@ import net.yoshinorin.qualtet.syntax._
 class TagService[M[_]: Monad](
   tagRepository: TagRepository[M],
   contentTaggingService: ContentTaggingService[M]
-)(dbContext: DataBaseContext[Aux[IO, Unit]]) {
+)(using transactor: Transactor[M]) {
 
   def bulkUpsertActions(data: Option[List[Tag]]): Action[Int] = {
     data match {
@@ -51,7 +49,7 @@ class TagService[M[_]: Monad](
    * @return tags
    */
   def getAll: IO[Seq[ResponseTag]] = {
-    getAllActions.perform.andTransact(dbContext)
+    transactor.transact(getAllActions)
   }
 
   /**
@@ -61,7 +59,7 @@ class TagService[M[_]: Monad](
    * @return maybe Tag
    */
   def findById(id: TagId): IO[Option[Tag]] = {
-    findByIdActions(id).perform.andTransact(dbContext)
+    transactor.transact(findByIdActions(id))
   }
 
   /**
@@ -71,7 +69,7 @@ class TagService[M[_]: Monad](
    * @return maybe Tag
    */
   def findByName(tagName: TagName): IO[Option[Tag]] = {
-    findByNameActions(tagName).perform.andTransact(dbContext)
+    transactor.transact(findByNameActions(tagName))
   }
 
   /**
@@ -107,13 +105,13 @@ class TagService[M[_]: Monad](
    */
   def delete(id: TagId): IO[Unit] = {
     val queries = for {
-      contentTaggingDelete <- contentTaggingService.deleteByTagIdActions(id).perform
-      tagDelete <- deleteActions(id).perform
+      contentTaggingDelete <- transactor.perform(contentTaggingService.deleteByTagIdActions(id))
+      tagDelete <- transactor.perform(deleteActions(id))
     } yield (contentTaggingDelete, tagDelete)
 
     for {
       _ <- this.findById(id).throwIfNone(NotFound(s"tag not found: ${id}"))
-      _ <- queries.transact(dbContext.transactor)
+      _ <- transactor.transact2(queries)
     } yield ()
   }
 }

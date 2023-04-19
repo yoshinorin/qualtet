@@ -2,20 +2,19 @@ package net.yoshinorin.qualtet.domains.articles
 
 import cats.effect.IO
 import cats.Monad
-import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
-import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
+import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.syntax._
 
 class ArticleService[M[_]: Monad](
   articleRepository: ArticleRepository[M],
   contentTypeService: ContentTypeService[M]
-)(dbContext: DataBaseContext[Aux[IO, Unit]]) {
+)(using transactor: Transactor[M]) {
 
   def actions(
     contentTypeId: ContentTypeId,
@@ -42,7 +41,7 @@ class ArticleService[M[_]: Monad](
   )(f: (ContentTypeId, A, ArticlesQueryParameter) => Action[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
       c <- contentTypeService.findByName("article").throwIfNone(NotFound(s"content-type not found: article"))
-      articlesWithCount <- f(c.id, data, queryParam).perform.andTransact(dbContext)
+      articlesWithCount <- transactor.transact(f(c.id, data, queryParam))
     } yield
       if (articlesWithCount.nonEmpty) {
         ResponseArticleWithCount(articlesWithCount.map(_._1).headOption.getOrElse(0), articlesWithCount.map(_._2))

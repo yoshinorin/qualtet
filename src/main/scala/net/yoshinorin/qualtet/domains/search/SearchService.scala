@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.search
 
 import cats.effect.IO
 import cats.Monad
-import doobie.util.transactor.Transactor.Aux
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
@@ -11,7 +10,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeSe
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
-import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
+import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.types.Points
 import net.yoshinorin.qualtet.syntax._
@@ -22,7 +21,7 @@ import scala.annotation.tailrec
 class SearchService[M[_]: Monad](
   searchConfig: SearchConfig,
   searchRepository: SearchRepository[M]
-)(dbContext: DataBaseContext[Aux[IO, Unit]]) {
+)(using transactor: Transactor[M]) {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -82,7 +81,7 @@ class SearchService[M[_]: Monad](
   def search(query: Map[String, List[String]]): IO[ResponseSearchWithCount] = {
     for {
       qs <- IO(validateAndExtractQueryString(query))
-      searchResult <- actions(qs).perform.andTransact(dbContext)
+      searchResult <- transactor.transact(actions(qs))
     } yield
       if (searchResult.nonEmpty) {
         val r = searchResult.map { x =>

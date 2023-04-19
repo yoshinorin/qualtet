@@ -60,7 +60,7 @@ class TagServiceSpec extends AnyWordSpec {
     "be findByContentId" in {
       val r = (for {
         c <- contentService.findByPath(Path("/test/tagService-4"))
-        t <- tagService.findByContentIdActions(c.get.id).perform.andTransact(dbContext)
+        t <- dbContext.transact(tagService.findByContentIdActions(c.get.id))
       } yield t).unsafeRunSync()
       assert(r.head.name === TagName("tagService4"))
     }

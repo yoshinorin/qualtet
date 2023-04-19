@@ -2,16 +2,15 @@ package net.yoshinorin.qualtet.domains.authors
 
 import cats.effect.IO
 import cats.Monad
-import doobie.util.transactor.Transactor.Aux
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
-import net.yoshinorin.qualtet.infrastructure.db.DataBaseContext
+import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.syntax._
 
 class AuthorService[M[_]: Monad](
   authorRepository: AuthorRepository[M]
-)(dbContext: DataBaseContext[Aux[IO, Unit]]) {
+)(using transactor: Transactor[M]) {
 
   def upsertActions(data: Author): Action[Int] = {
     Continue(authorRepository.upsert(data), Action.done[Int])
@@ -41,7 +40,7 @@ class AuthorService[M[_]: Monad](
    */
   def create(data: Author): IO[ResponseAuthor] = {
     for {
-      _ <- upsertActions(data).perform.andTransact(dbContext)
+      _ <- transactor.transact(upsertActions(data))
       a <- this.findByName(data.name).throwIfNone(InternalServerError("user not found"))
     } yield a
   }
@@ -52,7 +51,7 @@ class AuthorService[M[_]: Monad](
    * @return Authors
    */
   def getAll: IO[Seq[ResponseAuthor]] = {
-    fetchActions.perform.andTransact(dbContext)
+    transactor.transact(fetchActions)
   }
 
   /**
@@ -62,7 +61,7 @@ class AuthorService[M[_]: Monad](
    * @return Author
    */
   def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
-    findByIdActions(id).perform.andTransact(dbContext)
+    transactor.transact(findByIdActions(id))
   }
 
   /**
@@ -72,7 +71,7 @@ class AuthorService[M[_]: Monad](
    * @return Author
    */
   def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
-    findByIdWithPasswordActions(id).perform.andTransact(dbContext)
+    transactor.transact(findByIdWithPasswordActions(id))
   }
 
   /**
@@ -82,7 +81,7 @@ class AuthorService[M[_]: Monad](
    * @return Author
    */
   def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
-    findByNameActions(name).perform.andTransact(dbContext)
+    transactor.transact(findByNameActions(name))
   }
 
 }
