@@ -10,7 +10,7 @@ object LocalProcesses {
 
   private def javaProcesses(): Array[String] = "jps -l".!!.split(lineSeparator)
 
-  private def getDevServerPID(ps: Array[String]): Option[Long] = {
+  private def getLocalServerPID(ps: Array[String]): Option[Long] = {
     val psStrings = ps.filter(p => p.contains("net.yoshinorin.qualtet.BootStrap"))
     if (psStrings.length > 0) {
       Some(psStrings.head.split(" ").head.toLong)
@@ -47,7 +47,7 @@ object LocalProcesses {
   lazy val kill = taskKey[Unit]("kill current local server process")
 
   val tasks = Seq(
-    kill := killLocalServer(getDevServerPID(javaProcesses()))
+    kill := killLocalServer(getLocalServerPID(javaProcesses()))
   )
 
   object Commands {
