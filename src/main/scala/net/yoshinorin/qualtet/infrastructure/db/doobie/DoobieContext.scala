@@ -35,19 +35,19 @@ class DoobieContext(config: DBConfig) extends Transactor[ConnectionIO] {
 
   override def transact[R](action: Action[R]): IO[R] = transact(perform(action))
 
-  override def transact2[T1, R](ts: (ConnectionIO[(T1, R)])): IO[R] = {
+  override def transact2[T1, T2](ts: (ConnectionIO[(T1, T2)])): IO[T2] = {
     for {
       r <- ts.transact(transactor)
     } yield r._2
   }
 
-  override def transact4[T1, T2, T3, R](ts: (ConnectionIO[(T1, T2, T3, R)])): IO[R] = {
+  override def transact4[T1, T2, T3, T4](ts: (ConnectionIO[(T1, T2, T3, T4)])): IO[T4] = {
     for {
       r <- ts.transact(transactor)
     } yield r._4
   }
 
-  override def transact7[T1, T2, T3, T4, T5, T6, R](ts: (ConnectionIO[(T1, T2, T3, T4, T5, T6, R)])): IO[R] = {
+  override def transact7[T1, T2, T3, T4, T5, T6, T7](ts: (ConnectionIO[(T1, T2, T3, T4, T5, T6, T7)])): IO[T7] = {
     for {
       r <- ts.transact(transactor)
     } yield r._7
