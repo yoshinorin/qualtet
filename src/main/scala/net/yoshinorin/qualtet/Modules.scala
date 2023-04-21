@@ -14,6 +14,7 @@ import net.yoshinorin.qualtet.domains.contents.{ContentRepositoryDoobieInterpret
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceRepositoryDoobieInterpreter, ExternalResourceService}
 import net.yoshinorin.qualtet.domains.robots.{RobotsRepositoryDoobieInterpreter, RobotsService}
 import net.yoshinorin.qualtet.domains.search.{SearchRepositoryDoobieInterpreter, SearchService}
+import net.yoshinorin.qualtet.domains.series.{SeriesRepositoryDoobieInterpreter, SeriesService}
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapsRepositoryDoobieInterpreter, SitemapService, Url}
 import net.yoshinorin.qualtet.domains.tags.{TagRepositoryDoobieInterpreter, TagService}
 import net.yoshinorin.qualtet.auth.Signature
@@ -65,6 +66,9 @@ object Modules {
 
   val searchRepository: SearchRepositoryDoobieInterpreter = new SearchRepositoryDoobieInterpreter()
   val searchService = new SearchService(config.search, searchRepository)
+
+  val seriesRepository: SeriesRepositoryDoobieInterpreter = new SeriesRepositoryDoobieInterpreter()
+  val seriesService = new SeriesService(seriesRepository)
 
   val contentRepository: ContentRepositoryDoobieInterpreter = new ContentRepositoryDoobieInterpreter()
   val contentService =

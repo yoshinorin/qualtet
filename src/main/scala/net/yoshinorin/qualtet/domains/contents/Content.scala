@@ -23,6 +23,7 @@ object ContentId {
   }
 }
 
+// TODO: move somewhere
 final case class Path(value: String) extends AnyVal
 object Path {
   given codecPath: JsonValueCodec[Path] = JsonCodecMaker.make

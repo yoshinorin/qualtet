@@ -23,6 +23,7 @@ import net.yoshinorin.qualtet.http.routes.{
   FeedRoute,
   HomeRoute,
   SearchRoute,
+  SeriesRoute,
   SitemapRoute
 }
 import net.yoshinorin.qualtet.http.routes.TagRoute
@@ -44,6 +45,7 @@ class Router[M[_]: Monad](
   feedRoute: FeedRoute[M],
   homeRoute: HomeRoute,
   searchRoute: SearchRoute[M],
+  seriesRoute: SeriesRoute[M],
   sitemapRoute: SitemapRoute[M],
   tagRoute: TagRoute[M]
 ) {
@@ -73,6 +75,7 @@ class Router[M[_]: Monad](
     "/content-types" -> corsProvider.apply(contentTypes),
     "/feeds" -> corsProvider.apply(feeds),
     "/search" -> corsProvider.apply(search),
+    "/series" -> corsProvider.apply(series),
     "/sitemaps" -> corsProvider.apply(sitemaps),
     "/status" -> corsProvider.apply(status),
     "/tags" -> corsProvider.apply(tags),
@@ -163,6 +166,14 @@ class Router[M[_]: Monad](
   private[http] def search: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case request @ GET -> _ =>
       searchRoute.search(request.uri.query.multiParams)
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+    case request @ _ =>
+      methodNotAllowed(request, Allow(Set(GET)))
+  }
+
+  private[http] def series: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case request @ GET -> _ =>
+      seriesRoute.get(request.uri.path.toString())
     case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
