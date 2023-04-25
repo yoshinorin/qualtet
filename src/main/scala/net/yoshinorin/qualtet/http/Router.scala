@@ -172,6 +172,8 @@ class Router[M[_]: Monad](
   }
 
   private[http] def series: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root =>
+      seriesRoute.get
     case request @ GET -> _ =>
       seriesRoute.get(request.uri.path.toString())
     case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`

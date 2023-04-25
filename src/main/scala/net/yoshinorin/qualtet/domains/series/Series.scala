@@ -25,5 +25,5 @@ final case class Series(
 
 object Series {
   given codecSeries: JsonValueCodec[Series] = JsonCodecMaker.make
-  given codecListSeries: JsonValueCodec[List[Series]] = JsonCodecMaker.make
+  given codecSeqSeries: JsonValueCodec[Seq[Series]] = JsonCodecMaker.make
 }

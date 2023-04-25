@@ -17,6 +17,10 @@ class SeriesService[M[_]: Monad](
     Continue(seriesRepository.findByPath(path), Action.done[Option[Series]])
   }
 
+  def fetchActions: Action[Seq[Series]] = {
+    Continue(seriesRepository.getAll(), Action.done[Seq[Series]])
+  }
+
   /**
    * find a series by path
    *
@@ -25,6 +29,15 @@ class SeriesService[M[_]: Monad](
    */
   def findByPath(path: Path): IO[Option[Series]] = {
     transactor.transact(findByPathActions(path))
+  }
+
+  /**
+   * get all series
+   *
+   * @return Series
+   */
+  def getAll: IO[Seq[Series]] = {
+    transactor.transact(fetchActions)
   }
 
 }

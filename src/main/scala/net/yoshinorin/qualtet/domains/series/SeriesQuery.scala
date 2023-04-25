@@ -12,4 +12,9 @@ object SeriesQuery {
       .query[Series]
   }
 
+  def getAll(implicit tagRead: Read[Series]): Query0[Series] = {
+    sql"SELECT * FROM series"
+      .query[Series]
+  }
+
 }

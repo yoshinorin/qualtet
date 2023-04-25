@@ -327,6 +327,20 @@ paths:
           schema:
             type: string
           description: Word for seach contents.
+  /series:
+    get:
+      summary: Get all series
+      tags:
+        - series
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/series'
   /series/{seriesName}:
     get:
       summary: Get a series

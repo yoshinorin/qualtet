@@ -31,4 +31,8 @@ class SeriesRepositoryDoobieInterpreter extends SeriesRepository[ConnectionIO] {
   override def findByPath(path: Path): ConnectionIO[Option[Series]] = {
     SeriesQuery.findByPath(path).option
   }
+
+  override def getAll(): ConnectionIO[Seq[Series]] = {
+    SeriesQuery.getAll.to[Seq]
+  }
 }
