@@ -18,14 +18,13 @@ class SeriesService[M[_]: Monad](
   }
 
   /**
-    * find a series by path
-    *
-    * @param path a series path
-    * @return Series Instance
-    */
+   * find a series by path
+   *
+   * @param path a series path
+   * @return Series Instance
+   */
   def findByPath(path: Path): IO[Option[Series]] = {
     transactor.transact(findByPathActions(path))
   }
 
 }
-
