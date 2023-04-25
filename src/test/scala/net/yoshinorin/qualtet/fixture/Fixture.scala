@@ -52,7 +52,7 @@ object Fixture {
   val p: String = Modules.config.http.port.toString()
   val host = Uri.unsafeFromString(s"http://${h}:${p}")
 
-  given dbContext2: DoobieContext = new DoobieContext(Modules.config.db)
+  given dbContext: DoobieContext = new DoobieContext(Modules.config.db)
 
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
