@@ -27,6 +27,7 @@ import net.yoshinorin.qualtet.http.routes.{
   FeedRoute,
   HomeRoute,
   SearchRoute,
+  SeriesRoute,
   SitemapRoute,
   TagRoute
 }
@@ -84,6 +85,7 @@ object Fixture {
   val feedRoute = new FeedRoute(Modules.feedService)
   val homeRoute: HomeRoute = new HomeRoute()
   val searchRoute = new SearchRoute(Modules.searchService)
+  val seriesRoute = new SeriesRoute(Modules.seriesService)
   val sitemapRoute = new SitemapRoute(Modules.sitemapService)
   val tagRoute = new TagRoute(Modules.tagService, Modules.articleService)
 
@@ -101,6 +103,7 @@ object Fixture {
     feedRoute,
     homeRoute,
     searchRoute,
+    seriesRoute,
     sitemapRoute,
     tagRoute
   )
@@ -118,6 +121,7 @@ object Fixture {
     feedRoute: FeedRoute[M] = feedRoute,
     homeRoute: HomeRoute = homeRoute,
     searchRoute: SearchRoute[M] = searchRoute,
+    seriesRoute: SeriesRoute[M] = seriesRoute,
     sitemapRoute: SitemapRoute[M] = sitemapRoute,
     tagRoute: TagRoute[M] = tagRoute
   ) = new net.yoshinorin.qualtet.http.Router(
@@ -134,6 +138,7 @@ object Fixture {
     feedRoute = feedRoute,
     homeRoute = homeRoute,
     searchRoute = searchRoute,
+    seriesRoute = seriesRoute,
     sitemapRoute = sitemapRoute,
     tagRoute = tagRoute
   )
