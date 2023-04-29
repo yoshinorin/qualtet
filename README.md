@@ -17,7 +17,8 @@
 |[Qualtet](https://github.com/yoshinorin/qualtet)|API-based blogging system (server-side).|
 |[Quintet](https://github.com/yoshinorin/quintet)|The front end for Qualtet.|
 |[Qualtet-CLI](https://github.com/yoshinorin/qualtet-cli)|A set of wrappers that call the APIs of [Hexo](https://github.com/hexojs/hexo) and [Qualtet](https://github.com/yoshinorin/qualtet).|
-|[Hexo](https://github.com/hexojs)|Hexo is SSG, but I'm using it for just local content management. (markdown, images, etc...) My website's contents depend on Hexo locally. But basically, Qualtet no needs to depend on Hexo and any SSG, cms ...etc.|
+
+<sub>About [Hexo](https://github.com/hexojs). Hexo is a SSG, but I'm using it only for local content management. (such as markdown, images, etc...) The contents of my website depend on Hexo locally. But basically, Qualtet doesn't necessarily need to depend on Hexo or any other SSG or CMS ...etc.</sub>
 
 ## Architecture (Example)
 
