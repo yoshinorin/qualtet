@@ -29,7 +29,6 @@ import com.comcast.ip4s._
 
 // import scala.io.StdIn
 
-@SuppressWarnings(Array("org.wartremover.warts.ScalaApp")) // Not yet migrate to Scala3
 object BootStrap extends IOApp {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
