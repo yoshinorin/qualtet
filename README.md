@@ -2,7 +2,7 @@
 
 *Qualtet is an API-based blogging system (server-side).*
 
-> [Live (Qualtet is a backend of this site)](https://yoshinorin.net)
+> [Live (Qualtet is the backend for this site)](https://yoshinorin.net)
 
 |Version|Build|Coverage|Docs|
 |---|---|---|---|
@@ -10,13 +10,13 @@
 |![](https://img.shields.io/badge/Release-v1.13.0_(stale)-inactive.svg?style=flat-square)|[![CI](https://github.com/yoshinorin/qualtet/actions/workflows/ci.yml/badge.svg?branch=v1.x)](https://github.com/yoshinorin/qualtet/actions/workflows/ci.yml)|[![Coverage Status](https://coveralls.io/repos/github/yoshinorin/qualtet/badge.svg?branch=v1.x)](https://coveralls.io/github/yoshinorin/qualtet?branch=v1.x)|![](https://img.shields.io/badge/Docs-N/A-inactive.svg?style=flat-square)|
 
 
-## Related Repositories
+## Related Projects
 
-|||
+| Project | Description |
 |---|---|
 |[Qualtet](https://github.com/yoshinorin/qualtet)|API-based blogging system (server-side).|
-|[Quintet](https://github.com/yoshinorin/quintet)|The front end for Qualtet.|
 |[Qualtet-CLI](https://github.com/yoshinorin/qualtet-cli)|A set of wrappers that call the APIs of [Hexo](https://github.com/hexojs/hexo) and [Qualtet](https://github.com/yoshinorin/qualtet).|
+|[Quintet](https://github.com/yoshinorin/quintet)|The front end for Qualtet.|
 
 <sub>About [Hexo](https://github.com/hexojs). Hexo is a SSG, but I'm using it only for local content management. (such as markdown, images, etc...) The contents of my website depend on Hexo locally. But basically, Qualtet doesn't necessarily need to depend on Hexo or any other SSG or CMS ...etc.</sub>
 
