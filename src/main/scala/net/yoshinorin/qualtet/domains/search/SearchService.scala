@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.search
 
 import cats.effect.IO
 import cats.Monad
+import cats.implicits._
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
@@ -57,7 +58,7 @@ class SearchService[M[_]: Monad](
           case Some(n) if (n._1 > h._2) => calcSubStrRanges(t, Seq(h, n))
           case Some(n) if (acc.sizeIs > 1 && acc.tail.head._1 == h._1) => calcSubStrRanges(t, acc.dropRight(1) :+ (h._1, n._2))
           case Some(n) => calcSubStrRanges(t, acc :+ (h._1, n._2))
-          case None if (acc == Nil) => calcSubStrRanges(t, Seq(h))
+          case None if (acc === Nil) => calcSubStrRanges(t, Seq(h))
           case _ => acc
         }
     }
