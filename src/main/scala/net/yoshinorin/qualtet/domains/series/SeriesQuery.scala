@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.contents.Path
 object SeriesQuery {
 
   def findByPath(path: Path)(implicit tagRead: Read[Series]): Query0[Series] = {
-    sql"SELECT * FROM series WHERE path = 'test'"
+    sql"SELECT * FROM series WHERE path = ${path.value}"
       .query[Series]
   }
 
