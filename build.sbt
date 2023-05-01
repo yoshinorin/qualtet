@@ -1,4 +1,5 @@
 import docker._
+import testing._
 import LocalProcesses._
 
 organization := "net.yoshinorin"

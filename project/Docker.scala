@@ -43,34 +43,3 @@ class Local extends Docker {
     }
   }
 }
-
-class Testing extends Docker {
-  val dockerComposeFilePath = new File("src/test/resources/docker-compose.yml")
-  val upTesting = taskKey[Unit]("run db container for testing")
-  val downTesting = taskKey[Unit]("shutdown db container for testing")
-
-  val tasks = Seq(
-    upTesting := up_(dockerComposeFilePath),
-    downTesting := down_(dockerComposeFilePath)
-  )
-
-  object Commands {
-    val runAll = {
-      """
-        |;scalafmt
-        |;Test / scalafmt
-        |;runTestDbContainer
-        |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
-        |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
-        |;test
-        |;shutDownTestDbContainer
-        |""".stripMargin
-    }
-    val upDbAndCreateMinData = {
-      """;runTestDbContainer
-        |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
-        |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
-        |""".stripMargin
-    }
-  }
-}
