@@ -171,14 +171,23 @@ class Router[M[_]: Monad](
       methodNotAllowed(request, Allow(Set(GET)))
   }
 
-  private[http] def series: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  // NOTE: must be compose `auth route` after `Non auth route`.
+  private[http] def series: HttpRoutes[IO] =
+    seriesWithoutAuth <+>
+      authProvider.authenticate(seriesWithAuthed)
+
+  private[http] def seriesWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root =>
       seriesRoute.get
     case request @ GET -> _ =>
       seriesRoute.get(request.uri.path.toString())
-    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+  }
+
+  private[this] def seriesWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
+    case request @ POST -> Root as payload =>
+      seriesRoute.post(payload)
     case request @ _ =>
-      methodNotAllowed(request, Allow(Set(GET)))
+      methodNotAllowed(request.req, Allow(Set(GET, POST, DELETE)))
   }
 
   private[http] def sitemaps: HttpRoutes[IO] = HttpRoutes.of[IO] {

@@ -6,17 +6,34 @@ import org.http4s.headers.`Content-Type`
 import org.http4s._
 import org.http4s.dsl.io._
 import org.slf4j.LoggerFactory
-import net.yoshinorin.qualtet.domains.series.Series._
+import net.yoshinorin.qualtet.domains.series.{Series, RequestSeries}
 import net.yoshinorin.qualtet.domains.series.SeriesService
 import net.yoshinorin.qualtet.domains.contents.Path
 import net.yoshinorin.qualtet.http.RequestDecoder
 import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 
 class SeriesRoute[M[_]: Monad](
   seriesService: SeriesService[M]
 ) extends RequestDecoder {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
+
+  def post(payload: (ResponseAuthor, String)): IO[Response[IO]] = {
+    val maybeSeries = for {
+      maybeSeries <- IO(decode[RequestSeries](payload._2))
+    } yield maybeSeries
+
+    maybeSeries.flatMap { s =>
+      s match {
+        case Left(f) => throw f
+        case Right(s) =>
+          seriesService.create(s).flatMap { createdSeries =>
+            Created(createdSeries.asJson, `Content-Type`(MediaType.application.json))
+          }
+      }
+    }
+  }
 
   // series
   def get: IO[Response[IO]] = {

@@ -341,6 +341,30 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/series'
+    post:
+      summary: Create or Update a series
+      tags:
+        - series
+      description: |
+        Create or Update a series
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestSeries'
+      responses:
+        201:
+          description: Create or Update succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/series'
+        400:
+          description: BadRequest
+        401:
+          description: Unauthorized
   /series/{seriesName}:
     get:
       summary: Get a series
@@ -506,6 +530,22 @@ components:
         description:
           type: string
           example: "Example series description"
+    requestSeries:
+      type: object
+      properties:
+        path:
+          type: string
+          format: url(excludes domain part)
+          example: "/series/<example>"
+        title:
+          type: string
+          example: "Example series"
+        description:
+          type: string
+          example: "Example series description"
+      required:
+        - path
+        - title
     requestContent:
       type: object
       properties:
