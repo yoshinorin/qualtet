@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS series (
     id CHAR(26) CHARACTER SET ascii PRIMARY KEY NOT NULL,
     path VARCHAR(512) UNIQUE NOT NULL,
     title VARCHAR(255) NOT NULL,
-    desctiprion VARCHAR(1024) NULL
+    description VARCHAR(1024) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS series_contents_belonging (
