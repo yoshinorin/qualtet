@@ -39,6 +39,9 @@ docker/config
 docker/dumps/
 tmpdata
 
+# Test
+test-out-data/
+
 # Artifacts
 *.jar
 

@@ -8,7 +8,8 @@ services:
       MYSQL_PASSWORD: pass
       MYSQL_DATABASE: qualtet
     volumes:
-      - ../../../logs/mysql:/var/log/mysql
+      - ../../../test-out-data/data/local:/var/lib/mysql
+      - ../../../test-out-data/logs/mysql:/var/log/mysql
     expose:
       - "33066"
     ports:
