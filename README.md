@@ -45,6 +45,10 @@ Please see [website](https://yoshinorin.github.io/qualtet/docs/).
     * [Examples](./docs/_docs/restapi/index.md)
 * [Development](./docs/_docs/development/index.md)
 
+## ERD
+
+![](./docs/_assets/assets/erd.jpg)
+
 ## Branches
 
 The current master branch is for `v2.x`. `v1.x` branch is [here](https://github.com/yoshinorin/qualtet/tree/v1.x). But it will be not updated.
