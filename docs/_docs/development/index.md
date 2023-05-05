@@ -3,20 +3,9 @@ layout: doc-page
 title: Development
 ---
 
-## Compile
+## Run local server
 
-```sh
-$ cd <source code dir>
-$ sbt
-...
-[info] started sbt server
-sbt:qualtet> ~compile
-[success] Total time: 1 s, completed 2021/05/12 2:49:37
-[info] 1. Monitoring source files for qualtet/compile...
-[info]    Press <enter> to interrupt or '?' for more options.
-```
-
-## Start server
+### Start server
 
 ```sh
 $ cd <source code dir>
@@ -28,54 +17,37 @@ Multiple main classes detected. Select one to run:
 Enter number: 1
 ```
 
-## Start server(Hot reload)
+### Start server(Hot reload)
 
 ```
 $ sbt
 $ ~reStart
 ```
 
-Run `scalafmt` & `kill current server` start server(Hot reload)
+Run `scalafmt` & `kill current server` before start server(Hot reload)
 
 ```
 $ sbt
 $ runs
 ```
 
-## Kill current server process
-
-Require [npm kill-port](https://github.com/tiaanduplessis/kill-port) globally.
+### Kill current server process
 
 ```
 $ sbt
 $ kills
 ```
 
-## Assembly
+### local db using by docker
 
 ```
-$ sbt assembly
-```
+$ sbt
 
-## REST API Document
+// start up local db using by docker
+$ localDbUp
 
-```sh
-$ cd ./docs/api
-$ npm run serve
-Server started: http://127.0.0.1:8080
-```
-
-## Generate Website
-
-```sh
-$ sbt doc
-```
-
-Serve generated docs locally.
-
-```sh
-$ cd ./docs/dist
-$ python -m http.server 8080
+// shutdown local db
+$ localDbUp
 ```
 
 ## Code format
@@ -122,20 +94,51 @@ sbt:qualtet> dependencyUpdates
 sbt:qualtet>
 ```
 
-## Change log level in sbt
-
-```scala
-$ sbt
-...
-
-> debug
-```
-
-> [Change the logging level for a specific task, configuration, or project](https://www.scala-sbt.org/1.x/docs/Howto-Logging.html#Change+the+logging+level+for+a+specific+task%2C+configuration%2C+or+project)
-
 ## Generate commit log for release note
 
 ```sh
 // git log --pretty=format:"* (%h) %s" <tag>..<tag>
 $ git log --pretty=format:"* (%h) %s" v1.2.0..v1.3.0
+```
+
+## Compile
+
+```sh
+$ cd <source code dir>
+$ sbt
+...
+[info] started sbt server
+sbt:qualtet> ~compile
+[success] Total time: 1 s, completed 2021/05/12 2:49:37
+[info] 1. Monitoring source files for qualtet/compile...
+[info]    Press <enter> to interrupt or '?' for more options.
+```
+
+## Assembly
+
+```
+$ sbt assembly
+```
+
+## Documentation
+
+### REST API Document
+
+```sh
+$ cd ./docs/api
+$ npm run serve
+Server started: http://127.0.0.1:8080
+```
+
+### Generate Website docs
+
+```sh
+$ sbt doc
+```
+
+Serve generated docs locally.
+
+```sh
+$ cd ./docs/dist
+$ python -m http.server 8080
 ```
