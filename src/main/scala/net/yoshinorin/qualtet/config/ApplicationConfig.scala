@@ -32,6 +32,7 @@ object ApplicationConfig {
   private val httpHost: String = config.getString("http.host")
   private val httpPort: Int = config.getInt("http.port")
 
+  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   private val corsAllowOrigins: List[String] = config.getList("cors.allow-origins").unwrapped().asInstanceOf[ArrayList[String]].asScala.toList
 
   private val jwtIss: String = config.getString("jwt.iss")
