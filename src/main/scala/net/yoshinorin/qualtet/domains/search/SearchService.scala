@@ -48,6 +48,7 @@ class SearchService[M[_]: Monad](
     words.flatMap(w => sentence.position(w).map(x => x.expand(8, 24, sentence.length)))
   }
 
+  @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
   @tailrec
   private def calcSubStrRanges(idxes: Seq[Points], acc: Seq[Points] = Nil): Seq[Points] = {
     idxes.headOption match {

@@ -9,6 +9,7 @@ import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
 object SearchQuery {
   // https://tpolecat.github.io/doobie/docs/08-Fragments.html
+  @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
   def search(query: List[String])(implicit
     responseSearchWithCount: Read[(Int, ResponseSearch)]
   ): Query0[(Int, ResponseSearch)] = {
