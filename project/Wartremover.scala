@@ -8,7 +8,8 @@ object Wartremover {
       Wart.Throw,
       Wart.DefaultArguments,
       Wart.Overloading,
-      Wart.Nothing
+      Wart.Nothing,
+      Wart.ToString
     )
 
 }
