@@ -81,11 +81,14 @@ object BootStrap extends IOApp {
     // TODO: filter & format log
     val httpAppWithLogger: HttpApp[IO] = Logger.httpApp(true, false)(router.routes)
 
+    val host = Ipv4Address.fromString(Modules.config.http.host).getOrElse(ipv4"127.0.0.1")
+    val port = Port.fromInt(Modules.config.http.port).getOrElse(port"9001")
+
     logger.info("starting http server...")
     EmberServerBuilder
       .default[IO]
-      .withHost(Ipv4Address.fromString(Modules.config.http.host).get)
-      .withPort(Port.fromInt(Modules.config.http.port).get)
+      .withHost(host)
+      .withPort(port)
       .withHttpApp(httpAppWithLogger)
       .withLogger(org.typelevel.log4cats.slf4j.Slf4jLogger.getLoggerFromSlf4j(logger))
       .build
