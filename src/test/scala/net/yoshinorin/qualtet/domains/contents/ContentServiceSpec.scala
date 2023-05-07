@@ -14,6 +14,33 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.ContentServiceSpec
 class ContentServiceSpec extends AnyWordSpec {
 
+  val requestContent1: RequestContent = RequestContent(
+    contentType = "article",
+    path = Path("/test/path"),
+    title = "this is a title",
+    rawContent = "this is a raw content",
+    htmlContent = "this is a html content",
+    robotsAttributes = Attributes("noarchive, noimageindex"),
+    tags = List("Scala", "http4s"),
+    externalResources = List(
+      ExternalResources(
+        ExternalResourceKind("js"),
+        values = List("test", "foo", "bar")
+      )
+    )
+  )
+
+  val requestContentNoMetas: RequestContent = RequestContent(
+    contentType = "article",
+    path = Path("/test/no-metas"),
+    title = "this is a title",
+    rawContent = "this is a raw content",
+    htmlContent = "this is a html content",
+    robotsAttributes = Attributes("noarchive, noimageindex"),
+    tags = List(),
+    externalResources = List()
+  )
+
   "ContentServiceSpec" should {
 
     "create content and related data" in {

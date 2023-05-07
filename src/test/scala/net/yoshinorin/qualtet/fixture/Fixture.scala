@@ -173,9 +173,6 @@ object Fixture {
   val contentId: ContentId = ContentId("01febb1333pd3431q1a1e00fbt")
   val contentTypeId: ContentTypeId = ContentTypeId("01febb1333pd3431q1a1e01fbc")
   val articleContentType: ContentType = ContentType(contentTypeId, "articles")
-
-  val tagId: TagId = TagId("01frdbe1g83533h92rkhy8ctkw")
-
   val fullRobotsAttributes: Attributes = Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex")
 
   def makeRequestContents(
@@ -203,94 +200,4 @@ object Fixture {
       Modules.contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync()
     }
   }
-
-  val requestContent1: RequestContent = RequestContent(
-    contentType = "article",
-    path = Path("/test/path"),
-    title = "this is a title",
-    rawContent = "this is a raw content",
-    htmlContent = "this is a html content",
-    robotsAttributes = Attributes("noarchive, noimageindex"),
-    tags = List("Scala", "http4s"),
-    externalResources = List(
-      ExternalResources(
-        ExternalResourceKind("js"),
-        values = List("test", "foo", "bar")
-      )
-    )
-  )
-
-  val requestContentNoMetas: RequestContent = RequestContent(
-    contentType = "article",
-    path = Path("/test/no-metas"),
-    title = "this is a title",
-    rawContent = "this is a raw content",
-    htmlContent = "this is a html content",
-    robotsAttributes = Attributes("noarchive, noimageindex"),
-    tags = List(),
-    externalResources = List()
-  )
-
-  val responseArchive: ResponseArchive = ResponseArchive(
-    path = Path("/test"),
-    title = "title",
-    publishedAt = 1567814290
-  )
-
-  val responseArchive2: ResponseArchive =
-    ResponseArchive(
-      path = Path("/test/path1"),
-      title = "title1",
-      publishedAt = 1567814290
-    )
-
-  val responseArchive3: ResponseArchive =
-    ResponseArchive(
-      path = Path("/test/path2"),
-      title = "title2",
-      publishedAt = 1567814391
-    )
-
-  val responseArticle1: ResponseArticle = ResponseArticle(
-    id = ContentId(generateUlid()),
-    path = Path("/test"),
-    title = "title",
-    content = "this is a content",
-    publishedAt = 0,
-    updatedAt = 0
-  )
-
-  val responseArticle2: ResponseArticle = ResponseArticle(
-    id = ContentId(generateUlid()),
-    path = Path("/test/path2"),
-    title = "title2",
-    content = "this is a content2",
-    publishedAt = 1,
-    updatedAt = 2
-  )
-
-  val responseArticleWithLongLengthContent: ResponseArticle = ResponseArticle(
-    id = ContentId(generateUlid()),
-    path = Path("/test"),
-    title = "title",
-    content = "a" * 101,
-    publishedAt = 0,
-    updatedAt = 0
-  )
-
-  val feed1: ResponseFeed = ResponseFeed(
-    title = "feedTitle1",
-    link = Path("/feed1"),
-    id = Path("/feed1"),
-    published = 0,
-    updated = 0
-  )
-
-  val feed2: ResponseFeed = ResponseFeed(
-    title = "feedTitle2",
-    link = Path("/feed2"),
-    id = Path("/feed2"),
-    published = 0,
-    updated = 0
-  )
 }
