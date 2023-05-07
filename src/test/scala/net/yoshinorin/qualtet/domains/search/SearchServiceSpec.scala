@@ -7,13 +7,14 @@ import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.fixture.Fixture._
 import net.yoshinorin.qualtet.Modules._
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.syntax._
 
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.search.SearchServiceSpec
-class SearchServiceSpec extends AnyWordSpec {
+class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents: List[RequestContent] = {
     (0 until 49).toList
@@ -77,8 +78,10 @@ class SearchServiceSpec extends AnyWordSpec {
     )
   }
 
-  // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  override protected def beforeAll(): Unit = {
+    // NOTE: create content and related data for test
+    requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  }
 
   "SearchService" should {
 

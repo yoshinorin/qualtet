@@ -8,12 +8,13 @@ import net.yoshinorin.qualtet.fixture.Fixture._
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
 import net.yoshinorin.qualtet.Modules._
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.syntax._
 
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingServiceSpec
-class ContentTaggingServiceSpec extends AnyWordSpec {
+class ContentTaggingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   given dbContext: DoobieContext = new DoobieContext(config.db)
 
@@ -34,8 +35,10 @@ class ContentTaggingServiceSpec extends AnyWordSpec {
       )
   }
 
-  // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  override protected def beforeAll(): Unit = {
+    // NOTE: create content and related data for test
+    requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  }
 
   "ContentTaggingService" should {
 

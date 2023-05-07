@@ -12,11 +12,12 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.{author, router}
 import net.yoshinorin.qualtet.Modules._
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.FeedRouteSpec
-class FeedRouteSpec extends AnyWordSpec {
+class FeedRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents: List[RequestContent] = {
     (0 until 2).toList
@@ -35,8 +36,10 @@ class FeedRouteSpec extends AnyWordSpec {
       )
   }
 
-  // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  override protected def beforeAll(): Unit = {
+    // NOTE: create content and related data for test
+    requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  }
 
   val client: Client[IO] = Client.fromHttpApp(router.routes)
 

@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.feeds
 
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.fixture.Fixture._
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
@@ -11,7 +12,7 @@ import net.yoshinorin.qualtet.Modules._
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.FeedServiceSpec
-class FeedServiceSpec extends AnyWordSpec {
+class FeedServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents: List[RequestContent] = {
     (1 until 30).toList
@@ -31,8 +32,10 @@ class FeedServiceSpec extends AnyWordSpec {
       )
   }
 
-  // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  override protected def beforeAll(): Unit = {
+    // NOTE: create content and related data for test
+    requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  }
 
   "getFeeds return ResponseFeed instances" in {
     val result = (for {

@@ -15,11 +15,12 @@ import net.yoshinorin.qualtet.domains.tags.{TagId, ResponseTag}
 import net.yoshinorin.qualtet.fixture.Fixture._
 import net.yoshinorin.qualtet.Modules._
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.TagRouteSpec
-class TagRouteSpec extends AnyWordSpec {
+class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents: List[RequestContent] = {
     (0 until 5).toList
@@ -38,8 +39,10 @@ class TagRouteSpec extends AnyWordSpec {
       )
   }
 
-  // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  override protected def beforeAll(): Unit = {
+    // NOTE: create content and related data for test
+    requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  }
 
   val t: Seq[ResponseTag] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.contains("tagRoute-"))
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get

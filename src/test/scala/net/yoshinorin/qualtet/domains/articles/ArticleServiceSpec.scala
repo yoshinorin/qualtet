@@ -8,10 +8,11 @@ import net.yoshinorin.qualtet.Modules._
 import net.yoshinorin.qualtet.fixture.Fixture._
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.BeforeAndAfterAll
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.ArticleServiceSpec
-class ArticleServiceSpec extends AnyWordSpec {
+class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents: List[RequestContent] = {
     (1 until 30).toList
@@ -48,9 +49,11 @@ class ArticleServiceSpec extends AnyWordSpec {
       )
   }
 
-  // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
-  sameTagNameRequestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  override protected def beforeAll(): Unit = {
+    // NOTE: create content and related data for test
+    requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+    sameTagNameRequestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+  }
 
   "ArticleService" should {
 
