@@ -23,11 +23,15 @@ import cats.effect.unsafe.implicits.global
 class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents = makeRequestContents(10, "tagRoute")
+  // NOTE: create content and related data for test
+  createContents(requestContents)
 
+  /* TODO: `BeforeAndAfterAll` seems doesn't work on CI only this test class.
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
     createContents(requestContents)
   }
+   */
 
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
