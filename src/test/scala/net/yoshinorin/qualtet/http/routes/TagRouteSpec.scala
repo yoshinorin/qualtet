@@ -44,13 +44,15 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
     requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
   }
 
-  val t: Seq[ResponseTag] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.contains("tagRoute-"))
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
   val tagRoute = new TagRoute(tagService, articleService)
   val client: Client[IO] = Client.fromHttpApp(makeRouter(tagRoute = tagRoute).routes)
 
   "TagRoute" should {
+
+    val t: Seq[ResponseTag] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.contains("tagRoute-"))
+
     "be return tags" in {
       val expectJson =
         s"""
