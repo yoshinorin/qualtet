@@ -41,7 +41,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+    createContents(requestContents)
   }
 
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get

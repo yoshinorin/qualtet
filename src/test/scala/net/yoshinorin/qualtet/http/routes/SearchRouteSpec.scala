@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.Modules._
-import net.yoshinorin.qualtet.fixture.Fixture
+import net.yoshinorin.qualtet.fixture.Fixture._
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 
@@ -47,10 +47,10 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(Fixture.author.name.value), rc).unsafeRunSync() }
+    createContents(requestContents)
   }
 
-  val client: Client[IO] = Client.fromHttpApp(Fixture.router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes)
 
   "SearchRoute" should {
     "be return search result" in {

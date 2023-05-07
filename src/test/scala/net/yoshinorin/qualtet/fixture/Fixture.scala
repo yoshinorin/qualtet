@@ -40,6 +40,7 @@ import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import cats.effect.unsafe.implicits.global
 
 // Just test data
 object Fixture {
@@ -176,6 +177,13 @@ object Fixture {
   val tagId: TagId = TagId("01frdbe1g83533h92rkhy8ctkw")
 
   val fullRobotsAttributes: Attributes = Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex")
+
+
+  def createContents(requestContents: List[RequestContent]) = {
+    requestContents.foreach { rc =>
+      Modules.contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync()
+    }
+  }
 
   val requestContent1: RequestContent = RequestContent(
     contentType = "article",
