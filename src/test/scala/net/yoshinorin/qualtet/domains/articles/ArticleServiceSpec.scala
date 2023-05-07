@@ -52,7 +52,7 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
     createContents(requestContents)
-    sameTagNameRequestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
+    createContents(sameTagNameRequestContents)
   }
 
   "ArticleService" should {
