@@ -14,24 +14,6 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.ArticleServiceSpec
 class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestContents: List[RequestContent] = {
-    (1 until 30).toList
-      .map(_.toString())
-      .map(_.toString())
-      .map(i =>
-        RequestContent(
-          contentType = "article",
-          path = Path(s"/test/path-${i}"),
-          title = s"this is a title ${i}",
-          rawContent = s"this is a raw content ${i}",
-          htmlContent = s"this is a html content ${i}",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(s"testTag${i}"),
-          externalResources = List()
-        )
-      )
-  }
-
   val sameTagNameRequestContents: List[RequestContent] = {
     (1 until 15).toList
       .map(_.toString())
@@ -48,6 +30,8 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         )
       )
   }
+
+  val requestContents = makeRequestContents(30, "articles")
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test

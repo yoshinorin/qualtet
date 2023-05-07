@@ -178,6 +178,25 @@ object Fixture {
 
   val fullRobotsAttributes: Attributes = Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex")
 
+  def makeRequestContents(
+    numberOfCreateContents: Int,
+    specName: String
+  ): List[RequestContent] = {
+    (0 until numberOfCreateContents).toList
+      .map(_.toString())
+      .map(i =>
+        RequestContent(
+          contentType = "article",
+          path = Path(s"/test/${specName}-${i}"),
+          title = s"this is a ${specName} title ${i}",
+          rawContent = s"this is a ${specName} raw content ${i}",
+          htmlContent = s"this is a ${specName} html content ${i}",
+          robotsAttributes = Attributes("noarchive, noimageindex"),
+          tags = List(s"${specName}Tag${i}"),
+          externalResources = List()
+        )
+      )
+  }
 
   def createContents(requestContents: List[RequestContent]) = {
     requestContents.foreach { rc =>

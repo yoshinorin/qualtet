@@ -14,23 +14,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.FeedServiceSpec
 class FeedServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestContents: List[RequestContent] = {
-    (1 until 30).toList
-      .map(_.toString())
-      .map(_.toString())
-      .map(i =>
-        RequestContent(
-          contentType = "article",
-          path = Path(s"/test/feed-${i}"),
-          title = s"this is a title for feed ${i}",
-          rawContent = s"this is a raw content for feed ${i}",
-          htmlContent = s"this is a html content for feed ${i}",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(s"testTagFeed${i}"),
-          externalResources = List()
-        )
-      )
-  }
+  val requestContents = makeRequestContents(30, "feeds")
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test

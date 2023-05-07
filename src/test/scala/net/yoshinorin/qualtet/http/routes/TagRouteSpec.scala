@@ -22,22 +22,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.TagRouteSpec
 class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestContents: List[RequestContent] = {
-    (0 until 5).toList
-      .map(_.toString())
-      .map(i =>
-        RequestContent(
-          contentType = "article",
-          path = Path(s"/test/tagRoute-${i}"),
-          title = s"this is a tagRoute title ${i}",
-          rawContent = s"this is a tagRoute raw content ${i}",
-          htmlContent = s"this is a tagRoute html content ${i}",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(s"tagRoute-${i}"),
-          externalResources = List()
-        )
-      )
-  }
+  val requestContents = makeRequestContents(5, "tagRoute")
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
@@ -51,7 +36,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   "TagRoute" should {
 
-    val t: Seq[ResponseTag] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.contains("tagRoute-"))
+    val t: Seq[ResponseTag] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.contains("tagRouteTag"))
 
     "be return tags" in {
       val expectJson =

@@ -19,22 +19,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.SitemapRouteSpec
 class SitemapRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestContents: List[RequestContent] = {
-    (0 until 2).toList
-      .map(_.toString())
-      .map(i =>
-        RequestContent(
-          contentType = "article",
-          path = Path(s"/test/sitemapRoute-${i}"),
-          title = s"this is a sitemapRoute title ${i}",
-          rawContent = s"this is a sitemapRoute raw content ${i}",
-          htmlContent = s"this is a sitemapRoute html content ${i}",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(s"sitemapRoute-${i}"),
-          externalResources = List()
-        )
-      )
-  }
+  val requestContents = makeRequestContents(2, "sitemapRoute")
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
