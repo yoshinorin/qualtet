@@ -50,21 +50,21 @@ Enter number: 1
 
 ```
 $ sbt
-$ ~reStart
+$ sbt:qualtet> ~reStart
 ```
 
 Run `scalafmt` & `kill current server` before start server(Hot reload)
 
 ```
 $ sbt
-$ runs
+$ sbt:qualtet> runs
 ```
 
 ### Kill current server process
 
 ```
 $ sbt
-$ kills
+$ sbt:qualtet> kills
 ```
 
 ### local db using by docker
@@ -73,16 +73,16 @@ $ kills
 $ sbt
 
 // start up local db using by docker
-$ localDbUp
+$ sbt:qualtet> localDbUp
 
 // shutdown local db
-$ localDbUp
+$ sbt:qualtet> localDbUp
 ```
 
 ## Code format
 
 ```sh
-$ scalafmt
+$ sbt:qualtet> scalafmt
 ```
 
 ## Test
@@ -98,7 +98,7 @@ Run specific test
 ```sh
 # NOTE: Many of test depends on DB. This command may not works well...
 $ sbt
-$ testOnly *xxxxxSpec
+$ sbt:qualtet> testOnly *xxxxxSpec
 ```
 
 Generate Coverage report
