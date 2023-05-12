@@ -3,6 +3,35 @@ layout: doc-page
 title: Development
 ---
 
+## Initialize local DB (with Docker)
+
+1. run local db with docker
+
+```sh
+$ cd docker
+$ docker compose -f ./docker-compose.local.yml up
+```
+
+2. create author
+
+```sh
+$ sbt
+$ sbt:qualtet> createAuthor <name> <displayName> <password>
+```
+
+3. shut down docker once that runs seq `1.`
+
+```sh
+$ docker compose down
+```
+
+4. run local server with sbt command
+
+```sh
+$ sbt
+$ sbt:qualtet> runs
+```
+
 ## Run local server
 
 ### Start server
