@@ -7,7 +7,7 @@ import org.http4s.server.middleware._
 import org.http4s.headers.Origin
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.config.CorsConfig
-import java.net.URL
+import java.net.URI
 import scala.util.control.NonFatal
 
 import scala.util.control.NonFatal
@@ -21,7 +21,7 @@ class CorsProvider(
     corsConfig.allowOrigins
       .map(o => {
         try {
-          val u = new URL(o)
+          val u = new URI(o).toURL
           val protocol = if (u.getProtocol().startsWith("https")) Uri.Scheme.https else Uri.Scheme.http
           Origin.Host(protocol, Uri.RegName(u.getHost()), Some(u.getPort()))
         } catch {
