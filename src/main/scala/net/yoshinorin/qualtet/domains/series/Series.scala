@@ -4,7 +4,6 @@ import wvlet.airframe.ulid.ULID
 import com.github.plokhotnyuk.jsoniter_scala.macros._
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.Request
-import net.yoshinorin.qualtet.domains.contents.Path
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax._
 
@@ -18,9 +17,14 @@ object SeriesId {
   }
 }
 
+final case class SeriesName(value: String) extends AnyVal
+object SeriesName {
+  given codecSeriesName: JsonValueCodec[SeriesName] = JsonCodecMaker.make
+}
+
 final case class Series(
   id: SeriesId = new SeriesId,
-  path: Path,
+  name: SeriesName,
   title: String,
   description: Option[String]
 )
@@ -31,13 +35,13 @@ object Series {
 }
 
 final case class RequestSeries(
-  path: Path,
+  name: SeriesName,
   title: String,
   description: Option[String]
 ) extends Request[RequestSeries] {
   def postDecode: RequestSeries = {
     new RequestSeries(
-      path = path,
+      name = name,
       title = title.trimOrThrow(BadRequest("title is required")),
       description = description
     )
@@ -48,9 +52,9 @@ object RequestSeries {
   given codecRequestSeries: JsonValueCodec[RequestSeries] = JsonCodecMaker.make
   given codecRequestListSeries: JsonValueCodec[List[RequestSeries]] = JsonCodecMaker.make
 
-  def apply(path: Path, title: String, description: Option[String]): RequestSeries = {
+  def apply(name: SeriesName, title: String, description: Option[String]): RequestSeries = {
     new RequestSeries(
-      path = path,
+      name = name,
       title = title.trimOrThrow(BadRequest("title is required")),
       description = description
     )

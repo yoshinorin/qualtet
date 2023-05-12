@@ -5,7 +5,6 @@ import cats.Monad
 import cats.implicits._
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
-import net.yoshinorin.qualtet.domains.contents.Path
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.syntax._
@@ -19,8 +18,8 @@ class SeriesService[M[_]: Monad](
     Continue(seriesRepository.upsert(data), Action.done[Int])
   }
 
-  def findByPathActions(path: Path): Action[Option[Series]] = {
-    Continue(seriesRepository.findByPath(path), Action.done[Option[Series]])
+  def findByNameActions(name: SeriesName): Action[Option[Series]] = {
+    Continue(seriesRepository.findByName(name), Action.done[Option[Series]])
   }
 
   def fetchActions: Action[Seq[Series]] = {
@@ -34,28 +33,28 @@ class SeriesService[M[_]: Monad](
    * @return created Series
    */
   def create(data: RequestSeries): IO[Series] = {
-    this.findByPath(data.path).flatMap {
+    this.findByName(data.name).flatMap {
       case Some(s: Series) =>
         for {
-          _ <- transactor.transact(upsertActions(Series(s.id, s.path, data.title, data.description)))
-          s <- this.findByPath(data.path).throwIfNone(NotFound("series not found"))
+          _ <- transactor.transact(upsertActions(Series(s.id, s.name, data.title, data.description)))
+          s <- this.findByName(data.name).throwIfNone(NotFound("series not found"))
         } yield s
       case None =>
         for {
-          _ <- transactor.transact(upsertActions(Series(SeriesId(ULID.newULIDString.toLower), data.path, data.title, data.description)))
-          s <- this.findByPath(data.path).throwIfNone(NotFound("series not found"))
+          _ <- transactor.transact(upsertActions(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.title, data.description)))
+          s <- this.findByName(data.name).throwIfNone(NotFound("series not found"))
         } yield s
     }
   }
 
   /**
-   * find a series by path
+   * find a series by name
    *
-   * @param path a series path
+   * @param name a series name
    * @return Series Instance
    */
-  def findByPath(path: Path): IO[Option[Series]] = {
-    transactor.transact(findByPathActions(path))
+  def findByName(name: SeriesName): IO[Option[Series]] = {
+    transactor.transact(findByNameActions(name))
   }
 
   /**
