@@ -5,13 +5,13 @@ object Dependencies {
   val jsoniterVersion = "2.23.0"
   val doobieVersion = "1.0.0-RC2"
   val jwtScalaVersion = "9.3.0"
-  val flywayVersion = "9.18.0"
+  val flywayVersion = "9.19.1"
   val http4sVersion = "1.0.0-M39"
 
   val dependencies = Seq(
     "com.typesafe" % "config" % "1.4.2",
     // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4, but cats-effect keep fully compatibility with 3.x
-    "org.typelevel" %% "cats-effect" % "3.4.10",
+    "org.typelevel" %% "cats-effect" % "3.4.11",
     "org.http4s" %% "http4s-dsl" % http4sVersion,
     "org.http4s" %% "http4s-ember-server" % http4sVersion,
     "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
@@ -31,7 +31,7 @@ object Dependencies {
     "org.codehaus.janino" % "janino" % "3.1.9",
     "org.springframework.security" % "spring-security-core" % "6.1.0",
     "org.slf4j" % "slf4j-api" % "2.0.7",
-    "org.scalatest" %% "scalatest" % "3.2.15" % "test",
+    "org.scalatest" %% "scalatest" % "3.2.16" % "test",
     "org.mockito" % "mockito-core" % "5.3.1" % "test"
   )
 }
