@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
 
-  val jsoniterVersion = "2.23.0"
+  val jsoniterVersion = "2.23.1"
   val doobieVersion = "1.0.0-RC2"
   val jwtScalaVersion = "9.3.0"
   val flywayVersion = "9.19.1"
@@ -22,7 +22,7 @@ object Dependencies {
     "org.mariadb.jdbc" % "mariadb-java-client" % "3.1.4",
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "23.5.4",
+    "org.wvlet.airframe" %% "airframe-ulid" % "23.5.6",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.1.6",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
