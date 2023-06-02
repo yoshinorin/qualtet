@@ -11,8 +11,8 @@
   },
   "author": "yoshinorin",
   "engines": {
-    "npm": ">=8",
-    "node": ">=18"
+    "npm": ">=9",
+    "node": ">=20"
   },
   "dependencies": {
     "@redocly/cli": "^1.0.0-beta.127"
