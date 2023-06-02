@@ -6,6 +6,8 @@ on:
       - 'docs/**'
       - 'tools/**'
       - 'docker/**'
+      - LICENSE
+      - README.md
 
 jobs:
   build:
