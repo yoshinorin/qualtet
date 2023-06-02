@@ -46,7 +46,7 @@ lazy val root = (project in file("."))
       "-social-links:github::https://github.com/yoshinorin/qualtet",
       "-author",
       "-project-version", version.value,
-      "-project-footer", "Copyright (c) 2022 @yoshinorin",
+      "-project-footer", "Copyright (c) 2023 @yoshinorin",
       "-groups",
       "-default-template", "static-site-main",
       "-revision", "master"
