@@ -22,7 +22,7 @@ import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.infrastructure.db.Migrator
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 
 import pdi.jwt.JwtAlgorithm
 import java.security.SecureRandom
@@ -32,7 +32,7 @@ object Modules {
 
   val config = ApplicationConfig.load
 
-  given dbContext: DoobieContext = new DoobieContext(config.db)
+  given dbContext: DoobieTransactor = new DoobieTransactor(config.db)
   val migrator: Migrator = new Migrator(config.db)
 
   // NOTE: for generate JWT. They are reset when re-boot application.

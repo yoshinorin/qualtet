@@ -39,7 +39,7 @@ import net.yoshinorin.qualtet.http.routes.CacheRoute
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax._
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieContext
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 import cats.effect.unsafe.implicits.global
 
 // Just test data
@@ -53,7 +53,7 @@ object Fixture {
   val p: String = Modules.config.http.port.toString()
   val host = Uri.unsafeFromString(s"http://${h}:${p}")
 
-  given dbContext: DoobieContext = new DoobieContext(Modules.config.db)
+  given dbContext: DoobieTransactor = new DoobieTransactor(Modules.config.db)
 
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
