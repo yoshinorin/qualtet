@@ -76,7 +76,7 @@ $ sbt
 $ sbt:qualtet> localDbUp
 
 // shutdown local db
-$ sbt:qualtet> localDbUp
+$ sbt:qualtet> localDbDown
 ```
 
 ## Code format
