@@ -9,6 +9,7 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.tags.Tag
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax._
@@ -61,6 +62,7 @@ final case class RequestContent(
   robotsAttributes: Attributes, // TODO: Consider to use `Option[Attributes]`
   externalResources: List[ExternalResources] = List(),
   tags: List[String] = List(),
+  series: Option[SeriesName] = None,
   path: Path,
   title: String,
   rawContent: String,
@@ -76,6 +78,7 @@ final case class RequestContent(
       robotsAttributes = this.robotsAttributes.sort,
       externalResources = externalResources,
       tags = tags,
+      series = series,
       path = path,
       title = title.trimOrThrow(BadRequest("title required.")),
       rawContent = rawContent.trimOrThrow(BadRequest("rawContent required.")),
@@ -96,6 +99,7 @@ object RequestContent {
     robotsAttributes: Attributes,
     externalResources: List[ExternalResources] = List(),
     tags: List[String] = List(),
+    series: Option[SeriesName] = None,
     path: Path,
     title: String,
     rawContent: String,
@@ -109,6 +113,7 @@ object RequestContent {
       robotsAttributes = robotsAttributes,
       externalResources = externalResources,
       tags = tags,
+      series = series,
       path = path,
       title = title.trimOrThrow(BadRequest("title required.")),
       rawContent = rawContent.trimOrThrow(BadRequest("rawContent required.")),

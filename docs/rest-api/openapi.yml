@@ -159,8 +159,9 @@ paths:
         401:
           description: Unauthorized
         404:
-          description: Content type is not found
-          # content: TODO
+          description: |
+            - Content type is not found
+            - Series is not found
   /contents/{contentPath}:
     get:
       summary: Get a content
@@ -571,6 +572,9 @@ components:
         tags:
           type: array
           example: "['diary', 'tech']"
+        series:
+          type: string
+          example: "qualtet-development-history"
         publishedAt:
           type: long
           description: Unix time

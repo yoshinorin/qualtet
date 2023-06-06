@@ -79,7 +79,8 @@ object Modules {
       robotsService,
       externalResourceService,
       authorService,
-      contentTypeService
+      contentTypeService,
+      seriesService
     )
 
   val articleRepository = new ArticleRepositoryDoobieInterpreter()

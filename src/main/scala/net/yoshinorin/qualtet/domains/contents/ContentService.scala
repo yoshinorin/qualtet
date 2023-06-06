@@ -12,6 +12,7 @@ import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesService}
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.syntax._
 import wvlet.airframe.ulid.ULID
@@ -23,7 +24,8 @@ class ContentService[M[_]: Monad](
   robotsService: RobotsService[M],
   externalResourceService: ExternalResourceService[M],
   authorService: AuthorService[M],
-  contentTypeService: ContentTypeService[M]
+  contentTypeService: ContentTypeService[M],
+  seriesService: SeriesService[M]
 )(using
   transactor: Transactor[M]
 ) {
@@ -73,6 +75,10 @@ class ContentService[M[_]: Monad](
       }
       maybeTags <- tagService.getTags(Some(request.tags))
       maybeContentTagging <- createContentTagging(contentId, maybeTags)
+      maybeSeries <- request.series match {
+        case None => IO(None)
+        case Some(x) => seriesService.findByName(x).throwIfNone(NotFound(s"series not found: ${request.series}"))
+      }
       createdContent <- this.create(
         Content(
           id = contentId,
