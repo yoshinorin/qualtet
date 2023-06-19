@@ -11,6 +11,7 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorRepositoryDoobieInterpreter
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeRepositoryDoobieInterpreter, ContentType, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepositoryDoobieInterpretere, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.contents.{ContentRepositoryDoobieInterpreter, ContentService}
+import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializingRepositoryDoobieInterpretere, ContentSerializingService}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceRepositoryDoobieInterpreter, ExternalResourceService}
 import net.yoshinorin.qualtet.domains.robots.{RobotsRepositoryDoobieInterpreter, RobotsService}
 import net.yoshinorin.qualtet.domains.search.{SearchRepositoryDoobieInterpreter, SearchService}
@@ -70,6 +71,9 @@ object Modules {
   val seriesRepository: SeriesRepositoryDoobieInterpreter = new SeriesRepositoryDoobieInterpreter()
   val seriesService = new SeriesService(seriesRepository)
 
+  val contentSerializingRepository: ContentSerializingRepositoryDoobieInterpretere = new ContentSerializingRepositoryDoobieInterpretere()
+  val contentSerializingService = new ContentSerializingService(contentSerializingRepository)
+
   val contentRepository: ContentRepositoryDoobieInterpreter = new ContentRepositoryDoobieInterpreter()
   val contentService =
     new ContentService(
@@ -80,7 +84,8 @@ object Modules {
       externalResourceService,
       authorService,
       contentTypeService,
-      seriesService
+      seriesService,
+      contentSerializingService
     )
 
   val articleRepository = new ArticleRepositoryDoobieInterpreter()

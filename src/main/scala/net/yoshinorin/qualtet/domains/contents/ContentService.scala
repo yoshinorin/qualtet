@@ -6,13 +6,14 @@ import cats.implicits._
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
+import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
 import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesService}
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesName, SeriesService}
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.syntax._
 import wvlet.airframe.ulid.ULID
@@ -25,7 +26,8 @@ class ContentService[M[_]: Monad](
   externalResourceService: ExternalResourceService[M],
   authorService: AuthorService[M],
   contentTypeService: ContentTypeService[M],
-  seriesService: SeriesService[M]
+  seriesService: SeriesService[M],
+  contentSerializingService: ContentSerializingService[M]
 )(using
   transactor: Transactor[M]
 ) {
@@ -75,9 +77,14 @@ class ContentService[M[_]: Monad](
       }
       maybeTags <- tagService.getTags(Some(request.tags))
       maybeContentTagging <- createContentTagging(contentId, maybeTags)
-      maybeSeries <- request.series match {
+      maybeContentSerializing <- request.series match {
         case None => IO(None)
-        case Some(x) => seriesService.findByName(x).throwIfNone(NotFound(s"series not found: ${request.series}"))
+        case Some(seriesName) =>
+          seriesService.findByName(seriesName).flatMap { x =>
+            x match
+              case None => IO.raiseError(NotFound(s"series not found: ${seriesName}"))
+              case Some(s) => IO(Option(ContentSerializing(s.id, contentId)))
+          }
       }
       createdContent <- this.create(
         Content(
@@ -94,6 +101,7 @@ class ContentService[M[_]: Monad](
         request.robotsAttributes,
         maybeTags,
         maybeContentTagging,
+        maybeContentSerializing,
         request.externalResources
       )
     } yield createdContent
@@ -110,6 +118,7 @@ class ContentService[M[_]: Monad](
     robotsAttributes: Attributes,
     tags: Option[List[Tag]],
     contentTagging: Option[List[ContentTagging]],
+    contentSerializing: Option[ContentSerializing],
     externalResources: List[ExternalResources]
   ): IO[Content] = {
 
@@ -123,6 +132,7 @@ class ContentService[M[_]: Monad](
       tagsBulkUpsert <- transactor.perform(tagService.bulkUpsertActions(tags))
       // TODO: check diff and clean up contentTagging before upsert
       contentTaggingBulkUpsert <- transactor.perform(contentTaggingService.bulkUpsertActions(contentTagging))
+      contentSerializingUpsert <- transactor.perform(contentSerializingService.upsertActions(contentSerializing))
       // TODO: check diff and clean up external_resources before upsert
       externalResourceBulkUpsert <- transactor.perform(externalResourceService.bulkUpsertActions(maybeExternalResources))
     } yield (contentUpsert, currentTags, tagsDiffDelete, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
