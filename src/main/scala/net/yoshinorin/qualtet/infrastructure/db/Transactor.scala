@@ -9,5 +9,5 @@ trait Transactor[M[_]] {
   def transact[R](a: Action[R]): IO[R]
   def transact2[T1, T2](ts: (M[(T1, T2)])): IO[T2]
   def transact4[T1, T2, T3, T4](ts: (M[(T1, T2, T3, T4)])): IO[T4]
-  def transact7[T1, T2, T3, T4, T5, T6, T7](ts: (M[(T1, T2, T3, T4, T5, T6, T7)])): IO[T7]
+  def transact8[T1, T2, T3, T4, T5, T6, T7, T8](ts: (M[(T1, T2, T3, T4, T5, T6, T7, T8)])): IO[T8]
 }

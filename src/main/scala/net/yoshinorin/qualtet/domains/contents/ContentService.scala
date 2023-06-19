@@ -135,10 +135,19 @@ class ContentService[M[_]: Monad](
       contentSerializingUpsert <- transactor.perform(contentSerializingService.upsertActions(contentSerializing))
       // TODO: check diff and clean up external_resources before upsert
       externalResourceBulkUpsert <- transactor.perform(externalResourceService.bulkUpsertActions(maybeExternalResources))
-    } yield (contentUpsert, currentTags, tagsDiffDelete, robotsUpsert, tagsBulkUpsert, contentTaggingBulkUpsert, externalResourceBulkUpsert)
+    } yield (
+      contentUpsert,
+      currentTags,
+      tagsDiffDelete,
+      robotsUpsert,
+      tagsBulkUpsert,
+      contentTaggingBulkUpsert,
+      contentSerializingUpsert,
+      externalResourceBulkUpsert
+    )
 
     for {
-      _ <- transactor.transact7[Int, Seq[Tag], Unit, Int, Int, Int, Int](queries)
+      _ <- transactor.transact8[Int, Seq[Tag], Unit, Int, Int, Int, Int, Int](queries)
       c <- this.findByPath(data.path).throwIfNone(InternalServerError("content not found")) // NOTE: 404 is better?
     } yield c
   }

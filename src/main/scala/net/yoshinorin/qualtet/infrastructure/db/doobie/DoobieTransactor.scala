@@ -47,10 +47,10 @@ class DoobieTransactor(config: DBConfig) extends Transactor[ConnectionIO] {
     } yield r._4
   }
 
-  override def transact7[T1, T2, T3, T4, T5, T6, T7](ts: (ConnectionIO[(T1, T2, T3, T4, T5, T6, T7)])): IO[T7] = {
+  override def transact8[T1, T2, T3, T4, T5, T6, T7, T8](ts: (ConnectionIO[(T1, T2, T3, T4, T5, T6, T7, T8)])): IO[T8] = {
     for {
       r <- ts.transact(transactor)
-    } yield r._7
+    } yield r._8
   }
 
   /*
