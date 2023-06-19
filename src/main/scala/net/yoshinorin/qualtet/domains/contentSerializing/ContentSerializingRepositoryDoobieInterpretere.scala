@@ -17,9 +17,14 @@ class ContentSerializingRepositoryDoobieInterpretere extends ContentSerializingR
   given contentSerializingWrite: Write[ContentSerializing] =
     Write[(String, String)].contramap(s => (s.seriesId.value, s.contentId.value))
 
+  override def upsert(data: ContentSerializing): ConnectionIO[Int] = {
+    ContentSerializingQuery.bulkUpsert.run(data)
+  }
+
   override def bulkUpsert(data: List[ContentSerializing]): ConnectionIO[Int] = {
     ContentSerializingQuery.bulkUpsert.updateMany(data)
   }
+
   override def findBySeriesId(id: SeriesId): ConnectionIO[Seq[ContentSerializing]] = {
     ContentSerializingQuery.findBySeriesId(id).to[Seq]
   }

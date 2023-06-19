@@ -17,6 +17,13 @@ class ContentSerializingService[M[_]: Monad](
     Continue(contentSerializingRepository.findBySeriesId(id), Action.done[Seq[ContentSerializing]])
   }
 
+  def upsertActions(data: Option[ContentSerializing]): Action[Int] = {
+    data match {
+      case Some(d) => Continue(contentSerializingRepository.upsert(d), Action.done[Int])
+      case None => Continue(contentSerializingRepository.fakeRequestInt, Action.done[Int])
+    }
+  }
+
   def bulkUpsertActions(data: Option[List[ContentSerializing]]): Action[Int] = {
     data match {
       case Some(d) => Continue(contentSerializingRepository.bulkUpsert(d), Action.done[Int])

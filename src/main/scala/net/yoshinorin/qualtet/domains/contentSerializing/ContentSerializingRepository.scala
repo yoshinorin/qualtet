@@ -4,6 +4,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.series.SeriesId
 
 trait ContentSerializingRepository[M[_]] {
+  def upsert(data: ContentSerializing): M[Int]
   def bulkUpsert(data: List[ContentSerializing]): M[Int]
   def findBySeriesId(id: SeriesId): M[Seq[ContentSerializing]]
   def deleteBySeriesId(id: SeriesId): M[Unit]
