@@ -44,8 +44,7 @@ class SeriesRoute[M[_]: Monad](
 
   def get(name: String): IO[Response[IO]] = {
     (for {
-      // TODO: should be configurlize for append suffix or prefix
-      maybeSeries <- seriesService.findByName(SeriesName(s"/${name}"))
+      maybeSeries <- seriesService.findByName(SeriesName(s"${name}"))
     } yield maybeSeries)
       .flatMap(_.asResponse)
       .handleErrorWith(_.logWithStackTrace.andResponse)

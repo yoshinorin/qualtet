@@ -179,8 +179,8 @@ class Router[M[_]: Monad](
   private[http] def seriesWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root =>
       seriesRoute.get
-    case request @ GET -> _ =>
-      seriesRoute.get(request.uri.path.toString())
+    case request @ GET -> Root / name =>
+      seriesRoute.get(name)
   }
 
   private[this] def seriesWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
