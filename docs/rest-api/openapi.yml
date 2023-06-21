@@ -380,6 +380,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/series'
+        404:
+          description: Series not found
 components:
   securitySchemes:
     basicAuth:
