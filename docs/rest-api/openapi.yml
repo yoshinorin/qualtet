@@ -521,10 +521,9 @@ components:
         id:
           type: string
           example: "01gs85hv65rhsq06fdp7j3ers0"
-        path:
+        name:
           type: string
-          format: url(excludes domain part)
-          example: "/series/<example>"
+          example: "qualtet-development-history"
         title:
           type: string
           example: "Example series"
