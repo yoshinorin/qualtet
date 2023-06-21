@@ -29,14 +29,16 @@ title: Features
 - [x] Create
 - [x] Select
     - [ ] Return id
-    - [ ] GET API migrate from `path` to `id`
 - [x] Update
-    - [ ] Check diff and delete unrelated them or update them
+    - [ ] Check diff and update them
         - [x] Tags
         - [ ] externalResources
         - [x] Robots
 - [x] Delete
-    - [x] Delete with externalResources, Tags & Robots
+    - [ ] Check diff and delete unrelated them
+        - [x] Tags
+        - [ ] externalResources
+        - [x] Robots
 
 ## Tags
 
@@ -47,6 +49,8 @@ title: Features
     - [x] by TagName
 - [x] Update
 - [x] Delete
+    - [x] Delete series and related contents from junction table
+    - [x] Delete junction table when delete a content
 
 ## Search
 
