@@ -6,6 +6,7 @@ import com.github.plokhotnyuk.jsoniter_scala.core._
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.domains.articles.ResponseArticle
 
 final case class SeriesId(value: String = ULID.newULIDString.toLower) extends AnyVal
 object SeriesId {
@@ -59,4 +60,17 @@ object RequestSeries {
       description = description
     )
   }
+}
+
+final case class ResponseSeries(
+  id: SeriesId,
+  name: SeriesName,
+  title: String,
+  description: Option[String],
+  articles: Seq[ResponseArticle]
+)
+
+object ResponseSeries {
+  given codecResponseSeries: JsonValueCodec[ResponseSeries] = JsonCodecMaker.make
+  given codecResponseSeriesWithCount: JsonValueCodec[Seq[ResponseSeries]] = JsonCodecMaker.make
 }

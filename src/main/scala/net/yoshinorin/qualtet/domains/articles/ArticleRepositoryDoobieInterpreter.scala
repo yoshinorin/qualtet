@@ -4,6 +4,7 @@ import doobie.Read
 import doobie.ConnectionIO
 import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
@@ -19,5 +20,9 @@ class ArticleRepositoryDoobieInterpreter extends ArticleRepository[ConnectionIO]
   }
   override def findByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, sqlParams: SqlParams): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
     ArticleQuery.findByTagNameWithCount(contentTypeId, tagName, sqlParams).to[Seq]
+  }
+
+  override def findBySeriesNameWithCount(contentTypeId: ContentTypeId, seriesName: SeriesName): ConnectionIO[Seq[(Int, ResponseArticle)]] = {
+    ArticleQuery.findBySeriesNameWithCount(contentTypeId, seriesName).to[Seq]
   }
 }

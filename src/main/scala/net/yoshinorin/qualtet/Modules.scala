@@ -68,8 +68,11 @@ object Modules {
   val searchRepository: SearchRepositoryDoobieInterpreter = new SearchRepositoryDoobieInterpreter()
   val searchService = new SearchService(config.search, searchRepository)
 
+  val articleRepository = new ArticleRepositoryDoobieInterpreter()
+  val articleService = new ArticleService(articleRepository, contentTypeService)
+
   val seriesRepository: SeriesRepositoryDoobieInterpreter = new SeriesRepositoryDoobieInterpreter()
-  val seriesService = new SeriesService(seriesRepository)
+  val seriesService = new SeriesService(seriesRepository, articleService)
 
   val contentSerializingRepository: ContentSerializingRepositoryDoobieInterpretere = new ContentSerializingRepositoryDoobieInterpretere()
   val contentSerializingService = new ContentSerializingService(contentSerializingRepository)
@@ -87,9 +90,6 @@ object Modules {
       seriesService,
       contentSerializingService
     )
-
-  val articleRepository = new ArticleRepositoryDoobieInterpreter()
-  val articleService = new ArticleService(articleRepository, contentTypeService)
 
   val archiveRepository: ArchiveRepositoryDoobieInterpreter = new ArchiveRepositoryDoobieInterpreter()
   val archiveService = new ArchiveService(archiveRepository, contentTypeService)

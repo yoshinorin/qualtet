@@ -5,13 +5,15 @@ import cats.Monad
 import cats.implicits._
 import net.yoshinorin.qualtet.actions.Action._
 import net.yoshinorin.qualtet.actions.{Action, Continue}
+import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.syntax._
 import wvlet.airframe.ulid.ULID
 
 class SeriesService[M[_]: Monad](
-  seriesRepository: SeriesRepository[M]
+  seriesRepository: SeriesRepository[M],
+  articleService: ArticleService[M]
 )(using transactor: Transactor[M]) {
 
   def upsertActions(data: Series): Action[Int] = {
@@ -55,6 +57,15 @@ class SeriesService[M[_]: Monad](
    */
   def findByName(name: SeriesName): IO[Option[Series]] = {
     transactor.transact(findByNameActions(name))
+  }
+
+  def get(name: SeriesName): IO[ResponseSeries] = {
+    for {
+      series <- transactor.transact(findByNameActions(name)).throwIfNone(NotFound(s"series not found: ${name.value}"))
+      seriesWithArticles <- articleService.getBySeriesName(series.name)
+    } yield {
+      ResponseSeries(series.id, series.name, series.title, series.description, seriesWithArticles.articles)
+    }
   }
 
   /**

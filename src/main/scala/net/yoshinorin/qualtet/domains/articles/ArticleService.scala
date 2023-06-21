@@ -7,6 +7,7 @@ import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
+import net.yoshinorin.qualtet.domains.series.{SeriesName, ResponseSeries}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.syntax._
@@ -24,13 +25,25 @@ class ArticleService[M[_]: Monad](
     Continue(articleRepository.getWithCount(contentTypeId, queryParams), Action.done[Seq[(Int, ResponseArticle)]])
   }
 
-  def actions(
+  def tagActions(
     contentTypeId: ContentTypeId,
     tagName: TagName,
     queryParams: ArticlesQueryParameter
   ): Action[Seq[(Int, ResponseArticle)]] = {
     Continue(
       articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams),
+      Action.done[Seq[(Int, ResponseArticle)]]
+    )
+  }
+
+  def seriesActions(
+    contentTypeId: ContentTypeId,
+    seriesName: SeriesName,
+    queryParams: ArticlesQueryParameter // TODO: `Optional`
+  ): Action[Seq[(Int, ResponseArticle)]] = {
+    println(queryParams)
+    Continue(
+      articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName),
       Action.done[Seq[(Int, ResponseArticle)]]
     )
   }
@@ -61,7 +74,11 @@ class ArticleService[M[_]: Monad](
    */
 
   def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
-    this.get(tagName, queryParam)(actions)
+    this.get(tagName, queryParam)(tagActions)
+  }
+
+  def getBySeriesName(seriesName: SeriesName): IO[ResponseArticleWithCount] = {
+    this.get(seriesName, ArticlesQueryParameter(0, 100))(seriesActions)
   }
 
 }

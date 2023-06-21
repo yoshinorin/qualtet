@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, RequestSeries}
 import net.yoshinorin.qualtet.domains.series.SeriesService
 import net.yoshinorin.qualtet.http.RequestDecoder
-import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
+import net.yoshinorin.qualtet.syntax._
 
 class SeriesRoute[M[_]: Monad](
   seriesService: SeriesService[M]
@@ -44,10 +44,9 @@ class SeriesRoute[M[_]: Monad](
 
   def get(name: String): IO[Response[IO]] = {
     (for {
-      maybeSeries <- seriesService.findByName(SeriesName(s"${name}"))
-    } yield maybeSeries)
-      .flatMap(_.asResponse)
-      .handleErrorWith(_.logWithStackTrace.andResponse)
+      seriesWithArticles <- seriesService.get(SeriesName(name))
+      response <- Ok(seriesWithArticles.asJson, `Content-Type`(MediaType.application.json))
+    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
   }
 
 }
