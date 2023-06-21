@@ -47,7 +47,7 @@ Please see [website](https://yoshinorin.github.io/qualtet/docs/).
 
 ## ERD
 
-![](./docs/_assets/assets/erd.jpg)
+![](./docs/_assets/assets/erd.png)
 
 ## Branches
 
