@@ -59,6 +59,17 @@ title: Features
     - [ ] Optional Limit
     - [ ] Optional Pagination
 
+## Series
+
+- [x] Create
+- [x] Select
+    - [x] Select all serieses once
+    - [x] Select a series with related contents
+- [x] Update
+- [ ] Delete
+    - [ ] Delete series and related contents from junction table
+    - [ ] Delete junction table when delete a content
+
 ## Tests
 
 - [x] Use DB
