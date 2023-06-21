@@ -15,7 +15,7 @@ An example of architecture.
 
 ## Requirements
 
-* sbt 1.8.x
+* sbt 1.9.x
 * Scala 3.2.x
 * Java 17.x
 * MariaDB 10.11.x

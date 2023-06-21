@@ -3,7 +3,7 @@ layout: doc-page
 title: Requirements
 ---
 
-* sbt 1.8.x
+* sbt 1.9.x
 * Scala 3.2.x
 * Java 17.x (Perhaps works with 11.x)
 * MariaDB 10.11.x
