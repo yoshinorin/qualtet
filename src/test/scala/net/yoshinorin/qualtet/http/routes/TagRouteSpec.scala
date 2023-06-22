@@ -26,7 +26,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
   // NOTE: create content and related data for test
   createContents(requestContents)
 
-  /* TODO: `BeforeAndAfterAll` seems doesn't work on CI only this test class.
+  /* TODO: `BeforeAndAfterAll` seems doesn't work on CI this test class.
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
     createContents(requestContents)
