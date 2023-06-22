@@ -41,6 +41,7 @@ import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax._
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 import cats.effect.unsafe.implicits.global
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, RequestSeries}
 
 // Just test data
 object Fixture {
@@ -177,7 +178,8 @@ object Fixture {
 
   def makeRequestContents(
     numberOfCreateContents: Int,
-    specName: String
+    specName: String,
+    series: Option[SeriesName] = None
   ): List[RequestContent] = {
     (0 until numberOfCreateContents).toList
       .map(_.toString())
@@ -190,6 +192,7 @@ object Fixture {
           htmlContent = s"this is a ${specName} html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
           tags = List(s"${specName}Tag${i}"),
+          series = series,
           externalResources = List()
         )
       )
@@ -198,6 +201,12 @@ object Fixture {
   def createContents(requestContents: List[RequestContent]) = {
     requestContents.foreach { rc =>
       Modules.contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync()
+    }
+  }
+
+  def createSeries(requestSeries: List[RequestSeries]) = {
+    requestSeries.foreach { rs =>
+      Modules.seriesService.create(rs).unsafeRunSync()
     }
   }
 }
