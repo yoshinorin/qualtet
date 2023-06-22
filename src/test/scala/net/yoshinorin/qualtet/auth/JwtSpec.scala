@@ -46,7 +46,6 @@ class JwtSpec extends AnyWordSpec {
 
         }
         case Left(l) =>
-          println(l.getMessage)
           assert(false)
       }
 

@@ -41,7 +41,6 @@ class ArticleService[M[_]: Monad](
     seriesName: SeriesName,
     queryParams: ArticlesQueryParameter // TODO: `Optional`
   ): Action[Seq[(Int, ResponseArticle)]] = {
-    println(queryParams)
     Continue(
       articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName),
       Action.done[Seq[(Int, ResponseArticle)]]
