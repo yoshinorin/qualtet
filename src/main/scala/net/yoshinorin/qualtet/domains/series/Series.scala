@@ -41,6 +41,8 @@ final case class RequestSeries(
   description: Option[String]
 ) extends Request[RequestSeries] {
   def postDecode: RequestSeries = {
+    // TODO: improve
+    name.value.trimOrThrow(BadRequest("name is required"))
     new RequestSeries(
       name = name,
       title = title.trimOrThrow(BadRequest("title is required")),
@@ -54,6 +56,8 @@ object RequestSeries {
   given codecRequestListSeries: JsonValueCodec[List[RequestSeries]] = JsonCodecMaker.make
 
   def apply(name: SeriesName, title: String, description: Option[String]): RequestSeries = {
+    // TODO: improve
+    name.value.trimOrThrow(BadRequest("name is required"))
     new RequestSeries(
       name = name,
       title = title.trimOrThrow(BadRequest("title is required")),
