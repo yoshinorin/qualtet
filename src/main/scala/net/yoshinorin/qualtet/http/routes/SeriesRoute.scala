@@ -31,15 +31,15 @@ class SeriesRoute[M[_]: Monad](
             Created(createdSeries.asJson, `Content-Type`(MediaType.application.json))
           }
       }
-    }
+    }.handleErrorWith(_.logWithStackTrace.andResponse)
   }
 
   // series
   def get: IO[Response[IO]] = {
-    for {
+    (for {
       series <- seriesService.getAll
       response <- Ok(series.asJson, `Content-Type`(MediaType.application.json))
-    } yield response
+    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
   }
 
   def get(name: String): IO[Response[IO]] = {
