@@ -34,7 +34,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject caused by expired token" in {
+    "be reject caused by expired token" ignore {
       client
         .run(Request(method = Method.DELETE, uri = uri"/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + expiredToken))))
         .use { response =>
@@ -45,7 +45,7 @@ class CacheRouteSpec extends AnyWordSpec {
       // TODO: .unsafeRunSync()
     }
 
-    "be reject caused by the authorization header is empty" in {
+    "be reject caused by the authorization header is empty" ignore {
       client
         .run(Request(method = Method.DELETE, uri = uri"/caches/"))
         .use { response =>
@@ -56,7 +56,7 @@ class CacheRouteSpec extends AnyWordSpec {
       // TODO: .unsafeRunSync()
     }
 
-    "be reject caused by invalid token" in {
+    "be reject caused by invalid token" ignore {
       client
         .run(Request(method = Method.DELETE, uri = uri"/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalidToken"))))
         .use { response =>
@@ -67,7 +67,7 @@ class CacheRouteSpec extends AnyWordSpec {
       // TODO: .unsafeRunSync()
     }
 
-    "be return user not found" in {
+    "be return user not found" ignore {
       client
         .run(Request(method = Method.DELETE, uri = uri"/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + nonExistsUserToken))))
         .use { response =>

@@ -106,7 +106,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject DELETE endpoint caused by invalid token" in {
+    "be reject DELETE endpoint caused by invalid token" ignore {
       client
         .run(
           Request(
@@ -204,7 +204,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject caused by expired token" in {
+    "be reject caused by expired token" ignore {
       val json =
         """
           |{
@@ -230,7 +230,7 @@ class ContentRouteSpec extends AnyWordSpec {
       // TODO: .unsafeRunSync()
     }
 
-    "be reject POST endpoint caused by the authorization header is empty" in {
+    "be reject POST endpoint caused by the authorization header is empty" ignore {
       client
         .run(Request(method = Method.POST, uri = uri"/contents/"))
         .use { response =>
@@ -241,7 +241,7 @@ class ContentRouteSpec extends AnyWordSpec {
       // TODO: .unsafeRunSync()
     }
 
-    "be reject POST endpoint caused by invalid token" in {
+    "be reject POST endpoint caused by invalid token" ignore {
       val entity = EntityEncoder[IO, String].toEntity("")
       client
         .run(
@@ -255,7 +255,7 @@ class ContentRouteSpec extends AnyWordSpec {
       // TODO: .unsafeRunSync()
     }
 
-    "be return user not found" in {
+    "be return user not found" ignore {
       val entity = EntityEncoder[IO, String].toEntity("")
       client
         .run(

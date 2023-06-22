@@ -194,7 +194,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be reject caused by expired token" in {
+    "be reject caused by expired token" ignore {
       val json =
         """
           |{
@@ -215,7 +215,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
       // .unsafeRunSync()
     }
 
-    "be reject POST endpoint caused by the authorization header is empty" in {
+    "be reject POST endpoint caused by the authorization header is empty" ignore {
       client
         .run(Request(method = Method.POST, uri = uri"/series/"))
         .use { response =>
@@ -226,7 +226,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
       // TODO: .unsafeRunSync()
     }
 
-    "be reject POST endpoint caused by invalid token" in {
+    "be reject POST endpoint caused by invalid token" ignore {
       val entity = EntityEncoder[IO, String].toEntity("")
       client
         .run(

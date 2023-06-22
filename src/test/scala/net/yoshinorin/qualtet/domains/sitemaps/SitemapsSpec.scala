@@ -11,7 +11,7 @@ class SitemapsSpec extends AnyWordSpec {
     "valid value" in {
       assert(Loc("https://example.com/test/post").value === "https://example.com/test/post")
     }
-    "invalid value" in {
+    "invalid value" ignore {
       // TODO: write test
     }
   }
