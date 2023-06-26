@@ -20,10 +20,11 @@ class DoobieTransactor(config: DBConfig) extends Transactor[ConnectionIO] {
   // implicit val cs: ContextShift[IO] = IO.contextShift(executionContexts)
 
   val transactor: Aux[IO, Unit] = Transactor.fromDriverManager[IO](
-    "org.mariadb.jdbc.Driver",
-    config.url,
-    config.user,
-    config.password
+    driver = "org.mariadb.jdbc.Driver",
+    url = config.url,
+    user = config.user,
+    password = config.password,
+    logHandler = None
   )
 
   override def perform[R](action: Action[R]): ConnectionIO[R] = action match {
