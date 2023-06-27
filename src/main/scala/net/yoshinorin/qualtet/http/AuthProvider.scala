@@ -11,6 +11,7 @@ import org.http4s.headers.Authorization
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.auth.AuthService
+import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
 import net.yoshinorin.qualtet.syntax._
 
@@ -19,7 +20,7 @@ class AuthProvider[M[_]: Monad](
 ) {
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  private def authUser: Kleisli[IO, Request[IO], Either[String, (ResponseAuthor, String)]] =
+  private def authUser: Kleisli[IO, Request[IO], Either[Fail, (ResponseAuthor, String)]] =
     Kleisli({ request =>
       for {
         auth <- IO(request.headers.get[Authorization].orThrow(Unauthorized("Authorization header is none")))
@@ -28,14 +29,16 @@ class AuthProvider[M[_]: Monad](
       } yield author match {
         case None =>
           logger.error(s"Invalid author: ${author}")
-          Left("Unauthorized")
+          Left(Unauthorized("Unauthorized"))
         case Some(author) =>
           logger.info(s"Authorization succeeded: ${author}")
           Right((author, payload))
       }
     })
 
-  private def onFailure: AuthedRoutes[String, IO] = Kleisli(req => OptionT.liftF(Forbidden(req.context)))
+  private def onFailure: AuthedRoutes[Fail, IO] = Kleisli { req =>
+    OptionT.pure[IO](Response[IO](status = Status.Unauthorized))
+  }
 
   def authenticate: AuthMiddleware[IO, (ResponseAuthor, String)] = AuthMiddleware(authUser, onFailure)
 }
