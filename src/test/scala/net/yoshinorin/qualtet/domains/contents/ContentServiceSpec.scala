@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contents
 
 import net.yoshinorin.qualtet.domains.authors.AuthorName
-import net.yoshinorin.qualtet.message.Fail.NotFound
+import net.yoshinorin.qualtet.message.Fail.{NotFound, UnprocessableEntity}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.Modules._
 import net.yoshinorin.qualtet.fixture.Fixture._
@@ -212,8 +212,8 @@ class ContentServiceSpec extends AnyWordSpec {
       }
     }
 
-    "be throw Author NotFound Exception" in {
-      assertThrows[NotFound] {
+    "be throw Author UnprocessableEntity Exception" in {
+      assertThrows[UnprocessableEntity] {
         contentService.createContentFromRequest(AuthorName("not_exists_user"), requestContent1).unsafeRunSync()
       }
     }

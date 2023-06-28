@@ -158,8 +158,9 @@ paths:
           description: BadRequest
         401:
           description: Unauthorized
-        404:
+        422:
           description: |
+            - Author is not found
             - Content type is not found
             - Series is not found
   /contents/{contentPath}:

@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
-import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound}
+import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound, UnprocessableEntity}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
@@ -68,8 +68,8 @@ class ContentService[M[_]: Monad](
     }
 
     for {
-      a <- authorService.findByName(authorName).throwIfNone(NotFound(s"user not found: ${request.contentType}"))
-      c <- contentTypeService.findByName(request.contentType).throwIfNone(NotFound(s"content-type not found: ${request.contentType}"))
+      a <- authorService.findByName(authorName).throwIfNone(UnprocessableEntity(s"user not found: ${request.contentType}"))
+      c <- contentTypeService.findByName(request.contentType).throwIfNone(UnprocessableEntity(s"content-type not found: ${request.contentType}"))
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
         case None => ContentId(ULID.newULIDString.toLower)
@@ -82,7 +82,7 @@ class ContentService[M[_]: Monad](
         case Some(seriesName) =>
           seriesService.findByName(seriesName).flatMap { x =>
             x match
-              case None => IO.raiseError(NotFound(s"series not found: ${seriesName}"))
+              case None => IO.raiseError(UnprocessableEntity(s"series not found: ${seriesName}"))
               case Some(s) => IO(Option(ContentSerializing(s.id, contentId)))
           }
       }
