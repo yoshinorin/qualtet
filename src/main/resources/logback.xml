@@ -1,9 +1,4 @@
 <configuration>
-
-    <!--
-    <property name="QUALTET_ENV" value="${QUALTET_ENV}" />
-    -->
-
     <appender name="APPLICATION_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${application.home:-.}/logs/application.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
