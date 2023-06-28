@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.contents
 
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.message.Fail.{NotFound, UnprocessableEntity}
+import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.Modules._
 import net.yoshinorin.qualtet.fixture.Fixture._
@@ -215,6 +216,20 @@ class ContentServiceSpec extends AnyWordSpec {
     "be throw Author UnprocessableEntity Exception" in {
       assertThrows[UnprocessableEntity] {
         contentService.createContentFromRequest(AuthorName("not_exists_user"), requestContent1).unsafeRunSync()
+      }
+    }
+
+    "be throw Content-Type UnprocessableEntity Exception" in {
+      assertThrows[UnprocessableEntity] {
+        contentService.createContentFromRequest(AuthorName(author.name.value), requestContent1.copy(contentType = "not_exists_content-type")).unsafeRunSync()
+      }
+    }
+
+    "be throw Series UnprocessableEntity Exception" in {
+      assertThrows[UnprocessableEntity] {
+        contentService
+          .createContentFromRequest(AuthorName(author.name.value), requestContent1.copy(series = Some(SeriesName("not_exists_series_name"))))
+          .unsafeRunSync()
       }
     }
   }
