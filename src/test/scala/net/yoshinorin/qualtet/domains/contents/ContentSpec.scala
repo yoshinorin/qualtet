@@ -110,6 +110,7 @@ class ContentSpec extends AnyWordSpec {
       val expectJson =
         """
           |{
+          |  "id": "01h08dm4th59wsk81d4h96cf6b",
           |  "title" : "title",
           |  "robotsAttributes" : "noarchive, noimageindex",
           |  "externalResources" : [],
@@ -124,6 +125,7 @@ class ContentSpec extends AnyWordSpec {
 
       val json =
         ResponseContent(
+          id = ContentId("01h08dm4th59wsk81d4h96cf6b"),
           title = "title",
           robotsAttributes = Attributes("noarchive, noimageindex"),
           description = "this is a description",
@@ -142,6 +144,7 @@ class ContentSpec extends AnyWordSpec {
         """
           |[
           |  {
+          |    "id": "01h08dm4th59wsk81d4h96cf6b",
           |    "title" : "title1",
           |    "robotsAttributes" : "noarchive, noimageindex",
           |    "externalResources" : [
@@ -171,6 +174,7 @@ class ContentSpec extends AnyWordSpec {
           |    "updatedAt" : 1567814299
           |  },
           |  {
+          |    "id": "01h08dm4th59wsk81d4h96cf6c",
           |    "title" : "title2",
           |    "robotsAttributes" : "all",
           |    "externalResources" : [],
@@ -187,6 +191,7 @@ class ContentSpec extends AnyWordSpec {
       val json =
         Seq(
           ResponseContent(
+            id = ContentId("01h08dm4th59wsk81d4h96cf6b"),
             title = "title1",
             robotsAttributes = Attributes("noarchive, noimageindex"),
             externalResources = List(
@@ -210,6 +215,7 @@ class ContentSpec extends AnyWordSpec {
             updatedAt = 1567814299
           ),
           ResponseContent(
+            id = ContentId("01h08dm4th59wsk81d4h96cf6c"),
             title = "title2",
             robotsAttributes = Attributes("all"),
             externalResources = List(),

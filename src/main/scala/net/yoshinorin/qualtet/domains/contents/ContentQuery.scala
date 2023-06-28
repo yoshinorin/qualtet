@@ -42,6 +42,7 @@ object ContentQuery {
     //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
     sql"""
        SELECT
+         contents.id AS id,
          title,
          robots.attributes AS robotsAttributes,
          GROUP_CONCAT(external_resources.kind) AS externalResourceKindKey,

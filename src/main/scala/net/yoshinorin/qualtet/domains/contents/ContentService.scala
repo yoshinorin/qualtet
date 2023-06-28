@@ -222,6 +222,7 @@ class ContentService[M[_]: Monad](
         IO(
           Some(
             ResponseContent(
+              id = x.id,
               title = x.title,
               robotsAttributes = x.robotsAttributes,
               externalResources = (x.externalResourceKindKeys, x.externalResourceKindValues)

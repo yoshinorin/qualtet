@@ -125,6 +125,7 @@ object RequestContent {
 }
 
 final case class ResponseContent(
+  id: ContentId,
   title: String,
   robotsAttributes: Attributes,
   externalResources: List[ExternalResources] = List(),
@@ -149,6 +150,7 @@ object ResponseContent {
   given codecResponseContents: JsonValueCodec[Seq[ResponseContent]] = JsonCodecMaker.make
 }
 final case class ResponseContentDbRow(
+  id: ContentId,
   title: String,
   robotsAttributes: Attributes,
   externalResourceKindKeys: Option[String],

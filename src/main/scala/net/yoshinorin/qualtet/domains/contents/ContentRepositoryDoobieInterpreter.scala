@@ -43,9 +43,10 @@ class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO]
     }
 
   given contentDbRawRead: Read[ResponseContentDbRow] =
-    Read[(String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
-      case (title, robotsAttributes, externalResourceKindKeys, externalResourceKindValues, tagIds, tagNames, content, authorName, publishedAt, updatedAt) =>
+    Read[(String, String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
+      case (id, title, robotsAttributes, externalResourceKindKeys, externalResourceKindValues, tagIds, tagNames, content, authorName, publishedAt, updatedAt) =>
         ResponseContentDbRow(
+          ContentId(id),
           title,
           Attributes(robotsAttributes),
           externalResourceKindKeys,
@@ -60,10 +61,11 @@ class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO]
     }
 
   given contentDbRawWithOptionRead: Read[Option[ResponseContentDbRow]] =
-    Read[(String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
-      case (title, robotsAttributes, externalResourceKindKeys, externalResourceKindValues, tagIds, tagNames, content, authorName, publishedAt, updatedAt) =>
+    Read[(String, String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
+      case (id, title, robotsAttributes, externalResourceKindKeys, externalResourceKindValues, tagIds, tagNames, content, authorName, publishedAt, updatedAt) =>
         Some(
           ResponseContentDbRow(
+            ContentId(id),
             title,
             Attributes(robotsAttributes),
             externalResourceKindKeys,
