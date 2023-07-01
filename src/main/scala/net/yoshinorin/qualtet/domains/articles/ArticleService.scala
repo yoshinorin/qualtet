@@ -66,12 +66,6 @@ class ArticleService[M[_]: Monad](
     this.get(queryParam = queryParam)(actions)
   }
 
-  /*
-  def getByTagIdWithCount(tagId: TagId, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
-    this.get(tagId, queryParam)(articleRepository.findByTagIdWithCount)
-  }
-   */
-
   def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
     this.get(tagName, queryParam)(tagActions)
   }
