@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.message.Fail.Unauthorized
+import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
 
 class AuthProvider[M[_]: Monad](
@@ -20,19 +20,33 @@ class AuthProvider[M[_]: Monad](
 ) {
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
+  // TODO: cleanup messy code
   private def authUser: Kleisli[IO, Request[IO], Either[Fail, (ResponseAuthor, String)]] =
     Kleisli({ request =>
-      for {
-        auth <- IO(request.headers.get[Authorization].orThrow(Unauthorized("Authorization header is none")))
-        author <- authService.findAuthorFromJwtString(auth.credentials.renderString.replace("Bearer ", ""))
-        payload <- request.as[String]
-      } yield author match {
-        case None =>
-          logger.error(s"Invalid author: ${author}")
-          Left(Unauthorized("Unauthorized"))
-        case Some(author) =>
-          logger.info(s"Authorization succeeded: ${author}")
-          Right((author, payload))
+
+      val maybeRequestHeader = request.headers.get[Authorization].asEither[Fail](Unauthorized("Authorization header is none")) match {
+        case Left(f: Fail) => Left(f)
+        case Right(auth: Authorization) => Right(auth)
+      }
+
+      maybeRequestHeader match {
+        case Left(fail) => IO(Left(fail))
+        case Right(auth) =>
+          for {
+            maybeAuthor <- authService.findAuthorFromJwtString(auth.credentials.renderString.replace("Bearer ", ""))
+            author <- IO(maybeAuthor.asEither[Fail](NotFound("author not found")))
+            payload <- request.as[String]
+          } yield {
+            author match {
+              case Left(fail) => {
+                logger.error(fail.getMessage)
+                Left(fail)
+              }
+              case Right(value) =>
+                logger.info(s"Authorization succeeded: ${value}")
+                Right((value, payload))
+            }
+          }
       }
     })
 

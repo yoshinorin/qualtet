@@ -34,26 +34,26 @@ class CacheRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject caused by expired token" ignore {
+    "be reject caused by expired token" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + expiredToken))))
         .use { response =>
           IO {
-            // TODO: assert(response.status === Unauthorized)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
-    "be reject caused by the authorization header is empty" ignore {
+    "be reject caused by the authorization header is empty" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/caches/"))
         .use { response =>
           IO {
-            // TODO: assert(response.status === Unauthorized)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be reject caused by invalid token" ignore {
@@ -61,21 +61,21 @@ class CacheRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.DELETE, uri = uri"/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalidToken"))))
         .use { response =>
           IO {
-            // TODO: assert(response.status === Unauthorized)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
-    "be return user not found" ignore {
+    "be return user not found" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + nonExistsUserToken))))
         .use { response =>
           IO {
-            // TODO: assert(response.status === Unauthorized)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return Method Not Allowed" in {

@@ -106,7 +106,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject DELETE endpoint caused by invalid token" ignore {
+    "be reject DELETE endpoint caused by invalid token" in {
       client
         .run(
           Request(
@@ -117,10 +117,10 @@ class ContentRouteSpec extends AnyWordSpec {
         )
         .use { response =>
           IO {
-            // TODO: assert(response.status === Unauthorized)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be return 400 BadRequest caused by empty title" in {
@@ -204,7 +204,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject caused by expired token" ignore {
+    "be reject caused by expired token" in {
       val json =
         """
           |{
@@ -224,24 +224,24 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + expiredToken)), entity = entity))
         .use { response =>
           IO {
-            // TODO: assert(response.status === Unauthorized)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
-    "be reject POST endpoint caused by the authorization header is empty" ignore {
+    "be reject POST endpoint caused by the authorization header is empty" in {
       client
         .run(Request(method = Method.POST, uri = uri"/contents/"))
         .use { response =>
           IO {
-            // TODO: assert(response.status === Unauthorized)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
-    "be reject POST endpoint caused by invalid token" ignore {
+    "be reject POST endpoint caused by invalid token" in {
       val entity = EntityEncoder[IO, String].toEntity("")
       client
         .run(
@@ -249,13 +249,13 @@ class ContentRouteSpec extends AnyWordSpec {
         )
         .use { response =>
           IO {
-            // TODO: assert(response.status === Unauthorized)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
-    "be return user not found" ignore {
+    "be return user not found" in {
       val entity = EntityEncoder[IO, String].toEntity("")
       client
         .run(
@@ -268,10 +268,10 @@ class ContentRouteSpec extends AnyWordSpec {
         )
         .use { response =>
           IO {
-            // TODO: assert(response.status === Unauthorized)
+            assert(response.status === Unauthorized)
           }
         }
-      // TODO: .unsafeRunSync()
+        .unsafeRunSync()
     }
 
     "be reject with bad request (wrong JSON format)" in {
