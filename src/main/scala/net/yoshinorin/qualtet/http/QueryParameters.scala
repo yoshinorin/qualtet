@@ -28,6 +28,11 @@ final case class ArticlesQueryParameter(
   offset: Int = 0
 )
 
+final case class RequestQueryParamater(
+  page: Option[Int],
+  limit: Option[Int]
+)
+
 object ArticlesQueryParameter {
   def apply(
     page: Option[Int],

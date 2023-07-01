@@ -58,11 +58,11 @@ class Router[M[_]: Monad](
   }
 
   // TODO: move somewhere & refactor
-  private def queryParams(q: Map[String, String]): (Option[Int], Option[Int]) = {
+  private def queryParams(q: Map[String, String]): RequestQueryParamater = {
     val a = Try(q.getOrElse("page", 1).toString.trim.toInt)
     val b = Try(q.getOrElse("limit", 1).toString.trim.toInt)
 
-    (Some(a.getOrElse(1)), Some(b.getOrElse(10)))
+    RequestQueryParamater(Some(a.getOrElse(1)), Some(b.getOrElse(10)))
   }
 
   def routes = Http4sRouter(
@@ -99,8 +99,8 @@ class Router[M[_]: Monad](
 
   private[http] def articles: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case request @ GET -> Root =>
-      val qp = queryParams(request.uri.query.params)
-      articleRoute.get(qp._1, qp._2)
+      val q = queryParams(request.uri.query.params)
+      articleRoute.get(q.page, q.limit)
     case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
@@ -220,8 +220,8 @@ class Router[M[_]: Monad](
     case GET -> Root => tagRoute.get
     case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ GET -> Root / nameOrId =>
-      val qp = queryParams(request.uri.query.params)
-      tagRoute.get(nameOrId, qp._1, qp._2)
+      val q = queryParams(request.uri.query.params)
+      tagRoute.get(nameOrId, q.page, q.limit)
   }
 
   private[this] def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
