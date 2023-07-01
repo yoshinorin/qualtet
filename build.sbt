@@ -42,15 +42,21 @@ lazy val root = (project in file("."))
     // for Scaladoc3
     Compile / doc / target := file("./docs/dist"),
     Compile / doc / scalacOptions ++= Seq(
-      "-project", "Qualtet",
-      "-siteroot", "docs",
+      "-project",
+      "Qualtet",
+      "-siteroot",
+      "docs",
       "-social-links:github::https://github.com/yoshinorin/qualtet",
       "-author",
-      "-project-version", version.value,
-      "-project-footer", "Copyright (c) 2023 @yoshinorin",
+      "-project-version",
+      version.value,
+      "-project-footer",
+      "Copyright (c) 2023 @yoshinorin",
       "-groups",
-      "-default-template", "static-site-main",
-      "-revision", "master"
+      "-default-template",
+      "static-site-main",
+      "-revision",
+      "master"
     )
   )
 
@@ -84,7 +90,6 @@ assembly / assemblyMergeStrategy := {
   case _ => MergeStrategy.first
 }
 
-
 // Register Task and its Commands for testing with container.
 val runTestDbContainer = TaskKey[Unit]("runTestDbContainer", "Run DB container for testing.")
 val shutDownTestDbContainer = TaskKey[Unit]("shutDownTestDbContainer", "Shut down DB container for testing.")
@@ -97,7 +102,6 @@ addCommandAlias("testWithDb", testingDocker.Commands.runAll)
 addCommandAlias("testWithDB", testingDocker.Commands.runAll)
 addCommandAlias("testDbUp", testingDocker.Commands.upDbAndCreateMinData)
 addCommandAlias("testDBUp", testingDocker.Commands.upDbAndCreateMinData)
-
 
 // Register Task and its Commands for run local db with container.
 val runLocalDbContainer = TaskKey[Unit]("runLocalDbContainer", "Run DB container for local development.")
@@ -112,9 +116,8 @@ addCommandAlias("localDBUp", localDocker.Commands.up)
 addCommandAlias("localDbDown", localDocker.Commands.down)
 addCommandAlias("localDBDown", localDocker.Commands.down)
 
-
 // Register Task and its Commands for kill server and run server locally.
-val forceKillServer = TaskKey[Unit]("forceKillServer","force kill http server")
+val forceKillServer = TaskKey[Unit]("forceKillServer", "force kill http server")
 
 LocalProcesses.tasks
 forceKillServer := Def.sequential(LocalProcesses.kill).value
