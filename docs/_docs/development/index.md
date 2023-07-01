@@ -126,8 +126,8 @@ sbt:qualtet>
 ## Generate commit log for release note
 
 ```sh
-// git log --pretty=format:"* (%h) %s" <tag>..<tag>
-$ git log --pretty=format:"* (%h) %s" v1.2.0..v1.3.0
+// git log --pretty=format:"* (%h) %s" <tag>..<tag> | tac
+$ git log --pretty=format:"* (%h) %s" v2.5.0..v2.6.0 | tac
 ```
 
 ## Compile
