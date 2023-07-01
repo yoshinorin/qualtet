@@ -4,14 +4,14 @@ import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 // import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepository
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.actions.Action._
-import net.yoshinorin.qualtet.fixture.Fixture._
+import net.yoshinorin.qualtet.actions.Action.*
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
-import net.yoshinorin.qualtet.Modules._
+import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 import cats.effect.unsafe.implicits.global
 

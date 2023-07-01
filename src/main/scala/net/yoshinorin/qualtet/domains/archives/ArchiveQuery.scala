@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.archives
 
 import doobie.Read
-import doobie.implicits._
+import doobie.implicits.*
 import doobie.util.query.Query0
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 

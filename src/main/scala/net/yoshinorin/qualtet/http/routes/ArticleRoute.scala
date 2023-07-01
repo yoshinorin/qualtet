@@ -3,12 +3,12 @@ package net.yoshinorin.qualtet.http.routes
 import cats.effect.IO
 import cats.Monad
 import org.http4s.headers.`Content-Type`
-import org.http4s._
-import org.http4s.dsl.io._
+import org.http4s.*
+import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount._
+import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount.*
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 class ArticleRoute[M[_]: Monad](
   articleService: ArticleService[M]

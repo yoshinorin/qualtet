@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.syntax
 
-import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.core.*
 import java.nio.charset.Charset
 
 trait json {

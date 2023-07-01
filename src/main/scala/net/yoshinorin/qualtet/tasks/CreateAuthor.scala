@@ -7,8 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, AuthorRepositoryDoobieInterpreter, AuthorService, BCryptPassword}
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
-import net.yoshinorin.qualtet.Modules._
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.Modules.*
+import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 
 import cats.effect.unsafe.implicits.global

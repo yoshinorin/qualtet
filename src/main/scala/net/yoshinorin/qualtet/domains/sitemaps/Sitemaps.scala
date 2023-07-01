@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-import com.github.plokhotnyuk.jsoniter_scala.macros._
-import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
+import com.github.plokhotnyuk.jsoniter_scala.core.*
 
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}

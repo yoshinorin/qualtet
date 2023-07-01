@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.articles
 
-import net.yoshinorin.qualtet.fixture.Fixture._
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.fixture.Fixture.*
+import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.contents.Path

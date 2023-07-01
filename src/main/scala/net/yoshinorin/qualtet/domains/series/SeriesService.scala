@@ -2,13 +2,13 @@ package net.yoshinorin.qualtet.domains.series
 
 import cats.effect.IO
 import cats.Monad
-import cats.implicits._
-import net.yoshinorin.qualtet.actions.Action._
+import cats.implicits.*
+import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.message.Fail.NotFound
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID
 
 class SeriesService[M[_]: Monad](

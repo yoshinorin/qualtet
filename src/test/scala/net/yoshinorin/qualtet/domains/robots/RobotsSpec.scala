@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.robots
 
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots}
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.{contentId, fullRobotsAttributes}
 import org.scalatest.wordspec.AnyWordSpec
 

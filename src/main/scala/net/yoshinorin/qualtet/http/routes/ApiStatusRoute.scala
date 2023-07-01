@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
 import org.http4s.headers.`Content-Type`
-import org.http4s._
-import org.http4s.dsl.io._
+import org.http4s.*
+import org.http4s.dsl.io.*
 
 class ApiStatusRoute {
 

@@ -5,7 +5,7 @@ import cats.Monad
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorService, BCryptPassword, ResponseAuthor}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 import org.slf4j.LoggerFactory
 
 class AuthService[M[_]: Monad](authorService: AuthorService[M], jwt: Jwt) {

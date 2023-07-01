@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.search
 
 import doobie.Read
-import doobie.implicits._
+import doobie.implicits.*
 import doobie.util.query.Query0
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.TagName

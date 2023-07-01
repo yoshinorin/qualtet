@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.syntax
 
-import cats.implicits._
+import cats.implicits.*
 
 trait tuple {
 

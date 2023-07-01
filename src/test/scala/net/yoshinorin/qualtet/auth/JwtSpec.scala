@@ -2,13 +2,13 @@ package net.yoshinorin.qualtet.auth
 
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
-import net.yoshinorin.qualtet.Modules._
+import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.fixture.Fixture.{validBCryptPassword}
 import net.yoshinorin.qualtet.validator.Validator
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.exceptions.JwtValidationException
 import wvlet.airframe.ulid.ULID
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 import cats.effect.unsafe.implicits.global
 

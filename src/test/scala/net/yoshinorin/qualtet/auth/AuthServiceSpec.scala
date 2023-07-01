@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.auth
 
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
-import net.yoshinorin.qualtet.Modules._
-import net.yoshinorin.qualtet.fixture.Fixture._
+import net.yoshinorin.qualtet.Modules.*
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global

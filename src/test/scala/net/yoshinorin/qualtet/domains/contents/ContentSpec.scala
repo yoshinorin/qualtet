@@ -5,8 +5,8 @@ import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, Path, Respon
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName}
-import net.yoshinorin.qualtet.syntax._
-import net.yoshinorin.qualtet.fixture.Fixture._
+import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import org.scalatest.wordspec.AnyWordSpec
 

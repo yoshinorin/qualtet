@@ -1,11 +1,11 @@
 package net.yoshinorin.qualtet.domains.series
 
 import wvlet.airframe.ulid.ULID
-import com.github.plokhotnyuk.jsoniter_scala.macros._
-import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
+import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.message.Fail.BadRequest
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.domains.articles.ResponseArticle
 
 final case class SeriesId(value: String = ULID.newULIDString.toLower) extends AnyVal

@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.articles
 
 import cats.effect.IO
 import cats.Monad
-import net.yoshinorin.qualtet.actions.Action._
+import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.message.Fail.NotFound
@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.{SeriesName, ResponseSeries}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 class ArticleService[M[_]: Monad](
   articleRepository: ArticleRepository[M],

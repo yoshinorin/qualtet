@@ -3,10 +3,10 @@ package net.yoshinorin.qualtet.infrastructure.db.doobie
 import java.util.concurrent.{ExecutorService, Executors}
 import scala.concurrent.ExecutionContextExecutor
 import cats.implicits.catsSyntaxApplicativeId
-import doobie._
-import doobie.implicits._
+import doobie.*
+import doobie.implicits.*
 import doobie.util.transactor.Transactor.Aux
-import cats.effect._
+import cats.effect.*
 import net.yoshinorin.qualtet.actions.{Action, Continue, Done}
 import net.yoshinorin.qualtet.config.DBConfig
 import net.yoshinorin.qualtet.infrastructure.db.Transactor

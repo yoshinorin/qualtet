@@ -1,4 +1,4 @@
-import sbt._
+import sbt.*
 import java.io.File
 import scala.sys.process.Process
 import console.{ Console => Console_ }

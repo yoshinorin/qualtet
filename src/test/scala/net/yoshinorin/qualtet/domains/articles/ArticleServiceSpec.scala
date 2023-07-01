@@ -4,8 +4,8 @@ import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.TagName
-import net.yoshinorin.qualtet.Modules._
-import net.yoshinorin.qualtet.fixture.Fixture._
+import net.yoshinorin.qualtet.Modules.*
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll

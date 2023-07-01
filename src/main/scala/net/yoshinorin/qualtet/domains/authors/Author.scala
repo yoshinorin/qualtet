@@ -2,10 +2,10 @@ package net.yoshinorin.qualtet.domains.authors
 
 import java.time.ZonedDateTime
 import wvlet.airframe.ulid.ULID
-import com.github.plokhotnyuk.jsoniter_scala.macros._
-import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
+import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 import scala.util.matching.Regex
 

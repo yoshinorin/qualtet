@@ -1,17 +1,17 @@
 package net.yoshinorin.qualtet.http.routes
 
-import cats.effect._
+import cats.effect.*
 import cats.Monad
 import org.http4s.headers.`Content-Type`
-import org.http4s._
-import org.http4s.dsl.io._
+import org.http4s.*
+import org.http4s.dsl.io.*
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.domains.contents.ContentId
-import net.yoshinorin.qualtet.domains.contents.ResponseContent._
+import net.yoshinorin.qualtet.domains.contents.ResponseContent.*
 import net.yoshinorin.qualtet.http.RequestDecoder
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 class ContentRoute[M[_]: Monad](
   contentService: ContentService[M]

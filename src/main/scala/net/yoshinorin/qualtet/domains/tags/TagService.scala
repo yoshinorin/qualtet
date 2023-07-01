@@ -2,14 +2,14 @@ package net.yoshinorin.qualtet.domains.tags
 
 import cats.effect.IO
 import cats.Monad
-import cats.implicits._
-import net.yoshinorin.qualtet.actions.Action._
+import cats.implicits.*
+import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.contents.ContentId
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 class TagService[M[_]: Monad](
   tagRepository: TagRepository[M],

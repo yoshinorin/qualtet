@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.robots
 
-import com.github.plokhotnyuk.jsoniter_scala.macros._
-import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
+import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 

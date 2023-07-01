@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.domains.feeds
 
 import net.yoshinorin.qualtet.domains.contents.Path
-import net.yoshinorin.qualtet.syntax._
-import net.yoshinorin.qualtet.fixture.Fixture._
+import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.feeds.FeedSpec

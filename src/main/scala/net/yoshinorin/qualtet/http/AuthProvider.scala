@@ -4,16 +4,16 @@ import cats.effect.IO
 import cats.Monad
 import cats.data.Kleisli
 import cats.data.OptionT
-import org.http4s.server._
-import org.http4s._
-import org.http4s.dsl.io._
+import org.http4s.server.*
+import org.http4s.*
+import org.http4s.dsl.io.*
 import org.http4s.headers.Authorization
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 class AuthProvider[M[_]: Monad](
   authService: AuthService[M]

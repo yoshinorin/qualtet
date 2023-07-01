@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.externalResources
 
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.models.externalResources.ExternalResourcesSpec

@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.config
 
 import com.typesafe.config.{Config => TypeSafeConfig, ConfigFactory}
 import com.typesafe.config.ConfigList
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 import java.util.ArrayList
 

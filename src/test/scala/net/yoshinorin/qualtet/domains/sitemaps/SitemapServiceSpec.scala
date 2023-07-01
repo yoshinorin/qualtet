@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.fixture.Fixture._
+import net.yoshinorin.qualtet.fixture.Fixture.*
 
 import cats.effect.unsafe.implicits.global
 

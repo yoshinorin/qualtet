@@ -1,5 +1,5 @@
-import sbt._
-import scala.sys.process._
+import sbt.*
+import scala.sys.process.*
 import java.lang.ProcessHandle
 import java.util.NoSuchElementException
 import console.{ Console => Console_ }

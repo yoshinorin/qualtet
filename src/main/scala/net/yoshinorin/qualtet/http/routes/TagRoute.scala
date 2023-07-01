@@ -3,14 +3,14 @@ package net.yoshinorin.qualtet.http.routes
 import cats.effect.IO
 import cats.Monad
 import org.http4s.headers.`Content-Type`
-import org.http4s._
-import org.http4s.dsl.io._
+import org.http4s.*
+import org.http4s.dsl.io.*
 import org.http4s.Response
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 class TagRoute[M[_]: Monad](
   tagService: TagService[M],

@@ -1,16 +1,16 @@
 package net.yoshinorin.qualtet.http.routes
 
-import cats.effect._
+import cats.effect.*
 import cats.Monad
 import org.http4s.headers.`Content-Type`
-import org.http4s._
-import org.http4s.dsl.io._
+import org.http4s.*
+import org.http4s.dsl.io.*
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, RequestSeries}
 import net.yoshinorin.qualtet.domains.series.SeriesService
 import net.yoshinorin.qualtet.http.RequestDecoder
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 class SeriesRoute[M[_]: Monad](
   seriesService: SeriesService[M]

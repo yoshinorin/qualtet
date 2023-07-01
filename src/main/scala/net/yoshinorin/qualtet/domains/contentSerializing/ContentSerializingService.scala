@@ -2,12 +2,12 @@ package net.yoshinorin.qualtet.domains.contentSerializing
 
 import cats.effect.IO
 import cats.Monad
-import net.yoshinorin.qualtet.actions.Action._
+import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.series.SeriesId
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 class ContentSerializingService[M[_]: Monad](
   contentSerializingRepository: ContentSerializingRepository[M]

@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.domains.contents
 
 import java.time.ZonedDateTime
 import wvlet.airframe.ulid.ULID
-import com.github.plokhotnyuk.jsoniter_scala.macros._
-import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
+import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.tags.Tag
 import net.yoshinorin.qualtet.message.Fail.BadRequest
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 final case class ContentId(value: String = ULID.newULIDString.toLower) extends AnyVal
 object ContentId {

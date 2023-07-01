@@ -1,9 +1,9 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import com.github.plokhotnyuk.jsoniter_scala.macros._
-import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
+import com.github.plokhotnyuk.jsoniter_scala.core.*
 import wvlet.airframe.ulid.ULID
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 
 final case class TagId(value: String = ULID.newULIDString.toLower) extends AnyVal
 object TagId {

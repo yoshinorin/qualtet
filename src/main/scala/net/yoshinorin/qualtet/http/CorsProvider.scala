@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.http
 import cats.effect.IO
 import org.http4s.HttpRoutes
 import org.http4s.Uri
-import org.http4s.server.middleware._
+import org.http4s.server.middleware.*
 import org.http4s.headers.Origin
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.config.CorsConfig

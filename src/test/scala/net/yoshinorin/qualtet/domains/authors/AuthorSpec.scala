@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.domains.authors
 
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName, BCryptPassword, ResponseAuthor}
 import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
-import net.yoshinorin.qualtet.syntax._
-import net.yoshinorin.qualtet.fixture.Fixture._
+import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}

@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.domains.contents
 
 import cats.effect.IO
 import cats.Monad
-import cats.implicits._
-import net.yoshinorin.qualtet.actions.Action._
+import cats.implicits.*
+import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingService}
@@ -15,7 +15,7 @@ import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesName, SeriesService}
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID
 
 class ContentService[M[_]: Monad](
@@ -210,7 +210,7 @@ class ContentService[M[_]: Monad](
 
   def findBy[A](data: A)(f: A => Action[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
 
-    import net.yoshinorin.qualtet.syntax._
+    import net.yoshinorin.qualtet.syntax.*
 
     transactor.transact(f(data)).flatMap {
       case None => IO(None)

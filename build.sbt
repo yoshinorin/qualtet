@@ -1,6 +1,6 @@
-import docker._
-import testing._
-import LocalProcesses._
+import docker.*
+import testing.*
+import LocalProcesses.*
 
 organization := "net.yoshinorin"
 name := "qualtet"

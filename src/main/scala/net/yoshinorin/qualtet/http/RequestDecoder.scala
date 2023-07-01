@@ -1,10 +1,10 @@
 package net.yoshinorin.qualtet.http
 
-import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 import org.slf4j.LoggerFactory
 
 import scala.util.control.NonFatal

@@ -2,12 +2,12 @@ package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
 import cats.implicits.catsSyntaxEq
-import com.github.plokhotnyuk.jsoniter_scala.macros._
-import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
+import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.config.JwtConfig
 import net.yoshinorin.qualtet.domains.authors.Author
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 import org.slf4j.LoggerFactory
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
 import pdi.jwt.JwtOptions
@@ -33,7 +33,7 @@ object JwtClaim {
 
 class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signature) {
 
-  import JwtClaim._
+  import JwtClaim.*
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 

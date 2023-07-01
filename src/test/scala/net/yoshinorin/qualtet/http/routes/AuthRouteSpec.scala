@@ -2,12 +2,12 @@ package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
 import org.http4s.client.Client
-import org.http4s._
-import org.http4s.dsl.io._
+import org.http4s.*
+import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
-import org.http4s.implicits._
+import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.Modules._
+import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.fixture.Fixture.{authRoute, author, router}
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global

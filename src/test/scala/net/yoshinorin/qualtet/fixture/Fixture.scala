@@ -7,15 +7,15 @@ import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.CorsProvider
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.domains.archives._
-import net.yoshinorin.qualtet.domains.articles._
-import net.yoshinorin.qualtet.domains.authors._
-import net.yoshinorin.qualtet.domains.contents._
-import net.yoshinorin.qualtet.domains.contentTypes._
-import net.yoshinorin.qualtet.domains.externalResources._
-import net.yoshinorin.qualtet.domains.robots._
+import net.yoshinorin.qualtet.domains.archives.*
+import net.yoshinorin.qualtet.domains.articles.*
+import net.yoshinorin.qualtet.domains.authors.*
+import net.yoshinorin.qualtet.domains.contents.*
+import net.yoshinorin.qualtet.domains.contentTypes.*
+import net.yoshinorin.qualtet.domains.externalResources.*
+import net.yoshinorin.qualtet.domains.robots.*
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapsRepositoryDoobieInterpreter, SitemapService, Url}
-import net.yoshinorin.qualtet.domains.tags._
+import net.yoshinorin.qualtet.domains.tags.*
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,
@@ -38,7 +38,7 @@ import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
 import net.yoshinorin.qualtet.http.routes.CacheRoute
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.Modules
-import net.yoshinorin.qualtet.syntax._
+import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 import cats.effect.unsafe.implicits.global
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, RequestSeries}

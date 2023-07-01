@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet
 import cats.effect.IOApp
 import cats.effect.ExitCode
 import cats.effect.IO
-import org.http4s._
+import org.http4s.*
 import org.http4s.server.middleware.Logger
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.http.AuthProvider
@@ -25,7 +25,7 @@ import net.yoshinorin.qualtet.http.routes.{
 }
 import net.yoshinorin.qualtet.http.routes.CacheRoute
 import org.http4s.ember.server.EmberServerBuilder
-import com.comcast.ip4s._
+import com.comcast.ip4s.*
 
 // import scala.io.StdIn
 

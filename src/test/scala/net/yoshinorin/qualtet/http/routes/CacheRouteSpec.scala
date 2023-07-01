@@ -2,13 +2,13 @@ package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
 import org.http4s.client.Client
-import org.http4s._
-import org.http4s.dsl.io._
-import org.http4s.implicits._
-import org.typelevel.ci._
+import org.http4s.*
+import org.http4s.dsl.io.*
+import org.http4s.implicits.*
+import org.typelevel.ci.*
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.Modules._
+import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.fixture.Fixture.{author, cacheRoute, expiredToken, nonExistsUserToken, router}
 import net.yoshinorin.qualtet.auth.RequestToken
 
