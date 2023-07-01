@@ -12,7 +12,8 @@ scalacOptions ++= Seq(
   "-feature",
   "-unchecked",
   "-encoding",
-  "UTF-8"
+  "UTF-8",
+  "-Ykind-projector"
 )
 
 // https://github.com/rtimush/sbt-updates
