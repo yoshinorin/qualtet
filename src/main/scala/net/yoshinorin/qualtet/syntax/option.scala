@@ -9,6 +9,11 @@ trait option {
       case None => throw t
       case Some(t) => t
     }
+
+    def asEither[T2](t: T2): Either[T2, T] = s match {
+      case None => Left(t)
+      case Some(s) => Right(s)
+    }
   }
 
 }
