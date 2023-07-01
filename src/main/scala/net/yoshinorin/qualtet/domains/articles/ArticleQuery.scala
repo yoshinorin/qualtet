@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 object ArticleQuery {
 
   def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams)(implicit
-    resonseArticlesWithCount: Read[(Int, ResponseArticle)]
+    responseArticlesWithCount: Read[(Int, ResponseArticle)]
   ): Query0[(Int, ResponseArticle)] = {
     sql"""
       SELECT
@@ -37,7 +37,7 @@ object ArticleQuery {
   }
 
   def findByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, sqlParams: SqlParams)(implicit
-    resonseArticlesWithCount: Read[(Int, ResponseArticle)]
+    responseArticlesWithCount: Read[(Int, ResponseArticle)]
   ): Query0[(Int, ResponseArticle)] = {
     sql"""
       SELECT
@@ -69,7 +69,7 @@ object ArticleQuery {
   }
 
   def findBySeriesNameWithCount(contentTypeId: ContentTypeId, seriesName: SeriesName)(implicit
-    resonseArticlesWithCount: Read[(Int, ResponseArticle)]
+    responseArticlesWithCount: Read[(Int, ResponseArticle)]
   ): Query0[(Int, ResponseArticle)] = {
     sql"""
         SELECT
