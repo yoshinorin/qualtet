@@ -27,17 +27,17 @@ object ContentQuery {
       .query[Unit]
   }
 
-  def findById(id: ContentId)(implicit tagRead: Read[Content]): Query0[Content] = {
+  def findById(id: ContentId)(implicit contentRead: Read[Content]): Query0[Content] = {
     sql"SELECT * FROM contents WHERE id = ${id.value}"
       .query[Content]
   }
 
-  def findByPath(path: Path)(implicit tagRead: Read[Content]): Query0[Content] = {
+  def findByPath(path: Path)(implicit contentRead: Read[Content]): Query0[Content] = {
     sql"SELECT * FROM contents WHERE path = ${path.value}"
       .query[Content]
   }
 
-  def findByPathWithMeta(path: Path)(implicit tagRead: Read[Option[ResponseContentDbRow]]): Query0[Option[ResponseContentDbRow]] = {
+  def findByPathWithMeta(path: Path)(implicit contentRead: Read[Option[ResponseContentDbRow]]): Query0[Option[ResponseContentDbRow]] = {
     // NOTE: Do not use `.option` use `.query[Option[T]].unique` instead
     //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
     sql"""
