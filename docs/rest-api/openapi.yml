@@ -630,6 +630,9 @@ components:
         content:
           type: string
           example: "Post Content.... HTML strings"
+        length:
+          type: integer
+          example: 1252
         authorName:
           type: string
           description: "This field return from `authors.display_name` coloumn value."

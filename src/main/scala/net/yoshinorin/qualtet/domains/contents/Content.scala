@@ -132,6 +132,7 @@ final case class ResponseContent(
   tags: List[Tag] = List(),
   description: String,
   content: String,
+  length: Int,
   authorName: AuthorName,
   publishedAt: Long,
   updatedAt: Long

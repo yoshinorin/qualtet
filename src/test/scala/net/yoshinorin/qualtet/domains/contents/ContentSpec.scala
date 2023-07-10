@@ -117,6 +117,7 @@ class ContentSpec extends AnyWordSpec {
           |  "tags" : [],
           |  "description" : "this is a description",
           |  "content" : "this is a content",
+          |  "length" : 17,
           |  "authorName" : "jhondue",
           |  "publishedAt" : 1567814290,
           |  "updatedAt" : 1567814291
@@ -130,6 +131,7 @@ class ContentSpec extends AnyWordSpec {
           robotsAttributes = Attributes("noarchive, noimageindex"),
           description = "this is a description",
           content = "this is a content",
+          length = "this is a content".length,
           authorName = author.name,
           publishedAt = 1567814290,
           updatedAt = 1567814291
@@ -169,6 +171,7 @@ class ContentSpec extends AnyWordSpec {
           |    ],
           |    "description" : "this is a description1",
           |    "content" : "this is a content1",
+          |    "length" : 18,
           |    "authorName" : "jhondue",
           |    "publishedAt" : 1567814290,
           |    "updatedAt" : 1567814299
@@ -181,6 +184,7 @@ class ContentSpec extends AnyWordSpec {
           |    "tags" : [],
           |    "description" : "this is a description2",
           |    "content" : "this is a content2",
+          |    "length" : 18,
           |    "authorName" : "jhondue",
           |    "publishedAt" : 1567814291,
           |    "updatedAt" : 1567814391
@@ -210,6 +214,7 @@ class ContentSpec extends AnyWordSpec {
             ),
             description = "this is a description1",
             content = "this is a content1",
+            length = "this is a content1".length,
             authorName = author.name,
             publishedAt = 1567814290,
             updatedAt = 1567814299
@@ -221,6 +226,7 @@ class ContentSpec extends AnyWordSpec {
             externalResources = List(),
             description = "this is a description2",
             content = "this is a content2",
+            length = "this is a content2".length,
             authorName = author.name,
             publishedAt = 1567814291,
             updatedAt = 1567814391
