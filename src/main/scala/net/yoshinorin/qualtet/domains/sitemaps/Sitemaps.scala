@@ -7,28 +7,35 @@ import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
 
 // https://www.sitemaps.org/index.html
-final case class Loc(value: String) extends AnyVal
+opaque type Loc = String
 object Loc {
   given codecLastMod: JsonValueCodec[Loc] = JsonCodecMaker.make
 
   def apply(value: String): Loc = {
     // TODO: add url to prefix like https://example.com/....
     // TODO: validate URL or not
-    new Loc(value)
+    value
+  }
+
+  extension (loc: Loc) {
+    def value: String = loc
   }
 }
 
-final case class LastMod(value: String) extends AnyVal
+opaque type LastMod = String
 object LastMod {
   given codecLastMod: JsonValueCodec[LastMod] = JsonCodecMaker.make
 
   def apply(value: String): LastMod = {
     // TODO: validate YYYY-MM-DD string or not
-    val sitemapTagFormatDate = Instant
+    Instant
       .ofEpochSecond(value.toLong)
       .atZone(ZoneId.of("GMT"))
       .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-    new LastMod(sitemapTagFormatDate)
+  }
+
+  extension (lastMod: LastMod) {
+    def value: String = lastMod
   }
 }
 

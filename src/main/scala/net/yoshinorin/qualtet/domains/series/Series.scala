@@ -8,23 +8,33 @@ import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.domains.articles.ResponseArticle
 
-final case class SeriesId(value: String = ULID.newULIDString.toLower) extends AnyVal
+opaque type SeriesId = String
 object SeriesId {
   given codecSeriesId: JsonValueCodec[SeriesId] = JsonCodecMaker.make
 
-  def apply(value: String): SeriesId = {
+  def apply(value: String = ULID.newULIDString.toLower): SeriesId = {
     val _ = ULID.fromString(value)
-    new SeriesId(value)
+    value.toLower
+  }
+
+  extension (seriesId: SeriesId) {
+    def value: String = seriesId
   }
 }
 
-final case class SeriesName(value: String) extends AnyVal
+opaque type SeriesName = String
 object SeriesName {
   given codecSeriesName: JsonValueCodec[SeriesName] = JsonCodecMaker.make
+
+  def apply(value: String): SeriesName = value
+
+  extension (seriesName: SeriesName) {
+    def value: String = seriesName
+  }
 }
 
 final case class Series(
-  id: SeriesId = new SeriesId,
+  id: SeriesId = SeriesId.apply(),
   name: SeriesName,
   title: String,
   description: Option[String]

@@ -5,9 +5,7 @@ import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 
-final case class Attributes(value: String) extends AnyVal {
-  def sort: Attributes = new Attributes(value.split(",").map(x => x.trim).sorted.mkString(", "))
-}
+opaque type Attributes = String
 object Attributes {
   given codecAttributes: JsonValueCodec[Attributes] = JsonCodecMaker.make
 
@@ -24,8 +22,13 @@ object Attributes {
     if (attributes.diff(allowedAttributes).length > 0) {
       throw UnprocessableEntity("robots.attributes is invalid.")
     } else {
-      new Attributes(attributes.sorted.mkString(", "))
+      attributes.sorted.mkString(", ")
     }
+  }
+
+  extension (attributes: Attributes) {
+    def value: String = attributes
+    def sort: Attributes = value.split(",").map(x => x.trim).sorted.mkString(", ")
   }
 }
 

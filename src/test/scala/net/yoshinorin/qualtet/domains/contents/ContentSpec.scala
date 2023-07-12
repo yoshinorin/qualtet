@@ -41,7 +41,7 @@ class ContentSpec extends AnyWordSpec {
     "default instance" in {
       val currentUTCDateTime = ZonedDateTime.now(ZoneOffset.UTC)
       val content = Content(
-        authorId = new AuthorId,
+        authorId = AuthorId.apply(),
         contentTypeId = contentTypeId,
         path = Path("/path"),
         title = "",

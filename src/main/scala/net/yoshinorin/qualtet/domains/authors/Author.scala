@@ -9,17 +9,21 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.util.matching.Regex
 
-final case class AuthorId(value: String = ULID.newULIDString.toLower) extends AnyVal
+opaque type AuthorId = String
 object AuthorId {
   given codecAuthorId: JsonValueCodec[AuthorId] = JsonCodecMaker.make
 
-  def apply(value: String): AuthorId = {
+  def apply(value: String = ULID.newULIDString.toLower): AuthorId = {
     val _ = ULID.fromString(value)
-    new AuthorId(value)
+    value.toLower
+  }
+
+  extension (authorId: AuthorId) {
+    def value: String = authorId
   }
 }
 
-final case class AuthorName(value: String) extends AnyVal
+opaque type AuthorName = String
 object AuthorName {
   given codecAuthorName: JsonValueCodec[AuthorName] = JsonCodecMaker.make
   val authorNamePattern: Regex = "[0-9a-zA-Z_-]+".r
@@ -28,11 +32,15 @@ object AuthorName {
     if (!authorNamePattern.matches(value)) {
       throw UnprocessableEntity("authorName must be number, alphabet and underscore.")
     }
-    new AuthorName(value.toLower)
+    value.toLower
+  }
+
+  extension (authorName: AuthorName) {
+    def value: String = authorName
   }
 }
 
-final case class AuthorDisplayName(value: String) extends AnyVal
+opaque type AuthorDisplayName = String
 object AuthorDisplayName {
   given codecAuthorDisplayName: JsonValueCodec[AuthorDisplayName] = JsonCodecMaker.make
   val authorDisplayNamePattern: Regex = "[0-9a-zA-Z_-]+".r
@@ -41,23 +49,31 @@ object AuthorDisplayName {
     if (!authorDisplayNamePattern.matches(value)) {
       throw UnprocessableEntity("authorDisplayName must be number, alphabet or underscore.")
     }
-    new AuthorDisplayName(value)
+    value
+  }
+
+  extension (authorDisplayName: AuthorDisplayName) {
+    def value: String = authorDisplayName
   }
 }
 
-final case class BCryptPassword(value: String) extends AnyVal
+opaque type BCryptPassword = String
 object BCryptPassword {
   def apply(value: String): BCryptPassword = {
     // https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage-dpe
     if (!value.startsWith("$2a$")) {
       throw Unauthorized()
     }
-    new BCryptPassword(value)
+    value
+  }
+
+  extension (bCryptPassword: BCryptPassword) {
+    def value: String = bCryptPassword
   }
 }
 
 final case class Author(
-  id: AuthorId = new AuthorId,
+  id: AuthorId = AuthorId.apply(),
   name: AuthorName,
   displayName: AuthorDisplayName,
   password: BCryptPassword,
@@ -65,7 +81,7 @@ final case class Author(
 )
 
 final case class ResponseAuthor(
-  id: AuthorId = new AuthorId,
+  id: AuthorId = AuthorId.apply(),
   name: AuthorName,
   displayName: AuthorDisplayName,
   createdAt: Long = ZonedDateTime.now.toEpochSecond

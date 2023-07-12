@@ -5,7 +5,7 @@ import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 
-final case class ExternalResourceKind(value: String) extends AnyVal
+opaque type ExternalResourceKind = String
 object ExternalResourceKind {
   given codecExternalResources: JsonValueCodec[ExternalResourceKind] = JsonCodecMaker.make
 
@@ -14,7 +14,11 @@ object ExternalResourceKind {
     if (!allowedKinds.contains(value)) {
       throw UnprocessableEntity("The field externalResource.kind allowed only js or css.")
     }
-    new ExternalResourceKind(value)
+    value
+  }
+
+  extension (externalResourceKind: ExternalResourceKind) {
+    def value: String = externalResourceKind
   }
 }
 

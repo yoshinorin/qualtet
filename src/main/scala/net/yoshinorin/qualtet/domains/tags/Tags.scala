@@ -5,23 +5,34 @@ import com.github.plokhotnyuk.jsoniter_scala.core.*
 import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.syntax.*
 
-final case class TagId(value: String = ULID.newULIDString.toLower) extends AnyVal
+opaque type TagId = String
 object TagId {
   given codecTagId: JsonValueCodec[TagId] = JsonCodecMaker.make
-  def apply(value: String): TagId = {
+
+  def apply(value: String = ULID.newULIDString.toLower): TagId = {
     val _ = ULID.fromString(value)
-    new TagId(value)
+    value.toLower
+  }
+
+  extension (tagId: TagId) {
+    def value: String = tagId
   }
 }
 
-final case class TagName(value: String) extends AnyVal
+opaque type TagName = String
 object TagName {
   given codecTagName: JsonValueCodec[TagName] = JsonCodecMaker.make
   given codecTagNames: JsonValueCodec[Seq[TagName]] = JsonCodecMaker.make
+
+  def apply(value: String): TagName = value
+
+  extension (tagName: TagName) {
+    def value: String = tagName
+  }
 }
 
 final case class Tag(
-  id: TagId = new TagId,
+  id: TagId = TagId.apply(),
   name: TagName
 )
 object Tag {

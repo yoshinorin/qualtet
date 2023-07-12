@@ -5,18 +5,22 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.syntax.*
 
-final case class ContentTypeId(value: String = ULID.newULIDString.toLower) extends AnyVal
+opaque type ContentTypeId = String
 object ContentTypeId {
   given codecContentTypeId: JsonValueCodec[ContentTypeId] = JsonCodecMaker.make
 
-  def apply(value: String): ContentTypeId = {
+  def apply(value: String = ULID.newULIDString.toLower): ContentTypeId = {
     val _ = ULID.fromString(value)
-    new ContentTypeId(value)
+    value.toLower
+  }
+
+  extension (contentTypeId: ContentTypeId) {
+    def value: String = contentTypeId
   }
 }
 
 final case class ContentType(
-  id: ContentTypeId = new ContentTypeId,
+  id: ContentTypeId = ContentTypeId.apply(),
   name: String
 )
 

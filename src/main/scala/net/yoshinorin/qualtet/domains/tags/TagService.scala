@@ -80,7 +80,7 @@ class TagService[M[_]: Monad](
    */
   def findOrGetNewInstance(tagName: TagName): IO[Tag] = {
     this.findByName(tagName).flatMap {
-      case None => IO(Tag(new TagId, tagName))
+      case None => IO(Tag(TagId.apply(), tagName))
       case Some(t) => IO(t)
     }
   }

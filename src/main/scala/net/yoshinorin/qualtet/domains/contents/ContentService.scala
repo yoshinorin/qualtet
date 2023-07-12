@@ -228,7 +228,7 @@ class ContentService[M[_]: Monad](
               externalResources = (x.externalResourceKindKeys, x.externalResourceKindValues)
                 .zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2).distinct))
                 .getOrElse(List()),
-              tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(new TagId(x), new TagName(y))).map(x => x.distinct).getOrElse(List()),
+              tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(TagId(x), TagName(y))).map(x => x.distinct).getOrElse(List()),
               description = stripedContent.substring(0, descriptionLength),
               content = x.content,
               length = stripedContent.length,

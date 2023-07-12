@@ -10,15 +10,15 @@ class TupleSpec extends AnyWordSpec {
   "zipFromStringPair" should {
     "return list of [A]" in {
       val maybeTags = (
-        Option("A, B, C"),
+        Option("01h08d6m9p5say793h288n0rsc, 01h08d6pazabydf3eneghthp84, 01h08d6pkag4p7y6xebzyn9bkf"),
         Option("Z, X, Y")
-      ).zip((x, y) => new Tag(new TagId(x), new TagName(y)))
+      ).zip((x, y) => new Tag(TagId(x), TagName(y)))
 
-      assert(maybeTags.get(0).id.value === "A")
+      assert(maybeTags.get(0).id.value === "01h08d6m9p5say793h288n0rsc")
       assert(maybeTags.get(0).name.value === "Z")
-      assert(maybeTags.get(1).id.value === "B")
+      assert(maybeTags.get(1).id.value === "01h08d6pazabydf3eneghthp84")
       assert(maybeTags.get(1).name.value === "X")
-      assert(maybeTags.get(2).id.value === "C")
+      assert(maybeTags.get(2).id.value === "01h08d6pkag4p7y6xebzyn9bkf")
       assert(maybeTags.get(2).name.value === "Y")
     }
 
@@ -26,7 +26,7 @@ class TupleSpec extends AnyWordSpec {
       val maybeTags = (
         None,
         Option("Z, X, Y")
-      ).zip((x, y) => new Tag(new TagId(x), new TagName(y)))
+      ).zip((x, y) => new Tag(TagId(x), TagName(y)))
       assert(maybeTags.isEmpty)
     }
 
@@ -34,7 +34,7 @@ class TupleSpec extends AnyWordSpec {
       val maybeTags = (
         Option("A, B, C"),
         None
-      ).zip((x, y) => new Tag(new TagId(x), new TagName(y)))
+      ).zip((x, y) => new Tag(TagId(x), TagName(y)))
       assert(maybeTags.isEmpty)
     }
 
@@ -42,7 +42,7 @@ class TupleSpec extends AnyWordSpec {
       val maybeTags = (
         Option("A, B, C, D"),
         Option("Z, X, Y")
-      ).zip((x, y) => new Tag(new TagId(x), new TagName(y)))
+      ).zip((x, y) => new Tag(TagId(x), TagName(y)))
       assert(maybeTags.isEmpty)
     }
   }

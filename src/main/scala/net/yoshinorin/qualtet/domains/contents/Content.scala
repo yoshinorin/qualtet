@@ -14,33 +14,41 @@ import net.yoshinorin.qualtet.domains.tags.Tag
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax.*
 
-final case class ContentId(value: String = ULID.newULIDString.toLower) extends AnyVal
+opaque type ContentId = String
 object ContentId {
   given codecContentId: JsonValueCodec[ContentId] = JsonCodecMaker.make
 
-  def apply(value: String): ContentId = {
-    val _ = ULID.fromString(value)
-    new ContentId(value)
+  def apply(value: String = ULID.newULIDString.toLower): ContentId = {
+    val _ = ULID.fromString(value) // NOTE: for validate value
+    value.toLower
+  }
+
+  extension (contentId: ContentId) {
+    def value: String = contentId
   }
 }
 
 // TODO: move somewhere
-final case class Path(value: String) extends AnyVal
+opaque type Path = String
 object Path {
   given codecPath: JsonValueCodec[Path] = JsonCodecMaker.make
 
   def apply(value: String): Path = {
     // TODO: check valid url https://www.ietf.org/rfc/rfc3986.txt
     if (!value.startsWith("/")) {
-      new Path(s"/${value}")
+      s"/${value}"
     } else {
-      new Path(value)
+      value
     }
+  }
+
+  extension (path: Path) {
+    def value: String = path
   }
 }
 
 final case class Content(
-  id: ContentId = new ContentId,
+  id: ContentId = ContentId.apply(),
   authorId: AuthorId,
   contentTypeId: ContentTypeId,
   path: Path,
