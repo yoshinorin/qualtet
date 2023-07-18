@@ -208,9 +208,6 @@ class ContentService[M[_]: Monad](
   }
 
   def findBy[A](data: A)(f: A => Action[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
-
-    import net.yoshinorin.qualtet.syntax.*
-
     transactor.transact(f(data)).flatMap {
       case None => IO(None)
       case Some(x) =>
