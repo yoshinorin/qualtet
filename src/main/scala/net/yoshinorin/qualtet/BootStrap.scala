@@ -33,10 +33,6 @@ object BootStrap extends IOApp {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  logger.info("booting...")
-
-  Modules.migrator.migrate(Modules.contentTypeService)
-
   val authProvider = new AuthProvider(Modules.authService)
   val corsProvider = new CorsProvider(Modules.config.cors)
 
@@ -54,8 +50,6 @@ object BootStrap extends IOApp {
   val seriesRoute = new SeriesRoute(Modules.seriesService)
   val sitemapRoute = new SitemapRoute(Modules.sitemapService)
   val tagRoute = new TagRoute(Modules.tagService, Modules.articleService)
-
-  logger.info("created all instances")
 
   val router = new net.yoshinorin.qualtet.http.Router(
     authProvider,
@@ -77,6 +71,8 @@ object BootStrap extends IOApp {
   )
 
   def run(args: List[String]): IO[ExitCode] = {
+
+    Modules.migrator.migrate(Modules.contentTypeService)
 
     // TODO: filter & format log
     val httpAppWithLogger: HttpApp[IO] = Logger.httpApp(true, false)(router.routes)
