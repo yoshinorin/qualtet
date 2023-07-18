@@ -2,13 +2,14 @@ package net.yoshinorin.qualtet.domains.sitemaps
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
+import net.yoshinorin.qualtet.domains.ValueExtender
 
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
 
 // https://www.sitemaps.org/index.html
 opaque type Loc = String
-object Loc {
+object Loc extends ValueExtender[Loc] {
   given codecLastMod: JsonValueCodec[Loc] = JsonCodecMaker.make
 
   def apply(value: String): Loc = {
@@ -16,14 +17,10 @@ object Loc {
     // TODO: validate URL or not
     value
   }
-
-  extension (loc: Loc) {
-    def value: String = loc
-  }
 }
 
 opaque type LastMod = String
-object LastMod {
+object LastMod extends ValueExtender[LastMod] {
   given codecLastMod: JsonValueCodec[LastMod] = JsonCodecMaker.make
 
   def apply(value: String): LastMod = {
@@ -32,10 +29,6 @@ object LastMod {
       .ofEpochSecond(value.toLong)
       .atZone(ZoneId.of("GMT"))
       .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-  }
-
-  extension (lastMod: LastMod) {
-    def value: String = lastMod
   }
 }
 

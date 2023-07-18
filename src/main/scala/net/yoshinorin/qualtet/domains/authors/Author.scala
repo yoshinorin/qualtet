@@ -4,27 +4,24 @@ import java.time.ZonedDateTime
 import wvlet.airframe.ulid.ULID
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
+import net.yoshinorin.qualtet.domains.ValueExtender
 import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
 import net.yoshinorin.qualtet.syntax.*
 
 import scala.util.matching.Regex
 
 opaque type AuthorId = String
-object AuthorId {
+object AuthorId extends ValueExtender[AuthorId] {
   given codecAuthorId: JsonValueCodec[AuthorId] = JsonCodecMaker.make
 
   def apply(value: String = ULID.newULIDString.toLower): AuthorId = {
     val _ = ULID.fromString(value)
     value.toLower
   }
-
-  extension (authorId: AuthorId) {
-    def value: String = authorId
-  }
 }
 
 opaque type AuthorName = String
-object AuthorName {
+object AuthorName extends ValueExtender[AuthorName] {
   given codecAuthorName: JsonValueCodec[AuthorName] = JsonCodecMaker.make
   val authorNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
@@ -34,14 +31,10 @@ object AuthorName {
     }
     value.toLower
   }
-
-  extension (authorName: AuthorName) {
-    def value: String = authorName
-  }
 }
 
 opaque type AuthorDisplayName = String
-object AuthorDisplayName {
+object AuthorDisplayName extends ValueExtender[AuthorDisplayName] {
   given codecAuthorDisplayName: JsonValueCodec[AuthorDisplayName] = JsonCodecMaker.make
   val authorDisplayNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
@@ -51,24 +44,16 @@ object AuthorDisplayName {
     }
     value
   }
-
-  extension (authorDisplayName: AuthorDisplayName) {
-    def value: String = authorDisplayName
-  }
 }
 
 opaque type BCryptPassword = String
-object BCryptPassword {
+object BCryptPassword extends ValueExtender[BCryptPassword] {
   def apply(value: String): BCryptPassword = {
     // https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage-dpe
     if (!value.startsWith("$2a$")) {
       throw Unauthorized()
     }
     value
-  }
-
-  extension (bCryptPassword: BCryptPassword) {
-    def value: String = bCryptPassword
   }
 }
 

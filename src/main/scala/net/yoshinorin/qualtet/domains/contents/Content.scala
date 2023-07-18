@@ -4,7 +4,7 @@ import java.time.ZonedDateTime
 import wvlet.airframe.ulid.ULID
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.Request
+import net.yoshinorin.qualtet.domains.{Request, ValueExtender}
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
@@ -15,22 +15,18 @@ import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax.*
 
 opaque type ContentId = String
-object ContentId {
+object ContentId extends ValueExtender[ContentId] {
   given codecContentId: JsonValueCodec[ContentId] = JsonCodecMaker.make
 
   def apply(value: String = ULID.newULIDString.toLower): ContentId = {
     val _ = ULID.fromString(value) // NOTE: for validate value
     value.toLower
   }
-
-  extension (contentId: ContentId) {
-    def value: String = contentId
-  }
 }
 
 // TODO: move somewhere
 opaque type Path = String
-object Path {
+object Path extends ValueExtender[Path] {
   given codecPath: JsonValueCodec[Path] = JsonCodecMaker.make
 
   def apply(value: String): Path = {
@@ -40,10 +36,6 @@ object Path {
     } else {
       value
     }
-  }
-
-  extension (path: Path) {
-    def value: String = path
   }
 }
 

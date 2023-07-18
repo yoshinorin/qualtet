@@ -3,34 +3,26 @@ package net.yoshinorin.qualtet.domains.series
 import wvlet.airframe.ulid.ULID
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.Request
+import net.yoshinorin.qualtet.domains.{Request, ValueExtender}
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.domains.articles.ResponseArticle
 
 opaque type SeriesId = String
-object SeriesId {
+object SeriesId extends ValueExtender[SeriesId] {
   given codecSeriesId: JsonValueCodec[SeriesId] = JsonCodecMaker.make
 
   def apply(value: String = ULID.newULIDString.toLower): SeriesId = {
     val _ = ULID.fromString(value)
     value.toLower
   }
-
-  extension (seriesId: SeriesId) {
-    def value: String = seriesId
-  }
 }
 
 opaque type SeriesName = String
-object SeriesName {
+object SeriesName extends ValueExtender[SeriesName] {
   given codecSeriesName: JsonValueCodec[SeriesName] = JsonCodecMaker.make
 
   def apply(value: String): SeriesName = value
-
-  extension (seriesName: SeriesName) {
-    def value: String = seriesName
-  }
 }
 
 final case class Series(
