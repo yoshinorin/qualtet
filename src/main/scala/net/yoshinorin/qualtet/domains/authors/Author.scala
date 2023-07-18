@@ -1,23 +1,17 @@
 package net.yoshinorin.qualtet.domains.authors
 
 import java.time.ZonedDateTime
-import wvlet.airframe.ulid.ULID
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.ValueExtender
+import net.yoshinorin.qualtet.domains.{ValueExtender, UlidConvertible}
 import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
 import net.yoshinorin.qualtet.syntax.*
 
 import scala.util.matching.Regex
 
 opaque type AuthorId = String
-object AuthorId extends ValueExtender[AuthorId] {
+object AuthorId extends ValueExtender[AuthorId] with UlidConvertible[AuthorId] {
   given codecAuthorId: JsonValueCodec[AuthorId] = JsonCodecMaker.make
-
-  def apply(value: String = ULID.newULIDString.toLower): AuthorId = {
-    val _ = ULID.fromString(value)
-    value.toLower
-  }
 }
 
 opaque type AuthorName = String

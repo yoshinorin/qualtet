@@ -2,18 +2,12 @@ package net.yoshinorin.qualtet.domains.tags
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import wvlet.airframe.ulid.ULID
-import net.yoshinorin.qualtet.domains.ValueExtender
+import net.yoshinorin.qualtet.domains.{ValueExtender, UlidConvertible}
 import net.yoshinorin.qualtet.syntax.*
 
 opaque type TagId = String
-object TagId extends ValueExtender[TagId] {
+object TagId extends ValueExtender[TagId] with UlidConvertible[TagId] {
   given codecTagId: JsonValueCodec[TagId] = JsonCodecMaker.make
-
-  def apply(value: String = ULID.newULIDString.toLower): TagId = {
-    val _ = ULID.fromString(value)
-    value.toLower
-  }
 }
 
 opaque type TagName = String

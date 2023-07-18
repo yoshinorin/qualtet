@@ -1,19 +1,13 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-import wvlet.airframe.ulid.ULID
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.ValueExtender
+import net.yoshinorin.qualtet.domains.{ValueExtender, UlidConvertible}
 import net.yoshinorin.qualtet.syntax.*
 
 opaque type ContentTypeId = String
-object ContentTypeId extends ValueExtender[ContentTypeId] {
+object ContentTypeId extends ValueExtender[ContentTypeId] with UlidConvertible[ContentTypeId] {
   given codecContentTypeId: JsonValueCodec[ContentTypeId] = JsonCodecMaker.make
-
-  def apply(value: String = ULID.newULIDString.toLower): ContentTypeId = {
-    val _ = ULID.fromString(value)
-    value.toLower
-  }
 }
 
 final case class ContentType(
