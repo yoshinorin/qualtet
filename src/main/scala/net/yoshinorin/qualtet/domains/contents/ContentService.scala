@@ -16,7 +16,6 @@ import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesName, SeriesService}
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.syntax.*
-import wvlet.airframe.ulid.ULID
 
 class ContentService[M[_]: Monad](
   contentRepository: ContentRepository[M],
@@ -72,7 +71,7 @@ class ContentService[M[_]: Monad](
       c <- contentTypeService.findByName(request.contentType).throwIfNone(UnprocessableEntity(s"content-type not found: ${request.contentType}"))
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
-        case None => ContentId(ULID.newULIDString.toLower)
+        case None => ContentId.apply()
         case Some(x) => x.id
       }
       maybeTags <- tagService.getTags(Some(request.tags))
