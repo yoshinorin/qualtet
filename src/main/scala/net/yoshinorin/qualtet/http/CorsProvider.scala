@@ -8,7 +8,6 @@ import org.http4s.headers.Origin
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.config.CorsConfig
 import java.net.URI
-import scala.util.control.NonFatal
 
 import scala.util.control.NonFatal
 
