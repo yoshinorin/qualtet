@@ -322,7 +322,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/responseSearch'
         422:
-          description: Unprocess request
+          description: Unprocessable request
       parameters:
         - in: query
           name: q
