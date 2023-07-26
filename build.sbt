@@ -4,7 +4,7 @@ import LocalProcesses.*
 
 organization := "net.yoshinorin"
 name := "qualtet"
-version := "v2.6.0"
+version := "v2.7.0"
 scalaVersion := "3.3.0"
 
 scalacOptions ++= Seq(
