@@ -52,7 +52,6 @@ object Content {
 }
 
 final case class RequestContent(
-  requestId: String = ULID.newULIDString.toLower,
   contentType: String,
   robotsAttributes: Attributes, // TODO: Consider to use `Option[Attributes]`
   externalResources: List[ExternalResources] = List(),
@@ -68,7 +67,6 @@ final case class RequestContent(
   // NOTE: see `net.yoshinorin.qualtet.domains.Request` comment.
   def postDecode: RequestContent = {
     new RequestContent(
-      requestId = requestId,
       contentType = contentType,
       robotsAttributes = this.robotsAttributes.sort,
       externalResources = externalResources,
@@ -89,7 +87,6 @@ object RequestContent {
   given codecRequestContents: JsonValueCodec[List[RequestContent]] = JsonCodecMaker.make
 
   def apply(
-    requestId: String = ULID.newULIDString.toLower,
     contentType: String,
     robotsAttributes: Attributes,
     externalResources: List[ExternalResources] = List(),
@@ -103,7 +100,6 @@ object RequestContent {
     updatedAt: Long = ZonedDateTime.now.toEpochSecond
   ): RequestContent = {
     new RequestContent(
-      requestId = requestId,
       contentType = contentType,
       robotsAttributes = robotsAttributes,
       externalResources = externalResources,
