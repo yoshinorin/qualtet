@@ -1,22 +1,19 @@
 package net.yoshinorin.qualtet
 
-import cats.effect.IOApp
-import cats.effect.ExitCode
-import cats.effect.IO
+import cats.effect.{ExitCode, IO, IOApp}
 import org.http4s.*
-import org.http4s.server.middleware.Logger
 import org.http4s.ember.server.EmberServerBuilder
-import org.http4s.server.middleware.{RequestId, ResponseTiming}
+import org.http4s.server.middleware.{Logger, RequestId, ResponseTiming}
 import com.comcast.ip4s.*
 import org.slf4j.LoggerFactory
-import net.yoshinorin.qualtet.http.AuthProvider
-import net.yoshinorin.qualtet.http.CorsProvider
+import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
 import net.yoshinorin.qualtet.http.routes.{
   ApiStatusRoute,
   ArchiveRoute,
   ArticleRoute,
   AuthRoute,
   AuthorRoute,
+  CacheRoute,
   ContentRoute,
   ContentTypeRoute,
   FeedRoute,
@@ -26,9 +23,6 @@ import net.yoshinorin.qualtet.http.routes.{
   SitemapRoute,
   TagRoute
 }
-import net.yoshinorin.qualtet.http.routes.CacheRoute
-
-// import scala.io.StdIn
 
 object BootStrap extends IOApp {
 
