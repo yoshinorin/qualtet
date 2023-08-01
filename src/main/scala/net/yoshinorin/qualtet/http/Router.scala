@@ -65,22 +65,24 @@ class Router[M[_]: Monad](
     RequestQueryParamater(Some(a.getOrElse(1)), Some(b.getOrElse(10)))
   }
 
+  def withCors = corsProvider.httpRouter(routes)
+
   def routes = Http4sRouter(
-    "/" -> corsProvider.apply(home),
-    "/archives" -> corsProvider.apply(archives),
-    "/articles" -> corsProvider.apply(articles),
-    "/authors" -> corsProvider.apply(authors),
-    "/caches" -> corsProvider.apply(caches),
-    "/contents" -> corsProvider.apply(contents),
-    "/content-types" -> corsProvider.apply(contentTypes),
-    "/feeds" -> corsProvider.apply(feeds),
-    "/search" -> corsProvider.apply(search),
-    "/series" -> corsProvider.apply(series),
-    "/sitemaps" -> corsProvider.apply(sitemaps),
-    "/status" -> corsProvider.apply(status),
-    "/tags" -> corsProvider.apply(tags),
-    "/token" -> corsProvider.apply(token)
-  ).orNotFound
+    "/" -> home,
+    "/archives" -> archives,
+    "/articles" -> articles,
+    "/authors" -> authors,
+    "/caches" -> caches,
+    "/contents" -> contents,
+    "/content-types" -> contentTypes,
+    "/feeds" -> feeds,
+    "/search" -> search,
+    "/series" -> series,
+    "/sitemaps" -> sitemaps,
+    "/status" -> status,
+    "/tags" -> tags,
+    "/token" -> token
+  )
 
   private[http] def home: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => homeRoute.get

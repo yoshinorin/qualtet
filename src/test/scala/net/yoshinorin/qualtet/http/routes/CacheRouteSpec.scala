@@ -19,7 +19,7 @@ class CacheRouteSpec extends AnyWordSpec {
 
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
-  val client: Client[IO] = Client.fromHttpApp(router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "CacheRoute" should {
     "be invalidate all caches" in {

@@ -20,7 +20,7 @@ class AuthorRouteSpec extends AnyWordSpec {
   val a: ResponseAuthor = authorService.findByName(AuthorName(author.name.value)).unsafeRunSync().get
   val a2: ResponseAuthor = authorService.findByName(AuthorName(author2.name.value)).unsafeRunSync().get
 
-  val client: Client[IO] = Client.fromHttpApp(router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "AuthorRoute" should {
     "be return two authors" in {

@@ -50,7 +50,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
     createContents(requestContents)
   }
 
-  val client: Client[IO] = Client.fromHttpApp(router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "SearchRoute" should {
     "be return search result" in {

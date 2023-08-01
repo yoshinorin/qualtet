@@ -77,7 +77,7 @@ object BootStrap extends IOApp {
 
     // NOTE: https://github.com/http4s/http4s/blob/v1.0.0-M40/server/shared/src/main/scala/org/http4s/server/middleware/ResponseTiming.scala
     //       https://github.com/http4s/http4s/blob/v1.0.0-M40/server/shared/src/main/scala/org/http4s/server/middleware/ResponseLogger.scala
-    val responseTiming = ResponseTiming(router.routes)
+    val responseTiming = ResponseTiming(router.withCors.orNotFound)
     // TODO: filter & format log
     val httpAppWithLogger: HttpApp[IO] = Logger.httpApp(logHeaders = true, logBody = false)(responseTiming)
 

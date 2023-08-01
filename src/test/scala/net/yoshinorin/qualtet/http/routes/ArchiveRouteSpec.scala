@@ -25,7 +25,7 @@ class ArchiveRouteSpec extends AnyWordSpec {
   val router = Fixture.makeRouter(archiveRoute = archiveRoute)
 
   val request: Request[IO] = Request(method = Method.GET, uri = uri"/archives")
-  val client: Client[IO] = Client.fromHttpApp(router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   when(mockArchiveService.get).thenReturn(
     IO(

@@ -26,7 +26,7 @@ class SitemapRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
     createContents(requestContents)
   }
 
-  val client: Client[IO] = Client.fromHttpApp(router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "SitemapRoute" should {
     "be return json for sitemap.xml" in {

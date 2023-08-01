@@ -14,7 +14,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.ContentTypeRouteSpec
 class ContentTypeRouteSpec extends AnyWordSpec {
 
-  val client: Client[IO] = Client.fromHttpApp(router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "ContentTypeRoute" should {
 

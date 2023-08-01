@@ -16,7 +16,7 @@ import cats.effect.unsafe.implicits.global
 class AuthRouteSpec extends AnyWordSpec {
 
   val a: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
-  val client: Client[IO] = Client.fromHttpApp(router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "AuthRoute" should {
 

@@ -13,7 +13,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.HomeRouteSpec
 class HomeRouteSpec extends AnyWordSpec {
 
-  val client: Client[IO] = Client.fromHttpApp(router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "HomeRoute" should {
 

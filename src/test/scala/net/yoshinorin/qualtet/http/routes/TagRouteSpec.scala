@@ -36,7 +36,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
   val tagRoute = new TagRoute(tagService, articleService)
-  val client: Client[IO] = Client.fromHttpApp(makeRouter(tagRoute = tagRoute).routes)
+  val client: Client[IO] = Client.fromHttpApp(makeRouter(tagRoute = tagRoute).routes.orNotFound)
 
   "TagRoute" should {
 

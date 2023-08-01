@@ -1,8 +1,11 @@
 package net.yoshinorin.qualtet.http
 
 import cats.effect.IO
+import cats.data.Kleisli
+import org.http4s.HttpApp
 import org.http4s.HttpRoutes
 import org.http4s.Uri
+import org.http4s.{Request, Response}
 import org.http4s.server.middleware.*
 import org.http4s.headers.Origin
 import org.slf4j.LoggerFactory
@@ -33,6 +36,8 @@ class CorsProvider(
       .toSet
   }
 
-  def apply(route: HttpRoutes[IO]) = CORS.policy.withAllowOriginHost(origins).apply(route)
+  def httpRouter(route: HttpRoutes[IO]) = CORS.policy.withAllowOriginHost(origins).httpRoutes(route)
+
+  def httpApp(app: HttpApp[IO]) = CORS.policy.withAllowOriginHost(origins).httpApp(app)
 
 }

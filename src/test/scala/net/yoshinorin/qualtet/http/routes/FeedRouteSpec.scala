@@ -26,7 +26,7 @@ class FeedRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
     createContents(requestContents)
   }
 
-  val client: Client[IO] = Client.fromHttpApp(router.routes)
+  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "FeedRoute" should {
     "be return feeds" in {
