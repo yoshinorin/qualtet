@@ -5,6 +5,9 @@ import cats.effect.ExitCode
 import cats.effect.IO
 import org.http4s.*
 import org.http4s.server.middleware.Logger
+import org.http4s.ember.server.EmberServerBuilder
+import org.http4s.server.middleware.{RequestId, ResponseTiming}
+import com.comcast.ip4s.*
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.CorsProvider
@@ -24,9 +27,6 @@ import net.yoshinorin.qualtet.http.routes.{
   TagRoute
 }
 import net.yoshinorin.qualtet.http.routes.CacheRoute
-import org.http4s.ember.server.EmberServerBuilder
-import com.comcast.ip4s.*
-import org.http4s.server.middleware.ResponseTiming
 
 // import scala.io.StdIn
 
@@ -75,21 +75,26 @@ object BootStrap extends IOApp {
 
     Modules.migrator.migrate(Modules.contentTypeService)
 
-    // NOTE: https://github.com/http4s/http4s/blob/v1.0.0-M40/server/shared/src/main/scala/org/http4s/server/middleware/ResponseTiming.scala
-    //       https://github.com/http4s/http4s/blob/v1.0.0-M40/server/shared/src/main/scala/org/http4s/server/middleware/ResponseLogger.scala
-    val responseTiming = ResponseTiming(router.withCors.orNotFound)
-    // TODO: filter & format log
-    val httpAppWithLogger: HttpApp[IO] = Logger.httpApp(logHeaders = true, logBody = false)(responseTiming)
+    def buildHttpApp: HttpApp[IO] = {
+      // NOTE: https://github.com/http4s/http4s/blob/v1.0.0-M40/server/shared/src/main/scala/org/http4s/server/middleware/RequestId.scala
+      val withRequestIdHeader = RequestId(router.withCors.orNotFound)
+
+      // NOTE: https://github.com/http4s/http4s/blob/v1.0.0-M40/server/shared/src/main/scala/org/http4s/server/middleware/ResponseTiming.scala
+      val withResponseTimingHeader = ResponseTiming(withRequestIdHeader)
+      // TODO: filter & format log
+      Logger.httpApp(logHeaders = true, logBody = false)(withResponseTimingHeader)
+    }
 
     val host = Ipv4Address.fromString(Modules.config.http.host).getOrElse(ipv4"127.0.0.1")
     val port = Port.fromInt(Modules.config.http.port).getOrElse(port"9001")
+    val httpApp: HttpApp[IO] = buildHttpApp
 
     logger.info("starting http server...")
     EmberServerBuilder
       .default[IO]
       .withHost(host)
       .withPort(port)
-      .withHttpApp(httpAppWithLogger)
+      .withHttpApp(httpApp)
       .withLogger(org.typelevel.log4cats.slf4j.Slf4jLogger.getLoggerFromSlf4j(logger))
       .build
       .use(_ => IO.never)
