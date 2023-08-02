@@ -30,8 +30,12 @@ class CorsProvider(
       .toSet
   }
 
-  def httpRouter(route: HttpRoutes[IO]) = CORS.policy.withAllowOriginHost(origins).httpRoutes(route)
+  private[http] val policyWithAllowOrigin: CORSPolicy = {
+    if (origins.isEmpty) CORS.policy.withAllowOriginAll else CORS.policy.withAllowOriginHost(origins)
+  }
 
-  def httpApp(app: HttpApp[IO]) = CORS.policy.withAllowOriginHost(origins).httpApp(app)
+  def httpRouter(route: HttpRoutes[IO]) = policyWithAllowOrigin.httpRoutes(route)
+
+  def httpApp(app: HttpApp[IO]) = policyWithAllowOrigin.httpApp(app)
 
 }

@@ -32,9 +32,11 @@ Qualtet reads all settings from the system environment variable. You have to set
 
 ### CORS
 
+By default Qualtet allow CORS requests from any origin.
+
 |Property|Description|Type|Default|Example|
 |---|---|---|---|---|
-|`QUALTET_CORS_ALLOW_ORIGINS.<n>`|CORS allow origin|`string`|`http://localhost`|`http://localhost:8080`|
+|`QUALTET_CORS_ALLOW_ORIGINS.<n>`|CORS allow origin|`string`| - |`http://localhost:8080`|
 
 Qualtet can specify multiple allow-origins.
 
