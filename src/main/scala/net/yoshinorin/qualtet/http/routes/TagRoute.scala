@@ -2,24 +2,44 @@ package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
 import cats.Monad
-import org.http4s.headers.`Content-Type`
-import org.http4s.*
+import cats.implicits.*
+import org.http4s.headers.{Allow, `Content-Type`}
+import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
-import org.http4s.Response
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.articles.ArticleService
+import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
-import net.yoshinorin.qualtet.http.ArticlesQueryParameter
+import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, AuthProvider, MethodNotAllowedSupport}
 import net.yoshinorin.qualtet.syntax.*
 
 class TagRoute[M[_]: Monad](
+  authProvider: AuthProvider[M],
   tagService: TagService[M],
   articleService: ArticleService[M]
-) {
+) extends MethodNotAllowedSupport {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  def get: IO[Response[IO]] = {
+  private[http] def index: HttpRoutes[IO] =
+    tagsWithoutAuth <+>
+      authProvider.authenticate(tagsWithAuthed)
+
+  private[http] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root => this.get
+    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+    case request @ GET -> Root / nameOrId =>
+      val q = request.uri.query.params.asRequestQueryParamater
+      this.get(nameOrId, q.page, q.limit)
+  }
+
+  private[http] def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
+    case DELETE -> Root / nameOrId as payload => this.delete(nameOrId)
+    case request @ _ =>
+      methodNotAllowed(request.req, Allow(Set(GET, DELETE)))
+  }
+
+  private[http] def get: IO[Response[IO]] = {
     for {
       allTags <- tagService.getAll
       response <- Ok(allTags.asJson, `Content-Type`(MediaType.application.json))
@@ -36,14 +56,14 @@ class TagRoute[M[_]: Monad](
 
       But, it can not. So, I have to find the tagging contents with tagName.
    */
-  def get(nameOrId: String, page: Option[Int], limit: Option[Int]): IO[Response[IO]] = {
+  private[http] def get(nameOrId: String, page: Option[Int], limit: Option[Int]): IO[Response[IO]] = {
     (for {
       articles <- articleService.getByTagNameWithCount(TagName(nameOrId), ArticlesQueryParameter(page, limit))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
   }
 
-  def delete(nameOrId: String): IO[Response[IO]] = {
+  private[http] def delete(nameOrId: String): IO[Response[IO]] = {
     (for {
       _ <- tagService.delete(TagId(nameOrId))
       _ = logger.info(s"deleted tag: ${nameOrId}")

@@ -81,18 +81,17 @@ object Fixture {
   val articleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute = new AuthorRoute(Modules.authorService)
   val authRoute = new AuthRoute(Modules.authService)
-  val cacheRoute = new CacheRoute(Modules.cacheService)
+  val cacheRoute = new CacheRoute(authProvider, Modules.cacheService)
   val contentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
-  val contentRoute = new ContentRoute(Modules.contentService)
+  val contentRoute = new ContentRoute(authProvider, Modules.contentService)
   val feedRoute = new FeedRoute(Modules.feedService)
   val homeRoute: HomeRoute = new HomeRoute()
   val searchRoute = new SearchRoute(Modules.searchService)
-  val seriesRoute = new SeriesRoute(Modules.seriesService)
+  val seriesRoute = new SeriesRoute(authProvider, Modules.seriesService)
   val sitemapRoute = new SitemapRoute(Modules.sitemapService)
-  val tagRoute = new TagRoute(Modules.tagService, Modules.articleService)
+  val tagRoute = new TagRoute(authProvider, Modules.tagService, Modules.articleService)
 
   val router = new net.yoshinorin.qualtet.http.Router(
-    authProvider,
     corsProvider,
     apiStatusRoute,
     archiveRoute,
@@ -111,7 +110,6 @@ object Fixture {
   )
 
   def makeRouter[M[_]: Monad](
-    authProvider: AuthProvider[M] = authProvider,
     apiStatusRoute: ApiStatusRoute = apiStatusRoute,
     archiveRoute: ArchiveRoute[M] = archiveRoute,
     articleRoute: ArticleRoute[M] = articleRoute,
@@ -127,7 +125,6 @@ object Fixture {
     sitemapRoute: SitemapRoute[M] = sitemapRoute,
     tagRoute: TagRoute[M] = tagRoute
   ) = new net.yoshinorin.qualtet.http.Router(
-    authProvider = authProvider,
     corsProvider = corsProvider,
     apiStatusRoute = apiStatusRoute,
     archiveRoute = archiveRoute,
