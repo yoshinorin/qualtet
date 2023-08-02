@@ -2,13 +2,11 @@ package net.yoshinorin.qualtet.http
 
 import cats.Monad
 import cats.effect.*, cats.implicits.*
-import org.http4s.headers.Allow
-import org.http4s.HttpRoutes
-import org.http4s.server.{Router => Http4sRouter}
+import org.http4s.headers.{Allow, Origin}
 import org.http4s.*
+import org.http4s.server.{Router => Http4sRouter}
 import org.http4s.dsl.io.*
 import org.http4s.server.middleware.*
-import org.http4s.headers.Origin
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.http.routes.{
@@ -24,9 +22,9 @@ import net.yoshinorin.qualtet.http.routes.{
   HomeRoute,
   SearchRoute,
   SeriesRoute,
-  SitemapRoute
+  SitemapRoute,
+  TagRoute
 }
-import net.yoshinorin.qualtet.http.routes.TagRoute
 import net.yoshinorin.qualtet.syntax.*
 
 import scala.util.Try
