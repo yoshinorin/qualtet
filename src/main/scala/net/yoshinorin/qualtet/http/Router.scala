@@ -27,8 +27,6 @@ import net.yoshinorin.qualtet.http.routes.{
 }
 import net.yoshinorin.qualtet.syntax.*
 
-import scala.util.Try
-
 class Router[M[_]: Monad](
   authProvider: AuthProvider[M],
   corsProvider: CorsProvider,
@@ -53,14 +51,6 @@ class Router[M[_]: Monad](
   private def methodNotAllowed(request: Request[IO], allow: Allow): IO[Response[IO]] = {
     logger.error(s"method not allowed: ${request}")
     MethodNotAllowed(allow)
-  }
-
-  // TODO: move somewhere & refactor
-  private def queryParams(q: Map[String, String]): RequestQueryParamater = {
-    val a = Try(q.getOrElse("page", 1).toString.trim.toInt)
-    val b = Try(q.getOrElse("limit", 1).toString.trim.toInt)
-
-    RequestQueryParamater(Some(a.getOrElse(1)), Some(b.getOrElse(10)))
   }
 
   def withCors = corsProvider.httpRouter(routes)
@@ -99,7 +89,7 @@ class Router[M[_]: Monad](
 
   private[http] def articles: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case request @ GET -> Root =>
-      val q = queryParams(request.uri.query.params)
+      val q = request.uri.query.params.asRequestQueryParamater
       articleRoute.get(q.page, q.limit)
     case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
@@ -220,7 +210,7 @@ class Router[M[_]: Monad](
     case GET -> Root => tagRoute.get
     case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ GET -> Root / nameOrId =>
-      val q = queryParams(request.uri.query.params)
+      val q = request.uri.query.params.asRequestQueryParamater
       tagRoute.get(nameOrId, q.page, q.limit)
   }
 
