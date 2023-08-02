@@ -30,7 +30,7 @@ trait http {
   extension (q: Map[String, String]) {
     def asRequestQueryParamater: RequestQueryParamater = {
       val a = Try(q.getOrElse("page", 1).toString.trim.toInt)
-      val b = Try(q.getOrElse("limit", 1).toString.trim.toInt)
+      val b = Try(q.getOrElse("limit", 10).toString.trim.toInt)
 
       RequestQueryParamater(Some(a.getOrElse(1)), Some(b.getOrElse(10)))
     }

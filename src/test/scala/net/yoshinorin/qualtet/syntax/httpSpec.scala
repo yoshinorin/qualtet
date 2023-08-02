@@ -17,7 +17,7 @@ class HttpSpec extends AnyWordSpec {
 
       "be convert to RequestQueryParamater with default value if key is empty" in {
         val result = Map().asRequestQueryParamater
-        assert(result === RequestQueryParamater(Some(1), Some(1)))
+        assert(result === RequestQueryParamater(Some(1), Some(10)))
       }
 
     }
