@@ -68,20 +68,9 @@ object BootStrap extends IOApp {
 
     Modules.migrator.migrate(Modules.contentTypeService)
 
-    // TODO: testable
-    def buildHttpApp: HttpApp[IO] = {
-      // NOTE: https://github.com/http4s/http4s/blob/v1.0.0-M40/server/shared/src/main/scala/org/http4s/server/middleware/RequestId.scala
-      val withRequestIdHeader = RequestId(router.withCors.orNotFound)
-
-      // NOTE: https://github.com/http4s/http4s/blob/v1.0.0-M40/server/shared/src/main/scala/org/http4s/server/middleware/ResponseTiming.scala
-      val withResponseTimingHeader = ResponseTiming(withRequestIdHeader)
-      // TODO: filter & format log
-      Logger.httpApp(logHeaders = true, logBody = false)(withResponseTimingHeader)
-    }
-
     val host = Ipv4Address.fromString(Modules.config.http.host).getOrElse(ipv4"127.0.0.1")
     val port = Port.fromInt(Modules.config.http.port).getOrElse(port"9001")
-    val httpApp: HttpApp[IO] = buildHttpApp
+    val httpApp: HttpApp[IO] = new HttpAppBuilder(router.withCors.orNotFound).build
 
     logger.info("starting http server...")
     EmberServerBuilder
