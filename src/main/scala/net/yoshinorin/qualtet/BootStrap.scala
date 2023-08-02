@@ -68,6 +68,7 @@ object BootStrap extends IOApp {
 
     Modules.migrator.migrate(Modules.contentTypeService)
 
+    // TODO: testable
     def buildHttpApp: HttpApp[IO] = {
       // NOTE: https://github.com/http4s/http4s/blob/v1.0.0-M40/server/shared/src/main/scala/org/http4s/server/middleware/RequestId.scala
       val withRequestIdHeader = RequestId(router.withCors.orNotFound)
