@@ -46,5 +46,12 @@ class CorsProviderSpec extends AnyWordSpec {
         )
       )
     }
+
+    "returns default origin if config is empty" in {
+      val corsProvider = new CorsProvider(corsConfig = CorsConfig(allowOrigins = List()))
+      assert(
+        corsProvider.origins === Set()
+      )
+    }
   }
 }
