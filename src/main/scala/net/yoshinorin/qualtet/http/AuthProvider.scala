@@ -2,14 +2,12 @@ package net.yoshinorin.qualtet.http
 
 import cats.effect.IO
 import cats.Monad
-import cats.data.Kleisli
-import cats.data.OptionT
-import org.http4s.server.*
-import org.http4s.*
+import cats.data.{OptionT, Kleisli}
+import org.http4s.server.AuthMiddleware
+import org.http4s.{AuthedRoutes, Request, Response, Status}
 import org.http4s.dsl.io.*
 import org.http4s.headers.Authorization
 import org.slf4j.LoggerFactory
-import org.typelevel.ci.*
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.message.Fail
