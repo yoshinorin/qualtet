@@ -24,15 +24,9 @@ class AuthProvider[M[_]: Monad](
   // TODO: cleanup messy code
   private def authUser: Kleisli[IO, Request[IO], Either[Fail, (ResponseAuthor, String)]] =
     Kleisli({ request =>
-
-      val maybeRequestHeader = request.headers.get[Authorization].asEither[Fail](Unauthorized("Authorization header is none")) match {
-        case Left(f: Fail) => Left(f)
-        case Right(auth: Authorization) => Right(auth)
-      }
-
-      maybeRequestHeader match {
-        case Left(fail) => IO(Left(fail))
-        case Right(auth) =>
+      request.headers.get[Authorization].asEither[Fail](Unauthorized("Authorization header is none")) match {
+        case Left(f: Fail) => IO(Left(f))
+        case Right(auth: Authorization) =>
           val renderString = auth.credentials.renderString.replace("Bearer ", "").replace("bearer ", "")
           for {
             maybeAuthor <- authService.findAuthorFromJwtString(renderString)
