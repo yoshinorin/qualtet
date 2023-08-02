@@ -24,7 +24,7 @@ class ContentRouteSpec extends AnyWordSpec {
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "ContentRoute" should {
-    "be create a content" in {
+    "be create a content (HTTP Header Bearer is UpperCase)" in {
       val json =
         """
           |{
@@ -41,6 +41,33 @@ class ContentRouteSpec extends AnyWordSpec {
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
         .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .use { response =>
+          IO {
+            assert(response.status === Created)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            // TODO: assert response
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "be create a content (HTTP Header bearer is LowerCase)" in {
+      val json =
+        """
+          |{
+          |  "contentType" : "article",
+          |  "path" : "/test/ContentRouteSpec1Lower",
+          |  "title" : "this is a ContentRouteSpec1Lower title",
+          |  "robotsAttributes": "noarchive, noimageindex",
+          |  "rawContent" : "this is a raw ContentRouteSpec1Lower",
+          |  "htmlContent" : "<p>this is a html ContentRouteSpec1Lower<p>",
+          |  "publishedAt" : 1644075206,
+          |  "updatedAt" : 1644075206
+          |}
+        """.stripMargin
+      val entity = EntityEncoder[IO, String].toEntity(json)
+      client
+        .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === Created)

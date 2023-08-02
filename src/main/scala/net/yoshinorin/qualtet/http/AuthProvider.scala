@@ -9,6 +9,7 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.Authorization
 import org.slf4j.LoggerFactory
+import org.typelevel.ci.*
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.message.Fail
@@ -32,8 +33,9 @@ class AuthProvider[M[_]: Monad](
       maybeRequestHeader match {
         case Left(fail) => IO(Left(fail))
         case Right(auth) =>
+          val renderString = auth.credentials.renderString.replace("Bearer ", "").replace("bearer ", "")
           for {
-            maybeAuthor <- authService.findAuthorFromJwtString(auth.credentials.renderString.replace("Bearer ", ""))
+            maybeAuthor <- authService.findAuthorFromJwtString(renderString)
             author <- IO(maybeAuthor.asEither[Fail](NotFound("author not found")))
             payload <- request.as[String]
           } yield {
