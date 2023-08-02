@@ -5,6 +5,7 @@ import org.http4s.headers.Origin
 import org.http4s.server.middleware.*
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.config.CorsConfig
+import java.net.MalformedURLException
 
 // testOnly net.yoshinorin.qualtet.http.CorsProviderSpec
 class CorsProviderSpec extends AnyWordSpec {
@@ -32,26 +33,27 @@ class CorsProviderSpec extends AnyWordSpec {
       )
     }
 
-    "returns default origin if config includes invalid schema" in {
-      val corsProvider = new CorsProvider(corsConfig =
-        CorsConfig(allowOrigins =
-          List(
-            "http://invalid:invalid"
-          )
-        )
-      )
-      assert(
-        corsProvider.origins === Set(
-          Origin.Host(Uri.Scheme.http, Uri.RegName("localhost"), None)
-        )
-      )
-    }
-
     "returns default origin if config is empty" in {
       val corsProvider = new CorsProvider(corsConfig = CorsConfig(allowOrigins = List()))
       assert(
         corsProvider.origins === Set()
       )
+    }
+
+    "thrown java.net.MalformedURLException if configs contains invalid URL." in {
+      assertThrows[MalformedURLException] {
+        new CorsProvider(corsConfig =
+          CorsConfig(allowOrigins =
+            List(
+              "http://example.com:8080",
+              "http://localhost:8080",
+              "http://invalid:invalid",
+              "http://example.com:8080",
+              "http://localhost:8080"
+            )
+          )
+        )
+      }
     }
   }
 }

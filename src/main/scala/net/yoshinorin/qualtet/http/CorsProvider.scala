@@ -20,18 +20,12 @@ class CorsProvider(
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
   private[http] val origins: Set[Origin.Host] = {
+    // NOTE: throw `java.net.MalformedURLException` if configs contains invalid URL.
     corsConfig.allowOrigins
       .map(o => {
-        try {
-          val u = new URI(o).toURL
-          val protocol = if (u.getProtocol().startsWith("https")) Uri.Scheme.https else Uri.Scheme.http
-          Origin.Host(protocol, Uri.RegName(u.getHost()), Some(u.getPort()))
-        } catch {
-          case NonFatal(t) =>
-            logger.error(s"invalid allow-origin config: ${o}")
-            logger.error(t.getMessage())
-            Origin.Host(Uri.Scheme.http, Uri.RegName("localhost"), None)
-        }
+        val u = new URI(o).toURL
+        val protocol = if (u.getProtocol().startsWith("https")) Uri.Scheme.https else Uri.Scheme.http
+        Origin.Host(protocol, Uri.RegName(u.getHost()), Some(u.getPort()))
       })
       .toSet
   }
