@@ -29,7 +29,8 @@ object Tag {
 
 final case class ResponseTag(
   id: TagId,
-  name: TagName
+  name: TagName,
+  count: Int
 )
 object ResponseTag {
   given codecResponseTag: JsonValueCodec[ResponseTag] = JsonCodecMaker.make

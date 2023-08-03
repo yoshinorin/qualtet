@@ -9,7 +9,21 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 object TagQuery {
 
   def getAll(implicit responseTagRead: Read[ResponseTag]): Query0[ResponseTag] = {
-    sql"SELECT * FROM tags"
+    sql"""
+      SELECT
+        tags.id,
+        tags.name,
+        COUNT(*) AS count
+      FROM tags
+      INNER JOIN contents_tagging
+        ON contents_tagging.tag_id = tags.id
+      INNER JOIN contents
+        ON contents_tagging.content_id = contents.id
+      GROUP BY
+        tags.id
+      ORDER BY
+        tags.name
+    """
       .query[ResponseTag]
   }
 

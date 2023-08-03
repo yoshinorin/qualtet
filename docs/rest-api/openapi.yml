@@ -204,7 +204,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/tag'
+                  $ref: '#/components/schemas/tagWithCount'
   /tags/{tagName}:
     get:
       summary: Get an articles by tagName
@@ -457,6 +457,20 @@ components:
         name:
           type: string
           example: "diary"
+    tagWithCount:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          example: "01frdbdb6s2mxshxzk3wan0f6d"
+        name:
+          type: string
+          example: "diary"
+        count:
+          description: number of related articles
+          type: number
+          example: 28
     simpleArticle:
       type: object
       properties:

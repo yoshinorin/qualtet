@@ -45,7 +45,7 @@ title: Features
 - [x] Create
 - [x] Select
     - [x] List
-        - [ ] Number of Contents by tag
+        - [x] Number of Contents by tag
     - [x] by TagName
 - [x] Update
 - [x] Delete

@@ -8,10 +8,10 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 class TagRepositoryDoobieInterpreter extends TagRepository[ConnectionIO] with ConnectionIOFaker {
 
   given responseTagRead: Read[ResponseTag] =
-    Read[(String, String)].map { case (id, name) => ResponseTag(TagId(id), TagName(name)) }
+    Read[(String, String, Int)].map { case (id, name, count) => ResponseTag(TagId(id), TagName(name), count) }
 
   given responseTagReadWithOption: Read[Option[ResponseTag]] =
-    Read[(String, String)].map { case (id, name) => Some(ResponseTag(TagId(id), TagName(name))) }
+    Read[(String, String, Int)].map { case (id, name, count) => Some(ResponseTag(TagId(id), TagName(name), count)) }
 
   given tagRead: Read[Tag] =
     Read[(String, String)].map { case (id, name) => Tag(TagId(id), TagName(name)) }

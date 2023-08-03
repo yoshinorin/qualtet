@@ -47,11 +47,13 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         s"""
           |{
           |  "id" : "${t(0).id.value}",
-          |  "name" : "${t(0).name.value}"
+          |  "name" : "${t(0).name.value}",
+          |  "count" : 1
           |},
           |{
           |  "id" : "${t(1).id.value}",
-          |  "name" : "${t(1).name.value}"
+          |  "name" : "${t(1).name.value}",
+          |  "count" : 1
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
