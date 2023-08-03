@@ -49,6 +49,29 @@ Please see [website](https://yoshinorin.github.io/qualtet/docs/).
 
 ![](./docs/_assets/assets/erd.png)
 
+## Using Stacks
+
+|Stack|-|
+|---|---|
+|[Scala](https://www.scala-lang.org/)|-|
+|[http4s](https://github.com/http4s/http4s)| HTTP Server |
+|[jsoniter-scala](https://github.com/plokhotnyuk/jsoniter-scala)| JSON codecs |
+|[jwt-scalajwt-scala](https://github.com/jwt-scala/jwt-scala)| JWT support |
+|[doobie](https://github.com/tpolecat/doobie)| JDBC Layer |
+|[airframe-ulid](https://github.com/wvlet/airframe/)| ULID Generator |
+|[caffeine](https://github.com/ben-manes/caffeine)| Caching library |
+|[logback](https://github.com/qos-ch/logback)| Logging framework |
+|[slf4j](https://github.com/qos-ch/slf4j)| Logging facade |
+|[Spring Security](https://github.com/spring-projects/spring-security)| BCrypt password |
+|[Flyway](https://flywaydb.org/)| Database Migration |
+|[ScalaTest](http://www.scalatest.org/)| Unit test |
+|[Mockito](https://github.com/mockito/mockito)| Mocking framework |
+|[Scalafmt](https://scalameta.org/scalafmt/)| Code formatter |
+|[GitHub Action](https://github.com/yoshinorin/cahsper/actions)| CI/CD |
+|[COVERALLS](https://coveralls.io/github/yoshinorin/qualtet?branch=master)| Coverage report |
+|[ReDoc](https://github.com/Redocly/redoc)| API documentation |
+|[GitHub Pages](https://pages.github.com/)| Hosting WebSite & API docuementation |
+
 ## Branches
 
 The current master branch is for `v2.x`. `v1.x` branch is [here](https://github.com/yoshinorin/qualtet/tree/v1.x). But it will be not updated.
