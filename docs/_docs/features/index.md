@@ -49,7 +49,7 @@ title: Features
     - [x] by TagName
 - [x] Update
 - [x] Delete
-    - [x] Delete series and related contents from junction table
+    - [x] Delete tags and related contents from junction table
     - [x] Delete junction table when delete a content
 
 ## Search
