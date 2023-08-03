@@ -54,6 +54,8 @@ Please see [website](https://yoshinorin.github.io/qualtet/docs/).
 |Stack|-|
 |---|---|
 |[Scala](https://www.scala-lang.org/)|-|
+|[cats](https://github.com/typelevel/cats)| Functional programming library |
+|[cats-effect](https://github.com/typelevel/cats-effect)| Pure asynchronous runtime |
 |[http4s](https://github.com/http4s/http4s)| HTTP Server |
 |[jsoniter-scala](https://github.com/plokhotnyuk/jsoniter-scala)| JSON codecs |
 |[jwt-scalajwt-scala](https://github.com/jwt-scala/jwt-scala)| JWT support |
