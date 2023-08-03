@@ -1,4 +1,4 @@
-FROM ghcr.io/yoshinorin/docker-sbt:v1.9.0.1-scala3
+FROM ghcr.io/yoshinorin/docker-sbt:v1.9.3-scala3
 
 LABEL maintainer="yoshinorin"
 ENV QUALTET_VERSION="v2.7.0"
