@@ -5,7 +5,7 @@ on:
     paths-ignore:
       - 'docs/**'
       - 'tools/**'
-      - 'docker/**'
+      - 'docker/**.yml'
       - LICENSE
       - README.md
 
