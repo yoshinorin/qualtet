@@ -9,3 +9,6 @@ addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.1.1")
 addSbtPlugin("com.typesafe.sbt" % "sbt-license-report" % "1.2.0")
 addSbtPlugin("org.wartremover" % "sbt-wartremover" % "3.1.3")
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.6.3")
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.11.0")
+addSbtPlugin("com.github.sbt" % "sbt-git" % "2.0.1")
+

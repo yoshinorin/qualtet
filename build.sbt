@@ -59,6 +59,15 @@ lazy val root = (project in file("."))
       "master"
     )
   )
+  .enablePlugins(GitVersioning)
+  .enablePlugins(BuildInfoPlugin)
+  .settings(
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion,
+      "commitHash" -> git.gitHeadCommit.value.getOrElse("")
+    ),
+    //buildInfoPackage := s"${organization}.${name}.buildinfo"
+    buildInfoPackage := "net.yoshinorin.qualtet.buildinfo"
+  )
 
 reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
 
