@@ -45,6 +45,10 @@ Please see [website](https://yoshinorin.github.io/qualtet/docs/).
     * [Examples](./docs/_docs/restapi/index.md)
 * [Development](./docs/_docs/development/index.md)
 
+## Releases
+
+Please see [releases page](./docs/_docs/releases/index.md).
+
 ## ERD
 
 ![](./docs/_assets/assets/erd.png)
