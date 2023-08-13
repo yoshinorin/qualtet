@@ -1,3 +1,7 @@
+---
+layout: doc-page
+title: Releases
+---
 
 | Version | Code name | Released at |
 | --- | --- | --- |
