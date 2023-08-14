@@ -29,6 +29,7 @@ import net.yoshinorin.qualtet.http.routes.{
   SearchRoute,
   SeriesRoute,
   SitemapRoute,
+  SystemRoute,
   TagRoute
 }
 import java.util.concurrent.TimeUnit
@@ -42,6 +43,7 @@ import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 import cats.effect.unsafe.implicits.global
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, RequestSeries}
+import net.yoshinorin.qualtet.BootStrap.systemRoute
 
 // Just test data
 object Fixture {
@@ -89,6 +91,7 @@ object Fixture {
   val searchRoute = new SearchRoute(Modules.searchService)
   val seriesRoute = new SeriesRoute(authProvider, Modules.seriesService)
   val sitemapRoute = new SitemapRoute(Modules.sitemapService)
+  val systemRoute = new SystemRoute()
   val tagRoute = new TagRoute(authProvider, Modules.tagService, Modules.articleService)
 
   val router = new net.yoshinorin.qualtet.http.Router(
@@ -106,6 +109,7 @@ object Fixture {
     searchRoute,
     seriesRoute,
     sitemapRoute,
+    systemRoute,
     tagRoute
   )
 
@@ -123,7 +127,8 @@ object Fixture {
     searchRoute: SearchRoute[M] = searchRoute,
     seriesRoute: SeriesRoute[M] = seriesRoute,
     sitemapRoute: SitemapRoute[M] = sitemapRoute,
-    tagRoute: TagRoute[M] = tagRoute
+    tagRoute: TagRoute[M] = tagRoute,
+    systemRoute: SystemRoute = systemRoute
   ) = new net.yoshinorin.qualtet.http.Router(
     corsProvider = corsProvider,
     apiStatusRoute = apiStatusRoute,
@@ -139,6 +144,7 @@ object Fixture {
     searchRoute = searchRoute,
     seriesRoute = seriesRoute,
     sitemapRoute = sitemapRoute,
+    systemRoute = systemRoute,
     tagRoute = tagRoute
   )
 

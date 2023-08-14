@@ -14,6 +14,8 @@ paths:
   /status:
     get:
       summary: Get API server status
+      description:
+        This API will be deprecated in version `2.10`.
       tags:
         - status
       responses:

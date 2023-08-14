@@ -16,6 +16,7 @@ import net.yoshinorin.qualtet.http.routes.{
   SearchRoute,
   SeriesRoute,
   SitemapRoute,
+  SystemRoute,
   TagRoute
 }
 
@@ -34,6 +35,7 @@ class Router[M[_]: Monad](
   searchRoute: SearchRoute[M],
   seriesRoute: SeriesRoute[M],
   sitemapRoute: SitemapRoute[M],
+  systemRoute: SystemRoute,
   tagRoute: TagRoute[M]
 ) {
 
@@ -52,6 +54,7 @@ class Router[M[_]: Monad](
     "/series" -> seriesRoute.index,
     "/sitemaps" -> sitemapRoute.index,
     "/status" -> apiStatusRoute.index,
+    "/system" -> systemRoute.index,
     "/tags" -> tagRoute.index,
     "/token" -> authRoute.index
   )
