@@ -9,14 +9,14 @@ import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 class SystemRoute extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root / "health" => this.get
+    case GET -> Root / "health" => this.health
     case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
   }
 
-  // system
-  private[http] def get: IO[Response[IO]] = {
+  // system/health
+  private[http] def health: IO[Response[IO]] = {
     Ok()
   }
 
