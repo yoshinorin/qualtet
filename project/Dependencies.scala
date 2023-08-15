@@ -5,7 +5,7 @@ object Dependencies {
   val jsoniterVersion = "2.23.2"
   val doobieVersion = "1.0.0-RC4"
   val jwtScalaVersion = "9.4.3"
-  val flywayVersion = "9.21.0"
+  val flywayVersion = "9.21.1"
   val http4sVersion = "1.0.0-M39"
 
   val dependencies = Seq(
@@ -22,11 +22,11 @@ object Dependencies {
     "org.mariadb.jdbc" % "mariadb-java-client" % "3.1.4",
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "23.7.3",
-    "com.github.ben-manes.caffeine" % "caffeine" % "3.1.7",
+    "org.wvlet.airframe" %% "airframe-ulid" % "23.8.2",
+    "com.github.ben-manes.caffeine" % "caffeine" % "3.1.8",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
-    "ch.qos.logback" % "logback-classic" % "1.4.8",
+    "ch.qos.logback" % "logback-classic" % "1.4.11",
     "net.logstash.logback" % "logstash-logback-encoder" % "7.4",
     "org.codehaus.janino" % "janino" % "3.1.10",
     "org.springframework.security" % "spring-security-core" % "6.1.2",
