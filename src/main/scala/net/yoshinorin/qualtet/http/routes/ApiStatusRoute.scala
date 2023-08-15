@@ -6,7 +6,7 @@ import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
-@deprecated("This API will be deprecated in version `2.10`. Please use `SystemRoute` instead of this.")
+@deprecated("This API will be removed in version `2.10`. Please use `SystemRoute` instead of this.")
 class ApiStatusRoute extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
