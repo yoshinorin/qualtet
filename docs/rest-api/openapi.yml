@@ -29,6 +29,14 @@ paths:
                   status:
                     type: string
                     example: operational
+  /system/health:
+    get:
+      summary: Get API server health
+      tags:
+        - system
+      responses:
+        200:
+          description: API server is runnning
   /token:
     post:
       summary: Create an IDToken
