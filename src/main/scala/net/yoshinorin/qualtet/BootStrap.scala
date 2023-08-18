@@ -24,10 +24,13 @@ import net.yoshinorin.qualtet.http.routes.{
   SystemRoute,
   TagRoute
 }
+import net.yoshinorin.qualtet.syntax.asJson
 
 object BootStrap extends IOApp {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
+
+  logger.info(ApplicationInfo().asJson)
 
   val authProvider = new AuthProvider(Modules.authService)
   val corsProvider = new CorsProvider(Modules.config.cors)
