@@ -30,6 +30,12 @@ Qualtet reads all settings from the system environment variable. You have to set
 |`QUALTET_HTTP_BIND_ADDRESS`|Http server bind address.|`string`|`127.0.0.1`|`0.0.0.0`|
 |`QUALTET_HTTP_PORT`|Http server port.|`int`|`9001`|`9001`|
 
+### Endpoints
+
+|Property|Description|Type|Default|Example|
+|---|---|---|---|---|
+|`QUALTET_HTTP_ENDPOINT_SYSTEM_METADATA_ENABLED`| Allow to return application metadata (e.g Java version, commit hash etc). |`boolean`|`false`|`false`|
+
 ### CORS
 
 By default Qualtet allow CORS requests from any origin.

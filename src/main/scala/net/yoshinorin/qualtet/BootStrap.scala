@@ -48,7 +48,7 @@ object BootStrap extends IOApp {
   val searchRoute = new SearchRoute(Modules.searchService)
   val seriesRoute = new SeriesRoute(authProvider, Modules.seriesService)
   val sitemapRoute = new SitemapRoute(Modules.sitemapService)
-  val systemRoute = new SystemRoute()
+  val systemRoute = new SystemRoute(Modules.config.http.endpoints.system)
   val tagRoute = new TagRoute(authProvider, Modules.tagService, Modules.articleService)
 
   val router = new net.yoshinorin.qualtet.http.Router(

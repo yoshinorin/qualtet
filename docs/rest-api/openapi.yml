@@ -44,11 +44,13 @@ paths:
         - system
       responses:
         200:
-          description: Response when Success
+          description: Response when Success (If envval `QUALTET_HTTP_ENDPOINT_SYSTEM_METADATA_ENABLED` is `true`)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/applicationInfo'
+        404:
+          description: Response when Success (If envval `QUALTET_HTTP_ENDPOINT_SYSTEM_METADATA_ENABLED` is `false` or not exists)
   /token:
     post:
       summary: Create an IDToken

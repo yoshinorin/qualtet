@@ -8,8 +8,9 @@ import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 import net.yoshinorin.qualtet.ApplicationInfo
 import net.yoshinorin.qualtet.buildinfo.BuildInfo
 import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
 
-class SystemRoute extends MethodNotAllowedSupport {
+class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / "health" => this.health
@@ -26,11 +27,14 @@ class SystemRoute extends MethodNotAllowedSupport {
 
   // system/metadata
   private[http] def metadata: IO[Response[IO]] = {
-    (for {
-      a <- IO(ApplicationInfo().asJson)
-      response <- Ok(a, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
-
+    if (config.enabledMetaData) {
+      (for {
+        a <- IO(ApplicationInfo().asJson)
+        response <- Ok(a, `Content-Type`(MediaType.application.json))
+      } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
+    } else {
+      NotFound()
+    }
   }
 
 }
