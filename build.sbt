@@ -6,6 +6,7 @@ organization := "net.yoshinorin"
 name := "qualtet"
 version := "v2.8.0"
 scalaVersion := "3.3.0"
+val repository = "https://github.com/yoshinorin/qualtet"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -63,7 +64,8 @@ lazy val root = (project in file("."))
   .enablePlugins(BuildInfoPlugin)
   .settings(
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion,
-      "commitHash" -> git.gitHeadCommit.value.getOrElse("")
+      "commitHash" -> git.gitHeadCommit.value.getOrElse(""),
+      "repository" -> repository
     ),
     //buildInfoPackage := s"${organization}.${name}.buildinfo"
     buildInfoPackage := "net.yoshinorin.qualtet.buildinfo"
