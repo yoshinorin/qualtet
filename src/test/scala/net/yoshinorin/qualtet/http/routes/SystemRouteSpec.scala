@@ -46,6 +46,27 @@ class SystemRouteSpec extends AnyWordSpec {
       }
     }
 
+    "metadata" should {
+      "be return 200" in {
+        client
+          .run(Request(method = Method.GET, uri = uri"/system/metadata"))
+          .use { response =>
+            IO {
+              assert(response.status === Ok)
+              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("name"))
+              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("version"))
+              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("scalaVersion"))
+              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("sbtVersion"))
+              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("commitHash"))
+              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("runtime"))
+              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("jvmVendor"))
+              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("runtimeVersion"))
+            }
+          }
+          .unsafeRunSync()
+      }
+    }
+
   }
 
 }

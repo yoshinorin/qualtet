@@ -37,6 +37,18 @@ paths:
       responses:
         200:
           description: API server is runnning
+  /system/metadata:
+    get:
+      summary: Get system metadata
+      tags:
+        - system
+      responses:
+        200:
+          description: Response when Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationInfo'
   /token:
     post:
       summary: Create an IDToken
@@ -421,6 +433,33 @@ components:
         token:
           type: string
           example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3Mi...."
+    applicationInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "qualtet"
+        version:
+          type: string
+          example: "v2.3.0"
+        scalaVersion:
+          type: string
+          example: "3.3.0"
+        sbtVersion:
+          type: string
+          example: "1.9.3"
+        commitHash:
+          type: string
+          example: "237856f"
+        runtime:
+          type: string
+          example: "Java"
+        jvmVendor:
+          type: string
+          example: "Eclipse Adoptium"
+        runtimeVersion:
+          type: string
+          example: "17.0.5"
     author:
       type: object
       properties:
