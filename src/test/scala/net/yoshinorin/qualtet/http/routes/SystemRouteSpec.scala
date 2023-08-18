@@ -22,26 +22,30 @@ class SystemRouteSpec extends AnyWordSpec {
 
   "SystemRoute" should {
 
-    "health return 200" in {
+    "be return Method Not Allowed" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/system/health"))
+        .run(Request(method = Method.DELETE, uri = uri"/system"))
         .use { response =>
           IO {
-            assert(response.status === Ok)
+            assert(response.status === MethodNotAllowed)
           }
         }
         .unsafeRunSync()
     }
+
+    "health" should {
+      "be return 200" in {
+        client
+          .run(Request(method = Method.GET, uri = uri"/system/health"))
+          .use { response =>
+            IO {
+              assert(response.status === Ok)
+            }
+          }
+          .unsafeRunSync()
+      }
+    }
+
   }
 
-  "be return Method Not Allowed" in {
-    client
-      .run(Request(method = Method.DELETE, uri = uri"/system"))
-      .use { response =>
-        IO {
-          assert(response.status === MethodNotAllowed)
-        }
-      }
-      .unsafeRunSync()
-  }
 }
