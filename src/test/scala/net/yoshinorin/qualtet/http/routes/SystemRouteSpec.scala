@@ -17,8 +17,6 @@ class SystemRouteSpec extends AnyWordSpec {
 
   val systemRoute: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(enabledMetaData = false))
   val router = Fixture.makeRouter(systemRoute = systemRoute)
-
-  val request: Request[IO] = Request(method = Method.GET, uri = uri"/status")
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   val enabledMetadataEndpointSystemRoute: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(enabledMetaData = true))
