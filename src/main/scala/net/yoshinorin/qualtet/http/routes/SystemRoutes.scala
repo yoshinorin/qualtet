@@ -14,7 +14,8 @@ class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupp
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / "health" => this.health
-    case GET -> Root / "metadata" => this.metadata
+    case GET -> Root / "metadata" =>
+      if config.enabledMetaData then this.metadata else NotFound()
     case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))
@@ -27,14 +28,10 @@ class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupp
 
   // system/metadata
   private[http] def metadata: IO[Response[IO]] = {
-    if (config.enabledMetaData) {
-      (for {
-        a <- IO(ApplicationInfo().asJson)
-        response <- Ok(a, `Content-Type`(MediaType.application.json))
-      } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
-    } else {
-      NotFound()
-    }
+    (for {
+      a <- IO(ApplicationInfo().asJson)
+      response <- Ok(a, `Content-Type`(MediaType.application.json))
+    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
   }
 
 }
