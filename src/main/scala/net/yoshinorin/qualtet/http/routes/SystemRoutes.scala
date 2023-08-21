@@ -15,7 +15,7 @@ class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupp
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / "health" => this.health
     case GET -> Root / "metadata" =>
-      if config.enabledMetaData then this.metadata else NotFound()
+      if config.metadata.enabled then this.metadata else NotFound()
     case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ _ =>
       methodNotAllowed(request, Allow(Set(GET)))

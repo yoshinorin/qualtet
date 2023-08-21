@@ -9,7 +9,8 @@ import java.util.ArrayList
 final case class DBConfig(url: String, user: String, password: String)
 final case class HttpConfig(host: String, port: Int, endpoints: HttpEndpointsConfig)
 final case class HttpEndpointsConfig(system: HttpSystemEndpointConfig)
-final case class HttpSystemEndpointConfig(enabledMetaData: Boolean)
+final case class HttpSystemEndpointMetadata(enabled: Boolean)
+final case class HttpSystemEndpointConfig(metadata: HttpSystemEndpointMetadata)
 final case class CorsConfig(allowOrigins: List[String])
 final case class JwtConfig(iss: String, aud: String, expiration: Long)
 final case class CacheConfig(contentType: Long, sitemap: Long, feed: Long)
@@ -33,8 +34,8 @@ object ApplicationConfig {
 
   private val httpHost: String = config.getString("http.host")
   private val httpPort: Int = config.getInt("http.port")
-  private val httpSystemMetadataEndpointEnabled: Boolean = config.getBoolean("http.endpoints.system.metadata.enabled")
-  private val httpEndpoints: HttpEndpointsConfig = HttpEndpointsConfig(system = HttpSystemEndpointConfig(httpSystemMetadataEndpointEnabled))
+  private val httpEndpoints: HttpEndpointsConfig =
+    HttpEndpointsConfig(system = HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(config.getBoolean("http.endpoints.system.metadata.enabled"))))
 
   @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   private val corsAllowOrigins: List[String] = config.getList("cors.allow-origins").unwrapped().asInstanceOf[ArrayList[String]].asScala.toList

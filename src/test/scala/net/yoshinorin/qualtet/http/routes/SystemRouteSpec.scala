@@ -11,15 +11,16 @@ import net.yoshinorin.qualtet.fixture.Fixture
 
 import cats.effect.unsafe.implicits.global
 import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
+import net.yoshinorin.qualtet.config.HttpSystemEndpointMetadata
 
 // testOnly net.yoshinorin.qualtet.http.routes.SystemRouteSpec
 class SystemRouteSpec extends AnyWordSpec {
 
-  val systemRoute: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(enabledMetaData = false))
+  val systemRoute: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(enabled = false)))
   val router = Fixture.makeRouter(systemRoute = systemRoute)
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
-  val enabledMetadataEndpointSystemRoute: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(enabledMetaData = true))
+  val enabledMetadataEndpointSystemRoute: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(enabled = true)))
   val enabledMetadataEndpointRouter = Fixture.makeRouter(systemRoute = enabledMetadataEndpointSystemRoute)
   val clientForEnabledMetadataEndpoint: Client[IO] = Client.fromHttpApp(enabledMetadataEndpointRouter.routes.orNotFound)
 
