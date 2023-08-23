@@ -11,20 +11,20 @@ lazy val commitHash = BuildInfo.commitHash.substring(0, 7)
 lazy val runtime = Runtime()
 lazy val build = Build()
 
-private final case class Runtime(
+private[this] final case class Runtime(
   name: String = "Java",
   vendor: String = jvmVendor,
   version: String = runtimeVersion
 )
 
-private final case class Build(
+private[this] final case class Build(
   commit: String = commitHash,
   url: String = s"${BuildInfo.repository}/commit/${commitHash}",
   scalaVersion: String = BuildInfo.scalaVersion,
   sbtVersion: String = BuildInfo.sbtVersion
 )
 
-final case class ApplicationInfo(
+private[this] final case class ApplicationInfo(
   name: String = BuildInfo.name,
   version: String = BuildInfo.version,
   repository: String = BuildInfo.repository,
@@ -33,6 +33,11 @@ final case class ApplicationInfo(
 )
 
 object ApplicationInfo {
+
+  import net.yoshinorin.qualtet.syntax.*
+
+  lazy val asJson = ApplicationInfo().asJson
+
   given codecAuthor: JsonValueCodec[ApplicationInfo] = JsonCodecMaker.make(
     CodecMakerConfig
       .withRequireCollectionFields(true)

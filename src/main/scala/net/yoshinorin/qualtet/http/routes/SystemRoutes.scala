@@ -29,7 +29,7 @@ class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupp
   // system/metadata
   private[http] def metadata: IO[Response[IO]] = {
     (for {
-      a <- IO(ApplicationInfo().asJson)
+      a <- IO(ApplicationInfo.asJson)
       response <- Ok(a, `Content-Type`(MediaType.application.json))
     } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
   }
