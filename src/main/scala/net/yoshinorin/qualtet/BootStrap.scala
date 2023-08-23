@@ -1,8 +1,10 @@
 package net.yoshinorin.qualtet
 
-import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.{ExitCode, IO, ResourceApp}
+import cats.effect.kernel.Resource
 import org.http4s.*
 import org.http4s.ember.server.EmberServerBuilder
+import org.http4s.server.Server
 import org.http4s.server.middleware.{Logger, RequestId, ResponseTiming}
 import com.comcast.ip4s.*
 import org.slf4j.LoggerFactory
@@ -26,7 +28,7 @@ import net.yoshinorin.qualtet.http.routes.{
 }
 import net.yoshinorin.qualtet.syntax.asJson
 
-object BootStrap extends IOApp {
+object BootStrap extends ResourceApp.Forever {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -70,15 +72,7 @@ object BootStrap extends IOApp {
     tagRoute
   )
 
-  def run(args: List[String]): IO[ExitCode] = {
-
-    Modules.migrator.migrate(Modules.contentTypeService)
-
-    val host = Ipv4Address.fromString(Modules.config.http.host).getOrElse(ipv4"127.0.0.1")
-    val port = Port.fromInt(Modules.config.http.port).getOrElse(port"9001")
-    val httpApp: HttpApp[IO] = new HttpAppBuilder(router.withCors.orNotFound).build
-
-    logger.info("starting http server...")
+  private[this] def server(host: Ipv4Address, port: Port, httpApp: HttpApp[IO]): Resource[IO, Server] = {
     EmberServerBuilder
       .default[IO]
       .withHost(host)
@@ -86,7 +80,17 @@ object BootStrap extends IOApp {
       .withHttpApp(httpApp)
       .withLogger(org.typelevel.log4cats.slf4j.Slf4jLogger.getLoggerFromSlf4j(logger))
       .build
-      .use(_ => IO.never)
-      .as(ExitCode.Success)
+  }
+
+  override def run(args: List[String]): Resource[IO, Unit] = {
+    Modules.migrator.migrate(Modules.contentTypeService)
+    val host = Ipv4Address.fromString(Modules.config.http.host).getOrElse(ipv4"127.0.0.1")
+    val port = Port.fromInt(Modules.config.http.port).getOrElse(port"9001")
+    val httpApp: HttpApp[IO] = new HttpAppBuilder(router.withCors.orNotFound).build
+
+    for {
+      _ <- server(host, port, httpApp)
+    } yield ()
+
   }
 }
