@@ -9,12 +9,19 @@ scalaVersion := "3.3.0"
 val repository = "https://github.com/yoshinorin/qualtet"
 
 scalacOptions ++= Seq(
+  "-encoding",
+  "utf8",
   "-deprecation",
   "-feature",
   "-unchecked",
-  "-encoding",
-  "UTF-8",
-  "-Ykind-projector"
+  "-Ykind-projector",
+  "-Wvalue-discard",
+  "-Wunused:implicits",
+  "-Wunused:explicits",
+  "-Wunused:imports",
+  "-Wunused:locals",
+  "-Wunused:params",
+  "-Wunused:privates"
 )
 
 // https://github.com/rtimush/sbt-updates
