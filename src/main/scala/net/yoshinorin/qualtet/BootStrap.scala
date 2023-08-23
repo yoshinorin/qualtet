@@ -28,6 +28,8 @@ import net.yoshinorin.qualtet.http.routes.{
 }
 import net.yoshinorin.qualtet.syntax.asJson
 
+import scala.concurrent.duration._
+
 object BootStrap extends ResourceApp.Forever {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
@@ -79,6 +81,7 @@ object BootStrap extends ResourceApp.Forever {
       .withPort(port)
       .withHttpApp(httpApp)
       .withLogger(org.typelevel.log4cats.slf4j.Slf4jLogger.getLoggerFromSlf4j(logger))
+      .withShutdownTimeout(1.second)
       .build
   }
 
