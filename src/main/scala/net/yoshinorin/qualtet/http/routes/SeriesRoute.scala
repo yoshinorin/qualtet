@@ -6,7 +6,6 @@ import cats.implicits.*
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
-import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesService, RequestSeries}
 import net.yoshinorin.qualtet.http.{AuthProvider, MethodNotAllowedSupport, RequestDecoder}
@@ -17,8 +16,6 @@ class SeriesRoute[M[_]: Monad](
   seriesService: SeriesService[M]
 ) extends RequestDecoder
     with MethodNotAllowedSupport {
-
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def index: HttpRoutes[IO] =

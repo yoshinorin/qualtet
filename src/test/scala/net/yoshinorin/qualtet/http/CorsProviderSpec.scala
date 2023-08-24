@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.http
 
 import org.http4s.Uri
 import org.http4s.headers.Origin
-import org.http4s.server.middleware.*
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.config.CorsConfig
 import java.net.MalformedURLException

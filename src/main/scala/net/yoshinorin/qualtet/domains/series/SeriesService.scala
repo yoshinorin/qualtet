@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.series
 
 import cats.effect.IO
 import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.articles.ArticleService

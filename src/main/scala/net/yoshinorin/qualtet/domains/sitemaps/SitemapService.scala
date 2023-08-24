@@ -7,7 +7,6 @@ import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.domains.Cacheable
-import net.yoshinorin.qualtet.syntax.*
 
 class SitemapService[M[_]: Monad](
   sitemapRepository: SitemapsRepository[M],

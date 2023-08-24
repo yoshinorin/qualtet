@@ -1,17 +1,14 @@
 package net.yoshinorin.qualtet.domains.contentSerializing
 
-import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.series.SeriesId
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
-import net.yoshinorin.qualtet.syntax.*
 
 class ContentSerializingService[M[_]: Monad](
   contentSerializingRepository: ContentSerializingRepository[M]
-)(using transactor: Transactor[M]) {
+) {
 
   def findBySeriesIdActions(id: SeriesId): Action[Seq[ContentSerializing]] = {
     Continue(contentSerializingRepository.findBySeriesId(id), Action.done[Seq[ContentSerializing]])

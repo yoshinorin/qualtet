@@ -1,17 +1,12 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import net.yoshinorin.qualtet.domains.authors.AuthorName
-import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
-import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.contents.Path
 import net.yoshinorin.qualtet.domains.series.{SeriesName, RequestSeries}
-import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
-import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.syntax.*
 
 import cats.effect.unsafe.implicits.global
 
@@ -66,7 +61,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     }
 
     "be upsert" in {
-      val created = seriesService
+      seriesService
         .create(
           RequestSeries(
             title = "Series Service Spec Created",
@@ -76,7 +71,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         )
         .unsafeRunSync()
       val resultAfterCreated = seriesService.findByName(SeriesName("seriesservice-series-created")).unsafeRunSync().get
-      val updated = seriesService
+      seriesService
         .create(
           RequestSeries(
             title = "Series Service Spec Updated",

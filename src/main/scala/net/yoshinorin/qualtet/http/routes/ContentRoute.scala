@@ -9,7 +9,6 @@ import org.http4s.dsl.io.*
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, Path, RequestContent}
-import net.yoshinorin.qualtet.domains.contents.ResponseContent.*
 import net.yoshinorin.qualtet.http.{AuthProvider, RequestDecoder}
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport

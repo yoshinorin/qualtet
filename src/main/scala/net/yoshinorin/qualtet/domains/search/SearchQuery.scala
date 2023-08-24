@@ -3,9 +3,6 @@ package net.yoshinorin.qualtet.domains.search
 import doobie.Read
 import doobie.implicits.*
 import doobie.util.query.Query0
-import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.tags.TagName
-import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
 object SearchQuery {
   // https://tpolecat.github.io/doobie/docs/08-Fragments.html

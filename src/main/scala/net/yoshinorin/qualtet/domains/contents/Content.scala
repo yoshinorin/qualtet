@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
 import java.time.ZonedDateTime
-import wvlet.airframe.ulid.ULID
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{Request, ValueExtender, UlidConvertible}

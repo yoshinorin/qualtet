@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound, Unpro
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesName, SeriesService}
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesService}
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.syntax.*
 

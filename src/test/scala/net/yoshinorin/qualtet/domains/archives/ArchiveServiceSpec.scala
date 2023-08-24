@@ -1,8 +1,5 @@
 package net.yoshinorin.qualtet.domains.archives
 
-import net.yoshinorin.qualtet.domains.authors.AuthorName
-import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
-import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec

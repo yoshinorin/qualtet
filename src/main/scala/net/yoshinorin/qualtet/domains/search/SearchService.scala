@@ -3,28 +3,20 @@ package net.yoshinorin.qualtet.domains.search
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
-import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.config.SearchConfig
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
-import net.yoshinorin.qualtet.message.Fail.NotFound
-import net.yoshinorin.qualtet.domains.tags.TagName
-import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.types.Points
 import net.yoshinorin.qualtet.syntax.*
 
-import scala.util.Try
 import scala.annotation.tailrec
 
 class SearchService[M[_]: Monad](
   searchConfig: SearchConfig,
   searchRepository: SearchRepository[M]
 )(using transactor: Transactor[M]) {
-
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
   def actions(query: List[String]): Action[Seq[(Int, ResponseSearch)]] = {
     Continue(searchRepository.search(query), Action.done[Seq[(Int, ResponseSearch)]])

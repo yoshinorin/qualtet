@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.domains.archives
 
-import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.contents.Path

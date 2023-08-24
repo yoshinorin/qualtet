@@ -6,7 +6,6 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.archives.ArchiveService
-import net.yoshinorin.qualtet.domains.archives.ResponseArchive.*
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 import net.yoshinorin.qualtet.syntax.*
 

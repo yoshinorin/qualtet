@@ -6,7 +6,6 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount.*
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, MethodNotAllowedSupport}
 import net.yoshinorin.qualtet.syntax.*
 

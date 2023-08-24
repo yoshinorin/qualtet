@@ -2,10 +2,7 @@ package net.yoshinorin.qualtet.domains.search
 
 import doobie.Read
 import doobie.ConnectionIO
-import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
-import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.tags.TagName
-import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
+import net.yoshinorin.qualtet.domains.contents.Path
 
 class SearchRepositoryDoobieInterpreter extends SearchRepository[ConnectionIO] {
 

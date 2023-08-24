@@ -8,9 +8,7 @@ import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
-import net.yoshinorin.qualtet.domains.authors.{AuthorName, ResponseAuthor}
-import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
-import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.tags.{TagId, ResponseTag}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.Modules.*

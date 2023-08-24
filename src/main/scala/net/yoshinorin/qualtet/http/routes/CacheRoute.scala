@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
 import cats.Monad
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
+import org.http4s.headers.Allow
+import org.http4s.{AuthedRoutes, HttpRoutes, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.cache.CacheService

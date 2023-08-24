@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-import net.yoshinorin.qualtet.domains.sitemaps.{LastMod, Loc, Url}
+import net.yoshinorin.qualtet.domains.sitemaps.{LastMod, Loc}
 import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 

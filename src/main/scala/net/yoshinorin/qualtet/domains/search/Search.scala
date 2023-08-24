@@ -2,10 +2,8 @@ package net.yoshinorin.qualtet.domains.search
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
+import net.yoshinorin.qualtet.domains.contents.Path
 import net.yoshinorin.qualtet.syntax.*
-
-import scala.util.Random
 
 final case class ResponseSearch(
   path: Path,

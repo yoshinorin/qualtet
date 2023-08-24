@@ -7,7 +7,6 @@ import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.domains.feeds.FeedService
-import net.yoshinorin.qualtet.domains.feeds.ResponseFeed.*
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 

@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.syntax
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.message.Fail
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
-import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.syntax.OptionSpec
 class OptionSpec extends AnyWordSpec {

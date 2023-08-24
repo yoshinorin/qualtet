@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet
 
-import cats.effect.IO
 import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule

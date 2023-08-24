@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeId}
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.fixture.Fixture.contentTypeId
 import org.scalatest.wordspec.AnyWordSpec
 

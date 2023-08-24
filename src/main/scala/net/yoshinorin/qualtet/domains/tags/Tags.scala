@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.domains.tags
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{ValueExtender, UlidConvertible}
-import net.yoshinorin.qualtet.syntax.*
 
 opaque type TagId = String
 object TagId extends ValueExtender[TagId] with UlidConvertible[TagId] {

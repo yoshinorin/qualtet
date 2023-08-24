@@ -1,18 +1,14 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
-import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.*
-import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
-import net.yoshinorin.qualtet.syntax.*
 
-import cats.effect.unsafe.implicits.global
 import org.scalatest.Ignore
 
 // testOnly net.yoshinorin.qualtet.domains.contentTaggings.ContentSerializingServiceSpec

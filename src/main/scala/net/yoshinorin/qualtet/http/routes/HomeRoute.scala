@@ -1,8 +1,7 @@
 package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Response}
+import org.http4s.{HttpRoutes, Response}
 import org.http4s.dsl.io.*
 
 class HomeRoute {

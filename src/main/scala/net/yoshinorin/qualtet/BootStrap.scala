@@ -1,11 +1,10 @@
 package net.yoshinorin.qualtet
 
-import cats.effect.{ExitCode, IO, ResourceApp}
+import cats.effect.{IO, ResourceApp}
 import cats.effect.kernel.Resource
 import org.http4s.*
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Server
-import org.http4s.server.middleware.{Logger, RequestId, ResponseTiming}
 import com.comcast.ip4s.*
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
@@ -26,7 +25,6 @@ import net.yoshinorin.qualtet.http.routes.{
   SystemRoute,
   TagRoute
 }
-import net.yoshinorin.qualtet.syntax.asJson
 
 import scala.concurrent.duration._
 

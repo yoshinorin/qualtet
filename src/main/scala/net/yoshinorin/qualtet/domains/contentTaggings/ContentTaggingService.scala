@@ -7,7 +7,6 @@ import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.tags.TagId
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
-import net.yoshinorin.qualtet.syntax.*
 
 class ContentTaggingService[M[_]: Monad](
   contentTaggingRepository: ContentTaggingRepository[M]

@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.http.routes
 import cats.effect.IO
 import org.http4s.client.Client
 import org.http4s.*
-import org.http4s.dsl.io.*
 import org.http4s.implicits.*
 import org.typelevel.ci._
 import net.yoshinorin.qualtet.HttpAppBuilder

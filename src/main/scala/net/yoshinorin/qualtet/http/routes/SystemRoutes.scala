@@ -6,7 +6,6 @@ import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 import net.yoshinorin.qualtet.ApplicationInfo
-import net.yoshinorin.qualtet.buildinfo.BuildInfo
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
 
