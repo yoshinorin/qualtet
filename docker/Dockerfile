@@ -1,7 +1,7 @@
 FROM ghcr.io/yoshinorin/docker-sbt:v1.9.3-scala3
 
 LABEL maintainer="yoshinorin"
-ENV QUALTET_VERSION="v2.8.0"
+ENV QUALTET_VERSION="v2.9.0"
 
 RUN apt update -y \
   && apt upgrade -y \
