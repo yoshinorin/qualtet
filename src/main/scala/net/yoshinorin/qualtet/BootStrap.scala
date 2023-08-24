@@ -89,9 +89,6 @@ object BootStrap extends ResourceApp.Forever {
     val port = Port.fromInt(Modules.config.http.port).getOrElse(port"9001")
     val httpApp: HttpApp[IO] = new HttpAppBuilder(router.withCors.orNotFound).build
 
-    for {
-      _ <- server(host, port, httpApp)
-    } yield ()
-
+    server(host, port, httpApp).map[Unit](_ => ())
   }
 }
