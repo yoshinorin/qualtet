@@ -8,7 +8,7 @@ import console.{ Console => Console_ }
 trait Docker {
   def up_(dockerComposeFilePath: File) ={
     Console_.info("db container starting")
-    val dockerCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} up -d")
+    val dockerCommand = Process(s"docker compose -f ${dockerComposeFilePath.getAbsolutePath} up -d")
     dockerCommand.run
 
     // workaround
@@ -18,7 +18,7 @@ trait Docker {
 
   def down_(dockerComposeFilePath: File) = {
     Console_.info("db container stopping")
-    val dockerDownCommand = Process(s"docker-compose -f ${dockerComposeFilePath.getAbsolutePath} down")
+    val dockerDownCommand = Process(s"docker compose -f ${dockerComposeFilePath.getAbsolutePath} down")
     dockerDownCommand.run
     Console_.info("db container stopped")
   }
