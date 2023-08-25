@@ -71,7 +71,7 @@ lazy val root = (project in file("."))
   .enablePlugins(BuildInfoPlugin)
   .settings(
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion,
-      "commitHash" -> git.gitHeadCommit.value.getOrElse(""),
+      "commitHash" -> git.gitHeadCommit.value,
       "repository" -> repository
     ),
     //buildInfoPackage := s"${organization}.${name}.buildinfo"

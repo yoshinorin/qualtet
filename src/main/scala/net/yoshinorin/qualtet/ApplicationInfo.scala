@@ -7,7 +7,10 @@ import net.yoshinorin.qualtet.buildinfo.BuildInfo.repository
 
 lazy val jvmVendor = System.getProperty("java.vendor")
 lazy val runtimeVersion = System.getProperty("java.version")
-lazy val commitHash = BuildInfo.commitHash.substring(0, 7)
+lazy val commitHash = BuildInfo.commitHash match {
+  case Some(c) if c.length() >= 7 => c.substring(0, 7)
+  case _ => "N/A"
+}
 lazy val runtime = Runtime()
 lazy val build = Build()
 
