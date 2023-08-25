@@ -18,9 +18,9 @@ COPY entry-point.sh entry-point.sh
 COPY commit-hash.sh commit-hash.sh
 
 RUN sh commit-hash.sh \
-  && rm -rf scripts docs docker .github .gitignore .editorconfig .git .env .env.example Makefile .githooks target .scalafmt.conf tools \
   && sbt assembly exit \
   && cp ./target/scala-3.3.0/qualtet-assembly-${QUALTET_VERSION}.jar qualtet-assembly.jar \
+  && rm -rf scripts docs docker .github .gitignore .editorconfig .git .env .env.example Makefile .githooks target .scalafmt.conf tools \
   && chmod +x entry-point.sh
 
 ENTRYPOINT [ "/usr/opt/qualtet/entry-point.sh" ]
