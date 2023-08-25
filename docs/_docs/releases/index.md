@@ -6,7 +6,7 @@ title: Releases
 | Version | Code name | Released at |
 | --- | --- | --- |
 | [v2.9.1](https://github.com/yoshinorin/qualtet/releases/tag/v2.9.1)                        |                          | 2023-08-25             |
-| [v2.9.1](https://github.com/yoshinorin/qualtet/releases/tag/v2.9.0)                        | Scarlet Judy             | 2023-08-24T15:25:50Z   |
+| [v2.9.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.9.0)                        | Scarlet Judy             | 2023-08-24T15:25:50Z   |
 | [v2.8.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.8.0)                        | Scarlet Iman             | 2023-08-03T17:00:01Z   |
 | [v2.7.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.7.0)                        | Scarlet Hagiri           | 2023-07-26T14:51:25Z   |
 | [v2.6.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.6.0)                        | Scarlet Gamila           | 2023-07-01T14:31:08Z   |
