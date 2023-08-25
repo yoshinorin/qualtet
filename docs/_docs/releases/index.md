@@ -40,3 +40,9 @@ title: Releases
 | [v1.0.0-SNAPSHOT-3](https://github.com/yoshinorin/qualtet/releases/tag/v1.0.0-SNAPSHOT-3)  | -                        | 2022-02-02T13:16:10Z   |
 | [v1.0.0-SNAPSHOT-2](https://github.com/yoshinorin/qualtet/releases/tag/v1.0.0-SNAPSHOT-2)  | -                        | 2022-02-02T13:16:27Z   |
 
+
+## Appendix
+
+```sh
+$ gh release list --limit 50 -R "yoshinorin/qualtet" | head -50
+```
