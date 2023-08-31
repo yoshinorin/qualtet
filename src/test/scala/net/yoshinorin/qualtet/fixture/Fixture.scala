@@ -1,7 +1,10 @@
 package net.yoshinorin.qualtet.fixture
 
 import cats.Monad
+import cats.effect.IO
 import org.http4s.Uri
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
+import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import net.yoshinorin.qualtet.http.AuthProvider
@@ -52,6 +55,7 @@ object Fixture {
   val host = Uri.unsafeFromString(s"http://${h}:${p}")
 
   given dbContext: DoobieTransactor = new DoobieTransactor(Modules.config.db)
+  given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
 
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =

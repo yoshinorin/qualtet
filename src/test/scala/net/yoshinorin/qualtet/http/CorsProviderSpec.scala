@@ -9,6 +9,8 @@ import java.net.MalformedURLException
 // testOnly net.yoshinorin.qualtet.http.CorsProviderSpec
 class CorsProviderSpec extends AnyWordSpec {
 
+  import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
+
   "CorsProvider" should {
     "returns origins by config" in {
       val corsProvider = new CorsProvider(corsConfig =

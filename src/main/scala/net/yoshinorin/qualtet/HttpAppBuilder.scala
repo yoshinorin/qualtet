@@ -4,8 +4,9 @@ import cats.effect.IO
 import cats.data.Kleisli
 import org.http4s.{HttpApp, Request, Response}
 import org.http4s.server.middleware.{RequestId, ResponseTiming, Logger}
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
 
-class HttpAppBuilder(routes: Kleisli[IO, Request[IO], Response[IO]]) {
+class HttpAppBuilder(routes: Kleisli[IO, Request[IO], Response[IO]])(using logger: Log4CatsLoggerFactory[IO]) {
 
   def build: HttpApp[IO] = {
 

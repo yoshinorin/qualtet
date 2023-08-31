@@ -6,12 +6,13 @@ import org.http4s.HttpRoutes
 import org.http4s.Uri
 import org.http4s.server.middleware.*
 import org.http4s.headers.Origin
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
 import net.yoshinorin.qualtet.config.CorsConfig
 import java.net.URI
 
 class CorsProvider(
   corsConfig: CorsConfig
-) {
+)(using logger: Log4CatsLoggerFactory[IO]) {
 
   private[http] val origins: Set[Origin.Host] = {
     // NOTE: throw `java.net.MalformedURLException` if configs contains invalid URL.

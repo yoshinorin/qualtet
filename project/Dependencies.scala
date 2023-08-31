@@ -6,12 +6,12 @@ object Dependencies {
   val doobieVersion = "1.0.0-RC4"
   val jwtScalaVersion = "9.4.3"
   val flywayVersion = "9.21.1"
-  val http4sVersion = "1.0.0-M39"
+  val http4sVersion = "1.0.0-M40"
 
   val dependencies = Seq(
     "com.typesafe" % "config" % "1.4.2",
-    // NOTE: doobie 1.0.0-RC2 dependes on cats-effect 3.3.4, but cats-effect keep fully compatibility with 3.x
-    "org.typelevel" %% "cats-effect" % "3.4.11",
+    // NOTE: doobie 1.0.0-RC4 and http4s 1.0.0-M40 dependes on cats-effect 3.5.1
+    "org.typelevel" %% "cats-effect" % "3.5.1",
     "org.http4s" %% "http4s-dsl" % http4sVersion,
     "org.http4s" %% "http4s-ember-server" % http4sVersion,
     "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,

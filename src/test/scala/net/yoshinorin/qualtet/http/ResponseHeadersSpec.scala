@@ -14,6 +14,8 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.ResponseHeadersSpec
 class ResponseHeadersSpec extends AnyWordSpec {
 
+  import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
+
   val httpApp = new HttpAppBuilder(router.routes.orNotFound).build
   val client: Client[IO] = Client.fromHttpApp(httpApp)
 
