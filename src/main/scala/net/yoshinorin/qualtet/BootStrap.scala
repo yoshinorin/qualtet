@@ -13,7 +13,6 @@ import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
 import org.typelevel.log4cats.slf4j.{Slf4jLogger => Log4CatsSlf4jLogger}
 import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
 import net.yoshinorin.qualtet.http.routes.{
-  ApiStatusRoute,
   ArchiveRoute,
   ArticleRoute,
   AuthRoute,
@@ -43,7 +42,6 @@ object BootStrap extends IOApp {
   val authProvider = new AuthProvider(Modules.authService)
   val corsProvider = new CorsProvider(Modules.config.cors)
 
-  val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val archiveRoute = new ArchiveRoute(Modules.archiveService)
   val articleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute = new AuthorRoute(Modules.authorService)
@@ -61,7 +59,6 @@ object BootStrap extends IOApp {
 
   val router = new net.yoshinorin.qualtet.http.Router(
     corsProvider,
-    apiStatusRoute,
     archiveRoute,
     articleRoute,
     authorRoute,

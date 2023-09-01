@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.http
 import cats.Monad
 import org.http4s.server.{Router => Http4sRouter}
 import net.yoshinorin.qualtet.http.routes.{
-  ApiStatusRoute,
   ArchiveRoute,
   ArticleRoute,
   AuthRoute,
@@ -22,7 +21,6 @@ import net.yoshinorin.qualtet.http.routes.{
 
 class Router[M[_]: Monad](
   corsProvider: CorsProvider,
-  apiStatusRoute: ApiStatusRoute,
   archiveRoute: ArchiveRoute[M],
   articleRoute: ArticleRoute[M],
   authorRoute: AuthorRoute[M],
@@ -53,7 +51,6 @@ class Router[M[_]: Monad](
     "/search" -> searchRoute.index,
     "/series" -> seriesRoute.index,
     "/sitemaps" -> sitemapRoute.index,
-    "/status" -> apiStatusRoute.index,
     "/system" -> systemRoute.index,
     "/tags" -> tagRoute.index,
     "/token" -> authRoute.index

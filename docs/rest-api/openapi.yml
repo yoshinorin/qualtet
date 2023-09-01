@@ -15,7 +15,7 @@ paths:
     get:
       summary: Get API server status
       description:
-        This API will be removed in version `2.10`.
+        "**NOTE:** This API deleted in version `2.10`."
       tags:
         - status
       responses:

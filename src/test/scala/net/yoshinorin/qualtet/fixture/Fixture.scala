@@ -17,7 +17,6 @@ import net.yoshinorin.qualtet.domains.contentTypes.*
 import net.yoshinorin.qualtet.domains.robots.*
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapsRepositoryDoobieInterpreter, SitemapService, Url}
 import net.yoshinorin.qualtet.http.routes.{
-  ApiStatusRoute,
   ArchiveRoute,
   ArticleRoute,
   AuthRoute,
@@ -77,7 +76,6 @@ object Fixture {
   val authProvider = new AuthProvider(Modules.authService)
   val corsProvider = new CorsProvider(Modules.config.cors)
 
-  val apiStatusRoute: ApiStatusRoute = new ApiStatusRoute()
   val archiveRoute = new ArchiveRoute(Modules.archiveService)
   val articleRoute = new ArticleRoute(Modules.articleService)
   val authorRoute = new AuthorRoute(Modules.authorService)
@@ -95,7 +93,6 @@ object Fixture {
 
   val router = new net.yoshinorin.qualtet.http.Router(
     corsProvider,
-    apiStatusRoute,
     archiveRoute,
     articleRoute,
     authorRoute,
@@ -113,7 +110,6 @@ object Fixture {
   )
 
   def makeRouter[M[_]: Monad](
-    apiStatusRoute: ApiStatusRoute = apiStatusRoute,
     archiveRoute: ArchiveRoute[M] = archiveRoute,
     articleRoute: ArticleRoute[M] = articleRoute,
     authorRoute: AuthorRoute[M] = authorRoute,
@@ -130,7 +126,6 @@ object Fixture {
     systemRoute: SystemRoute = systemRoute
   ) = new net.yoshinorin.qualtet.http.Router(
     corsProvider = corsProvider,
-    apiStatusRoute = apiStatusRoute,
     archiveRoute = archiveRoute,
     articleRoute = articleRoute,
     authorRoute = authorRoute,
