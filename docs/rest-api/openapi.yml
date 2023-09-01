@@ -473,7 +473,7 @@ components:
               example: "3.3.0"
             sbtVersion:
               type: string
-              example: "1.9.3"
+              example: "1.9.4"
     author:
       type: object
       properties:
