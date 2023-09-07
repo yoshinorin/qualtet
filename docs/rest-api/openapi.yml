@@ -470,7 +470,7 @@ components:
               example: "https://github.com/yoshinorin/qualtet/commit/237856f"
             scalaVersion:
               type: string
-              example: "3.3.0"
+              example: "3.3.1"
             sbtVersion:
               type: string
               example: "1.9.4"
