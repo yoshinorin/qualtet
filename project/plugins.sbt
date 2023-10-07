@@ -1,6 +1,6 @@
 logLevel := util.Level.Warn
 
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.0")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
 addSbtPlugin("nl.gn0s1s" % "sbt-dotenv" % "3.0.0")
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.8")
 addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.9")
