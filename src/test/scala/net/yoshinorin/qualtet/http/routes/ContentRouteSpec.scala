@@ -109,6 +109,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("contentnotfound"))
           }
         }
         .unsafeRunSync()
@@ -128,6 +129,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("contentnotfound"))
           }
         }
         .unsafeRunSync()

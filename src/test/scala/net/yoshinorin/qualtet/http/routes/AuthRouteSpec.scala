@@ -136,6 +136,8 @@ class AuthRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            // TODO: avoid to return user not found message
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("not-exists-userisnotfound."))
           }
         }
         .unsafeRunSync()
