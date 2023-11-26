@@ -5,7 +5,7 @@ ENV QUALTET_VERSION="v2.11.0"
 
 RUN apt update -y \
   && apt upgrade -y \
-  && apt install -y git \
+  && apt install --no-install-recommends -y git \
   && apt autoremove \
   && apt clean \
   && git clone --depth 1 --branch ${QUALTET_VERSION} https://github.com/yoshinorin/qualtet.git /usr/opt/qualtet
