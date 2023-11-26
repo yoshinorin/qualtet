@@ -1,7 +1,7 @@
 version: '3'
 services:
   qualtet_mariadb:
-    image: ghcr.io/yoshinorin/docker-mariadb:v10.11.5
+    image: ghcr.io/yoshinorin/docker-mariadb:v10.11.6
     environment:
       MYSQL_ROOT_PASSWORD: pass
       MYSQL_USER: root
