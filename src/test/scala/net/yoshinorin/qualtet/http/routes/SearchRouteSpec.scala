@@ -72,6 +72,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
+            // TODO: assert JSON
           }
         }
         .unsafeRunSync()
@@ -83,6 +84,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
+            // TODO: assert JSON
           }
         }
         .unsafeRunSync()
@@ -94,6 +96,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
+            // TODO: assert JSON
           }
         }
         .unsafeRunSync()
@@ -105,6 +108,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
+            // TODO: assert JSON
           }
         }
         .unsafeRunSync()
@@ -116,6 +120,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
+            // TODO: assert JSON
           }
         }
         .unsafeRunSync()

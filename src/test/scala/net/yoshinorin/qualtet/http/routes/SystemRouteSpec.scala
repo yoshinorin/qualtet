@@ -78,6 +78,7 @@ class SystemRouteSpec extends AnyWordSpec {
           .use { response =>
             IO {
               assert(response.status === NotFound)
+              // TODO: consider to return JSON or not
             }
           }
           .unsafeRunSync()

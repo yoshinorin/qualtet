@@ -170,6 +170,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            // TODO: assert JSON
           }
         }
         .unsafeRunSync()
@@ -192,6 +193,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            // TODO: assert JSON
           }
         }
         .unsafeRunSync()

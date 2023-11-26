@@ -128,6 +128,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            // TODO: assert json
           }
         }
         .unsafeRunSync()
@@ -165,6 +166,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            // TODO: assert json
           }
         }
         .unsafeRunSync()
@@ -183,6 +185,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            // TODO: assert json
           }
         }
         .unsafeRunSync()

@@ -324,6 +324,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
+            // TODO: assert JSON
           }
         }
         .unsafeRunSync()
@@ -345,6 +346,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
+            // TODO: assert JSON
           }
         }
         .unsafeRunSync()
