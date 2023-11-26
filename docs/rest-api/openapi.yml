@@ -77,8 +77,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/errorMessage'
+                $ref: '#/components/schemas/errorMessage'
         401:
           description: Unauthorized
   /archives:
@@ -100,6 +99,17 @@ paths:
       summary: Get articles with count
       tags:
         - articles
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The number of pages for pagination.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The number of items to return. Max is 10.
       responses:
         200:
           description: Response when Success
@@ -116,17 +126,6 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/article'
-      parameters:
-        - in: query
-          name: page
-          schema:
-            type: integer
-          description: The number of pages for pagination.
-        - in: query
-          name: limit
-          schema:
-            type: integer
-          description: The number of items to return. Max is 10.
   /authors:
     get:
       summary: Get all authors
@@ -156,7 +155,10 @@ paths:
                 $ref: '#/components/schemas/author'
         404:
           description: Author not found
-          # content: TODO
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorMessage'
   /contents:
     post:
       summary: Create or Update a content
@@ -201,7 +203,10 @@ paths:
                 $ref: '#/components/schemas/responseContent'
         404:
           description: Content not found
-          # content: TODO
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorMessage'
   /contents/{contentId}:
     delete:
       summary: Delete a content
@@ -216,6 +221,10 @@ paths:
           description: Unauthorized
         404:
           description: Content not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorMessage'
   /tags:
     get:
       summary: Get a tags
@@ -243,8 +252,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/simpleArticle'
         404:
-          description: Content not found
-          # content: TODO
+          description: Tag not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorMessage'
   /tags/{tagId}:
     delete:
       summary: Delete a tag
@@ -259,9 +271,13 @@ paths:
           description: Unauthorized
         404:
           description: Tag not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorMessage'
   /content-types/{contentPath}:
     get:
-      summary: Get content-types
+      summary: Get Content-Types
       tags:
         - content-types
       responses:
@@ -274,7 +290,7 @@ paths:
                   $ref: '#/components/schemas/contentType'
   /content-types/{contentTypeName}:
     get:
-      summary: Get a content-type with name
+      summary: Get a Content-Type
       tags:
         - content-types
       responses:
@@ -284,6 +300,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/contentType'
+        404:
+          description: Content-Type not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorMessage'
   /sitemaps:
     get:
       summary: Get an articles url & updated date for sitemaps.xml
@@ -298,7 +320,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/sitemaps'
-  /feed/{feedName}:
+  /feeds/{feedName}:
     get:
       summary: Get a feeds
       tags:
@@ -329,6 +351,12 @@ paths:
       summary: Search contents
       tags:
         - search
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: Word for seach contents.
       responses:
         200:
           description: Response when Success
@@ -347,12 +375,6 @@ paths:
                       $ref: '#/components/schemas/responseSearch'
         422:
           description: Unprocessable request
-      parameters:
-        - in: query
-          name: q
-          schema:
-            type: string
-          description: Word for seach contents.
   /series:
     get:
       summary: Get all series
@@ -407,6 +429,10 @@ paths:
                   $ref: '#/components/schemas/series'
         404:
           description: Series not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorMessage'
 components:
   securitySchemes:
     basicAuth:
