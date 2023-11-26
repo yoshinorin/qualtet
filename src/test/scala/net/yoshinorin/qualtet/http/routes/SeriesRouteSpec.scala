@@ -130,6 +130,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("seriesnotfound"))
           }
         }
@@ -148,6 +149,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -215,6 +217,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
 
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -226,6 +229,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -240,6 +244,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()

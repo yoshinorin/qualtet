@@ -93,6 +93,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NoContent)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -109,6 +110,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("contentnotfound"))
           }
         }
@@ -129,6 +131,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("contentnotfound"))
           }
         }
@@ -147,6 +150,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -254,6 +258,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -265,6 +270,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -279,6 +285,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -298,6 +305,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -324,6 +332,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert JSON
           }
         }
@@ -346,6 +355,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert JSON
           }
         }
@@ -447,6 +457,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()

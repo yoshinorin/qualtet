@@ -72,6 +72,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert JSON
           }
         }
@@ -84,6 +85,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert JSON
           }
         }
@@ -96,6 +98,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert JSON
           }
         }
@@ -108,6 +111,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert JSON
           }
         }
@@ -120,6 +124,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert JSON
           }
         }

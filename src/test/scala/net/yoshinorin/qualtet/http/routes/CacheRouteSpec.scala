@@ -29,6 +29,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NoContent)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -40,6 +41,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -51,6 +53,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -62,6 +65,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -73,6 +77,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -84,6 +89,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()

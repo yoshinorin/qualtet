@@ -44,6 +44,7 @@ class SitemapRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()

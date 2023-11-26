@@ -128,6 +128,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert json
           }
         }
@@ -149,6 +150,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === NoContent)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -166,6 +168,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert json
           }
         }
@@ -185,6 +188,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert json
           }
         }
@@ -197,6 +201,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -215,6 +220,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()

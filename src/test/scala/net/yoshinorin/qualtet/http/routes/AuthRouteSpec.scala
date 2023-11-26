@@ -58,6 +58,7 @@ class AuthRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -77,6 +78,7 @@ class AuthRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -96,6 +98,7 @@ class AuthRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -116,6 +119,7 @@ class AuthRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -136,6 +140,7 @@ class AuthRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: avoid to return user not found message
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("not-exists-userisnotfound."))
           }
@@ -149,6 +154,7 @@ class AuthRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()

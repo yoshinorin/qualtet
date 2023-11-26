@@ -4,6 +4,7 @@ import cats.effect.IO
 import org.http4s.client.Client
 import org.http4s.*
 import org.http4s.dsl.io.*
+import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.fixture.Fixture
@@ -31,6 +32,7 @@ class SystemRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()
@@ -43,6 +45,7 @@ class SystemRouteSpec extends AnyWordSpec {
           .use { response =>
             IO {
               assert(response.status === Ok)
+              assert(response.contentType.isEmpty)
             }
           }
           .unsafeRunSync()
@@ -56,6 +59,7 @@ class SystemRouteSpec extends AnyWordSpec {
           .use { response =>
             IO {
               assert(response.status === Ok)
+              assert(response.contentType.get === `Content-Type`(MediaType.application.json))
               assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("name"))
               assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("version"))
               assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("repository"))
@@ -79,6 +83,7 @@ class SystemRouteSpec extends AnyWordSpec {
             IO {
               assert(response.status === NotFound)
               // TODO: consider to return JSON or not
+              assert(response.contentType.isEmpty)
             }
           }
           .unsafeRunSync()

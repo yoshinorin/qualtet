@@ -37,6 +37,7 @@ class HomeRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
+            assert(response.contentType.get.charset.get === Charset.`UTF-8`)
             assert(response.as[String].unsafeRunSync().contains("Not found"))
           }
         }

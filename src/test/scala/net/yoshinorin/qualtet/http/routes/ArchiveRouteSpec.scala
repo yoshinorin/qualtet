@@ -81,6 +81,7 @@ class ArchiveRouteSpec extends AnyWordSpec {
       .use { response =>
         IO {
           assert(response.status === MethodNotAllowed)
+          assert(response.contentType.isEmpty)
         }
       }
       .unsafeRunSync()
