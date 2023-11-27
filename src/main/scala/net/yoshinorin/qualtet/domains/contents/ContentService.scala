@@ -148,6 +148,7 @@ class ContentService[M[_]: Monad](
     for {
       _ <- transactor.transact8[Int, Seq[Tag], Unit, Int, Int, Int, Int, Int](queries)
       c <- this.findByPath(data.path).throwIfNone(InternalServerError("content not found")) // NOTE: 404 is better?
+      // TODO: Should return `ResponseContent` instead of `Content`.
     } yield c
   }
 
@@ -227,7 +228,7 @@ class ContentService[M[_]: Monad](
               tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(TagId(x), TagName(y))).map(x => x.distinct).getOrElse(List()),
               description = stripedContent.substring(0, descriptionLength),
               content = x.content,
-              length = stripedContent.length,
+              length = stripedContent.length, // FIXME: replace all whitespaces to empty here.
               authorName = x.authorName,
               publishedAt = x.publishedAt,
               updatedAt = x.updatedAt
