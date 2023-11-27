@@ -6,6 +6,7 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
+import net.yoshinorin.qualtet.domains.sitemaps.Url
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -33,6 +34,9 @@ class SitemapRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("loc"))
+
+            val maybeSitemap = unsafeDecode[Seq[Url]](response)
+            assert(maybeSitemap.size >= 2) // FIXME
           }
         }
         .unsafeRunSync()

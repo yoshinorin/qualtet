@@ -8,8 +8,10 @@ import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
+import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.tags.{TagId, ResponseTag}
+import net.yoshinorin.qualtet.message.Message
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -74,7 +76,10 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("/test/tagRoute-0"))
+
+            val maybeArticles = unsafeDecode[ResponseArticleWithCount](response)
+            assert(maybeArticles.count === 1)
+            assert(maybeArticles.articles.head.path.toString().startsWith("/test/tagRoute-0"))
           }
         }
         .unsafeRunSync()
@@ -85,7 +90,10 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("/test/tagRoute-1"))
+
+            val maybeArticles = unsafeDecode[ResponseArticleWithCount](response)
+            assert(maybeArticles.count === 1)
+            assert(maybeArticles.articles.head.path.toString().startsWith("/test/tagRoute-1"))
           }
         }
         .unsafeRunSync()
@@ -129,7 +137,9 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message.startsWith("articles not found"))
           }
         }
         .unsafeRunSync()
@@ -169,7 +179,9 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message.startsWith("tag not found: "))
           }
         }
         .unsafeRunSync()
@@ -189,7 +201,9 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message.startsWith("tag not found: "))
           }
         }
         .unsafeRunSync()

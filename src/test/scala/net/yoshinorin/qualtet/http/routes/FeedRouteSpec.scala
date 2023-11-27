@@ -6,6 +6,7 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
+import net.yoshinorin.qualtet.domains.feeds.ResponseFeed
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -33,6 +34,9 @@ class FeedRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert response contents count
+
+            val maybeFeeds = unsafeDecode[Seq[ResponseFeed]](response)
+            assert(maybeFeeds.size === 5)
           }
         }
         .unsafeRunSync()

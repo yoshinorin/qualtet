@@ -3,10 +3,12 @@ package net.yoshinorin.qualtet.fixture
 import cats.Monad
 import cats.effect.IO
 import org.http4s.Uri
+import org.http4s.Response
 import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
 import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
+import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.CorsProvider
 import net.yoshinorin.qualtet.cache.CacheModule
@@ -205,5 +207,9 @@ object Fixture {
     requestSeries.foreach { rs =>
       Modules.seriesService.create(rs).unsafeRunSync()
     }
+  }
+
+  def unsafeDecode[T](response: Response[IO])(implicit j: JsonValueCodec[T]) = {
+    response.as[String].unsafeRunSync().decode
   }
 }

@@ -6,7 +6,9 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
-import net.yoshinorin.qualtet.fixture.Fixture.router
+import net.yoshinorin.qualtet.domains.contentTypes.ContentType
+import net.yoshinorin.qualtet.message.Message
+import net.yoshinorin.qualtet.fixture.Fixture.{router, unsafeDecode}
 import org.scalatest.wordspec.AnyWordSpec
 
 import cats.effect.unsafe.implicits.global
@@ -25,6 +27,9 @@ class ContentTypeRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+
+            val maybeContentTypes = unsafeDecode[Seq[ContentType]](response)
+            assert(maybeContentTypes.size === 2)
           }
         }
         .unsafeRunSync()
@@ -37,7 +42,10 @@ class ContentTypeRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("article"))
+
+            val maybeContentType = unsafeDecode[ContentType](response)
+            // assert(maybeContentType.id === "TODO") // TODO: assert id is ULID
+            assert(maybeContentType.name === "article")
           }
         }
         .unsafeRunSync()
@@ -50,7 +58,10 @@ class ContentTypeRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("page"))
+
+            val maybeContentType = unsafeDecode[ContentType](response)
+            // assert(maybeContentType.id === "TODO") // TODO: assert id is ULID
+            assert(maybeContentType.name === "page")
           }
         }
         .unsafeRunSync()
@@ -63,7 +74,9 @@ class ContentTypeRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("NotFound"))
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "Not Found")
           }
         }
         .unsafeRunSync()

@@ -8,6 +8,8 @@ import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.search.ResponseSearchWithCount
+import net.yoshinorin.qualtet.message.Message
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -61,6 +63,12 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             // TODO: assert json
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("contents"))
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("searchRoute"))
+
+            val maybeSearchResult = unsafeDecode[ResponseSearchWithCount](response)
+            assert(maybeSearchResult.count >= 49) // FIXME: Get number of articles for search result with service class and use it for assertion.
+            assert(maybeSearchResult.contents.size === 30)
+            assert(maybeSearchResult.contents.head.path.toString().startsWith("/test/searchRoute-"))
+            assert(maybeSearchResult.contents(29).path.toString().startsWith("/test/searchRoute-"))
           }
         }
         .unsafeRunSync()
@@ -73,7 +81,9 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert JSON
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "SEARCH_QUERY_REQUIRED")
           }
         }
         .unsafeRunSync()
@@ -86,7 +96,9 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert JSON
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "SEARCH_CHAR_LENGTH_TOO_SHORT")
           }
         }
         .unsafeRunSync()
@@ -99,7 +111,9 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert JSON
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "SEARCH_QUERY_REQUIRED")
           }
         }
         .unsafeRunSync()
@@ -112,7 +126,9 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert JSON
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "INVALID_CHARS_INCLUDED")
           }
         }
         .unsafeRunSync()
@@ -125,7 +141,9 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert JSON
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "TOO_MANY_SEARCH_WORDS")
           }
         }
         .unsafeRunSync()

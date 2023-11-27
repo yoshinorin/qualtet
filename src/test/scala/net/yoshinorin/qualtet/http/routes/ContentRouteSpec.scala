@@ -9,11 +9,15 @@ import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.contents.{ContentId, Path, RequestContent}
+import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, Path, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.message.Message
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
+
+import java.time.Instant
+
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.ContentRouteSpec
@@ -45,7 +49,17 @@ class ContentRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Created)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert response
+
+            val maybeContent = unsafeDecode[Content](response)
+            assert(maybeContent.authorId === validAuthor.id)
+            // assert(maybeContent.contentTypeId === 'TODO') TODO: assert contentTypeId
+            assert(maybeContent.htmlContent === "<p>this is a html ContentRouteSpec1<p>")
+            // assert(maybeContent.id) TODO: asset id is ULID
+            assert(maybeContent.path === "/test/ContentRouteSpec1")
+            assert(maybeContent.publishedAt === 1644075206)
+            assert(maybeContent.rawContent === "this is a raw ContentRouteSpec1")
+            assert(maybeContent.title === "this is a ContentRouteSpec1 title")
+            assert(maybeContent.updatedAt === 1644075206)
           }
         }
         .unsafeRunSync()
@@ -72,7 +86,7 @@ class ContentRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Created)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert response
+            // NOTE: no-need to assert response. Because, this test case for `HTTP Header bearer is LowerCase`.
           }
         }
         .unsafeRunSync()
@@ -111,7 +125,9 @@ class ContentRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("contentnotfound"))
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message.startsWith("content not found: "))
           }
         }
         .unsafeRunSync()
@@ -363,6 +379,8 @@ class ContentRouteSpec extends AnyWordSpec {
     }
 
     "be return specific content" in {
+      val now = Instant.now.getEpochSecond
+
       // NOTE: create content and related data for test
       contentService
         .createContentFromRequest(
@@ -375,7 +393,8 @@ class ContentRouteSpec extends AnyWordSpec {
             htmlContent = "<p>this is a html ContentRouteSpec2<p>",
             robotsAttributes = Attributes("noarchive, noimageindex"),
             tags = List("ContentRoute"),
-            externalResources = List()
+            externalResources = List(),
+            publishedAt = 1644075206
           )
         )
         .unsafeRunSync()
@@ -391,7 +410,19 @@ class ContentRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json
+
+            val maybeContent = unsafeDecode[ResponseContent](response)
+            assert(maybeContent.authorName === validAuthor.displayName.toString().toLowerCase())
+            assert(maybeContent.content === "<p>this is a html ContentRouteSpec2<p>")
+            assert(maybeContent.description === "this is a html ContentRouteSpec2")
+            assert(maybeContent.externalResources.isEmpty)
+            assert(maybeContent.length === "this is a html ContentRouteSpec2".size)
+            assert(maybeContent.publishedAt === 1644075206)
+            assert(maybeContent.robotsAttributes === "noarchive, noimageindex")
+            assert(maybeContent.tags.size === 1)
+            assert(maybeContent.tags.head.name === "ContentRoute")
+            assert(maybeContent.title === "this is a ContentRouteSpec2 title")
+            assert(maybeContent.updatedAt >= now)
           }
         }
         .unsafeRunSync()

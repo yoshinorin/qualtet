@@ -10,6 +10,7 @@ import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, RequestSeries}
+import net.yoshinorin.qualtet.message.Message
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -71,7 +72,12 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === Created)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert response
+
+            val maybeSeries = unsafeDecode[Series](response)
+            assert(maybeSeries.name === "example series")
+            // assert(maybeSeries.id === "TODO")  // TODO: assert id is ULID
+            assert(maybeSeries.description.get === "example series description")
+            assert(maybeSeries.title === "example series title")
           }
         }
         .unsafeRunSync()
@@ -119,6 +125,12 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("seriesroute-series"))
+
+            val maybeSeries = unsafeDecode[Series](response)
+            assert(maybeSeries.name === "seriesroute-series")
+            // assert(maybeSeries.id === "TODO")  // TODO: assert id is ULID
+            assert(maybeSeries.description.get === "Series Route Spec Description1")
+            assert(maybeSeries.title === "Series Route Spec")
           }
         }
         .unsafeRunSync()
@@ -131,7 +143,9 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("seriesnotfound"))
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "series not found: not-exists")
           }
         }
         .unsafeRunSync()
@@ -172,7 +186,9 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert JSON
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "name is required")
           }
         }
         .unsafeRunSync()
@@ -195,7 +211,9 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert JSON
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "title is required")
           }
         }
         .unsafeRunSync()

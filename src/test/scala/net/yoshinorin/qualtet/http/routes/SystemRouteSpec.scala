@@ -7,21 +7,22 @@ import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.fixture.Fixture
+import net.yoshinorin.qualtet.ApplicationInfo
+import net.yoshinorin.qualtet.buildinfo.BuildInfo
+import net.yoshinorin.qualtet.config.{HttpSystemEndpointConfig, HttpSystemEndpointMetadata}
+import net.yoshinorin.qualtet.fixture.Fixture.{makeRouter, unsafeDecode}
 
 import cats.effect.unsafe.implicits.global
-import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
-import net.yoshinorin.qualtet.config.HttpSystemEndpointMetadata
 
 // testOnly net.yoshinorin.qualtet.http.routes.SystemRouteSpec
 class SystemRouteSpec extends AnyWordSpec {
 
   val systemRoute: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(enabled = false)))
-  val router = Fixture.makeRouter(systemRoute = systemRoute)
+  val router = makeRouter(systemRoute = systemRoute)
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   val enabledMetadataEndpointSystemRoute: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(enabled = true)))
-  val enabledMetadataEndpointRouter = Fixture.makeRouter(systemRoute = enabledMetadataEndpointSystemRoute)
+  val enabledMetadataEndpointRouter = makeRouter(systemRoute = enabledMetadataEndpointSystemRoute)
   val clientForEnabledMetadataEndpoint: Client[IO] = Client.fromHttpApp(enabledMetadataEndpointRouter.routes.orNotFound)
 
   "SystemRoute" should {
@@ -60,17 +61,13 @@ class SystemRouteSpec extends AnyWordSpec {
             IO {
               assert(response.status === Ok)
               assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("name"))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("version"))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("repository"))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("runtime"))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("vendor"))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("version"))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("build"))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("commit"))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("url"))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("scalaVersion"))
-              assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("sbtVersion"))
+
+              val maybeAppInfo = unsafeDecode[ApplicationInfo](response)
+              assert(maybeAppInfo.name === BuildInfo.name)
+              assert(maybeAppInfo.repository === BuildInfo.repository)
+              assert(maybeAppInfo.version === BuildInfo.version)
+              assert(maybeAppInfo.build.scalaVersion === BuildInfo.scalaVersion)
+              assert(maybeAppInfo.build.sbtVersion === BuildInfo.sbtVersion)
             }
           }
           .unsafeRunSync()

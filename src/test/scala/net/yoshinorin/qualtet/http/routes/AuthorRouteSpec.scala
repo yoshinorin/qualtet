@@ -7,7 +7,8 @@ import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, ResponseAuthor}
-import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, router}
+import net.yoshinorin.qualtet.message.Message
+import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, router, unsafeDecode}
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
@@ -46,7 +47,6 @@ class AuthorRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json & it's count
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
           }
         }
@@ -70,7 +70,6 @@ class AuthorRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json & it's count
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
           }
         }
@@ -84,7 +83,9 @@ class AuthorRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("NotFound"))
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "Not Found")
           }
         }
         .unsafeRunSync()

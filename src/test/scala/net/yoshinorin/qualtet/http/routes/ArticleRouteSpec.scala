@@ -6,11 +6,13 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
+import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.message.Message
 import net.yoshinorin.qualtet.Modules.*
-import net.yoshinorin.qualtet.fixture.Fixture
+import net.yoshinorin.qualtet.fixture.Fixture.{author, router, unsafeDecode}
 import org.scalatest.wordspec.AnyWordSpec
 
 import cats.effect.unsafe.implicits.global
@@ -36,9 +38,9 @@ class ArticleRouteSpec extends AnyWordSpec {
   }
 
   // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(Fixture.author.name.value), rc).unsafeRunSync() }
+  requestContents.foreach { rc => contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync() }
 
-  val client: Client[IO] = Client.fromHttpApp(Fixture.router.routes.orNotFound)
+  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "ArticleRoute" should {
     "be return articles with default query params" in {
@@ -48,8 +50,10 @@ class ArticleRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("count"))
+
+            val maybeArticles = unsafeDecode[ResponseArticleWithCount](response)
+            assert(maybeArticles.count >= 20) // FIXME: get number of all articles and assert it.
+            assert(maybeArticles.articles.size === 10)
           }
         }
         .unsafeRunSync()
@@ -62,8 +66,10 @@ class ArticleRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("count"))
+
+            val maybeArticles = unsafeDecode[ResponseArticleWithCount](response)
+            assert(maybeArticles.count >= 20) // FIXME: get number of all articles and assert it.
+            assert(maybeArticles.articles.size === 5)
           }
         }
         .unsafeRunSync()
@@ -76,8 +82,10 @@ class ArticleRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert json & it's count
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("count"))
+
+            val maybeArticles = unsafeDecode[ResponseArticleWithCount](response)
+            assert(maybeArticles.count >= 20) // FIXME: get number of all articles and assert it.
+            assert(maybeArticles.articles.size === 10)
           }
         }
         .unsafeRunSync()
@@ -90,7 +98,9 @@ class ArticleRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("articlesnotfound"))
+
+            val maybeError = unsafeDecode[Message](response)
+            assert(maybeError.message === "articles not found")
           }
         }
         .unsafeRunSync()
