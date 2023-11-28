@@ -416,7 +416,7 @@ class ContentRouteSpec extends AnyWordSpec {
             assert(maybeContent.content === "<p>this is a html ContentRouteSpec2<p>")
             assert(maybeContent.description === "this is a html ContentRouteSpec2")
             assert(maybeContent.externalResources.isEmpty)
-            assert(maybeContent.length === "this is a html ContentRouteSpec2".size)
+            assert(maybeContent.length === "this is a html ContentRouteSpec2".replaceAll(" ", "").size)
             assert(maybeContent.publishedAt === 1644075206)
             assert(maybeContent.robotsAttributes === "noarchive, noimageindex")
             assert(maybeContent.tags.size === 1)

@@ -228,7 +228,7 @@ class ContentService[M[_]: Monad](
               tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(TagId(x), TagName(y))).map(x => x.distinct).getOrElse(List()),
               description = stripedContent.substring(0, descriptionLength),
               content = x.content,
-              length = stripedContent.length, // FIXME: replace all whitespaces to empty here.
+              length = stripedContent.replaceAll(" ", "").length,
               authorName = x.authorName,
               publishedAt = x.publishedAt,
               updatedAt = x.updatedAt
