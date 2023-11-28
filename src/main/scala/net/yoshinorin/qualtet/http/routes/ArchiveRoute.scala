@@ -9,8 +9,8 @@ import net.yoshinorin.qualtet.domains.archives.ArchiveService
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 import net.yoshinorin.qualtet.syntax.*
 
-class ArchiveRoute[M[_]: Monad](
-  archiveService: ArchiveService[M]
+class ArchiveRoute[F[_]: Monad](
+  archiveService: ArchiveService[F]
 ) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {

@@ -9,8 +9,8 @@ import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, MethodNotAllowedSupport}
 import net.yoshinorin.qualtet.syntax.*
 
-class ArticleRoute[M[_]: Monad](
-  articleService: ArticleService[M]
+class ArticleRoute[F[_]: Monad](
+  articleService: ArticleService[F]
 ) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {

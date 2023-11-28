@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.robots
 
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-trait RobotsRepository[M[_]] {
-  def upsert(data: Robots): M[Int]
-  def delete(contentId: ContentId): M[Unit]
+trait RobotsRepository[F[_]] {
+  def upsert(data: Robots): F[Int]
+  def delete(contentId: ContentId): F[Unit]
 }

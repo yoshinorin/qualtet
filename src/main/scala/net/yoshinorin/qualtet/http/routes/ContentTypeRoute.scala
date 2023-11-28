@@ -9,8 +9,8 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 import net.yoshinorin.qualtet.syntax.*
 
-class ContentTypeRoute[M[_]: Monad](
-  contentTypeService: ContentTypeService[M]
+class ContentTypeRoute[F[_]: Monad](
+  contentTypeService: ContentTypeService[F]
 ) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {

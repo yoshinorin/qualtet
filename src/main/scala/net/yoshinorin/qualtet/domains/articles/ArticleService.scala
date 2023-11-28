@@ -12,10 +12,10 @@ import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.syntax.*
 
-class ArticleService[M[_]: Monad](
-  articleRepository: ArticleRepository[M],
-  contentTypeService: ContentTypeService[M]
-)(using transactor: Transactor[M]) {
+class ArticleService[F[_]: Monad](
+  articleRepository: ArticleRepository[F],
+  contentTypeService: ContentTypeService[F]
+)(using transactor: Transactor[F]) {
 
   def actions(
     contentTypeId: ContentTypeId,

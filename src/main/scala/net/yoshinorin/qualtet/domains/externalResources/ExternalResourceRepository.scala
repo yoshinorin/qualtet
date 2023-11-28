@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.domains.externalResources
 
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-trait ExternalResourceRepository[M[_]] {
-  def bulkUpsert(data: List[ExternalResource]): M[Int]
-  def delete(contentId: ContentId): M[Unit]
-  def fakeRequest(): M[Int]
+trait ExternalResourceRepository[F[_]] {
+  def bulkUpsert(data: List[ExternalResource]): F[Int]
+  def delete(contentId: ContentId): F[Unit]
+  def fakeRequest(): F[Int]
 }

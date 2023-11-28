@@ -8,9 +8,9 @@ import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.domains.Cacheable
 
-class FeedService[M[_]: Monad](
+class FeedService[F[_]: Monad](
   cache: CacheModule[String, ResponseArticleWithCount],
-  articleService: ArticleService[M]
+  articleService: ArticleService[F]
 ) extends Cacheable {
 
   private val cacheKey = "feed-full-cache"

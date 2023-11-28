@@ -8,9 +8,9 @@ import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.syntax.*
 
-class AuthorService[M[_]: Monad](
-  authorRepository: AuthorRepository[M]
-)(using transactor: Transactor[M]) {
+class AuthorService[F[_]: Monad](
+  authorRepository: AuthorRepository[F]
+)(using transactor: Transactor[F]) {
 
   def upsertActions(data: Author): Action[Int] = {
     Continue(authorRepository.upsert(data), Action.done[Int])

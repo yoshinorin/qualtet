@@ -13,10 +13,10 @@ import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, AuthProvider, MethodNotAllowedSupport}
 import net.yoshinorin.qualtet.syntax.*
 
-class TagRoute[M[_]: Monad](
-  authProvider: AuthProvider[M],
-  tagService: TagService[M],
-  articleService: ArticleService[M]
+class TagRoute[F[_]: Monad](
+  authProvider: AuthProvider[F],
+  tagService: TagService[F],
+  articleService: ArticleService[F]
 ) extends MethodNotAllowedSupport {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

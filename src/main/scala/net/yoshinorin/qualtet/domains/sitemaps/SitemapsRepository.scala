@@ -1,5 +1,5 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-trait SitemapsRepository[M[_]] {
-  def get(): M[Seq[Url]]
+trait SitemapsRepository[F[_]] {
+  def get(): F[Seq[Url]]
 }

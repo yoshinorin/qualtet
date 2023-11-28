@@ -13,9 +13,9 @@ import net.yoshinorin.qualtet.http.{AuthProvider, RequestDecoder}
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
-class ContentRoute[M[_]: Monad](
-  authProvider: AuthProvider[M],
-  contentService: ContentService[M]
+class ContentRoute[F[_]: Monad](
+  authProvider: AuthProvider[F],
+  contentService: ContentService[F]
 ) extends RequestDecoder
     with MethodNotAllowedSupport {
 

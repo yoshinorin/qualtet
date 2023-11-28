@@ -6,8 +6,8 @@ import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.series.SeriesId
 
-class ContentSerializingService[M[_]: Monad](
-  contentSerializingRepository: ContentSerializingRepository[M]
+class ContentSerializingService[F[_]: Monad](
+  contentSerializingRepository: ContentSerializingRepository[F]
 ) {
 
   def findBySeriesIdActions(id: SeriesId): Action[Seq[ContentSerializing]] = {

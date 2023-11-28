@@ -10,8 +10,8 @@ import net.yoshinorin.qualtet.domains.search.SearchService
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
-class SearchRoute[M[_]: Monad](
-  searchService: SearchService[M]
+class SearchRoute[F[_]: Monad](
+  searchService: SearchService[F]
 ) extends MethodNotAllowedSupport {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)

@@ -2,10 +2,10 @@ package net.yoshinorin.qualtet.domains.contents
 
 import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
 
-trait ContentRepository[M[_]] {
-  def upsert(data: Content): M[Int]
-  def findById(id: ContentId): M[Option[Content]]
-  def findByPath(path: Path): M[Option[Content]]
-  def findByPathWithMeta(path: Path): M[Option[ResponseContentDbRow]]
-  def delete(id: ContentId): M[Unit]
+trait ContentRepository[F[_]] {
+  def upsert(data: Content): F[Int]
+  def findById(id: ContentId): F[Option[Content]]
+  def findByPath(path: Path): F[Option[Content]]
+  def findByPathWithMeta(path: Path): F[Option[ResponseContentDbRow]]
+  def delete(id: ContentId): F[Unit]
 }

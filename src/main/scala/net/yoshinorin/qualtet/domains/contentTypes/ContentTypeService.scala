@@ -10,10 +10,10 @@ import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.syntax.*
 
-class ContentTypeService[M[_]: Monad](
-  contentRepository: ContentTypeRepository[M],
+class ContentTypeService[F[_]: Monad](
+  contentRepository: ContentTypeRepository[F],
   cache: CacheModule[String, ContentType]
-)(using transactor: Transactor[M])
+)(using transactor: Transactor[F])
     extends Cacheable {
 
   def upsertActions(data: ContentType): Action[Int] = {

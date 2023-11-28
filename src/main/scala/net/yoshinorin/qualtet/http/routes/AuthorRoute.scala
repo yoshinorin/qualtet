@@ -9,8 +9,8 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
-class AuthorRoute[M[_]: Monad](
-  authorService: AuthorService[M]
+class AuthorRoute[F[_]: Monad](
+  authorService: AuthorService[F]
 ) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {

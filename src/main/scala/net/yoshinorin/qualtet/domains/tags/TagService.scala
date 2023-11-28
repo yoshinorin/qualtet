@@ -11,10 +11,10 @@ import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.syntax.*
 
-class TagService[M[_]: Monad](
-  tagRepository: TagRepository[M],
-  contentTaggingService: ContentTaggingService[M]
-)(using transactor: Transactor[M]) {
+class TagService[F[_]: Monad](
+  tagRepository: TagRepository[F],
+  contentTaggingService: ContentTaggingService[F]
+)(using transactor: Transactor[F]) {
 
   def bulkUpsertActions(data: Option[List[Tag]]): Action[Int] = {
     data match {

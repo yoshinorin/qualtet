@@ -11,9 +11,9 @@ import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesService,
 import net.yoshinorin.qualtet.http.{AuthProvider, MethodNotAllowedSupport, RequestDecoder}
 import net.yoshinorin.qualtet.syntax.*
 
-class SeriesRoute[M[_]: Monad](
-  authProvider: AuthProvider[M],
-  seriesService: SeriesService[M]
+class SeriesRoute[F[_]: Monad](
+  authProvider: AuthProvider[F],
+  seriesService: SeriesService[F]
 ) extends RequestDecoder
     with MethodNotAllowedSupport {
 

@@ -10,10 +10,10 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.syntax.*
 import cats.Monad
 
-class ArchiveService[M[_]: Monad](
-  archiveRepository: ArchiveRepository[M],
-  contentTypeService: ContentTypeService[M]
-)(using transactor: Transactor[M]) {
+class ArchiveService[F[_]: Monad](
+  archiveRepository: ArchiveRepository[F],
+  contentTypeService: ContentTypeService[F]
+)(using transactor: Transactor[F]) {
 
   def actions(contentTypeId: ContentTypeId): Action[Seq[ResponseArchive]] = {
     Continue(archiveRepository.get(contentTypeId), Action.done[Seq[ResponseArchive]])

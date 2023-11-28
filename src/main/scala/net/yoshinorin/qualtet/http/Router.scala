@@ -19,22 +19,22 @@ import net.yoshinorin.qualtet.http.routes.{
   TagRoute
 }
 
-class Router[M[_]: Monad](
+class Router[F[_]: Monad](
   corsProvider: CorsProvider,
-  archiveRoute: ArchiveRoute[M],
-  articleRoute: ArticleRoute[M],
-  authorRoute: AuthorRoute[M],
-  authRoute: AuthRoute[M],
-  cacheRoute: CacheRoute[M],
-  contentRoute: ContentRoute[M],
-  contentTypeRoute: ContentTypeRoute[M],
-  feedRoute: FeedRoute[M],
+  archiveRoute: ArchiveRoute[F],
+  articleRoute: ArticleRoute[F],
+  authorRoute: AuthorRoute[F],
+  authRoute: AuthRoute[F],
+  cacheRoute: CacheRoute[F],
+  contentRoute: ContentRoute[F],
+  contentTypeRoute: ContentTypeRoute[F],
+  feedRoute: FeedRoute[F],
   homeRoute: HomeRoute,
-  searchRoute: SearchRoute[M],
-  seriesRoute: SeriesRoute[M],
-  sitemapRoute: SitemapRoute[M],
+  searchRoute: SearchRoute[F],
+  seriesRoute: SeriesRoute[F],
+  sitemapRoute: SitemapRoute[F],
   systemRoute: SystemRoute,
-  tagRoute: TagRoute[M]
+  tagRoute: TagRoute[F]
 ) {
 
   def withCors = corsProvider.httpRouter(routes)

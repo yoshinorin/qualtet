@@ -1,5 +1,5 @@
 package net.yoshinorin.qualtet.domains.search
 
-trait SearchRepository[M[_]] {
-  def search(query: List[String]): M[Seq[(Int, ResponseSearch)]]
+trait SearchRepository[F[_]] {
+  def search(query: List[String]): F[Seq[(Int, ResponseSearch)]]
 }

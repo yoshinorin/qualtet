@@ -10,8 +10,8 @@ import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
-class FeedRoute[M[_]: Monad](
-  feedService: FeedService[M]
+class FeedRoute[F[_]: Monad](
+  feedService: FeedService[F]
 ) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {

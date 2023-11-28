@@ -17,18 +17,18 @@ import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesService}
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.syntax.*
 
-class ContentService[M[_]: Monad](
-  contentRepository: ContentRepository[M],
-  tagService: TagService[M],
-  contentTaggingService: ContentTaggingService[M],
-  robotsService: RobotsService[M],
-  externalResourceService: ExternalResourceService[M],
-  authorService: AuthorService[M],
-  contentTypeService: ContentTypeService[M],
-  seriesService: SeriesService[M],
-  contentSerializingService: ContentSerializingService[M]
+class ContentService[F[_]: Monad](
+  contentRepository: ContentRepository[F],
+  tagService: TagService[F],
+  contentTaggingService: ContentTaggingService[F],
+  robotsService: RobotsService[F],
+  externalResourceService: ExternalResourceService[F],
+  authorService: AuthorService[F],
+  contentTypeService: ContentTypeService[F],
+  seriesService: SeriesService[F],
+  contentSerializingService: ContentSerializingService[F]
 )(using
-  transactor: Transactor[M]
+  transactor: Transactor[F]
 ) {
 
   def upsertActions(data: Content): Action[Int] = {

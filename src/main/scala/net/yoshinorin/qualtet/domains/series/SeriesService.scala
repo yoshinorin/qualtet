@@ -10,10 +10,10 @@ import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID
 
-class SeriesService[M[_]: Monad](
-  seriesRepository: SeriesRepository[M],
-  articleService: ArticleService[M]
-)(using transactor: Transactor[M]) {
+class SeriesService[F[_]: Monad](
+  seriesRepository: SeriesRepository[F],
+  articleService: ArticleService[F]
+)(using transactor: Transactor[F]) {
 
   def upsertActions(data: Series): Action[Int] = {
     Continue(seriesRepository.upsert(data), Action.done[Int])

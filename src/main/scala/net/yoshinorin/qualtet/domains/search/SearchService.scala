@@ -13,10 +13,10 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.tailrec
 
-class SearchService[M[_]: Monad](
+class SearchService[F[_]: Monad](
   searchConfig: SearchConfig,
-  searchRepository: SearchRepository[M]
-)(using transactor: Transactor[M]) {
+  searchRepository: SearchRepository[F]
+)(using transactor: Transactor[F]) {
 
   def actions(query: List[String]): Action[Seq[(Int, ResponseSearch)]] = {
     Continue(searchRepository.search(query), Action.done[Seq[(Int, ResponseSearch)]])

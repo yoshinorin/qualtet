@@ -9,9 +9,9 @@ import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.http.{AuthProvider, MethodNotAllowedSupport}
 
-class CacheRoute[M[_]: Monad](
-  authProvider: AuthProvider[M],
-  cacheService: CacheService[M]
+class CacheRoute[F[_]: Monad](
+  authProvider: AuthProvider[F],
+  cacheService: CacheService[F]
 ) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = authProvider.authenticate(AuthedRoutes.of {

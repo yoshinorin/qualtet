@@ -111,20 +111,20 @@ object Fixture {
     tagRoute
   )
 
-  def makeRouter[M[_]: Monad](
-    archiveRoute: ArchiveRoute[M] = archiveRoute,
-    articleRoute: ArticleRoute[M] = articleRoute,
-    authorRoute: AuthorRoute[M] = authorRoute,
-    authRoute: AuthRoute[M] = authRoute,
-    cacheRoute: CacheRoute[M] = cacheRoute,
-    contentRoute: ContentRoute[M] = contentRoute,
-    contentTypeRoute: ContentTypeRoute[M] = contentTypeRoute,
-    feedRoute: FeedRoute[M] = feedRoute,
+  def makeRouter[F[_]: Monad](
+    archiveRoute: ArchiveRoute[F] = archiveRoute,
+    articleRoute: ArticleRoute[F] = articleRoute,
+    authorRoute: AuthorRoute[F] = authorRoute,
+    authRoute: AuthRoute[F] = authRoute,
+    cacheRoute: CacheRoute[F] = cacheRoute,
+    contentRoute: ContentRoute[F] = contentRoute,
+    contentTypeRoute: ContentTypeRoute[F] = contentTypeRoute,
+    feedRoute: FeedRoute[F] = feedRoute,
     homeRoute: HomeRoute = homeRoute,
-    searchRoute: SearchRoute[M] = searchRoute,
-    seriesRoute: SeriesRoute[M] = seriesRoute,
-    sitemapRoute: SitemapRoute[M] = sitemapRoute,
-    tagRoute: TagRoute[M] = tagRoute,
+    searchRoute: SearchRoute[F] = searchRoute,
+    seriesRoute: SeriesRoute[F] = seriesRoute,
+    sitemapRoute: SitemapRoute[F] = sitemapRoute,
+    tagRoute: TagRoute[F] = tagRoute,
     systemRoute: SystemRoute = systemRoute
   ) = new net.yoshinorin.qualtet.http.Router(
     corsProvider = corsProvider,
