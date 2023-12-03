@@ -14,7 +14,7 @@ import net.yoshinorin.qualtet.syntax.*
 class TagService[F[_]: Monad](
   tagRepository: TagRepository[F],
   contentTaggingService: ContentTaggingService[F]
-)(using transactor: Transactor[F]) {
+)(using transactor: Transactor[F, IO]) {
 
   def bulkUpsertActions(data: Option[List[Tag]]): Action[Int] = {
     data match {

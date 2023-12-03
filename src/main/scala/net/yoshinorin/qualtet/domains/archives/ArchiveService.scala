@@ -13,7 +13,7 @@ import cats.Monad
 class ArchiveService[F[_]: Monad](
   archiveRepository: ArchiveRepository[F],
   contentTypeService: ContentTypeService[F]
-)(using transactor: Transactor[F]) {
+)(using transactor: Transactor[F, IO]) {
 
   def actions(contentTypeId: ContentTypeId): Action[Seq[ResponseArchive]] = {
     Continue(archiveRepository.get(contentTypeId), Action.done[Seq[ResponseArchive]])

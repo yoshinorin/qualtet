@@ -28,7 +28,7 @@ class ContentService[F[_]: Monad](
   seriesService: SeriesService[F],
   contentSerializingService: ContentSerializingService[F]
 )(using
-  transactor: Transactor[F]
+  transactor: Transactor[F, IO]
 ) {
 
   def upsertActions(data: Content): Action[Int] = {

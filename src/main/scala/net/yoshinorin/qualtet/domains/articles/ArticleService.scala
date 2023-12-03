@@ -15,7 +15,7 @@ import net.yoshinorin.qualtet.syntax.*
 class ArticleService[F[_]: Monad](
   articleRepository: ArticleRepository[F],
   contentTypeService: ContentTypeService[F]
-)(using transactor: Transactor[F]) {
+)(using transactor: Transactor[F, IO]) {
 
   def actions(
     contentTypeId: ContentTypeId,

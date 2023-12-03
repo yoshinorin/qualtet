@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.syntax.*
 class ContentTypeService[F[_]: Monad](
   contentRepository: ContentTypeRepository[F],
   cache: CacheModule[String, ContentType]
-)(using transactor: Transactor[F])
+)(using transactor: Transactor[F, IO])
     extends Cacheable {
 
   def upsertActions(data: ContentType): Action[Int] = {

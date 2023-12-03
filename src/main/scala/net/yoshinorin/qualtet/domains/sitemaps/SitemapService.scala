@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.Cacheable
 class SitemapService[F[_]: Monad](
   sitemapRepository: SitemapsRepository[F],
   cache: CacheModule[String, Seq[Url]]
-)(using transactor: Transactor[F])
+)(using transactor: Transactor[F, IO])
     extends Cacheable {
 
   private val cacheKey = "sitemaps-full-cache"

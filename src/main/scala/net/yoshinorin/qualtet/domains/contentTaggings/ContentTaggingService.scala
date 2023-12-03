@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.infrastructure.db.Transactor
 
 class ContentTaggingService[F[_]: Monad](
   contentTaggingRepository: ContentTaggingRepository[F]
-)(using transactor: Transactor[F]) {
+)(using transactor: Transactor[F, IO]) {
 
   def findByTagIdActions(id: TagId): Action[Seq[ContentTagging]] = {
     Continue(contentTaggingRepository.findByTagId(id), Action.done[Seq[ContentTagging]])

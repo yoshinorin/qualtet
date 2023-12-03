@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 class AuthorService[F[_]: Monad](
   authorRepository: AuthorRepository[F]
-)(using transactor: Transactor[F]) {
+)(using transactor: Transactor[F, IO]) {
 
   def upsertActions(data: Author): Action[Int] = {
     Continue(authorRepository.upsert(data), Action.done[Int])

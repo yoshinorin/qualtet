@@ -13,7 +13,7 @@ import wvlet.airframe.ulid.ULID
 class SeriesService[F[_]: Monad](
   seriesRepository: SeriesRepository[F],
   articleService: ArticleService[F]
-)(using transactor: Transactor[F]) {
+)(using transactor: Transactor[F, IO]) {
 
   def upsertActions(data: Series): Action[Int] = {
     Continue(seriesRepository.upsert(data), Action.done[Int])

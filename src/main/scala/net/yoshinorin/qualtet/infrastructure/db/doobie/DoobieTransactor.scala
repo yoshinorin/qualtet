@@ -7,11 +7,12 @@ import doobie.*
 import doobie.implicits.*
 import doobie.util.transactor.Transactor.Aux
 import cats.effect.*
+import cats.effect.IO
 import net.yoshinorin.qualtet.actions.{Action, Continue, Done}
 import net.yoshinorin.qualtet.config.DBConfig
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 
-class DoobieTransactor(config: DBConfig) extends Transactor[ConnectionIO] {
+class DoobieTransactor(config: DBConfig) extends Transactor[ConnectionIO, IO] {
 
   val executors: ExecutorService = Executors.newCachedThreadPool()
   val executionContexts: ExecutionContextExecutor = scala.concurrent.ExecutionContext.fromExecutor(executors)

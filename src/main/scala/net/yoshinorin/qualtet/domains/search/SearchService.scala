@@ -16,7 +16,7 @@ import scala.annotation.tailrec
 class SearchService[F[_]: Monad](
   searchConfig: SearchConfig,
   searchRepository: SearchRepository[F]
-)(using transactor: Transactor[F]) {
+)(using transactor: Transactor[F, IO]) {
 
   def actions(query: List[String]): Action[Seq[(Int, ResponseSearch)]] = {
     Continue(searchRepository.search(query), Action.done[Seq[(Int, ResponseSearch)]])
