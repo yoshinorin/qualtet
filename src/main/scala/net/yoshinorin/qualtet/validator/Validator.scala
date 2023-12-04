@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.validator
 
+import cats.Monad
 import cats.data.EitherT
-import cats.effect.IO
 
 object Validator {
 
@@ -11,11 +11,11 @@ object Validator {
    * @param fail Instance for Fail.
    * @return validation result with EitherT
    */
-  def validate[A, F](a: A)(cond: A => Boolean)(fail: F): EitherT[IO, F, A] = {
+  def validate[A, B, F[_]: Monad](a: A)(cond: A => Boolean)(fail: B): EitherT[F, B, A] = {
     if (cond(a)) {
-      EitherT.right(IO(a))
+      EitherT.right(Monad[F].pure(a))
     } else {
-      EitherT.left(IO(fail))
+      EitherT.left(Monad[F].pure(fail))
     }
   }
 
@@ -27,11 +27,11 @@ object Validator {
    * @param fail Instance for Fail.
    * @return validation result with EitherT
    */
-  def validateUnless[A, F](a: A)(cond: A => Boolean)(fail: F): EitherT[IO, F, A] = {
+  def validateUnless[A, B, F[_]: Monad](a: A)(cond: A => Boolean)(fail: B): EitherT[F, B, A] = {
     if (cond(a)) {
-      EitherT.left(IO(fail))
+      EitherT.left(Monad[F].pure(fail))
     } else {
-      EitherT.right(IO(a))
+      EitherT.right(Monad[F].pure(a))
     }
   }
 

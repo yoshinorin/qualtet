@@ -83,9 +83,9 @@ class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair
         IO(Left(t))
       case Right(jc) => {
         (for {
-          _ <- jc.toEitherIO(x => x.aud === config.aud)(Unauthorized())
-          _ <- jc.toEitherIO(x => x.iss === config.iss)(Unauthorized())
-          result <- jc.toEitherIO(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
+          _ <- jc.toEitherF(x => x.aud === config.aud)(Unauthorized())
+          _ <- jc.toEitherF(x => x.iss === config.iss)(Unauthorized())
+          result <- jc.toEitherF(x => x.exp > Instant.now.getEpochSecond)(Unauthorized())
         } yield result).value
       }
     }
