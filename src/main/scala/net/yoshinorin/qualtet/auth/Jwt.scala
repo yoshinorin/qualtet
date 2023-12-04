@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.auth
 
-import cats.effect.IO
+import cats.Monad
 import cats.implicits.catsSyntaxEq
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
@@ -72,7 +72,7 @@ class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair
    * @param jwtString String of JWT
    * @return JwtClaim
    */
-  def decode(jwtString: String): IO[Either[Throwable, JwtClaim]] = {
+  def decode[F[_]: Monad](jwtString: String): F[Either[Throwable, JwtClaim]] = {
     (for {
       _ <- verify(jwtString)
       maybeJwtClaim <- pdi.jwt.Jwt.decodeRaw(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
@@ -80,7 +80,7 @@ class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair
     } yield jwtClaim) match {
       case Left(t) =>
         logger.error(t.getMessage)
-        IO(Left(t))
+        Monad[F].pure(Left(t))
       case Right(jc) => {
         (for {
           _ <- jc.toEitherF(x => x.aud === config.aud)(Unauthorized())

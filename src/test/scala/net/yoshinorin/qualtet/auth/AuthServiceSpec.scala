@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.auth
 
+import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
 import net.yoshinorin.qualtet.Modules.*
@@ -20,7 +21,7 @@ class AuthServiceSpec extends AnyWordSpec {
 
     "be generate token" in {
       val token = authService.generateToken(RequestToken(a.id, "pass")).unsafeRunSync().token
-      assert(jwtInstance.decode(token).unsafeRunSync().isRight)
+      assert(jwtInstance.decode[IO](token).unsafeRunSync().isRight)
     }
 
     "be find an author from JWT string" in {
