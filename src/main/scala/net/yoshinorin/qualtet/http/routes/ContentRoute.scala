@@ -56,7 +56,7 @@ class ContentRoute[F[_]: Monad](
             Created(createdContent.asJson, `Content-Type`(MediaType.application.json))
           }
       }
-    }.handleErrorWith(_.logWithStackTrace.andResponse)
+    }.handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   private[http] def delete(id: String): IO[Response[IO]] = {
@@ -64,7 +64,7 @@ class ContentRoute[F[_]: Monad](
       _ <- contentService.delete(ContentId(id))
       _ = logger.info(s"deleted content: ${id}")
       response <- NoContent()
-    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
+    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   def get(path: String): IO[Response[IO]] = {
@@ -73,7 +73,7 @@ class ContentRoute[F[_]: Monad](
       maybeContent <- contentService.findByPathWithMeta(Path(s"/${path}"))
     } yield maybeContent)
       .flatMap(_.asResponse)
-      .handleErrorWith(_.logWithStackTrace.andResponse)
+      .handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
 }

@@ -46,7 +46,7 @@ class SeriesRoute[F[_]: Monad](
             Created(createdSeries.asJson, `Content-Type`(MediaType.application.json))
           }
       }
-    }.handleErrorWith(_.logWithStackTrace.andResponse)
+    }.handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   // series
@@ -54,14 +54,14 @@ class SeriesRoute[F[_]: Monad](
     (for {
       series <- seriesService.getAll
       response <- Ok(series.asJson, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
+    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   private[http] def get(name: String): IO[Response[IO]] = {
     (for {
       seriesWithArticles <- seriesService.get(SeriesName(name))
       response <- Ok(seriesWithArticles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
+    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
 }

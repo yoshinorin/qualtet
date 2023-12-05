@@ -28,7 +28,7 @@ class SearchRoute[F[_]: Monad](
     (for {
       searchResult <- searchService.search(query)
       response <- Ok(searchResult.asJson, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.logWithStackTrace.andResponse)
+    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
 }
