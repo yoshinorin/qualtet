@@ -18,6 +18,7 @@ paths:
         "**NOTE:** This API deleted in version `2.10`."
       tags:
         - status
+      deprecated: true
       responses:
         200:
           description: Response when Success
