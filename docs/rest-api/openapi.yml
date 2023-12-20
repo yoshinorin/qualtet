@@ -17,8 +17,9 @@ info:
     | `X-Response-Time` | number | Always set by Qualtet. Response time (ms) |
   version: v2.11.0
 externalDocs:
-  description: Source code
-  url: 'https://github.com/yoshinorin/qualtet'
+  description: |
+    - Website
+  url: 'https://yoshinorin.github.io/qualtet/docs/'
 servers:
   - url: http://example.com/
 paths:
