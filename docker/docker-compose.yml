@@ -30,6 +30,7 @@ services:
       QUALTET_DB_USER: root
       QUALTET_DB_PASSWORD: pass
       QUALTET_HTTP_BIND_ADDRESS: 0.0.0.0
+      QUALTET_HTTP_ENDPOINT_SYSTEM_METADATA_ENABLED: true
       QUALTET_HTTP_PORT: 9001
       QUALTET_JWT_ISS: "http://localhost:9001"
       QUALTET_JWT_AUD: "qualtet_dev_1111"
