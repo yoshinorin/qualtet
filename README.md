@@ -16,6 +16,7 @@
 | Project | Description |
 |---|---|
 |[Qualtet](https://github.com/yoshinorin/qualtet)|API-based blogging system (server-side).|
+|[Qualtet-mock](https://github.com/yoshinorin/qualtet-mock)| Mock server of [Qualtet](https://github.com/yoshinorin/qualtet). Create for [Quintet](https://github.com/yoshinorin/quintet)'s E2E test.|
 |[Qualtet-CLI](https://github.com/yoshinorin/qualtet-cli)|A set of wrappers that call the APIs of [Hexo](https://github.com/hexojs/hexo) and [Qualtet](https://github.com/yoshinorin/qualtet).|
 |[Quintet](https://github.com/yoshinorin/quintet)|The front end for Qualtet.|
 
