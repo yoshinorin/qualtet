@@ -2,7 +2,7 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.27.1"
+  val jsoniterVersion = "2.27.3"
   val doobieVersion = "1.0.0-RC5"
   val jwtScalaVersion = "9.4.5"
   val flywayVersion = "10.4.1"
@@ -12,7 +12,7 @@ object Dependencies {
   val dependencies = Seq(
     "com.typesafe" % "config" % "1.4.3",
     // NOTE: doobie 1.0.0-RC4 and http4s 1.0.0-M40 dependes on cats-effect 3.5.1
-    "org.typelevel" %% "cats-effect" % "3.5.2",
+    "org.typelevel" %% "cats-effect" % "3.5.3",
     "org.typelevel" %% "log4cats-core" % log4catsVersion,
     "org.typelevel" %% "log4cats-slf4j" % log4catsVersion,
     "org.http4s" %% "http4s-dsl" % http4sVersion,
@@ -25,7 +25,7 @@ object Dependencies {
     "org.mariadb.jdbc" % "mariadb-java-client" % "3.3.2",
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "23.12.1",
+    "org.wvlet.airframe" %% "airframe-ulid" % "24.1.0",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.1.8",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
@@ -33,8 +33,8 @@ object Dependencies {
     "net.logstash.logback" % "logstash-logback-encoder" % "7.4",
     "org.codehaus.janino" % "janino" % "3.1.11",
     "org.springframework.security" % "spring-security-core" % "6.2.1",
-    "org.slf4j" % "slf4j-api" % "2.0.10",
+    "org.slf4j" % "slf4j-api" % "2.0.11",
     "org.scalatest" %% "scalatest" % "3.2.17" % "test",
-    "org.mockito" % "mockito-core" % "5.8.0" % "test"
+    "org.mockito" % "mockito-core" % "5.9.0" % "test"
   )
 }
