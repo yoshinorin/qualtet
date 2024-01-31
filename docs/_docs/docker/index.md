@@ -11,7 +11,7 @@ Qualtet provides docker image.
 
 ## Example docker-compose.yml
 
-Please see [docker-compose.yml](https://github.com/yoshinorin/qualtet/blob/master/docker/docker-compose.yml)
+Please see [docker-compose.yml](https://github.com/yoshinorin/qualtet/blob/master/docker/docker-compose.example.yml)
 
 ## Environment variables
 
