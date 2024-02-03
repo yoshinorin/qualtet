@@ -64,7 +64,7 @@ Please see [releases page](./docs/_docs/releases/index.md).
 |[cats-effect](https://github.com/typelevel/cats-effect)| Pure asynchronous runtime |
 |[http4s](https://github.com/http4s/http4s)| HTTP Server |
 |[jsoniter-scala](https://github.com/plokhotnyuk/jsoniter-scala)| JSON codecs |
-|[jwt-scalajwt-scala](https://github.com/jwt-scala/jwt-scala)| JWT support |
+|[jwt-scala](https://github.com/jwt-scala/jwt-scala)| JWT support |
 |[doobie](https://github.com/tpolecat/doobie)| JDBC Layer |
 |[airframe-ulid](https://github.com/wvlet/airframe/)| ULID Generator |
 |[caffeine](https://github.com/ben-manes/caffeine)| Caching library |
