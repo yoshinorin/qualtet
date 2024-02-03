@@ -60,26 +60,6 @@ class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO]
         )
     }
 
-  given contentDbRawWithOptionRead: Read[Option[ResponseContentDbRow]] =
-    Read[(String, String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
-      case (id, title, robotsAttributes, externalResourceKindKeys, externalResourceKindValues, tagIds, tagNames, content, authorName, publishedAt, updatedAt) =>
-        Some(
-          ResponseContentDbRow(
-            ContentId(id),
-            title,
-            Attributes(robotsAttributes),
-            externalResourceKindKeys,
-            externalResourceKindValues,
-            tagIds,
-            tagNames,
-            content,
-            AuthorName(authorName),
-            publishedAt,
-            updatedAt
-          )
-        )
-    }
-
   given contentWrite: Write[Content] =
     Write[(String, String, String, String, String, String, String, Long, Long)].contramap(c =>
       (
@@ -106,8 +86,9 @@ class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO]
     ContentQuery.findByPath(path).option
   }
   override def findByPathWithMeta(path: Path): ConnectionIO[Option[ResponseContentDbRow]] = {
-    // TODO: fix 500 if content is none
-    ContentQuery.findByPathWithMeta(path).unique
+    // NOTE: use `.option` instead of `.query[Option[T]].unique`
+    //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
+    ContentQuery.findByPathWithMeta(path).option
   }
   override def delete(id: ContentId): ConnectionIO[Unit] = {
     ContentQuery.delete(id).option.map(_ => ())

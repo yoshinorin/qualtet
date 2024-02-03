@@ -37,9 +37,7 @@ object ContentQuery {
       .query[Content]
   }
 
-  def findByPathWithMeta(path: Path)(implicit contentRead: Read[Option[ResponseContentDbRow]]): Query0[Option[ResponseContentDbRow]] = {
-    // NOTE: Do not use `.option` use `.query[Option[T]].unique` instead
-    //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
+  def findByPathWithMeta(path: Path)(implicit contentRead: Read[ResponseContentDbRow]): Query0[ResponseContentDbRow] = {
     sql"""
        SELECT
          contents.id AS id,
@@ -67,8 +65,10 @@ object ContentQuery {
          contents_tagging.tag_id = tags.id
        WHERE
          path = ${path.value}
+       HAVING
+   	     COUNT(*) > 0
     """
-      .query[Option[ResponseContentDbRow]]
+      .query[ResponseContentDbRow]
   }
 
 }

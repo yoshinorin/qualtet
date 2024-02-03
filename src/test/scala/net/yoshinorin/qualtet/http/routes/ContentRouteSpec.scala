@@ -439,8 +439,6 @@ class ContentRouteSpec extends AnyWordSpec {
 
     // 401 Invalid JWT with POST
 
-    /* TODO
-      The current source code returns 500. But should be return 404.
     "be return 404 with non-trailing slash" in {
       client
         .run(
@@ -474,7 +472,6 @@ class ContentRouteSpec extends AnyWordSpec {
         }
         .unsafeRunSync()
     }
-     */
 
     "return method not allowed" in {
       client
