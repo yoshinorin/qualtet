@@ -58,6 +58,7 @@ class SearchService[F[_]: Monad](
   }
 
   @tailrec
+  @SuppressWarnings(Array("org.wartremover.warts.SeqApply"))
   private def substrRecursively(sentence: String, idxes: Seq[Points], current: Int = 0, acc: String = ""): String = {
     if (idxes.sizeIs > current) {
       val currentIdx = idxes(current)
