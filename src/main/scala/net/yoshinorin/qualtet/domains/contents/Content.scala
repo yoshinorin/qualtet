@@ -72,9 +72,9 @@ final case class RequestContent(
       tags = tags,
       series = series,
       path = path,
-      title = title.trimOrThrow(BadRequest("title required.")),
-      rawContent = rawContent.trimOrThrow(BadRequest("rawContent required.")),
-      htmlContent = htmlContent.trimOrThrow(BadRequest("htmlContent required.")),
+      title = title.trimOrThrow(BadRequest(detail = "title required.")),
+      rawContent = rawContent.trimOrThrow(BadRequest(detail = "rawContent required.")),
+      htmlContent = htmlContent.trimOrThrow(BadRequest(detail = "htmlContent required.")),
       publishedAt = publishedAt,
       updatedAt = updatedAt
     )
@@ -105,9 +105,9 @@ object RequestContent {
       tags = tags,
       series = series,
       path = path,
-      title = title.trimOrThrow(BadRequest("title required.")),
-      rawContent = rawContent.trimOrThrow(BadRequest("rawContent required.")),
-      htmlContent = htmlContent.trimOrThrow(BadRequest("htmlContent required.")),
+      title = title.trimOrThrow(BadRequest(detail = "title required.")),
+      rawContent = rawContent.trimOrThrow(BadRequest(detail = "rawContent required.")),
+      htmlContent = htmlContent.trimOrThrow(BadRequest(detail = "htmlContent required.")),
       publishedAt = publishedAt,
       updatedAt = updatedAt
     )

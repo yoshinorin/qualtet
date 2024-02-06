@@ -38,12 +38,12 @@ class SeriesService[F[_]: Monad](
       case Some(s: Series) =>
         for {
           _ <- transactor.transact(upsertActions(Series(s.id, s.name, data.title, data.description)))
-          s <- this.findByName(data.name).throwIfNone(NotFound("series not found"))
+          s <- this.findByName(data.name).throwIfNone(NotFound(detail = "series not found"))
         } yield s
       case None =>
         for {
           _ <- transactor.transact(upsertActions(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.title, data.description)))
-          s <- this.findByName(data.name).throwIfNone(NotFound("series not found"))
+          s <- this.findByName(data.name).throwIfNone(NotFound(detail = "series not found"))
         } yield s
     }
   }
@@ -60,7 +60,7 @@ class SeriesService[F[_]: Monad](
 
   def get(name: SeriesName): IO[ResponseSeries] = {
     for {
-      series <- transactor.transact(findByNameActions(name)).throwIfNone(NotFound(s"series not found: ${name.value}"))
+      series <- transactor.transact(findByNameActions(name)).throwIfNone(NotFound(detail = s"series not found: ${name.value}"))
       seriesWithArticles <- articleService.getBySeriesName(series.name)
     } yield {
       ResponseSeries(series.id, series.name, series.title, series.description, seriesWithArticles.articles)

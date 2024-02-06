@@ -67,8 +67,8 @@ class ContentService[F[_]: Monad](
     }
 
     for {
-      a <- authorService.findByName(authorName).throwIfNone(UnprocessableEntity(s"user not found: ${request.contentType}"))
-      c <- contentTypeService.findByName(request.contentType).throwIfNone(UnprocessableEntity(s"content-type not found: ${request.contentType}"))
+      a <- authorService.findByName(authorName).throwIfNone(UnprocessableEntity(detail = s"user not found: ${request.contentType}"))
+      c <- contentTypeService.findByName(request.contentType).throwIfNone(UnprocessableEntity(detail = s"content-type not found: ${request.contentType}"))
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
         case None => ContentId.apply()
@@ -81,7 +81,7 @@ class ContentService[F[_]: Monad](
         case Some(seriesName) =>
           seriesService.findByName(seriesName).flatMap { x =>
             x match
-              case None => IO.raiseError(UnprocessableEntity(s"series not found: ${seriesName}"))
+              case None => IO.raiseError(UnprocessableEntity(detail = s"series not found: ${seriesName}"))
               case Some(s) => IO(Option(ContentSerializing(s.id, contentId)))
           }
       }
@@ -173,7 +173,7 @@ class ContentService[F[_]: Monad](
     )
 
     for {
-      _ <- this.findById(id).throwIfNone(NotFound(s"content not found: ${id}"))
+      _ <- this.findById(id).throwIfNone(NotFound(detail = s"content not found: ${id}"))
       _ <- transactor.transact4[Unit, Unit, Unit, Unit](queries)
     } yield ()
   }

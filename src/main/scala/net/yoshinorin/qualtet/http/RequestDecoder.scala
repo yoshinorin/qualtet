@@ -23,7 +23,7 @@ trait RequestDecoder {
           case t: Fail => Left(t)
           case t: JsonReaderException =>
             // TODO: consider error message
-            Left(Fail.BadRequest(t.getMessage()))
+            Left(Fail.BadRequest(detail = t.getMessage()))
           case _ => Left(InternalServerError())
         }
     }

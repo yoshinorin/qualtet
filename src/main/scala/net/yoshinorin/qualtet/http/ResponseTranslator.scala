@@ -15,12 +15,12 @@ object ResponseTranslator {
 
   private[this] def failToResponse(f: Fail): IO[Response[IO]] = {
     f match {
-      case Fail.NotFound(message) => NotFound(Message(message).asJson, `Content-Type`(MediaType.application.json))
-      case Fail.Unauthorized(message) => Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
-      case Fail.UnprocessableEntity(message) => UnprocessableEntity(Message(message).asJson, `Content-Type`(MediaType.application.json))
-      case Fail.BadRequest(message) => BadRequest(Message(message).asJson, `Content-Type`(MediaType.application.json))
-      case Fail.Forbidden(message) => Forbidden(Message(message).asJson, `Content-Type`(MediaType.application.json))
-      case Fail.InternalServerError(message) => InternalServerError(Message(message).asJson, `Content-Type`(MediaType.application.json))
+      case e: Fail.NotFound => NotFound(Message(e.detail).asJson, `Content-Type`(MediaType.application.json))
+      case e: Fail.Unauthorized => Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
+      case e: Fail.UnprocessableEntity => UnprocessableEntity(Message(e.detail).asJson, `Content-Type`(MediaType.application.json))
+      case e: Fail.BadRequest => BadRequest(Message(e.detail).asJson, `Content-Type`(MediaType.application.json))
+      case e: Fail.Forbidden => Forbidden(Message(e.detail).asJson, `Content-Type`(MediaType.application.json))
+      case e: Fail.InternalServerError => InternalServerError(Message(e.title).asJson, `Content-Type`(MediaType.application.json))
     }
   }
 

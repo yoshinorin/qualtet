@@ -52,13 +52,13 @@ class ArticleService[F[_]: Monad](
     queryParam: ArticlesQueryParameter
   )(f: (ContentTypeId, A, ArticlesQueryParameter) => Action[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
-      c <- contentTypeService.findByName("article").throwIfNone(NotFound(s"content-type not found: article"))
+      c <- contentTypeService.findByName("article").throwIfNone(NotFound(detail = "content-type not found: article"))
       articlesWithCount <- transactor.transact(f(c.id, data, queryParam))
     } yield
       if (articlesWithCount.nonEmpty) {
         ResponseArticleWithCount(articlesWithCount.map(_._1).headOption.getOrElse(0), articlesWithCount.map(_._2))
       } else {
-        throw NotFound("articles not found")
+        throw NotFound(detail = "articles not found")
       }
   }
 

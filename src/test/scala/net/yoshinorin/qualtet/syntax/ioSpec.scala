@@ -12,13 +12,13 @@ class IoSpec extends AnyWordSpec {
 
     "not be throw if not None" in {
       val i: String => IO[Option[String]] = a => IO(Some(a))
-      assert(i("something").throwIfNone(UnprocessableEntity("unprocessable!!")).unsafeRunSync() === "something")
+      assert(i("something").throwIfNone(UnprocessableEntity(detail = "unprocessable!!")).unsafeRunSync() === "something")
     }
 
     "be thrown if None" in {
       val i: Option[String] => IO[Option[String]] = _ => IO(None)
       assertThrows[UnprocessableEntity] {
-        i(None).throwIfNone(UnprocessableEntity("unprocessable!!")).unsafeRunSync()
+        i(None).throwIfNone(UnprocessableEntity(detail = "unprocessable!!")).unsafeRunSync()
       }
     }
 

@@ -16,12 +16,12 @@ object Attributes extends ValueExtender[Attributes] {
 
   def apply(value: String): Attributes = {
     if (value.endsWith(",")) {
-      throw UnprocessableEntity("robots.attributes is invalid.")
+      throw UnprocessableEntity(detail = "robots.attributes is invalid.")
     }
 
     val attributes = value.split(",").map(x => x.trim)
     if (attributes.diff(allowedAttributes).length > 0) {
-      throw UnprocessableEntity("robots.attributes is invalid.")
+      throw UnprocessableEntity(detail = "robots.attributes is invalid.")
     } else {
       attributes.sorted.mkString(", ")
     }

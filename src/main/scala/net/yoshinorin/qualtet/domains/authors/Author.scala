@@ -21,7 +21,7 @@ object AuthorName extends ValueExtender[AuthorName] {
 
   def apply(value: String): AuthorName = {
     if (!authorNamePattern.matches(value)) {
-      throw UnprocessableEntity("authorName must be number, alphabet and underscore.")
+      throw UnprocessableEntity(detail = "authorName must be number, alphabet and underscore.")
     }
     value.toLower
   }
@@ -34,7 +34,7 @@ object AuthorDisplayName extends ValueExtender[AuthorDisplayName] {
 
   def apply(value: String): AuthorDisplayName = {
     if (!authorDisplayNamePattern.matches(value)) {
-      throw UnprocessableEntity("authorDisplayName must be number, alphabet or underscore.")
+      throw UnprocessableEntity(detail = "authorDisplayName must be number, alphabet or underscore.")
     }
     value
   }

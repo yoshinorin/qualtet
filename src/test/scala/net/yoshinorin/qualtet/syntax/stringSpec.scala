@@ -67,17 +67,17 @@ class StringSpec extends AnyWordSpec {
   "trimOrThrow" should {
 
     "not be thrown exception" in {
-      assert("test".trimOrThrow(Fail.BadRequest("error")) === "test")
-      assert(" test ".trimOrThrow(Fail.BadRequest("error")) === "test")
+      assert("test".trimOrThrow(Fail.BadRequest(detail = "error")) === "test")
+      assert(" test ".trimOrThrow(Fail.BadRequest(detail = "error")) === "test")
     }
 
     "be thrown exception" in {
       assertThrows[Fail.BadRequest] {
-        "".trimOrThrow(Fail.BadRequest("error"))
+        "".trimOrThrow(Fail.BadRequest(detail = "error"))
       }
 
       assertThrows[Fail.BadRequest] {
-        " ".trimOrThrow(Fail.BadRequest("error"))
+        " ".trimOrThrow(Fail.BadRequest(detail = "error"))
       }
     }
 

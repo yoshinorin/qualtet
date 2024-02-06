@@ -25,7 +25,9 @@ class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt) {
     }
 
     for {
-      a <- authorService.findByIdWithPassword(tokenRequest.authorId).throwIfNone(NotFound(s"${tokenRequest.authorId} is not found."))
+      a <- authorService
+        .findByIdWithPassword(tokenRequest.authorId)
+        .throwIfNone(NotFound(detail = s"${tokenRequest.authorId} is not found."))
       _ <- verifyPassword(a.password)
       jwt <- IO(jwt.encode(a))
       responseToken <- IO(ResponseToken(jwt))

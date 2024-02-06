@@ -21,7 +21,7 @@ class ArchiveService[F[_]: Monad](
 
   def get: IO[Seq[ResponseArchive]] = {
     for {
-      c <- contentTypeService.findByName("article").throwIfNone(NotFound(s"content-type not found: article"))
+      c <- contentTypeService.findByName("article").throwIfNone(NotFound(detail = "content-type not found: article"))
       articles <- transactor.transact(actions(c.id))
     } yield articles
   }

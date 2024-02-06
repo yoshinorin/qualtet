@@ -28,7 +28,7 @@ class AuthProvider[F[_]: Monad](
           val renderString = auth.credentials.renderString.replace("Bearer ", "").replace("bearer ", "")
           for {
             maybeAuthor <- authService.findAuthorFromJwtString(renderString)
-            author <- IO(maybeAuthor.asEither[Fail](NotFound("author not found")))
+            author <- IO(maybeAuthor.asEither[Fail](NotFound(detail = "author not found")))
             payload <- request.as[String]
           } yield {
             author match {
