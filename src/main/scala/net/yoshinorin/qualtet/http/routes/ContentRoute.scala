@@ -6,6 +6,7 @@ import cats.effect.IO
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
+import org.http4s.ContextRequest
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, Path, RequestContent}
@@ -23,8 +24,8 @@ class ContentRoute[F[_]: Monad](
 
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def index: HttpRoutes[IO] =
-    contentWithoutAuth <+>
-      authProvider.authenticate(contentWithAuthed)
+    (contentWithoutAuth <+>
+      authProvider.authenticate(contentWithAuthed))
 
   private[http] def contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     // need slash on the prefix and suffix.
@@ -33,14 +34,22 @@ class ContentRoute[F[_]: Monad](
     case GET -> Root /: path =>
       contentRoute.get(path)
      */
-    case request @ GET -> _ => this.get(request.uri.path.toString().replace("/contents/", ""))
+    case request @ GET -> _ =>
+      this
+        .get(request.uri.path.toString().replace("/contents/", ""))
+        .handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
-  private[http] def contentWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
-    case request @ POST -> Root as payload => this.post(payload)
-    case DELETE -> Root / id as payload => this.delete(id)
-    case request @ _ =>
-      methodNotAllowed(request.req, Allow(Set(GET, POST, DELETE)))
+  private[http] def contentWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of { ctxRequest =>
+    (ctxRequest match {
+      case ContextRequest(_, r) =>
+        r match {
+          case request @ POST -> Root => this.post(ctxRequest.context)
+          case request @ DELETE -> Root / id => this.delete(id)
+          case request @ _ =>
+            methodNotAllowed(r, Allow(Set(GET, POST, DELETE)))
+        }
+    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   private[http] def post(payload: (ResponseAuthor, String)): IO[Response[IO]] = {
@@ -56,7 +65,7 @@ class ContentRoute[F[_]: Monad](
             Created(createdContent.asJson, `Content-Type`(MediaType.application.json))
           }
       }
-    }.handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }
   }
 
   private[http] def delete(id: String): IO[Response[IO]] = {
@@ -64,7 +73,7 @@ class ContentRoute[F[_]: Monad](
       _ <- contentService.delete(ContentId(id))
       _ = logger.info(s"deleted content: ${id}")
       response <- NoContent()
-    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    } yield response)
   }
 
   def get(path: String): IO[Response[IO]] = {
@@ -73,7 +82,6 @@ class ContentRoute[F[_]: Monad](
       maybeContent <- contentService.findByPathWithMeta(Path(s"/${path}"))
     } yield maybeContent)
       .flatMap(_.asResponse)
-      .handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
 }

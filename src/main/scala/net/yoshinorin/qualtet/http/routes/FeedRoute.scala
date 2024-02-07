@@ -14,11 +14,13 @@ class FeedRoute[F[_]: Monad](
   feedService: FeedService[F]
 ) extends MethodNotAllowedSupport {
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root / name => this.get(name)
-    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-    case request @ _ =>
-      methodNotAllowed(request, Allow(Set(GET)))
+  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    (r match {
+      case request @ GET -> Root / name => this.get(name)
+      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ _ =>
+        methodNotAllowed(request, Allow(Set(GET)))
+    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   private[http] def get(name: String): IO[Response[IO]] = {

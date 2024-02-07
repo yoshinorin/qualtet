@@ -13,13 +13,15 @@ class ArticleRoute[F[_]: Monad](
   articleService: ArticleService[F]
 ) extends MethodNotAllowedSupport {
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case request @ GET -> Root =>
-      val q = request.uri.query.params.asRequestQueryParamater
-      this.get(q.page, q.limit)
-    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-    case request @ _ =>
-      methodNotAllowed(request, Allow(Set(GET)))
+  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    (r match {
+      case request @ GET -> Root =>
+        val q = request.uri.query.params.asRequestQueryParamater
+        this.get(q.page, q.limit)
+      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ _ =>
+        methodNotAllowed(request, Allow(Set(GET)))
+    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   // articles?page=n&limit=m
@@ -27,7 +29,7 @@ class ArticleRoute[F[_]: Monad](
     (for {
       articles <- articleService.getWithCount(ArticlesQueryParameter(page, limit))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    } yield response)
   }
 
 }

@@ -7,6 +7,7 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import org.slf4j.LoggerFactory
+import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
@@ -26,17 +27,22 @@ class TagRoute[F[_]: Monad](
       authProvider.authenticate(tagsWithAuthed)
 
   private[http] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root => this.get
-    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+    case request @ GET -> Root => this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
     case request @ GET -> Root / nameOrId =>
       val q = request.uri.query.params.asRequestQueryParamater
-      this.get(nameOrId, q.page, q.limit)
+      this.get(nameOrId, q.page, q.limit).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
-  private[http] def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
-    case DELETE -> Root / nameOrId as payload => this.delete(nameOrId)
-    case request @ _ =>
-      methodNotAllowed(request.req, Allow(Set(GET, DELETE)))
+  private[http] def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of { ctxRequest =>
+    (ctxRequest match {
+      case ContextRequest(_, r) =>
+        r match {
+          case request @ DELETE -> Root / nameOrId => this.delete(nameOrId)
+          case request @ _ =>
+            methodNotAllowed(r, Allow(Set(GET, DELETE)))
+        }
+    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   private[http] def get: IO[Response[IO]] = {
@@ -60,7 +66,7 @@ class TagRoute[F[_]: Monad](
     (for {
       articles <- articleService.getByTagNameWithCount(TagName(nameOrId), ArticlesQueryParameter(page, limit))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    } yield response)
   }
 
   private[http] def delete(nameOrId: String): IO[Response[IO]] = {
@@ -68,6 +74,6 @@ class TagRoute[F[_]: Monad](
       _ <- tagService.delete(TagId(nameOrId))
       _ = logger.info(s"deleted tag: ${nameOrId}")
       response <- NoContent()
-    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    } yield response)
   }
 }

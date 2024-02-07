@@ -13,12 +13,14 @@ class AuthorRoute[F[_]: Monad](
   authorService: AuthorService[F]
 ) extends MethodNotAllowedSupport {
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root => this.get
-    case GET -> Root / authorName => this.get(authorName)
-    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-    case request @ _ =>
-      methodNotAllowed(request, Allow(Set(GET)))
+  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    (r match {
+      case request @ GET -> Root => this.get
+      case request @ GET -> Root / authorName => this.get(authorName)
+      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ _ =>
+        methodNotAllowed(request, Allow(Set(GET)))
+    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   // authors

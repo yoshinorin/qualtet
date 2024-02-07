@@ -11,13 +11,15 @@ import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
 
 class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupport {
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root / "health" => this.health
-    case GET -> Root / "metadata" =>
-      if config.metadata.enabled then this.metadata else NotFound()
-    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-    case request @ _ =>
-      methodNotAllowed(request, Allow(Set(GET)))
+  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    (r match {
+      case request @ GET -> Root / "health" => this.health
+      case request @ GET -> Root / "metadata" =>
+        if config.metadata.enabled then this.metadata else NotFound()
+      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ _ =>
+        methodNotAllowed(request, Allow(Set(GET)))
+    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   // system/health
@@ -30,7 +32,7 @@ class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupp
     (for {
       a <- IO(ApplicationInfo.asJson)
       response <- Ok(a, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    } yield response)
   }
 
 }

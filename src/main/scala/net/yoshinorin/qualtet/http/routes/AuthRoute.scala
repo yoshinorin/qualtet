@@ -11,11 +11,13 @@ import net.yoshinorin.qualtet.syntax.*
 
 class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder with MethodNotAllowedSupport {
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case request @ POST -> Root => this.post(request)
-    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-    case request @ _ =>
-      methodNotAllowed(request, Allow(Set(POST)))
+  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    (r match {
+      case request @ POST -> Root => this.post(request)
+      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ _ =>
+        methodNotAllowed(request, Allow(Set(POST)))
+    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   // token
@@ -31,7 +33,7 @@ class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder
             Ok(t.asJson, `Content-Type`(MediaType.application.json))
           }
       }
-    }.handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }
   }
 
 }

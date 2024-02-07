@@ -16,11 +16,13 @@ class SearchRoute[F[_]: Monad](
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case request @ GET -> _ => this.search(request.uri.query.multiParams)
-    case OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-    case request @ _ =>
-      methodNotAllowed(request, Allow(Set(GET)))
+  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    (r match {
+      case request @ GET -> _ => this.search(request.uri.query.multiParams)
+      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ _ =>
+        methodNotAllowed(request, Allow(Set(GET)))
+    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   private[http] def search(query: Map[String, List[String]]): IO[Response[IO]] = {
@@ -28,7 +30,7 @@ class SearchRoute[F[_]: Monad](
     (for {
       searchResult <- searchService.search(query)
       response <- Ok(searchResult.asJson, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    } yield response)
   }
 
 }

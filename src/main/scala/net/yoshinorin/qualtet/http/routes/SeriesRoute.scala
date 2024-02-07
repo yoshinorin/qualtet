@@ -6,6 +6,7 @@ import cats.implicits.*
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
+import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesService, RequestSeries}
 import net.yoshinorin.qualtet.http.{AuthProvider, MethodNotAllowedSupport, RequestDecoder}
@@ -19,18 +20,25 @@ class SeriesRoute[F[_]: Monad](
 
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def index: HttpRoutes[IO] =
-    seriesWithoutAuth <+>
-      authProvider.authenticate(seriesWithAuthed)
+    (seriesWithoutAuth <+>
+      authProvider.authenticate(seriesWithAuthed))
 
-  private[http] def seriesWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root => this.get
-    case request @ GET -> Root / name => this.get(name)
+  private[http] def seriesWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    r match {
+      case request @ GET -> Root => this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
+      case request @ GET -> Root / name => this.get(name).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }
   }
 
-  private[http] def seriesWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of {
-    case request @ POST -> Root as payload => this.post(payload)
-    case request @ _ =>
-      methodNotAllowed(request.req, Allow(Set(GET, POST, DELETE)))
+  private[http] def seriesWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of { ctxRequest =>
+    (ctxRequest match {
+      case ContextRequest(_, r) =>
+        r match {
+          case request @ POST -> Root => this.post(ctxRequest.context)
+          case request @ _ =>
+            methodNotAllowed(r, Allow(Set(GET, POST, DELETE)))
+        }
+    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   private[http] def post(payload: (ResponseAuthor, String)): IO[Response[IO]] = {
@@ -46,7 +54,7 @@ class SeriesRoute[F[_]: Monad](
             Created(createdSeries.asJson, `Content-Type`(MediaType.application.json))
           }
       }
-    }.handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }
   }
 
   // series
@@ -54,14 +62,14 @@ class SeriesRoute[F[_]: Monad](
     (for {
       series <- seriesService.getAll
       response <- Ok(series.asJson, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    } yield response)
   }
 
   private[http] def get(name: String): IO[Response[IO]] = {
     (for {
       seriesWithArticles <- seriesService.get(SeriesName(name))
       response <- Ok(seriesWithArticles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    } yield response)
   }
 
 }
