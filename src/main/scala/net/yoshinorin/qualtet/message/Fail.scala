@@ -35,7 +35,8 @@ object Fail {
   ) extends Fail
 
   final case class InternalServerError(
-    title: String = "Internal Server Error"
+    title: String = "Internal Server Error",
+    detail: String = "Internal Server Error"
   ) extends Fail
 
 }

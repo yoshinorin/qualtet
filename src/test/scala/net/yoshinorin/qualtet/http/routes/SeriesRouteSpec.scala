@@ -10,7 +10,7 @@ import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, RequestSeries}
-import net.yoshinorin.qualtet.message.Message
+import net.yoshinorin.qualtet.message.ProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -142,10 +142,13 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === NotFound)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message === "series not found: not-exists")
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Not Found")
+            assert(maybeError.status === 404)
+            assert(maybeError.detail === "series not found: not-exists")
+            assert(maybeError.instance === "/series/not-exists")
           }
         }
         .unsafeRunSync()
@@ -185,10 +188,13 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message === "name is required")
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Bad Request")
+            assert(maybeError.status === 400)
+            assert(maybeError.detail === "name is required")
+            assert(maybeError.instance === "/series/")
           }
         }
         .unsafeRunSync()
@@ -210,10 +216,13 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message === "title is required")
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Bad Request")
+            assert(maybeError.status === 400)
+            assert(maybeError.detail === "title is required")
+            assert(maybeError.instance === "/series/")
           }
         }
         .unsafeRunSync()

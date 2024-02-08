@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, Path, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.message.Message
+import net.yoshinorin.qualtet.message.ProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -124,10 +124,13 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message.startsWith("content not found: "))
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Not Found")
+            assert(maybeError.status === 404)
+            assert(maybeError.detail.startsWith("content not found: "))
+            assert(maybeError.instance === s"/contents/${content.id.value}")
           }
         }
         .unsafeRunSync()
@@ -147,8 +150,13 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("contentnotfound"))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Not Found")
+            assert(maybeError.status === 404)
+            assert(maybeError.detail === s"content not found: ${id.value}")
+            assert(maybeError.instance === s"/contents/${id.value}")
           }
         }
         .unsafeRunSync()
@@ -193,7 +201,13 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Bad Request")
+            assert(maybeError.status === 400)
+            assert(maybeError.detail === "title required.")
+            assert(maybeError.instance === s"/contents/")
           }
         }
         .unsafeRunSync()
@@ -220,7 +234,13 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Bad Request")
+            assert(maybeError.status === 400)
+            assert(maybeError.detail === "rawContent required.")
+            assert(maybeError.instance === s"/contents/")
           }
         }
         .unsafeRunSync()
@@ -247,7 +267,13 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Bad Request")
+            assert(maybeError.status === 400)
+            assert(maybeError.detail === "htmlContent required.")
+            assert(maybeError.instance === s"/contents/")
           }
         }
         .unsafeRunSync()
@@ -348,8 +374,13 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert JSON
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Bad Request")
+            assert(maybeError.status === 400)
+            assert(maybeError.detail === "Wrong JSON format or missing required field. Please see API document.")
+            assert(maybeError.instance === s"/contents/")
           }
         }
         .unsafeRunSync()
@@ -371,8 +402,13 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === BadRequest)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            // TODO: assert JSON
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Bad Request")
+            assert(maybeError.status === 400)
+            assert(maybeError.detail === "Wrong JSON format or missing required field. Please see API document.")
+            assert(maybeError.instance === s"/contents/")
           }
         }
         .unsafeRunSync()
@@ -450,7 +486,13 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Not Found")
+            assert(maybeError.status === 404)
+            assert(maybeError.detail === "Not Found")
+            assert(maybeError.instance === "/contents/this/is/a/404")
           }
         }
         .unsafeRunSync()
@@ -467,7 +509,13 @@ class ContentRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Not Found")
+            assert(maybeError.status === 404)
+            assert(maybeError.detail === "Not Found")
+            assert(maybeError.instance === "/contents/this/is/a/404/")
           }
         }
         .unsafeRunSync()

@@ -23,14 +23,13 @@ class SeriesRoute[F[_]: Monad](
     (seriesWithoutAuth <+>
       authProvider.authenticate(seriesWithAuthed))
 
-  private[http] def seriesWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
-    r match {
-      case request @ GET -> Root => this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
-      case request @ GET -> Root / name => this.get(name).handleErrorWith(_.logWithStackTrace[IO].andResponse)
-    }
+  private[http] def seriesWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case request @ GET -> Root => this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse(request))
+    case request @ GET -> Root / name => this.get(name).handleErrorWith(_.logWithStackTrace[IO].andResponse(request))
   }
 
   private[http] def seriesWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of { ctxRequest =>
+    implicit val x = ctxRequest.req
     (ctxRequest match {
       case ContextRequest(_, r) =>
         r match {

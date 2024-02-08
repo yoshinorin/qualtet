@@ -6,7 +6,7 @@ import cats.effect.IO
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
-import org.http4s.ContextRequest
+import org.http4s.{ContextRequest, Request}
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, Path, RequestContent}
@@ -36,11 +36,12 @@ class ContentRoute[F[_]: Monad](
      */
     case request @ GET -> _ =>
       this
-        .get(request.uri.path.toString().replace("/contents/", ""))
-        .handleErrorWith(_.logWithStackTrace[IO].andResponse)
+        .get(request.uri.path.toString().replace("/contents/", ""))(request)
+        .handleErrorWith(_.logWithStackTrace[IO].andResponse(request))
   }
 
   private[http] def contentWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of { ctxRequest =>
+    implicit val x = ctxRequest.req
     (ctxRequest match {
       case ContextRequest(_, r) =>
         r match {
@@ -76,7 +77,7 @@ class ContentRoute[F[_]: Monad](
     } yield response)
   }
 
-  def get(path: String): IO[Response[IO]] = {
+  def get(path: String)(implicit r: Request[IO]): IO[Response[IO]] = {
     (for {
       // TODO: should be configurlize for append suffix or prefix
       maybeContent <- contentService.findByPathWithMeta(Path(s"/${path}"))

@@ -8,7 +8,7 @@ import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.auth.ResponseToken
-import net.yoshinorin.qualtet.message.Message
+import net.yoshinorin.qualtet.message.ProblemDetails
 import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.fixture.Fixture.{author, router, unsafeDecode}
 import org.scalatest.wordspec.AnyWordSpec
@@ -143,10 +143,13 @@ class AuthRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
             // TODO: avoid to return user not found message
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message === "not-exists-user is not found.")
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Not Found")
+            assert(maybeError.status === 404)
+            assert(maybeError.detail === "not-exists-user is not found.")
+            assert(maybeError.instance === "/token/")
           }
         }
         .unsafeRunSync()

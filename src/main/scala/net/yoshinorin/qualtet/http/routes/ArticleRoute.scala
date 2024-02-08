@@ -14,6 +14,7 @@ class ArticleRoute[F[_]: Monad](
 ) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    implicit val x = r
     (r match {
       case request @ GET -> Root =>
         val q = request.uri.query.params.asRequestQueryParamater

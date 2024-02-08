@@ -12,6 +12,7 @@ import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
 class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    implicit val x = r
     (r match {
       case request @ GET -> Root / "health" => this.health
       case request @ GET -> Root / "metadata" =>

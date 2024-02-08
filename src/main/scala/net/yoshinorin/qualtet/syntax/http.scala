@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import cats.effect.IO
-import org.http4s.Response
+import org.http4s.{Response, Request}
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import net.yoshinorin.qualtet.http.{RequestQueryParamater, ResponseTranslator}
 
@@ -10,19 +10,19 @@ import scala.util.Try
 trait http {
 
   extension (e: Throwable) {
-    def asResponse: IO[Response[IO]] = {
+    def asResponse(implicit req: Request[IO]): IO[Response[IO]] = {
       ResponseTranslator.toResponse(e)
     }
   }
 
   extension (e: IO[Throwable]) {
-    def andResponse: IO[Response[IO]] = {
+    def andResponse(implicit req: Request[IO]): IO[Response[IO]] = {
       e.flatMap(_.asResponse)
     }
   }
 
   extension [T](a: Option[T]) {
-    def asResponse(implicit e: JsonValueCodec[T]): IO[Response[IO]] = {
+    def asResponse(implicit e: JsonValueCodec[T], req: Request[IO]): IO[Response[IO]] = {
       ResponseTranslator.toResponse[T](a)
     }
   }

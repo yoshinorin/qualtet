@@ -14,6 +14,7 @@ class ArchiveRoute[F[_]: Monad](
 ) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    implicit val x = r
     (r match {
       case request @ GET -> Root => this.get
       case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`

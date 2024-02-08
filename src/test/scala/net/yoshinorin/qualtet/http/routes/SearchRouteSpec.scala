@@ -9,7 +9,7 @@ import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.search.ResponseSearchWithCount
-import net.yoshinorin.qualtet.message.Message
+import net.yoshinorin.qualtet.message.ProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -80,10 +80,13 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message === "SEARCH_QUERY_REQUIRED")
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.status === 422)
+            assert(maybeError.detail === "SEARCH_QUERY_REQUIRED")
+            assert(maybeError.instance === "/search/")
           }
         }
         .unsafeRunSync()
@@ -95,10 +98,13 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message === "SEARCH_CHAR_LENGTH_TOO_SHORT")
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.status === 422)
+            assert(maybeError.detail === "SEARCH_CHAR_LENGTH_TOO_SHORT")
+            assert(maybeError.instance === "/search/?q=abc")
           }
         }
         .unsafeRunSync()
@@ -110,10 +116,13 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message === "SEARCH_QUERY_REQUIRED")
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.status === 422)
+            assert(maybeError.detail === "SEARCH_QUERY_REQUIRED")
+            assert(maybeError.instance === "/search/?invalid=abcd")
           }
         }
         .unsafeRunSync()
@@ -125,10 +134,13 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message === "INVALID_CHARS_INCLUDED")
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.status === 422)
+            assert(maybeError.detail === "INVALID_CHARS_INCLUDED")
+            assert(maybeError.instance === "/search/?q=a.b.c")
           }
         }
         .unsafeRunSync()
@@ -140,10 +152,13 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message === "TOO_MANY_SEARCH_WORDS")
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.status === 422)
+            assert(maybeError.detail === "TOO_MANY_SEARCH_WORDS")
+            assert(maybeError.instance === "/search/?q=abcd&q=abcd&q=abcd&q=abcd")
           }
         }
         .unsafeRunSync()

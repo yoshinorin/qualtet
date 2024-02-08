@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.http.routes
 
 import cats.effect.IO
 import cats.Monad
+import org.http4s.Request
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
@@ -14,6 +15,7 @@ class AuthorRoute[F[_]: Monad](
 ) extends MethodNotAllowedSupport {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
+    implicit val x = r
     (r match {
       case request @ GET -> Root => this.get
       case request @ GET -> Root / authorName => this.get(authorName)
@@ -31,7 +33,7 @@ class AuthorRoute[F[_]: Monad](
     } yield response
   }
 
-  private[http] def get(authorName: String): IO[Response[IO]] = {
+  private[http] def get(authorName: String)(implicit r: Request[IO]): IO[Response[IO]] = {
     (for {
       maybeAuthor <- authorService.findByName(AuthorName(authorName))
     } yield maybeAuthor).flatMap(_.asResponse)

@@ -7,7 +7,7 @@ import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.contentTypes.ContentType
-import net.yoshinorin.qualtet.message.Message
+import net.yoshinorin.qualtet.message.ProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.{router, unsafeDecode}
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -73,10 +73,13 @@ class ContentTypeRouteSpec extends AnyWordSpec {
         .use { response =>
           IO {
             assert(response.status === NotFound)
-            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[Message](response)
-            assert(maybeError.message === "Not Found")
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Not Found")
+            assert(maybeError.status === 404)
+            assert(maybeError.detail === "Not Found")
+            assert(maybeError.instance === "/content-types/not-exists")
           }
         }
         .unsafeRunSync()
