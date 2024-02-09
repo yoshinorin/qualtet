@@ -47,8 +47,8 @@ class ContentService[F[_]: Monad](
     Continue(contentRepository.findByPath(path), Action.done[Option[Content]])
   }
 
-  def findByPathWithMetaActions(path: Path): Action[Option[ResponseContentDbRow]] = {
-    Continue(contentRepository.findByPathWithMeta(path), Action.done[Option[ResponseContentDbRow]])
+  def findByPathWithMetaActions(path: Path): Action[Option[ReadContentDbRow]] = {
+    Continue(contentRepository.findByPathWithMeta(path), Action.done[Option[ReadContentDbRow]])
   }
 
   /**
@@ -208,7 +208,7 @@ class ContentService[F[_]: Monad](
     transactor.transact(findByIdActions(id))
   }
 
-  def findBy[A](data: A)(f: A => Action[Option[ResponseContentDbRow]]): IO[Option[ResponseContent]] = {
+  def findBy[A](data: A)(f: A => Action[Option[ReadContentDbRow]]): IO[Option[ResponseContent]] = {
     transactor.transact(f(data)).flatMap {
       case None => IO(None)
       case Some(x) =>

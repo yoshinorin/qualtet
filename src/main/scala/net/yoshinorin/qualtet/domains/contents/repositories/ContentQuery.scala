@@ -37,7 +37,7 @@ object ContentQuery {
       .query[Content]
   }
 
-  def findByPathWithMeta(path: Path)(implicit contentRead: Read[ResponseContentDbRow]): Query0[ResponseContentDbRow] = {
+  def findByPathWithMeta(path: Path)(implicit contentRead: Read[ReadContentDbRow]): Query0[ReadContentDbRow] = {
     sql"""
        SELECT
          contents.id AS id,
@@ -68,7 +68,7 @@ object ContentQuery {
        HAVING
    	     COUNT(*) > 0
     """
-      .query[ResponseContentDbRow]
+      .query[ReadContentDbRow]
   }
 
 }

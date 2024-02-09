@@ -42,10 +42,10 @@ class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO]
         )
     }
 
-  given contentDbRawRead: Read[ResponseContentDbRow] =
+  given contentDbRawRead: Read[ReadContentDbRow] =
     Read[(String, String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
       case (id, title, robotsAttributes, externalResourceKindKeys, externalResourceKindValues, tagIds, tagNames, content, authorName, publishedAt, updatedAt) =>
-        ResponseContentDbRow(
+        ReadContentDbRow(
           ContentId(id),
           title,
           Attributes(robotsAttributes),
@@ -85,7 +85,7 @@ class ContentRepositoryDoobieInterpreter extends ContentRepository[ConnectionIO]
   override def findByPath(path: Path): ConnectionIO[Option[Content]] = {
     ContentQuery.findByPath(path).option
   }
-  override def findByPathWithMeta(path: Path): ConnectionIO[Option[ResponseContentDbRow]] = {
+  override def findByPathWithMeta(path: Path): ConnectionIO[Option[ReadContentDbRow]] = {
     // NOTE: use `.option` instead of `.query[Option[T]].unique`
     //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
     ContentQuery.findByPathWithMeta(path).option
