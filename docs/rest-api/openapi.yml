@@ -65,7 +65,7 @@ paths:
                   status:
                     type: string
                     example: operational
-  /system/health:
+  /v1/system/health:
     get:
       summary: Get API server health
       tags:
@@ -73,7 +73,7 @@ paths:
       responses:
         200:
           description: API server is runnning
-  /system/metadata:
+  /v1/system/metadata:
     get:
       summary: Get system metadata
       tags:
@@ -106,8 +106,8 @@ paths:
                     example: "Not Found"
                   instance:
                     type: string
-                    example: "/system/metadata"
-  /token:
+                    example: "/v1/system/metadata"
+  /v1/token:
     post:
       summary: Create an IDToken
       tags:
@@ -149,10 +149,10 @@ paths:
                     example: "Bad Request"
                   instance:
                     type: string
-                    example: "/token"
+                    example: "/v1/token"
         401:
           description: Unauthorized
-  /archives:
+  /v1/archives:
     get:
       summary: Get all articles
       tags:
@@ -166,7 +166,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/simpleArticle'
-  /articles:
+  /v1/articles:
     get:
       summary: Get articles with count
       tags:
@@ -198,7 +198,7 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/article'
-  /authors:
+  /v1/authors:
     get:
       summary: Get all authors
       tags:
@@ -212,7 +212,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/author'
-  /authors/{authorName}:
+  /v1/authors/{authorName}:
     get:
       summary: Get an author
       tags:
@@ -246,8 +246,8 @@ paths:
                     example: "Not Found"
                   instance:
                     type: string
-                    example: "/author/{authorName}"
-  /contents:
+                    example: "/v1/author/{authorName}"
+  /v1/contents:
     post:
       summary: Create or Update a content
       tags:
@@ -289,7 +289,7 @@ paths:
                     example: "Bad Request"
                   instance:
                     type: string
-                    example: "/contents/"
+                    example: "/v1/contents/"
         401:
           description: Unauthorized
         422:
@@ -316,8 +316,8 @@ paths:
                     example: "Unprocessable Entity"
                   instance:
                     type: string
-                    example: "/contents"
-  /contents/{contentPath}:
+                    example: "/v1/contents"
+  /v1/contents/{contentPath}:
     get:
       summary: Get a content
       tags:
@@ -350,8 +350,8 @@ paths:
                     example: "Not Found"
                   instance:
                     type: string
-                    example: "/contents/{contentPath}"
-  /contents/{contentId}:
+                    example: "/v1/contents/{contentPath}"
+  /v1/contents/{contentId}:
     delete:
       summary: Delete a content
       tags:
@@ -384,8 +384,8 @@ paths:
                     example: "Not Found"
                   instance:
                     type: string
-                    example: "/contents/{contentId}"
-  /tags:
+                    example: "/v1/contents/{contentId}"
+  /v1/tags:
     get:
       summary: Get a tags
       tags:
@@ -398,7 +398,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/tagWithCount'
-  /tags/{tagName}:
+  /v1/tags/{tagName}:
     get:
       summary: Get an articles by tagName
       tags:
@@ -432,8 +432,8 @@ paths:
                     example: "Not Found"
                   instance:
                     type: string
-                    example: "/tags/{tagName}"
-  /tags/{tagId}:
+                    example: "/v1/tags/{tagName}"
+  /v1/tags/{tagId}:
     delete:
       summary: Delete a tag
       tags:
@@ -466,8 +466,8 @@ paths:
                     example: "Not Found"
                   instance:
                     type: string
-                    example: "/tags/{tagId}"
-  /content-types/{contentPath}:
+                    example: "/v1/tags/{tagId}"
+  /v1/content-types/{contentPath}:
     get:
       summary: Get Content-Types
       tags:
@@ -480,7 +480,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/contentType'
-  /content-types/{contentTypeName}:
+  /v1/content-types/{contentTypeName}:
     get:
       summary: Get a Content-Type
       tags:
@@ -513,8 +513,8 @@ paths:
                     example: "Not Found"
                   instance:
                     type: string
-                    example: "/content-types/{contentTypeName}"
-  /sitemaps:
+                    example: "/v1/content-types/{contentTypeName}"
+  /v1/sitemaps:
     get:
       summary: Get an articles url & updated date for sitemaps.xml
       tags:
@@ -528,7 +528,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/sitemaps'
-  /feeds/{feedName}:
+  /v1/feeds/{feedName}:
     get:
       summary: Get a feeds
       tags:
@@ -542,7 +542,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/feed'
-  /caches/:
+  /v1/caches/:
     delete:
       summary: Invalidate all caches
       tags:
@@ -554,7 +554,7 @@ paths:
           description: Caches are invalidated
         401:
           description: Unauthorized
-  /search:
+  /v1/search:
     get:
       summary: Search contents
       tags:
@@ -602,8 +602,8 @@ paths:
                     example: "Unprocessable Entity"
                   instance:
                     type: string
-                    example: "/search"
-  /series:
+                    example: "/v1/search"
+  /v1/series:
     get:
       summary: Get all series
       tags:
@@ -658,10 +658,10 @@ paths:
                     example: "Bad Request"
                   instance:
                     type: string
-                    example: "/series/"
+                    example: "/v1/series/"
         401:
           description: Unauthorized
-  /series/{seriesName}:
+  /v1/series/{seriesName}:
     get:
       summary: Get a series
       tags:
@@ -696,7 +696,7 @@ paths:
                     example: "Not Found"
                   instance:
                     type: string
-                    example: "/series/{seriesName}"
+                    example: "/v1/series/{seriesName}"
 components:
   securitySchemes:
     basicAuth:

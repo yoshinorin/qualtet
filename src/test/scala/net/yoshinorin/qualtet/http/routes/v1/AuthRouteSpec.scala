@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -14,8 +14,8 @@ import net.yoshinorin.qualtet.fixture.Fixture.{author, router, unsafeDecode}
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.AuthRouteSpec
-class AuthRouteSpec extends AnyWordSpec {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.AuthRouteSpec
+class AuthRouteV1Spec extends AnyWordSpec {
 
   val a: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
@@ -33,7 +33,7 @@ class AuthRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/token/", entity = entity))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -57,7 +57,7 @@ class AuthRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(wrongJsonFormat)
       client
-        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/token/", entity = entity))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -77,7 +77,7 @@ class AuthRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(wrongJson)
       client
-        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/token/", entity = entity))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -97,7 +97,7 @@ class AuthRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(wrongJson)
       client
-        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/token/", entity = entity))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -118,7 +118,7 @@ class AuthRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/token/", entity = entity))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -139,7 +139,7 @@ class AuthRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/token/", entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/token/", entity = entity))
         .use { response =>
           IO {
             assert(response.status === NotFound)
@@ -149,7 +149,7 @@ class AuthRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "not-exists-user is not found.")
-            assert(maybeError.instance === "/token/")
+            assert(maybeError.instance === "/v1/token/")
           }
         }
         .unsafeRunSync()
@@ -157,7 +157,7 @@ class AuthRouteSpec extends AnyWordSpec {
 
     "be return Method Not Allowed" in {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/token"))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/token"))
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)

@@ -12,21 +12,21 @@ import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
 import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
 import org.typelevel.log4cats.slf4j.{Slf4jLogger => Log4CatsSlf4jLogger}
 import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
-import net.yoshinorin.qualtet.http.routes.{
-  ArchiveRoute,
-  ArticleRoute,
-  AuthRoute,
-  AuthorRoute,
-  CacheRoute,
-  ContentRoute,
-  ContentTypeRoute,
-  FeedRoute,
-  HomeRoute,
-  SearchRoute,
-  SeriesRoute,
-  SitemapRoute,
-  SystemRoute,
-  TagRoute
+import net.yoshinorin.qualtet.http.routes.HomeRoute
+import net.yoshinorin.qualtet.http.routes.v1.{
+  ArchiveRoute => ArchiveRouteV1,
+  ArticleRoute => ArticleRouteV1,
+  AuthRoute => AuthRouteV1,
+  AuthorRoute => AuthorRouteV1,
+  CacheRoute => CacheRouteV1,
+  ContentRoute => ContentRouteV1,
+  ContentTypeRoute => ContentTypeRouteV1,
+  FeedRoute => FeedRouteV1,
+  SearchRoute => SearchRouteV1,
+  SeriesRoute => SeriesRouteV1,
+  SitemapRoute => SitemapRouteV1,
+  SystemRoute => SystemRouteV1,
+  TagRoute => TagRouteV1
 }
 
 import scala.concurrent.duration._
@@ -42,37 +42,37 @@ object BootStrap extends IOApp {
   val authProvider = new AuthProvider(Modules.authService)
   val corsProvider = new CorsProvider(Modules.config.cors)
 
-  val archiveRoute = new ArchiveRoute(Modules.archiveService)
-  val articleRoute = new ArticleRoute(Modules.articleService)
-  val authorRoute = new AuthorRoute(Modules.authorService)
-  val authRoute = new AuthRoute(Modules.authService)
-  val cacheRoute = new CacheRoute(authProvider, Modules.cacheService)
-  val contentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
-  val contentRoute = new ContentRoute(authProvider, Modules.contentService)
-  val feedRoute = new FeedRoute(Modules.feedService)
+  val archiveRouteV1 = new ArchiveRouteV1(Modules.archiveService)
+  val articleRouteV1 = new ArticleRouteV1(Modules.articleService)
+  val authorRouteV1 = new AuthorRouteV1(Modules.authorService)
+  val authRouteV1 = new AuthRouteV1(Modules.authService)
+  val cacheRouteV1 = new CacheRouteV1(authProvider, Modules.cacheService)
+  val contentTypeRouteV1 = new ContentTypeRouteV1(Modules.contentTypeService)
+  val contentRouteV1 = new ContentRouteV1(authProvider, Modules.contentService)
+  val feedRouteV1 = new FeedRouteV1(Modules.feedService)
   val homeRoute: HomeRoute = new HomeRoute()
-  val searchRoute = new SearchRoute(Modules.searchService)
-  val seriesRoute = new SeriesRoute(authProvider, Modules.seriesService)
-  val sitemapRoute = new SitemapRoute(Modules.sitemapService)
-  val systemRoute = new SystemRoute(Modules.config.http.endpoints.system)
-  val tagRoute = new TagRoute(authProvider, Modules.tagService, Modules.articleService)
+  val searchRouteV1 = new SearchRouteV1(Modules.searchService)
+  val seriesRouteV1 = new SeriesRouteV1(authProvider, Modules.seriesService)
+  val sitemapRouteV1 = new SitemapRouteV1(Modules.sitemapService)
+  val systemRouteV1 = new SystemRouteV1(Modules.config.http.endpoints.system)
+  val tagRouteV1 = new TagRouteV1(authProvider, Modules.tagService, Modules.articleService)
 
   val router = new net.yoshinorin.qualtet.http.Router(
     corsProvider,
-    archiveRoute,
-    articleRoute,
-    authorRoute,
-    authRoute,
-    cacheRoute,
-    contentRoute,
-    contentTypeRoute,
-    feedRoute,
+    archiveRouteV1,
+    articleRouteV1,
+    authorRouteV1,
+    authRouteV1,
+    cacheRouteV1,
+    contentRouteV1,
+    contentTypeRouteV1,
+    feedRouteV1,
     homeRoute,
-    searchRoute,
-    seriesRoute,
-    sitemapRoute,
-    systemRoute,
-    tagRoute
+    searchRouteV1,
+    seriesRouteV1,
+    sitemapRouteV1,
+    systemRouteV1,
+    tagRouteV1
   )
 
   private[this] def server(host: Ipv4Address, port: Port, httpApp: HttpApp[IO]): Resource[IO, Server] = {

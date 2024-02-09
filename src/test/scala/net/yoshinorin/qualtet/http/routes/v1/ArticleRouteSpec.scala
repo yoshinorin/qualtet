@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -17,8 +17,8 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.ArticleRouteSpec
-class ArticleRouteSpec extends AnyWordSpec {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.ArticleRouteSpec
+class ArticleRouteV1Spec extends AnyWordSpec {
 
   val requestContents: List[RequestContent] = {
     (0 until 20).toList
@@ -45,7 +45,7 @@ class ArticleRouteSpec extends AnyWordSpec {
   "ArticleRoute" should {
     "be return articles with default query params" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/articles"))
+        .run(Request(method = Method.GET, uri = uri"/v1/articles"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -61,7 +61,7 @@ class ArticleRouteSpec extends AnyWordSpec {
 
     "be return articles with query params" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/articles/?page=1&limit=5"))
+        .run(Request(method = Method.GET, uri = uri"/v1/articles/?page=1&limit=5"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -77,7 +77,7 @@ class ArticleRouteSpec extends AnyWordSpec {
 
     "be return 10 articles with query params" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/articles?page=1&limit=50"))
+        .run(Request(method = Method.GET, uri = uri"/v1/articles?page=1&limit=50"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -93,7 +93,7 @@ class ArticleRouteSpec extends AnyWordSpec {
 
     "not be return articles with query params" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/articles?page=9999&limit=10"))
+        .run(Request(method = Method.GET, uri = uri"/v1/articles?page=9999&limit=10"))
         .use { response =>
           IO {
             assert(response.status === NotFound)
@@ -103,7 +103,7 @@ class ArticleRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "articles not found")
-            assert(maybeError.instance === "/articles?page=9999&limit=10")
+            assert(maybeError.instance === "/v1/articles?page=9999&limit=10")
           }
         }
         .unsafeRunSync()
@@ -111,7 +111,7 @@ class ArticleRouteSpec extends AnyWordSpec {
 
     "be return Method Not Allowed" in {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/articles"))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/articles"))
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)

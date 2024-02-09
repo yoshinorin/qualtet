@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -13,8 +13,8 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.FeedRouteSpec
-class FeedRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.FeedRouteSpec
+class FeedRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents = makeRequestContents(2, "feedsRoute")
 
@@ -28,7 +28,7 @@ class FeedRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
   "FeedRoute" should {
     "be return feeds" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/feeds/index"))
+        .run(Request(method = Method.GET, uri = uri"/v1/feeds/index"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -44,7 +44,7 @@ class FeedRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return Method Not Allowed" in {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/feeds/index"))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/feeds/index"))
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)

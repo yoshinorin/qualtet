@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import cats.Monad

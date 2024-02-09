@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -18,8 +18,8 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.SeriesRouteSpec
-class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.SeriesRouteSpec
+class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestSeries: List[RequestSeries] = List(
     RequestSeries(
@@ -48,8 +48,8 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
-  val seriesRoute = new SeriesRoute(authProvider, seriesService)
-  val client: Client[IO] = Client.fromHttpApp(makeRouter(seriesRoute = seriesRoute).routes.orNotFound)
+  val seriesRouteV1 = new SeriesRoute(authProvider, seriesService)
+  val client: Client[IO] = Client.fromHttpApp(makeRouter(seriesRouteV1 = seriesRouteV1).routes.orNotFound)
 
   "SeriesRoute" should {
 
@@ -67,7 +67,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         """.stripMargin
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === Created)
@@ -105,7 +105,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       client
-        .run(Request(method = Method.GET, uri = uri"/series/"))
+        .run(Request(method = Method.GET, uri = uri"/v1/series/"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -119,7 +119,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return specific series" in {
       client
-        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/series/${s1.name.value}"))))
+        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${s1.name.value}"))))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -138,7 +138,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return 404" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/series/not-exists"))
+        .run(Request(method = Method.GET, uri = uri"/v1/series/not-exists"))
         .use { response =>
           IO {
             assert(response.status === NotFound)
@@ -148,7 +148,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "series not found: not-exists")
-            assert(maybeError.instance === "/series/not-exists")
+            assert(maybeError.instance === "/v1/series/not-exists")
           }
         }
         .unsafeRunSync()
@@ -159,7 +159,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .run(
           Request(
             method = Method.PATCH,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/series/${s1.name.value}")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${s1.name.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -184,7 +184,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === BadRequest)
@@ -194,7 +194,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "name is required")
-            assert(maybeError.instance === "/series/")
+            assert(maybeError.instance === "/v1/series/")
           }
         }
         .unsafeRunSync()
@@ -212,7 +212,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === BadRequest)
@@ -222,7 +222,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "title is required")
-            assert(maybeError.instance === "/series/")
+            assert(maybeError.instance === "/v1/series/")
           }
         }
         .unsafeRunSync()
@@ -239,7 +239,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         """.stripMargin
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + expiredToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + expiredToken)), entity = entity))
         .use { response =>
           IO {
 
@@ -252,7 +252,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be reject POST endpoint caused by the authorization header is empty" in {
       client
-        .run(Request(method = Method.POST, uri = uri"/series/"))
+        .run(Request(method = Method.POST, uri = uri"/v1/series/"))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -266,7 +266,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
       val entity = EntityEncoder[IO, String].toEntity("")
       client
         .run(
-          Request(method = Method.POST, uri = uri"/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalid Token")), entity = entity)
+          Request(method = Method.POST, uri = uri"/v1/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalid Token")), entity = entity)
         )
         .use { response =>
           IO {

@@ -18,25 +18,25 @@ import net.yoshinorin.qualtet.domains.contents.*
 import net.yoshinorin.qualtet.domains.contentTypes.*
 import net.yoshinorin.qualtet.domains.robots.*
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapsRepositoryDoobieInterpreter, SitemapService, Url}
-import net.yoshinorin.qualtet.http.routes.{
-  ArchiveRoute,
-  ArticleRoute,
-  AuthRoute,
-  AuthorRoute,
-  ContentRoute,
-  ContentTypeRoute,
-  FeedRoute,
-  HomeRoute,
-  SearchRoute,
-  SeriesRoute,
-  SitemapRoute,
-  SystemRoute,
-  TagRoute
+import net.yoshinorin.qualtet.http.routes.HomeRoute
+import net.yoshinorin.qualtet.http.routes.v1.{
+  ArchiveRoute => ArchiveRouteV1,
+  ArticleRoute => ArticleRouteV1,
+  AuthRoute => AuthRouteV1,
+  AuthorRoute => AuthorRouteV1,
+  CacheRoute => CacheRouteV1,
+  ContentRoute => ContentRouteV1,
+  ContentTypeRoute => ContentTypeRouteV1,
+  FeedRoute => FeedRouteV1,
+  SearchRoute => SearchRouteV1,
+  SeriesRoute => SeriesRouteV1,
+  SitemapRoute => SitemapRouteV1,
+  SystemRoute => SystemRouteV1,
+  TagRoute => TagRouteV1
 }
 import java.util.concurrent.TimeUnit
 import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.domains.feeds.FeedService
-import net.yoshinorin.qualtet.http.routes.CacheRoute
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax.*
@@ -78,70 +78,70 @@ object Fixture {
   val authProvider = new AuthProvider(Modules.authService)
   val corsProvider = new CorsProvider(Modules.config.cors)
 
-  val archiveRoute = new ArchiveRoute(Modules.archiveService)
-  val articleRoute = new ArticleRoute(Modules.articleService)
-  val authorRoute = new AuthorRoute(Modules.authorService)
-  val authRoute = new AuthRoute(Modules.authService)
-  val cacheRoute = new CacheRoute(authProvider, Modules.cacheService)
-  val contentTypeRoute = new ContentTypeRoute(Modules.contentTypeService)
-  val contentRoute = new ContentRoute(authProvider, Modules.contentService)
-  val feedRoute = new FeedRoute(Modules.feedService)
+  val archiveRouteV1 = new ArchiveRouteV1(Modules.archiveService)
+  val articleRouteV1 = new ArticleRouteV1(Modules.articleService)
+  val authorRouteV1 = new AuthorRouteV1(Modules.authorService)
+  val authRouteV1 = new AuthRouteV1(Modules.authService)
+  val cacheRouteV1 = new CacheRouteV1(authProvider, Modules.cacheService)
+  val contentTypeRouteV1 = new ContentTypeRouteV1(Modules.contentTypeService)
+  val contentRouteV1 = new ContentRouteV1(authProvider, Modules.contentService)
+  val feedRouteV1 = new FeedRouteV1(Modules.feedService)
   val homeRoute: HomeRoute = new HomeRoute()
-  val searchRoute = new SearchRoute(Modules.searchService)
-  val seriesRoute = new SeriesRoute(authProvider, Modules.seriesService)
-  val sitemapRoute = new SitemapRoute(Modules.sitemapService)
-  val systemRoute = new SystemRoute(Modules.config.http.endpoints.system)
-  val tagRoute = new TagRoute(authProvider, Modules.tagService, Modules.articleService)
+  val searchRouteV1 = new SearchRouteV1(Modules.searchService)
+  val seriesRouteV1 = new SeriesRouteV1(authProvider, Modules.seriesService)
+  val sitemapRouteV1 = new SitemapRouteV1(Modules.sitemapService)
+  val systemRouteV1 = new SystemRouteV1(Modules.config.http.endpoints.system)
+  val tagRouteV1 = new TagRouteV1(authProvider, Modules.tagService, Modules.articleService)
 
   val router = new net.yoshinorin.qualtet.http.Router(
     corsProvider,
-    archiveRoute,
-    articleRoute,
-    authorRoute,
-    authRoute,
-    cacheRoute,
-    contentRoute,
-    contentTypeRoute,
-    feedRoute,
+    archiveRouteV1,
+    articleRouteV1,
+    authorRouteV1,
+    authRouteV1,
+    cacheRouteV1,
+    contentRouteV1,
+    contentTypeRouteV1,
+    feedRouteV1,
     homeRoute,
-    searchRoute,
-    seriesRoute,
-    sitemapRoute,
-    systemRoute,
-    tagRoute
+    searchRouteV1,
+    seriesRouteV1,
+    sitemapRouteV1,
+    systemRouteV1,
+    tagRouteV1
   )
 
   def makeRouter[F[_]: Monad](
-    archiveRoute: ArchiveRoute[F] = archiveRoute,
-    articleRoute: ArticleRoute[F] = articleRoute,
-    authorRoute: AuthorRoute[F] = authorRoute,
-    authRoute: AuthRoute[F] = authRoute,
-    cacheRoute: CacheRoute[F] = cacheRoute,
-    contentRoute: ContentRoute[F] = contentRoute,
-    contentTypeRoute: ContentTypeRoute[F] = contentTypeRoute,
-    feedRoute: FeedRoute[F] = feedRoute,
+    archiveRouteV1: ArchiveRouteV1[F] = archiveRouteV1,
+    articleRouteV1: ArticleRouteV1[F] = articleRouteV1,
+    authorRouteV1: AuthorRouteV1[F] = authorRouteV1,
+    authRouteV1: AuthRouteV1[F] = authRouteV1,
+    cacheRouteV1: CacheRouteV1[F] = cacheRouteV1,
+    contentRouteV1: ContentRouteV1[F] = contentRouteV1,
+    contentTypeRouteV1: ContentTypeRouteV1[F] = contentTypeRouteV1,
+    feedRouteV1: FeedRouteV1[F] = feedRouteV1,
     homeRoute: HomeRoute = homeRoute,
-    searchRoute: SearchRoute[F] = searchRoute,
-    seriesRoute: SeriesRoute[F] = seriesRoute,
-    sitemapRoute: SitemapRoute[F] = sitemapRoute,
-    tagRoute: TagRoute[F] = tagRoute,
-    systemRoute: SystemRoute = systemRoute
+    searchRouteV1: SearchRouteV1[F] = searchRouteV1,
+    seriesRouteV1: SeriesRouteV1[F] = seriesRouteV1,
+    sitemapRouteV1: SitemapRouteV1[F] = sitemapRouteV1,
+    tagRouteV1: TagRouteV1[F] = tagRouteV1,
+    systemRouteV1: SystemRouteV1 = systemRouteV1
   ) = new net.yoshinorin.qualtet.http.Router(
     corsProvider = corsProvider,
-    archiveRoute = archiveRoute,
-    articleRoute = articleRoute,
-    authorRoute = authorRoute,
-    authRoute = authRoute,
-    cacheRoute = cacheRoute,
-    contentRoute = contentRoute,
-    contentTypeRoute = contentTypeRoute,
-    feedRoute = feedRoute,
+    archiveRouteV1 = archiveRouteV1,
+    articleRouteV1 = articleRouteV1,
+    authorRouteV1 = authorRouteV1,
+    authRouteV1 = authRouteV1,
+    cacheRouteV1 = cacheRouteV1,
+    contentRouteV1 = contentRouteV1,
+    contentTypeRouteV1 = contentTypeRouteV1,
+    feedRouteV1 = feedRouteV1,
     homeRoute = homeRoute,
-    searchRoute = searchRoute,
-    seriesRoute = seriesRoute,
-    sitemapRoute = sitemapRoute,
-    systemRoute = systemRoute,
-    tagRoute = tagRoute
+    searchRouteV1 = searchRouteV1,
+    seriesRouteV1 = seriesRouteV1,
+    sitemapRouteV1 = sitemapRouteV1,
+    systemRouteV1 = systemRouteV1,
+    tagRouteV1 = tagRouteV1
   )
 
   val authorId: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754a")

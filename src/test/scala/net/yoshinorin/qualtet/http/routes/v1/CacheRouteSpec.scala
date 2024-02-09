@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -14,7 +14,7 @@ import net.yoshinorin.qualtet.auth.RequestToken
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.CacheRouteSpec
+// testOnly net.yoshinorin.qualtet.http.routes.v1.CacheRouteSpec
 class CacheRouteSpec extends AnyWordSpec {
 
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
@@ -25,7 +25,7 @@ class CacheRouteSpec extends AnyWordSpec {
     "be invalidate all caches" in {
 
       client
-        .run(Request(method = Method.DELETE, uri = uri"/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))))
         .use { response =>
           IO {
             assert(response.status === NoContent)
@@ -37,7 +37,7 @@ class CacheRouteSpec extends AnyWordSpec {
 
     "be reject caused by expired token" in {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + expiredToken))))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + expiredToken))))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -49,7 +49,7 @@ class CacheRouteSpec extends AnyWordSpec {
 
     "be reject caused by the authorization header is empty" in {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/caches/"))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/caches/"))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -61,7 +61,7 @@ class CacheRouteSpec extends AnyWordSpec {
 
     "be reject caused by invalid token" ignore {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalidToken"))))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalidToken"))))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -73,7 +73,7 @@ class CacheRouteSpec extends AnyWordSpec {
 
     "be return user not found" in {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + nonExistsUserToken))))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + nonExistsUserToken))))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -85,7 +85,7 @@ class CacheRouteSpec extends AnyWordSpec {
 
     "be return Method Not Allowed" in {
       client
-        .run(Request(method = Method.POST, uri = uri"/caches", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))))
+        .run(Request(method = Method.POST, uri = uri"/v1/caches", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))))
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)

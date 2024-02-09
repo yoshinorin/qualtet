@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -19,8 +19,8 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.TagRouteSpec
-class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.TagRouteSpec
+class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents = makeRequestContents(10, "tagRoute")
   // NOTE: create content and related data for test
@@ -35,8 +35,8 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
-  val tagRoute = new TagRoute(authProvider, tagService, articleService)
-  val client: Client[IO] = Client.fromHttpApp(makeRouter(tagRoute = tagRoute).routes.orNotFound)
+  val tagRouteV1 = new TagRoute(authProvider, tagService, articleService)
+  val client: Client[IO] = Client.fromHttpApp(makeRouter(tagRouteV1 = tagRouteV1).routes.orNotFound)
 
   "TagRoute" should {
 
@@ -58,7 +58,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       client
-        .run(Request(method = Method.GET, uri = uri"/tags/"))
+        .run(Request(method = Method.GET, uri = uri"/v1/tags/"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -71,7 +71,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return specific tag" in {
       client
-        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${t(0).name.value}"))))
+        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${t(0).name.value}"))))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -85,7 +85,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
 
       client
-        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${t(1).name.value}"))))
+        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${t(1).name.value}"))))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -132,7 +132,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return 404" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/tags/not-exists"))
+        .run(Request(method = Method.GET, uri = uri"/v1/tags/not-exists"))
         .use { response =>
           IO {
             assert(response.status === NotFound)
@@ -142,7 +142,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail.startsWith("articles not found"))
-            assert(maybeError.instance === "/tags/not-exists")
+            assert(maybeError.instance === "/v1/tags/not-exists")
           }
         }
         .unsafeRunSync()
@@ -156,7 +156,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${tag.id.value}")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${tag.id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -174,7 +174,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${tag.id.value}")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${tag.id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -187,7 +187,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail.startsWith("tag not found: "))
-            assert(maybeError.instance === s"/tags/${tag.id.value}")
+            assert(maybeError.instance === s"/v1/tags/${tag.id.value}")
           }
         }
         .unsafeRunSync()
@@ -199,7 +199,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${id.value}")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -212,7 +212,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail.startsWith("tag not found: "))
-            assert(maybeError.instance === s"/tags/${id.value}")
+            assert(maybeError.instance === s"/v1/tags/${id.value}")
           }
         }
         .unsafeRunSync()
@@ -220,7 +220,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be reject DELETE endpoint caused by invalid token" in {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/tags/reject", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalid token"))))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/tags/reject", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalid token"))))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -236,7 +236,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .run(
           Request(
             method = Method.PATCH,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/tags/${tag.id.value}")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${tag.id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )

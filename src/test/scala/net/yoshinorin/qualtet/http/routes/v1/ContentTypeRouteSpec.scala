@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -13,8 +13,8 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.ContentTypeRouteSpec
-class ContentTypeRouteSpec extends AnyWordSpec {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.ContentTypeRouteSpec
+class ContentTypeRouteV1Spec extends AnyWordSpec {
 
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
@@ -22,7 +22,7 @@ class ContentTypeRouteSpec extends AnyWordSpec {
 
     "be return content-types" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/content-types/"))
+        .run(Request(method = Method.GET, uri = uri"/v1/content-types/"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -37,7 +37,7 @@ class ContentTypeRouteSpec extends AnyWordSpec {
 
     "be return content-type:articles" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/content-types/article"))
+        .run(Request(method = Method.GET, uri = uri"/v1/content-types/article"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -53,7 +53,7 @@ class ContentTypeRouteSpec extends AnyWordSpec {
 
     "be return content-type:page" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/content-types/page"))
+        .run(Request(method = Method.GET, uri = uri"/v1/content-types/page"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -69,7 +69,7 @@ class ContentTypeRouteSpec extends AnyWordSpec {
 
     "be return content-type:not-exists" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/content-types/not-exists"))
+        .run(Request(method = Method.GET, uri = uri"/v1/content-types/not-exists"))
         .use { response =>
           IO {
             assert(response.status === NotFound)
@@ -79,7 +79,7 @@ class ContentTypeRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "Not Found")
-            assert(maybeError.instance === "/content-types/not-exists")
+            assert(maybeError.instance === "/v1/content-types/not-exists")
           }
         }
         .unsafeRunSync()
@@ -87,7 +87,7 @@ class ContentTypeRouteSpec extends AnyWordSpec {
 
     "be return Method Not Allowed" in {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/content-types"))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/content-types"))
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)

@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -20,8 +20,8 @@ import java.time.Instant
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.ContentRouteSpec
-class ContentRouteSpec extends AnyWordSpec {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.ContentRouteSpec
+class ContentRouteV1Spec extends AnyWordSpec {
 
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
@@ -44,7 +44,7 @@ class ContentRouteSpec extends AnyWordSpec {
         """.stripMargin
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === Created)
@@ -81,7 +81,7 @@ class ContentRouteSpec extends AnyWordSpec {
         """.stripMargin
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "bearer " + validToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/contents/", headers = Headers(Header.Raw(ci"Authorization", "bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === Created)
@@ -100,7 +100,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/contents/${content.id.value}")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${content.id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -117,7 +117,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/contents/${content.id.value}")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${content.id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -130,7 +130,7 @@ class ContentRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail.startsWith("content not found: "))
-            assert(maybeError.instance === s"/contents/${content.id.value}")
+            assert(maybeError.instance === s"/v1/contents/${content.id.value}")
           }
         }
         .unsafeRunSync()
@@ -143,7 +143,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/contents/${id.value}")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${id.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -156,7 +156,7 @@ class ContentRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === s"content not found: ${id.value}")
-            assert(maybeError.instance === s"/contents/${id.value}")
+            assert(maybeError.instance === s"/v1/contents/${id.value}")
           }
         }
         .unsafeRunSync()
@@ -167,7 +167,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.DELETE,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/contents/reject")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/reject")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer invalid token"))
           )
         )
@@ -197,7 +197,7 @@ class ContentRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === BadRequest)
@@ -207,7 +207,7 @@ class ContentRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "title required.")
-            assert(maybeError.instance === s"/contents/")
+            assert(maybeError.instance === s"/v1/contents/")
           }
         }
         .unsafeRunSync()
@@ -230,7 +230,7 @@ class ContentRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === BadRequest)
@@ -240,7 +240,7 @@ class ContentRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "rawContent required.")
-            assert(maybeError.instance === s"/contents/")
+            assert(maybeError.instance === s"/v1/contents/")
           }
         }
         .unsafeRunSync()
@@ -263,7 +263,7 @@ class ContentRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === BadRequest)
@@ -273,7 +273,7 @@ class ContentRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "htmlContent required.")
-            assert(maybeError.instance === s"/contents/")
+            assert(maybeError.instance === s"/v1/contents/")
           }
         }
         .unsafeRunSync()
@@ -296,7 +296,9 @@ class ContentRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(json)
       client
-        .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + expiredToken)), entity = entity))
+        .run(
+          Request(method = Method.POST, uri = uri"/v1/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + expiredToken)), entity = entity)
+        )
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -308,7 +310,7 @@ class ContentRouteSpec extends AnyWordSpec {
 
     "be reject POST endpoint caused by the authorization header is empty" in {
       client
-        .run(Request(method = Method.POST, uri = uri"/contents/"))
+        .run(Request(method = Method.POST, uri = uri"/v1/contents/"))
         .use { response =>
           IO {
             assert(response.status === Unauthorized)
@@ -322,7 +324,12 @@ class ContentRouteSpec extends AnyWordSpec {
       val entity = EntityEncoder[IO, String].toEntity("")
       client
         .run(
-          Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalid Token")), entity = entity)
+          Request(
+            method = Method.POST,
+            uri = uri"/v1/contents/",
+            headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalid Token")),
+            entity = entity
+          )
         )
         .use { response =>
           IO {
@@ -339,7 +346,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.POST,
-            uri = uri"/contents/",
+            uri = uri"/v1/contents/",
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + nonExistsUserToken)),
             entity = entity
           )
@@ -370,7 +377,7 @@ class ContentRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(wrongJsonFormat)
       client
-        .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === BadRequest)
@@ -380,7 +387,7 @@ class ContentRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "Wrong JSON format or missing required field. Please see API document.")
-            assert(maybeError.instance === s"/contents/")
+            assert(maybeError.instance === s"/v1/contents/")
           }
         }
         .unsafeRunSync()
@@ -398,7 +405,7 @@ class ContentRouteSpec extends AnyWordSpec {
 
       val entity = EntityEncoder[IO, String].toEntity(wrongJsonFormat)
       client
-        .run(Request(method = Method.POST, uri = uri"/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .run(Request(method = Method.POST, uri = uri"/v1/contents/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
         .use { response =>
           IO {
             assert(response.status === BadRequest)
@@ -408,7 +415,7 @@ class ContentRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "Wrong JSON format or missing required field. Please see API document.")
-            assert(maybeError.instance === s"/contents/")
+            assert(maybeError.instance === s"/v1/contents/")
           }
         }
         .unsafeRunSync()
@@ -439,7 +446,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.GET,
-            uri = uri"/contents/test/content/route/spec/2"
+            uri = uri"/v1/contents/test/content/route/spec/2"
           )
         )
         .use { response =>
@@ -480,7 +487,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.GET,
-            uri = uri"/contents/this/is/a/404"
+            uri = uri"/v1/contents/this/is/a/404"
           )
         )
         .use { response =>
@@ -492,7 +499,7 @@ class ContentRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "Not Found")
-            assert(maybeError.instance === "/contents/this/is/a/404")
+            assert(maybeError.instance === "/v1/contents/this/is/a/404")
           }
         }
         .unsafeRunSync()
@@ -503,7 +510,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.GET,
-            uri = uri"/contents/this/is/a/404/"
+            uri = uri"/v1/contents/this/is/a/404/"
           )
         )
         .use { response =>
@@ -515,7 +522,7 @@ class ContentRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "Not Found")
-            assert(maybeError.instance === "/contents/this/is/a/404/")
+            assert(maybeError.instance === "/v1/contents/this/is/a/404/")
           }
         }
         .unsafeRunSync()
@@ -526,7 +533,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.PATCH,
-            uri = uri"/contents/this/is/a/404/",
+            uri = uri"/v1/contents/this/is/a/404/",
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )

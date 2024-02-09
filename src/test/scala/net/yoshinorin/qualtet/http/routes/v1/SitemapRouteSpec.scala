@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -13,8 +13,8 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.SitemapRouteSpec
-class SitemapRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.SitemapRouteSpec
+class SitemapRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents = makeRequestContents(2, "sitemapRoute")
 
@@ -28,7 +28,7 @@ class SitemapRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
   "SitemapRoute" should {
     "be return json for sitemap.xml" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/sitemaps"))
+        .run(Request(method = Method.GET, uri = uri"/v1/sitemaps"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -44,7 +44,7 @@ class SitemapRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return Method Not Allowed" in {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/sitemaps"))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/sitemaps"))
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)

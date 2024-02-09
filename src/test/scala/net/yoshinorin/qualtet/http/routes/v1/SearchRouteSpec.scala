@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -16,8 +16,8 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.SearchRouteSpec
-class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.SearchRouteSpec
+class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents: List[RequestContent] = {
     (0 until 49).toList
@@ -55,7 +55,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
   "SearchRoute" should {
     "be return search result" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/search/?q=searchRoute"))
+        .run(Request(method = Method.GET, uri = uri"/v1/search/?q=searchRoute"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -76,7 +76,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return UnprocessableEntity without query params" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/search/"))
+        .run(Request(method = Method.GET, uri = uri"/v1/search/"))
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
@@ -86,7 +86,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "SEARCH_QUERY_REQUIRED")
-            assert(maybeError.instance === "/search/")
+            assert(maybeError.instance === "/v1/search/")
           }
         }
         .unsafeRunSync()
@@ -94,7 +94,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return UnprocessableEntity with query param short value" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/search/?q=abc"))
+        .run(Request(method = Method.GET, uri = uri"/v1/search/?q=abc"))
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
@@ -104,7 +104,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "SEARCH_CHAR_LENGTH_TOO_SHORT")
-            assert(maybeError.instance === "/search/?q=abc")
+            assert(maybeError.instance === "/v1/search/?q=abc")
           }
         }
         .unsafeRunSync()
@@ -112,7 +112,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return UnprocessableEntity with invalid query param" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/search/?invalid=abcd"))
+        .run(Request(method = Method.GET, uri = uri"/v1/search/?invalid=abcd"))
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
@@ -122,7 +122,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "SEARCH_QUERY_REQUIRED")
-            assert(maybeError.instance === "/search/?invalid=abcd")
+            assert(maybeError.instance === "/v1/search/?invalid=abcd")
           }
         }
         .unsafeRunSync()
@@ -130,7 +130,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return UnprocessableEntity with query param contains invalid values" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/search/?q=a.b.c"))
+        .run(Request(method = Method.GET, uri = uri"/v1/search/?q=a.b.c"))
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
@@ -140,7 +140,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "INVALID_CHARS_INCLUDED")
-            assert(maybeError.instance === "/search/?q=a.b.c")
+            assert(maybeError.instance === "/v1/search/?q=a.b.c")
           }
         }
         .unsafeRunSync()
@@ -148,7 +148,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be return UnprocessableEntity with too many query params" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/search/?q=abcd&q=abcd&q=abcd&q=abcd"))
+        .run(Request(method = Method.GET, uri = uri"/v1/search/?q=abcd&q=abcd&q=abcd&q=abcd"))
         .use { response =>
           IO {
             assert(response.status === UnprocessableEntity)
@@ -158,7 +158,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "TOO_MANY_SEARCH_WORDS")
-            assert(maybeError.instance === "/search/?q=abcd&q=abcd&q=abcd&q=abcd")
+            assert(maybeError.instance === "/v1/search/?q=abcd&q=abcd&q=abcd&q=abcd")
           }
         }
         .unsafeRunSync()

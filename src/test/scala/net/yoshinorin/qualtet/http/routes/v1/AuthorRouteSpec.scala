@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import org.http4s.client.Client
@@ -13,8 +13,8 @@ import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.AuthorRouteSpec
-class AuthorRouteSpec extends AnyWordSpec {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.AuthorRouteSpec
+class AuthorRouteV1Spec extends AnyWordSpec {
 
   val authorRoute = new AuthorRoute(authorService)
 
@@ -42,7 +42,7 @@ class AuthorRouteSpec extends AnyWordSpec {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       client
-        .run(Request(method = Method.GET, uri = uri"/authors/"))
+        .run(Request(method = Method.GET, uri = uri"/v1/authors/"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -65,7 +65,7 @@ class AuthorRouteSpec extends AnyWordSpec {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       client
-        .run(Request(method = Method.GET, uri = uri"/authors/jhondue"))
+        .run(Request(method = Method.GET, uri = uri"/v1/authors/jhondue"))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -78,7 +78,7 @@ class AuthorRouteSpec extends AnyWordSpec {
 
     "be return 404" in {
       client
-        .run(Request(method = Method.GET, uri = uri"/authors/jhondue-not-exists"))
+        .run(Request(method = Method.GET, uri = uri"/v1/authors/jhondue-not-exists"))
         .use { response =>
           IO {
             assert(response.status === NotFound)
@@ -88,7 +88,7 @@ class AuthorRouteSpec extends AnyWordSpec {
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "Not Found")
-            assert(maybeError.instance === "/authors/jhondue-not-exists")
+            assert(maybeError.instance === "/v1/authors/jhondue-not-exists")
           }
         }
         .unsafeRunSync()
@@ -96,7 +96,7 @@ class AuthorRouteSpec extends AnyWordSpec {
 
     "be return Method Not Allowed" in {
       client
-        .run(Request(method = Method.DELETE, uri = uri"/authors"))
+        .run(Request(method = Method.DELETE, uri = uri"/v1/authors"))
         .use { response =>
           IO {
             assert(response.status === MethodNotAllowed)

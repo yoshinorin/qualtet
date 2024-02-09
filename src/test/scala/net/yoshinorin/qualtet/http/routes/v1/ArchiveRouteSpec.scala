@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import doobie.ConnectionIO
@@ -16,15 +16,15 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.ArchiveRouteSpec
-class ArchiveRouteSpec extends AnyWordSpec {
+// testOnly net.yoshinorin.qualtet.http.routes.v1.ArchiveRouteSpec
+class ArchiveRouteV1Spec extends AnyWordSpec {
 
   val mockArchiveService = Mockito.mock(classOf[ArchiveService[ConnectionIO]])
-  val archiveRoute = new ArchiveRoute(mockArchiveService)
+  val archiveRouteV1 = new ArchiveRoute(mockArchiveService)
 
-  val router = Fixture.makeRouter(archiveRoute = archiveRoute)
+  val router = Fixture.makeRouter(archiveRouteV1 = archiveRouteV1)
 
-  val request: Request[IO] = Request(method = Method.GET, uri = uri"/archives")
+  val request: Request[IO] = Request(method = Method.GET, uri = uri"/v1/archives")
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   when(mockArchiveService.get).thenReturn(
@@ -77,7 +77,7 @@ class ArchiveRouteSpec extends AnyWordSpec {
 
   "be return Method Not Allowed" in {
     client
-      .run(Request(method = Method.DELETE, uri = uri"/archives"))
+      .run(Request(method = Method.DELETE, uri = uri"/v1/archives"))
       .use { response =>
         IO {
           assert(response.status === MethodNotAllowed)

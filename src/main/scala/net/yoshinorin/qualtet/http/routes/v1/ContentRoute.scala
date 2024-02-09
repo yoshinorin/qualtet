@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http.routes
+package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.Monad
 import cats.implicits.*
@@ -36,7 +36,7 @@ class ContentRoute[F[_]: Monad](
      */
     case request @ GET -> _ =>
       this
-        .get(request.uri.path.toString().replace("/contents/", ""))(request)
+        .get(request.uri.path.toString().replace("/v1/contents/", ""))(request)
         .handleErrorWith(_.logWithStackTrace[IO].andResponse(request))
   }
 
