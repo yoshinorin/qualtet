@@ -7,10 +7,9 @@ import org.http4s.*
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Server
 import com.comcast.ip4s.*
-import org.slf4j.LoggerFactory
+import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
 import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
-import org.typelevel.log4cats.slf4j.{Slf4jLogger => Log4CatsSlf4jLogger}
 import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
@@ -33,11 +32,8 @@ import scala.concurrent.duration._
 
 object BootStrap extends IOApp {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
-
-  logger.info(ApplicationInfo.asJson)
-
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
+  val logger: SelfAwareStructuredLogger[IO] = Log4CatsLoggerFactory[IO].getLogger
 
   val authProvider = new AuthProvider(Modules.authService)
   val corsProvider = new CorsProvider(Modules.config.cors)
@@ -81,7 +77,7 @@ object BootStrap extends IOApp {
       .withHost(host)
       .withPort(port)
       .withHttpApp(httpApp)
-      .withLogger(Log4CatsSlf4jLogger.getLoggerFromSlf4j(logger))
+      .withLogger(logger)
       .withShutdownTimeout(1.second)
       .build
   }
@@ -92,6 +88,7 @@ object BootStrap extends IOApp {
     val port = Port.fromInt(Modules.config.http.port).getOrElse(port"9001")
 
     (for {
+      _ <- logger.info(ApplicationInfo.asJson)
       routes <- router.withCors.map[Kleisli[IO, Request[IO], Response[IO]]](x => x.orNotFound)
       httpApp <- IO(new HttpAppBuilder(routes).build)
       server <- IO(
