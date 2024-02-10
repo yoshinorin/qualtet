@@ -8,7 +8,7 @@
 
 || Version | CI/CD | Coverage |
 |---|---|---|---|
-| `v2.x` |![](https://img.shields.io/badge/Release-v2.11.0_(stable)-blue.svg?style=flat-square)|[![CI](https://github.com/yoshinorin/qualtet/actions/workflows/ci.yml/badge.svg)](https://github.com/yoshinorin/qualtet/actions/workflows/ci.yml)|[![](https://img.shields.io/badge/coverage-tempolary_inactive-inactive.svg)](https://github.com/yoshinorin/qualtet/commit/7923bccda784a198b3dc4d97a47111918e99ec30)|
+| `v2.x` |![](https://img.shields.io/badge/Release-v2.11.0_(stable)-blue.svg?style=flat-square)|[![CI](https://github.com/yoshinorin/qualtet/actions/workflows/ci.yml/badge.svg)](https://github.com/yoshinorin/qualtet/actions/workflows/ci.yml)|[![](https://img.shields.io/badge/coverage-tempolary_inactive-inactive.svg)](https://github.com/yoshinorin/qualtet/blob/e313dcd2fba9abdbb5fd40d36f71bcd0f27602a5/.github/workflows/ci.yml#L47)|
 | `v1.x` |![](https://img.shields.io/badge/Release-v1.13.0_(stale)-inactive.svg?style=flat-square)|[![CI](https://github.com/yoshinorin/qualtet/actions/workflows/ci.yml/badge.svg?branch=v1.x)](https://github.com/yoshinorin/qualtet/actions/workflows/ci.yml)|[![Coverage Status](https://coveralls.io/repos/github/yoshinorin/qualtet/badge.svg?branch=v1.x)](https://coveralls.io/github/yoshinorin/qualtet?branch=v1.x)|
 
 ## Related Projects
