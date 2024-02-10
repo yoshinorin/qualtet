@@ -13,7 +13,8 @@ import net.yoshinorin.qualtet.syntax.*
 
 object ResponseTranslator {
 
-  private[this] def failToResponse(f: Fail)(implicit req: Request[IO]): IO[Response[IO]] = {
+  // NOTE: can't use `ContextFunctions`.
+  private[this] def failToResponse(f: Fail)(using req: Request[IO]): IO[Response[IO]] = {
     f match {
       case e: Fail.NotFound =>
         NotFound(
@@ -77,6 +78,8 @@ object ResponseTranslator {
     }
   }
 
+  // NOTE: can't use `using` or `ContextFunctions`.
+  //       I don't know why can't use `using`...
   def toResponse[T](a: Option[T])(implicit e: JsonValueCodec[T], req: Request[IO]): IO[Response[IO]] = {
     a match {
       case Some(x) =>
