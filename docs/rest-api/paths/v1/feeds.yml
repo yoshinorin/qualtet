@@ -1,0 +1,13 @@
+get:
+  summary: Get a feeds
+  tags:
+    - feed
+  responses:
+    200:
+      description: Response when Success
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../components/schemas/feed.yml'

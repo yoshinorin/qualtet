@@ -1,0 +1,13 @@
+get:
+  summary: Get an articles url & updated date for sitemaps.xml
+  tags:
+    - sitemaps
+  responses:
+    200:
+      description: Response when Success
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../components/schemas/sitemap.yml'

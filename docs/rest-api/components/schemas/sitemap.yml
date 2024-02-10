@@ -1,0 +1,8 @@
+type: object
+properties:
+  loc:
+    type: string
+    example: "https://example.com/aaa/bbb/ccc"
+  lastMod:
+    type: string
+    example: "YYYY-MM-DD"

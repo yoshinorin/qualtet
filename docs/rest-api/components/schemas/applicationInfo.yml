@@ -1,0 +1,38 @@
+type: object
+properties:
+  name:
+    type: string
+    example: "qualtet"
+  version:
+    type: string
+    example: "v2.11.0"
+  repository:
+    type: string
+    example: "https://github.com/yoshinorin/qualtet"
+  runtime:
+    type: object
+    properties:
+      runtime:
+        type: string
+        example: "Java"
+      vendor:
+        type: string
+        example: "Eclipse Adoptium"
+      version:
+        type: string
+        example: "17.0.5"
+  build:
+    type: object
+    properties:
+      commit:
+        type: string
+        example: "237856f"
+      url:
+        type: string
+        example: "https://github.com/yoshinorin/qualtet/commit/237856f"
+      scalaVersion:
+        type: string
+        example: "3.3.1"
+      sbtVersion:
+        type: string
+        example: "1.9.7"

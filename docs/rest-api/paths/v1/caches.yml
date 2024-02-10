@@ -1,0 +1,11 @@
+delete:
+  summary: Invalidate all caches
+  tags:
+    - cache
+  security:
+    - bearerAuth: []
+  responses:
+    204:
+      description: Caches are invalidated
+    401:
+      description: Unauthorized

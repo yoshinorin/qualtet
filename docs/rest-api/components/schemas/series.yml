@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: string
+    example: "01gs85hv65rhsq06fdp7j3ers0"
+  name:
+    type: string
+    example: "qualtet-development-history"
+  title:
+    type: string
+    example: "Example series"
+  description:
+    type: string
+    example: "Example series description"
+  articles:
+    type: array
+    items:
+      $ref: './article.yml'

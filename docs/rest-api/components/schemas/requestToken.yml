@@ -1,0 +1,11 @@
+type: object
+properties:
+  authorId:
+    type: string
+    example: "01dfvhk1bz8lk1e4b1s2hdw9ku"
+  password:
+    type: string
+    example: "examplepassword"
+required:
+  - authorId
+  - password

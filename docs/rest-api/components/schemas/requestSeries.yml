@@ -1,0 +1,15 @@
+type: object
+properties:
+  path:
+    type: string
+    format: url(excludes domain part)
+    example: "/series/<example>"
+  title:
+    type: string
+    example: "Example series"
+  description:
+    type: string
+    example: "Example series description"
+required:
+  - path
+  - title

@@ -1,0 +1,13 @@
+type: object
+properties:
+  path:
+    type: string
+    format: url(excludes domain part)
+    example: "/post/test-article"
+  title:
+    type: string
+    example: "Post Title"
+  publishedAt:
+    type: long
+    description: Unix time
+    example: 1625065318

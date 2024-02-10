@@ -1,0 +1,12 @@
+get:
+  summary: Get a tags
+  tags:
+    - tags
+  responses:
+    200:
+      description: Response when Success
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: '../../../components/schemas/tagWithCount.yml'

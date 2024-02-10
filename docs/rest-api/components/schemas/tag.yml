@@ -1,0 +1,9 @@
+type: object
+properties:
+  id:
+    type: string
+    format: ulid
+    example: "01frdbdb6s2mxshxzk3wan0f6d"
+  name:
+    type: string
+    example: "diary"

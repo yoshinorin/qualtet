@@ -1,0 +1,33 @@
+get:
+  summary: Get system metadata
+  tags:
+    - system
+  responses:
+    200:
+      description: Response when Success (If envval `QUALTET_HTTP_ENDPOINT_SYSTEM_METADATA_ENABLED` is `true`)
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/applicationInfo.yml'
+    404:
+      description: Resource not found (If envval `QUALTET_HTTP_ENDPOINT_SYSTEM_METADATA_ENABLED` is `false` or not exists)
+      content:
+        application/json+problem:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "https://yoshinorin.github.io/qualtet/rest-api/"
+              title:
+                type: string
+                example: "Not Found"
+              status:
+                type: number
+                example: 404
+              detail:
+                type: string
+                example: "Not Found"
+              instance:
+                type: string
+                example: "/v1/system/metadata"

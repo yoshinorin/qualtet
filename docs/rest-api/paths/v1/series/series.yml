@@ -1,0 +1,57 @@
+get:
+  summary: Get all series
+  tags:
+    - series
+  responses:
+    200:
+      description: Response when Success
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../../components/schemas/series.yml'
+post:
+  summary: Create or Update a series
+  tags:
+    - series
+  description: |
+    Create or Update a series
+  security:
+    - bearerAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/requestSeries.yml'
+  responses:
+    201:
+      description: Create or Update succeeded
+      content:
+        application/json:
+          schema:
+            $ref: '../../../components/schemas/series.yml'
+    400:
+      description: BadRequest
+      content:
+        application/json+problem:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "https://yoshinorin.github.io/qualtet/rest-api/"
+              title:
+                type: string
+                example: "Bad Request"
+              status:
+                type: number
+                example: 400
+              detail:
+                type: string
+                example: "Bad Request"
+              instance:
+                type: string
+                example: "/v1/series/"
+    401:
+      description: Unauthorized

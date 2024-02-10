@@ -1,0 +1,41 @@
+type: object
+properties:
+  contentType:
+    type: string
+    example: "article"
+  path:
+    type: string
+    example: "/2020/01/01/new-year"
+  externalResources:
+    type: array
+    items:
+      $ref: './externalResource.yml'
+  title:
+    type: string
+    example: "Post Title"
+  rawContent:
+    type: string
+    example: "Post Content.... RAW strings"
+  htmlContent:
+    type: string
+    example: "Post Content.... HTML strings"
+  tags:
+    type: array
+    example: "['diary', 'tech']"
+  series:
+    type: string
+    example: "qualtet-development-history"
+  publishedAt:
+    type: long
+    description: Unix time
+    example: 1625065509
+  updatedAt:
+    type: long
+    description: Unix time
+    example: 1625065509
+required:
+  - contentType
+  - path
+  - title
+  - rawContent
+  - htmlContent

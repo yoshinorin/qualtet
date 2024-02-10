@@ -1,0 +1,33 @@
+get:
+  summary: Get a Content-Type
+  tags:
+    - content-types
+  responses:
+    200:
+      description: Response when Success
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/contentType'
+    404:
+      description: Content-Type not found
+      content:
+        application/json+problem:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "https://yoshinorin.github.io/qualtet/rest-api/"
+              title:
+                type: string
+                example: "Not Found"
+              status:
+                type: number
+                example: 404
+              detail:
+                type: string
+                example: "Not Found"
+              instance:
+                type: string
+                example: "/v1/content-types/{contentTypeName}"

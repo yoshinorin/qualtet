@@ -1,0 +1,8 @@
+type: object
+properties:
+  kind:
+    type: string
+    example: "js"
+  values:
+    type: array
+    example: "['mathjax','marmaid']"

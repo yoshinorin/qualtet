@@ -1,0 +1,21 @@
+type: object
+properties:
+  title:
+    type: string
+    example: "Post Title"
+  link:
+    type: string
+    format: url(excludes domain part)
+    example: "/post/test-article"
+  id:
+    type: string
+    format: url(excludes domain part)
+    example: "/post/test-article"
+  published:
+    type: long
+    description: Unix time
+    example: 1625065509
+  updated:
+    type: long
+    description: Unix time
+    example: 1625065592

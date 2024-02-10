@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    format: ulid
+    example: "01fgvhk1bz6546e4b1s2hdw0pw"
+  name:
+    type: string
+    example: JohnDoe
+  displayName:
+    type: string
+    example: John
+  createdAt:
+    type: long
+    description: Unix time
+    example: 1625065318

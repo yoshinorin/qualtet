@@ -1,0 +1,33 @@
+delete:
+  summary: Delete a content
+  tags:
+    - contents
+  security:
+    - bearerAuth: []
+  responses:
+    204:
+      description: Delete succeeded
+    401:
+      description: Unauthorized
+    404:
+      description: Content not found
+      content:
+        application/json+problem:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "https://yoshinorin.github.io/qualtet/rest-api/"
+              title:
+                type: string
+                example: "Not Found"
+              status:
+                type: number
+                example: 404
+              detail:
+                type: string
+                example: "Not Found"
+              instance:
+                type: string
+                example: "/v1/contents/{contentId}"

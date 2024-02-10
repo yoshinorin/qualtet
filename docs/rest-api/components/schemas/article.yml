@@ -1,0 +1,24 @@
+type: object
+properties:
+  id:
+    type: string
+    format: ulid
+    example: "01fgvhme5b7cj0m5agr9f4g2ca"
+  title:
+    type: string
+    example: "Post Title"
+  path:
+    type: string
+    format: url(excludes domain part)
+    example: "/post/test-article"
+  content:
+    type: string
+    example: "Post Content.... RAW strings"
+  publishedAt:
+    type: long
+    description: Unix time
+    example: 1625065509
+  updatedAt:
+    type: long
+    description: Unix time
+    example: 1625065592

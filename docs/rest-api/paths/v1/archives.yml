@@ -1,0 +1,13 @@
+get:
+  summary: Get all articles
+  tags:
+    - archives
+  responses:
+    200:
+      description: Response when Success
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: './components/schemas/simpleArticle.yml'

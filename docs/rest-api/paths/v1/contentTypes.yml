@@ -1,0 +1,12 @@
+get:
+  summary: Get Content-Types
+  tags:
+    - content-types
+  responses:
+    200:
+      description: Response when Success
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: '../../components/schemas/contentType.yml'

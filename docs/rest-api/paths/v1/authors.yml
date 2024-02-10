@@ -1,0 +1,13 @@
+get:
+  summary: Get all authors
+  tags:
+    - authors
+  responses:
+    200:
+      description: Response when Success
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../components/schemas/author.yml'

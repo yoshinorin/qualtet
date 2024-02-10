@@ -1,0 +1,34 @@
+get:
+  summary: Get an author
+  tags:
+    - authors
+  responses:
+    200:
+      description: Response when Success
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: '../../components/schemas/author.yml'
+    404:
+      description: Author not found
+      content:
+        application/json+problem:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "https://yoshinorin.github.io/qualtet/rest-api/"
+              title:
+                type: string
+                example: "Not Found"
+              status:
+                type: number
+                example: 404
+              detail:
+                type: string
+                example: "Not Found"
+              instance:
+                type: string
+                example: "/v1/author/{authorName}"
