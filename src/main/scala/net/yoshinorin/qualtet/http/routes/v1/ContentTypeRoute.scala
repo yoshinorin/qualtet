@@ -32,7 +32,7 @@ class ContentTypeRoute[F[_]: Monad](
     } yield response
   }
 
-  private[http] def get(name: String)(implicit r: Request[IO]): IO[Response[IO]] = {
+  private[http] def get(name: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
       maybeContentType <- contentTypeService.findByName(name)
     } yield maybeContentType).flatMap(_.asResponse)

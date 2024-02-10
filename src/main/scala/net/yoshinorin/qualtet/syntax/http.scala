@@ -10,19 +10,19 @@ import scala.util.Try
 trait http {
 
   extension (e: Throwable) {
-    def asResponse(implicit req: Request[IO]): IO[Response[IO]] = {
+    def asResponse: Request[IO] ?=> IO[Response[IO]] = {
       ResponseTranslator.toResponse(e)
     }
   }
 
   extension (e: IO[Throwable]) {
-    def andResponse(implicit req: Request[IO]): IO[Response[IO]] = {
+    def andResponse: Request[IO] ?=> IO[Response[IO]] = {
       e.flatMap(_.asResponse)
     }
   }
 
   extension [T](a: Option[T]) {
-    def asResponse(implicit e: JsonValueCodec[T], req: Request[IO]): IO[Response[IO]] = {
+    def asResponse: (JsonValueCodec[T], Request[IO]) ?=> IO[Response[IO]] = {
       ResponseTranslator.toResponse[T](a)
     }
   }

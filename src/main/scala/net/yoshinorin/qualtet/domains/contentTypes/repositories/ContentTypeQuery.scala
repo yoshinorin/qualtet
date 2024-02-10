@@ -7,7 +7,7 @@ import doobie.util.update.Update
 
 object ContentTypeQuery {
 
-  def upsert(implicit contentTypeWrite: Write[ContentType]): Update[ContentType] = {
+  def upsert: Write[ContentType] ?=> Update[ContentType] = {
     val q = s"""
           INSERT INTO content_types (id, name)
             VALUES (?, ?)
@@ -17,12 +17,12 @@ object ContentTypeQuery {
     Update[ContentType](q)
   }
 
-  def getAll(implicit contentTypeRead: Read[ContentType]): Query0[ContentType] = {
+  def getAll: Read[ContentType] ?=> Query0[ContentType] = {
     sql"SELECT * FROM content_types"
       .query[ContentType]
   }
 
-  def findByName(name: String)(implicit contentTypeRead: Read[ContentType]): Query0[ContentType] = {
+  def findByName(name: String): Read[ContentType] ?=> Query0[ContentType] = {
     sql"SELECT * FROM content_types WHERE name = ${name}"
       .query[ContentType]
   }

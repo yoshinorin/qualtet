@@ -33,7 +33,7 @@ class AuthorRoute[F[_]: Monad](
     } yield response
   }
 
-  private[http] def get(authorName: String)(implicit r: Request[IO]): IO[Response[IO]] = {
+  private[http] def get(authorName: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
       maybeAuthor <- authorService.findByName(AuthorName(authorName))
     } yield maybeAuthor).flatMap(_.asResponse)

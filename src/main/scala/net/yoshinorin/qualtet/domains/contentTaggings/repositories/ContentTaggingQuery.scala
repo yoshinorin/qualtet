@@ -10,12 +10,12 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object ContentTaggingQuery {
 
-  def findByTagId(id: TagId)(implicit contentTaggingRead: Read[ContentTagging]): query.Query0[ContentTagging] = {
+  def findByTagId(id: TagId): Read[ContentTagging] ?=> query.Query0[ContentTagging] = {
     sql"SELECT * FROM contents_tagging FROM tag_id = ${id.value}"
       .query[ContentTagging]
   }
 
-  def bulkUpsert(implicit contentTaggingWrite: Write[ContentTagging]): Update[ContentTagging] = {
+  def bulkUpsert: Write[ContentTagging] ?=> Update[ContentTagging] = {
     val q = s"""
           INSERT INTO contents_tagging (content_id, tag_id)
             VALUES (?, ?)

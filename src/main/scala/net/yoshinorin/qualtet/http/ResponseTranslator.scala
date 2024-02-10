@@ -70,7 +70,7 @@ object ResponseTranslator {
     }
   }
 
-  def toResponse(e: Throwable)(implicit req: Request[IO]): IO[Response[IO]] = {
+  def toResponse(e: Throwable): Request[IO] ?=> IO[Response[IO]] = {
     e match {
       case f: Fail => this.failToResponse(f)
       case _ => InternalServerError("Internal Server Error")

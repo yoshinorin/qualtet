@@ -27,11 +27,15 @@ class TagRoute[F[_]: Monad](
       authProvider.authenticate(tagsWithAuthed)
 
   private[http] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case request @ GET -> Root => this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse(request))
-    case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+    case request @ GET -> Root =>
+      implicit val r = request
+      this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    case request @ OPTIONS -> Root =>
+      NoContent() // TODO: return `Allow Header`
     case request @ GET -> Root / nameOrId =>
+      implicit val r = request
       val q = request.uri.query.params.asRequestQueryParamater
-      this.get(nameOrId, q.page, q.limit).handleErrorWith(_.logWithStackTrace[IO].andResponse(request))
+      this.get(nameOrId, q.page, q.limit).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   private[http] def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of { ctxRequest =>

@@ -7,7 +7,7 @@ import doobie.util.update.Update
 
 object ContentQuery {
 
-  def upsert(implicit contentWrite: Write[Content]): Update[Content] = {
+  def upsert: Write[Content] ?=> Update[Content] = {
     val q = s"""
           INSERT INTO contents (id, author_id, content_type_id, path, title, raw_content, html_content, published_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -27,17 +27,17 @@ object ContentQuery {
       .query[Unit]
   }
 
-  def findById(id: ContentId)(implicit contentRead: Read[Content]): Query0[Content] = {
+  def findById(id: ContentId): Read[Content] ?=> Query0[Content] = {
     sql"SELECT * FROM contents WHERE id = ${id.value}"
       .query[Content]
   }
 
-  def findByPath(path: Path)(implicit contentRead: Read[Content]): Query0[Content] = {
+  def findByPath(path: Path): Read[Content] ?=> Query0[Content] = {
     sql"SELECT * FROM contents WHERE path = ${path.value}"
       .query[Content]
   }
 
-  def findByPathWithMeta(path: Path)(implicit contentRead: Read[ReadContentDbRow]): Query0[ReadContentDbRow] = {
+  def findByPathWithMeta(path: Path): Read[ReadContentDbRow] ?=> Query0[ReadContentDbRow] = {
     sql"""
        SELECT
          contents.id AS id,

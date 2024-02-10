@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object RobotsQuery {
 
-  def upsert(implicit robotsWrite: Write[Robots]): Update[Robots] = {
+  def upsert: Write[Robots] ?=> Update[Robots] = {
     val q = s"""
           INSERT INTO robots (content_id, attributes)
             VALUES (?, ?)

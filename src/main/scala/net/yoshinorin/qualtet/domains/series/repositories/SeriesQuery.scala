@@ -7,7 +7,7 @@ import doobie.util.update.Update
 
 object SeriesQuery {
 
-  def upsert(implicit seriesWrite: doobie.Write[Series]): doobie.Update[Series] = {
+  def upsert: doobie.Write[Series] ?=> doobie.Update[Series] = {
     val q = s"""
           INSERT INTO series (id, name, title, description)
             VALUES (?, ?, ?, ?)
@@ -18,12 +18,12 @@ object SeriesQuery {
     Update[Series](q)
   }
 
-  def findByName(name: SeriesName)(implicit tagRead: Read[Series]): Query0[Series] = {
+  def findByName(name: SeriesName): Read[Series] ?=> Query0[Series] = {
     sql"SELECT * FROM series WHERE name = ${name.value}"
       .query[Series]
   }
 
-  def getAll(implicit tagRead: Read[Series]): Query0[Series] = {
+  def getAll: Read[Series] ?=> Query0[Series] = {
     sql"SELECT * FROM series"
       .query[Series]
   }

@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object ExternalResourceQuery {
 
-  def bulkUpsert(implicit externalResourceWrite: Write[ExternalResource]): Update[ExternalResource] = {
+  def bulkUpsert: Write[ExternalResource] ?=> Update[ExternalResource] = {
     val q = s"""
           INSERT INTO external_resources (content_id, kind, name)
             VALUES (?, ?, ?)

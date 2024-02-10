@@ -10,12 +10,12 @@ import net.yoshinorin.qualtet.domains.series.SeriesId
 
 object ContentSerializingQuery {
 
-  def findBySeriesId(id: SeriesId)(implicit contentSerializingRead: Read[ContentSerializing]): query.Query0[ContentSerializing] = {
+  def findBySeriesId(id: SeriesId): Read[ContentSerializing] ?=> query.Query0[ContentSerializing] = {
     sql"SELECT * FROM contents_serializing FROM series_id = ${id.value}"
       .query[ContentSerializing]
   }
 
-  def bulkUpsert(implicit contentSerializingWrite: Write[ContentSerializing]): Update[ContentSerializing] = {
+  def bulkUpsert: Write[ContentSerializing] ?=> Update[ContentSerializing] = {
     val q = s"""
           INSERT INTO contents_serializing (series_id, content_id)
             VALUES (?, ?)

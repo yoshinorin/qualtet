@@ -209,7 +209,7 @@ object Fixture {
     }
   }
 
-  def unsafeDecode[T](response: Response[IO])(implicit j: JsonValueCodec[T]) = {
+  def unsafeDecode[T](response: Response[IO]): JsonValueCodec[T] ?=> T = {
     response.as[String].unsafeRunSync().decode
   }
 }

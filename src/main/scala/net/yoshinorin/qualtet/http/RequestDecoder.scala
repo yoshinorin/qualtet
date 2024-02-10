@@ -13,7 +13,7 @@ trait RequestDecoder {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  def decode[T <: Request[T]](maybeJsonString: String)(implicit j: JsonValueCodec[T]): Either[Fail, T] = {
+  def decode[T <: Request[T]](maybeJsonString: String): JsonValueCodec[T] ?=> Either[Fail, T] = {
     try {
       Right(maybeJsonString.decode.postDecode)
     } catch {

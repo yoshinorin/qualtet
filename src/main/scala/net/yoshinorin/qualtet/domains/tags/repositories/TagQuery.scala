@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object TagQuery {
 
-  def getAll(implicit responseTagRead: Read[ResponseTag]): Query0[ResponseTag] = {
+  def getAll: Read[ResponseTag] ?=> Query0[ResponseTag] = {
     sql"""
       SELECT
         tags.id,
@@ -27,17 +27,17 @@ object TagQuery {
       .query[ResponseTag]
   }
 
-  def findByName(data: TagName)(implicit tagRead: Read[Tag]): Query0[Tag] = {
+  def findByName(data: TagName): Read[Tag] ?=> Query0[Tag] = {
     sql"SELECT * FROM tags WHERE name = ${data.value}"
       .query[Tag]
   }
 
-  def findById(id: TagId)(implicit tagRead: Read[Tag]): Query0[Tag] = {
+  def findById(id: TagId): Read[Tag] ?=> Query0[Tag] = {
     sql"SELECT * FROM tags WHERE id = ${id.value}"
       .query[Tag]
   }
 
-  def findByContentId(id: ContentId)(implicit tagRead: Read[Tag]): Query0[Tag] = {
+  def findByContentId(id: ContentId): Read[Tag] ?=> Query0[Tag] = {
     sql"""
       SELECT tags.*
       FROM
@@ -49,7 +49,7 @@ object TagQuery {
       .query[Tag]
   }
 
-  def bulkUpsert(implicit tagWrite: Write[Tag]): Update[Tag] = {
+  def bulkUpsert: Write[Tag] ?=> Update[Tag] = {
     val q = s"""
           INSERT INTO tags (id, name)
             VALUES (?, ?)

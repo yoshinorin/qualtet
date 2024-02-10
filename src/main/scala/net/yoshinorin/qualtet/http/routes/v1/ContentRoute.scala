@@ -35,9 +35,10 @@ class ContentRoute[F[_]: Monad](
       contentRoute.get(path)
      */
     case request @ GET -> _ =>
+      implicit val r = request
       this
-        .get(request.uri.path.toString().replace("/v1/contents/", ""))(request)
-        .handleErrorWith(_.logWithStackTrace[IO].andResponse(request))
+        .get(request.uri.path.toString().replace("/v1/contents/", ""))
+        .handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
   private[http] def contentWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of { ctxRequest =>
@@ -77,7 +78,7 @@ class ContentRoute[F[_]: Monad](
     } yield response)
   }
 
-  def get(path: String)(implicit r: Request[IO]): IO[Response[IO]] = {
+  def get(path: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
       // TODO: should be configurlize for append suffix or prefix
       maybeContent <- contentService.findByPathWithMeta(Path(s"/${path}"))
