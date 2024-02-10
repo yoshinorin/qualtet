@@ -30,7 +30,7 @@ jobs:
             ~/.ivy2/cache
             ~/.sbt
             ~/.cache/coursier/v1
-          key: build-${{ env.cache-name }}-${{ hashFiles('build.sbt') }}
+          key: build-${{ env.cache-name }}-${{ hashFiles('build.sbt') }}-${{ hashFiles('project/Dependencies.scala') }}
 
       - name: Set up JDK
         uses: actions/setup-java@v4
