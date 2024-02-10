@@ -20,13 +20,21 @@ jobs:
         scala: [3.3.1]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4
-      - uses: coursier/cache-action@v6
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
+
+      - name: Compile
+        working-directory: .
+        run: compile
+
+      - name: Caching
+        uses: coursier/cache-action@v6
 
       - name: Create log file
         working-directory: .
