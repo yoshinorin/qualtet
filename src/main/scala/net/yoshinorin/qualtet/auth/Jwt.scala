@@ -44,14 +44,15 @@ class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair
    * @return String (JWT)
    */
   def encode(author: Author): String = {
-    val claim = pdi.jwt.JwtClaim(
-      issuer = Some(config.iss),
-      audience = Some(Set(config.aud)),
-      subject = Some(author.id.value),
-      jwtId = Some(ULID.newULIDString.toLower),
-      expiration = Some(Instant.now.plusSeconds(config.expiration).getEpochSecond),
-      issuedAt = Some(Instant.now.getEpochSecond)
-    )
+    val claim = pdi.jwt
+      .JwtClaim(
+        issuer = Some(config.iss),
+        audience = Some(Set(config.aud)),
+        subject = Some(author.id.value),
+        jwtId = Some(ULID.newULIDString.toLower),
+        expiration = Some(Instant.now.plusSeconds(config.expiration).getEpochSecond),
+        issuedAt = Some(Instant.now.getEpochSecond)
+      )
     pdi.jwt.Jwt.encode(claim, signature.signedPrivateKey, algorithm)
   }
 

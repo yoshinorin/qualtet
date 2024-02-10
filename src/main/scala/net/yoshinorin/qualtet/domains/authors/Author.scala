@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.authors
 import java.time.ZonedDateTime
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.{ValueExtender, UlidConvertible}
+import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
 import net.yoshinorin.qualtet.syntax.*
 

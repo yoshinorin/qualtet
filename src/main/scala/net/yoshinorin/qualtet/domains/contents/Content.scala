@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import java.time.ZonedDateTime
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.{Request, ValueExtender, UlidConvertible}
+import net.yoshinorin.qualtet.domains.{Request, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources

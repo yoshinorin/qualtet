@@ -9,7 +9,7 @@ import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, RequestSeries}
+import net.yoshinorin.qualtet.domains.series.{RequestSeries, Series, SeriesName}
 import net.yoshinorin.qualtet.message.ProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.Modules.*

@@ -15,9 +15,10 @@ final case class ProblemDetails(
 
 object ProblemDetails {
   given codecProblemDetails: JsonValueCodec[ProblemDetails] = JsonCodecMaker.make(
-    CodecMakerConfig.withFieldNameMapper { case "type_" =>
-      "type"
-    }
+    CodecMakerConfig
+      .withFieldNameMapper { case "type_" =>
+        "type"
+      }
       .withTransientEmpty(false)
       .withSkipNestedOptionValues(false)
       .withSkipUnexpectedFields(false)

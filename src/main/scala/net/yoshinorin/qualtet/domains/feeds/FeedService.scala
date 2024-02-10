@@ -27,15 +27,16 @@ class FeedService[F[_]: Monad](
     }
 
     def toFeed(ra: ResponseArticleWithCount): Seq[ResponseFeed] = {
-      ra.articles.map(a => {
-        ResponseFeed(
-          title = a.title,
-          link = a.path,
-          id = a.path,
-          published = a.publishedAt,
-          updated = a.updatedAt
-        )
-      })
+      ra.articles
+        .map(a => {
+          ResponseFeed(
+            title = a.title,
+            link = a.path,
+            id = a.path,
+            published = a.publishedAt,
+            updated = a.updatedAt
+          )
+        })
     }
 
     cache.get(cacheKey) match {

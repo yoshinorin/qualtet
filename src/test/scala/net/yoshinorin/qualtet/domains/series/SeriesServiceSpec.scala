@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.tags
 
 import net.yoshinorin.qualtet.domains.contents.Path
-import net.yoshinorin.qualtet.domains.series.{SeriesName, RequestSeries}
+import net.yoshinorin.qualtet.domains.series.{RequestSeries, SeriesName}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 import net.yoshinorin.qualtet.Modules.*

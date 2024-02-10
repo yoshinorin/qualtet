@@ -17,7 +17,7 @@ import net.yoshinorin.qualtet.domains.authors.*
 import net.yoshinorin.qualtet.domains.contents.*
 import net.yoshinorin.qualtet.domains.contentTypes.*
 import net.yoshinorin.qualtet.domains.robots.*
-import net.yoshinorin.qualtet.domains.sitemaps.{SitemapsRepositoryDoobieInterpreter, SitemapService, Url}
+import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, SitemapsRepositoryDoobieInterpreter, Url}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
   ArchiveRoute => ArchiveRouteV1,
@@ -42,7 +42,7 @@ import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 import cats.effect.unsafe.implicits.global
-import net.yoshinorin.qualtet.domains.series.{SeriesName, RequestSeries}
+import net.yoshinorin.qualtet.domains.series.{RequestSeries, SeriesName}
 
 // Just test data
 object Fixture {

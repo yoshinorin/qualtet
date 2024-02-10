@@ -8,7 +8,7 @@ import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesService, RequestSeries}
+import net.yoshinorin.qualtet.domains.series.{RequestSeries, Series, SeriesName, SeriesService}
 import net.yoshinorin.qualtet.http.{AuthProvider, MethodNotAllowedSupport, RequestDecoder}
 import net.yoshinorin.qualtet.syntax.*
 

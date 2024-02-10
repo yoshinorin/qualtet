@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.contentTypes
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.{ValueExtender, UlidConvertible}
+import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
 
 opaque type ContentTypeId = String
 object ContentTypeId extends ValueExtender[ContentTypeId] with UlidConvertible[ContentTypeId] {

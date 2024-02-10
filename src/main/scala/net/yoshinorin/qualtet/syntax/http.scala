@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import cats.effect.IO
-import org.http4s.{Response, Request}
+import org.http4s.{Request, Response}
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import net.yoshinorin.qualtet.http.{RequestQueryParamater, ResponseTranslator}
 

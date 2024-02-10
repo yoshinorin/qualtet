@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.series
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.{Request, ValueExtender, UlidConvertible}
+import net.yoshinorin.qualtet.domains.{Request, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.message.Fail.BadRequest
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.domains.articles.ResponseArticle

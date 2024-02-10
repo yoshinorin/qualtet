@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.http
 
 import cats.effect.IO
 import cats.Monad
-import cats.data.{OptionT, Kleisli}
+import cats.data.{Kleisli, OptionT}
 import org.http4s.server.AuthMiddleware
 import org.http4s.{AuthedRoutes, Request, Response, Status}
 import org.http4s.dsl.io.*

@@ -32,9 +32,11 @@ object CreateAuthor {
         Author(name = AuthorName(args(0)), displayName = AuthorDisplayName(args(1)), password = BCryptPassword(bcryptPasswordEncoder.encode(args(2))))
       )
       author <- authorService.findByName(AuthorName(args(0)))
-    } yield author).handleErrorWith { e =>
-      IO.pure(e)
-    }.unsafeRunSync() match {
+    } yield author)
+      .handleErrorWith { e =>
+        IO.pure(e)
+      }
+      .unsafeRunSync() match {
       case Some(a: ResponseAuthor) =>
         logger.info(s"author created: ${a.asJson}")
         logger.info("shutting down...")

@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.http
 import cats.effect.IO
 import org.http4s.dsl.io.*
 import org.http4s.MediaType
-import org.http4s.{Response, Request}
+import org.http4s.{Request, Response}
 import org.http4s.Challenge
 import org.http4s.headers.{`Content-Type`, `WWW-Authenticate`}
 import com.github.plokhotnyuk.jsoniter_scala.core.*

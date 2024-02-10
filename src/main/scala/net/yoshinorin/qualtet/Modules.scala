@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet
 
-import com.github.benmanes.caffeine.cache.{Caffeine, Cache => CaffeineCache}
+import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepositoryDoobieInterpreter, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.{ArticleRepositoryDoobieInterpreter, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepositoryDoobieInterpreter, AuthorService}
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeRepositoryDoobieInterpreter, ContentType, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeRepositoryDoobieInterpreter, ContentTypeService}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepositoryDoobieInterpretere, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.contents.{ContentRepositoryDoobieInterpreter, ContentService}
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializingRepositoryDoobieInterpretere, ContentSerializingService}
@@ -15,7 +15,7 @@ import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceReposit
 import net.yoshinorin.qualtet.domains.robots.{RobotsRepositoryDoobieInterpreter, RobotsService}
 import net.yoshinorin.qualtet.domains.search.{SearchRepositoryDoobieInterpreter, SearchService}
 import net.yoshinorin.qualtet.domains.series.{SeriesRepositoryDoobieInterpreter, SeriesService}
-import net.yoshinorin.qualtet.domains.sitemaps.{SitemapsRepositoryDoobieInterpreter, SitemapService, Url}
+import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, SitemapsRepositoryDoobieInterpreter, Url}
 import net.yoshinorin.qualtet.domains.tags.{TagRepositoryDoobieInterpreter, TagService}
 import net.yoshinorin.qualtet.auth.Signature
 import net.yoshinorin.qualtet.domains.feeds.FeedService

@@ -4,7 +4,7 @@ import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.message.Fail.Unauthorized
 import net.yoshinorin.qualtet.Modules.*
-import net.yoshinorin.qualtet.fixture.Fixture.{validBCryptPassword}
+import net.yoshinorin.qualtet.fixture.Fixture.validBCryptPassword
 import net.yoshinorin.qualtet.validator.Validator
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.exceptions.JwtValidationException
