@@ -44,7 +44,7 @@ jobs:
       - name: Run tests
         working-directory: .
         run: cp .env.example .env && sbt testWithDb
-        # TODO: `sbt coverage testWithDb` raise error when `bbc93e985e32b88eb5840e61d13f9b2005b8e030`.
+        # TODO: `sbt coverage testWithDb` raise error since `bbc93e985e32b88eb5840e61d13f9b2005b8e030`.
         #       It seems failed to resolve doobie binaly version.
         #
         # while compiling: AuthorRepositoryDoobieInterpreter.scala
