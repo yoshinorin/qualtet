@@ -24,12 +24,20 @@
         </thead>
         <tbody>
           <tr>
-            <td id="status-result">N/A</td>
-            <td id="status-cors">N/A</td>
-            <td>status</td>
-            <td id="status-method">-</td>
-            <td id="status-statuscode">-</td>
-            <td id="status-remarks">-</td>
+            <td id="health-result">N/A</td>
+            <td id="health-cors">N/A</td>
+            <td>health</td>
+            <td id="health-method">-</td>
+            <td id="health-statuscode">-</td>
+            <td id="health-remarks">-</td>
+          </tr>
+          <tr>
+            <td id="metadata-result">N/A</td>
+            <td id="metadata-cors">N/A</td>
+            <td>metadata</td>
+            <td id="metadata-method">-</td>
+            <td id="metadata-statuscode">-</td>
+            <td id="metadata-remarks">-</td>
           </tr>
           <tr>
             <td id="token-result">N/A</td>
@@ -104,12 +112,12 @@
             <td id="feeds-remarks">-</td>
           </tr>
           <tr>
-            <td id="cache-result">N/A</td>
-            <td id="cache-cors">N/A</td>
+            <td id="caches-result">N/A</td>
+            <td id="caches-cors">N/A</td>
             <td>cache</td>
-            <td id="cache-method">-</td>
-            <td id="cache-statuscode">-</td>
-            <td id="cache-remarks">-</td>
+            <td id="caches-method">-</td>
+            <td id="caches-statuscode">-</td>
+            <td id="caches-remarks">-</td>
           </tr>
           <tr>
             <td id="search-result">N/A</td>
@@ -136,52 +144,53 @@
     document.getElementById("port").innerHTML = `port: ${port}`
     let errors = '';
 
-    const validator = (endpoint, method) => {
-      document.getElementById(`${endpoint}-method`).innerHTML = method;
-      fetch(`http://localhost:9001/${endpoint}`, {
+    const validator = (key, endpoint, method) => {
+      document.getElementById(`${key}-method`).innerHTML = method;
+      fetch(`http://localhost:9001/v1/${endpoint}`, {
         method: method
       })
       .then((response) => {
-        document.getElementById(`${endpoint}-statuscode`).innerHTML = response.status;
-        document.getElementById(`${endpoint}-result`).style.color = 'white';
+        document.getElementById(`${key}-statuscode`).innerHTML = response.status;
+        document.getElementById(`${key}-result`).style.color = 'white';
         if (response.status === 200) {
-          document.getElementById(`${endpoint}-result`).innerHTML = 'OK';
-          document.getElementById(`${endpoint}-result`).style.background = 'green';
+          document.getElementById(`${key}-result`).innerHTML = 'OK';
+          document.getElementById(`${key}-result`).style.background = 'green';
         } else {
-          document.getElementById(`${endpoint}-result`).innerHTML = 'NG';
-          document.getElementById(`${endpoint}-result`).style.background = 'red';
-          document.getElementById(`${endpoint}-remarks`).innerHTML = response.body;
+          document.getElementById(`${key}-result`).innerHTML = 'NG';
+          document.getElementById(`${key}-result`).style.background = 'red';
+          document.getElementById(`${key}-remarks`).innerHTML = response.body;
         }
-        document.getElementById(`${endpoint}-cors`).innerHTML = 'OK';
-        document.getElementById(`${endpoint}-cors`).style.color = 'white';
-        document.getElementById(`${endpoint}-cors`).style.background = 'green';
+        document.getElementById(`${key}-cors`).innerHTML = 'OK';
+        document.getElementById(`${key}-cors`).style.color = 'white';
+        document.getElementById(`${key}-cors`).style.background = 'green';
       })
       .catch((error) => {
-        document.getElementById(`${endpoint}-result`).innerHTML = 'NG';
-        document.getElementById(`${endpoint}-result`).style.color = 'white';
-        document.getElementById(`${endpoint}-result`).style.background = 'red';
+        document.getElementById(`${key}-result`).innerHTML = 'NG';
+        document.getElementById(`${key}-result`).style.color = 'white';
+        document.getElementById(`${key}-result`).style.background = 'red';
 
-        document.getElementById(`${endpoint}-cors`).innerHTML = 'NG';
-        document.getElementById(`${endpoint}-cors`).style.color = 'white';
-        document.getElementById(`${endpoint}-cors`).style.background = 'red';
+        document.getElementById(`${key}-cors`).innerHTML = 'NG';
+        document.getElementById(`${key}-cors`).style.color = 'white';
+        document.getElementById(`${key}-cors`).style.background = 'red';
 
-        document.getElementById(`${endpoint}-remarks`).innerHTML = error;
+        document.getElementById(`${key}-remarks`).innerHTML = error;
       });
     }
 
-    validator('status', 'GET');
-    validator('token', 'POST');
-    validator('archives', 'GET');
-    validator('articles', 'GET');
-    validator('authors', 'GET');
-    validator('contents', 'POST');
-    validator('tags', 'GET');
-    validator('content-types', 'GET');
-    validator('sitemaps', 'GET');
-    validator('feeds', 'GET');
-    validator('cache', 'GET');
-    validator('search', 'GET');
-    validator('series', 'GET');
+    validator('health', 'system/health', 'GET');
+    validator('metadata', 'system/metadata', 'GET');
+    validator('token', 'token', 'POST');
+    validator('archives', 'archives', 'GET');
+    validator('articles', 'articles', 'GET');
+    validator('authors', 'authors', 'GET');
+    validator('contents', 'contents', 'POST');
+    validator('tags', 'tags', 'GET');
+    validator('content-types', 'content-types', 'GET');
+    validator('sitemaps', 'sitemaps', 'GET');
+    validator('feeds', 'feeds/index', 'GET');
+    validator('caches', 'caches', 'DELETE');
+    validator('search', 'search?q=test', 'GET');
+    validator('series', 'series', 'GET');
   </script>
   <style>
     .wrapper {
