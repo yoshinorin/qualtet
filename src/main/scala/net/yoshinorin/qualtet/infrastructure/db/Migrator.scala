@@ -5,7 +5,6 @@ import net.yoshinorin.qualtet.config.DBConfig
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.FluentConfiguration
-import cats.effect.unsafe.implicits.global
 
 class Migrator(config: DBConfig) {
 
@@ -20,7 +19,7 @@ class Migrator(config: DBConfig) {
     (for {
       _ <- contentTypeService.create(ContentType(name = "article"))
       _ <- contentTypeService.create(ContentType(name = "page"))
-    } yield ()).unsafeRunSync()
+    } yield ())
   }
 
   /**

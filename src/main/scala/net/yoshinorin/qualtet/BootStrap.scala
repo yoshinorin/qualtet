@@ -83,12 +83,12 @@ object BootStrap extends IOApp {
   }
 
   def run(args: List[String]): IO[ExitCode] = {
-    Modules.migrator.migrate(Modules.contentTypeService)
     val host = Ipv4Address.fromString(Modules.config.http.host).getOrElse(ipv4"127.0.0.1")
     val port = Port.fromInt(Modules.config.http.port).getOrElse(port"9001")
 
     (for {
       _ <- logger.info(ApplicationInfo.asJson)
+      _ <- IO(Modules.migrator.migrate(Modules.contentTypeService))
       routes <- router.withCors.map[Kleisli[IO, Request[IO], Response[IO]]](x => x.orNotFound)
       httpApp <- IO(new HttpAppBuilder(routes).build)
       server <- IO(
