@@ -18,7 +18,7 @@ class TagRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   tagService: TagService[F],
   articleService: ArticleService[F]
-) extends MethodNotAllowedSupport {
+) extends MethodNotAllowedSupport[IO] {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 

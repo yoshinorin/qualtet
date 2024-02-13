@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
 class AuthorRoute[F[_]: Monad](
   authorService: AuthorService[F]
-) extends MethodNotAllowedSupport {
+) extends MethodNotAllowedSupport[IO] {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
     implicit val x = r

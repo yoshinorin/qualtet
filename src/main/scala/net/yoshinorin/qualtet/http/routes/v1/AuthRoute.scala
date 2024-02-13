@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.auth.{AuthService, RequestToken}
 import net.yoshinorin.qualtet.http.{MethodNotAllowedSupport, RequestDecoder}
 import net.yoshinorin.qualtet.syntax.*
 
-class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder with MethodNotAllowedSupport {
+class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder with MethodNotAllowedSupport[IO] {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
     implicit val x = r

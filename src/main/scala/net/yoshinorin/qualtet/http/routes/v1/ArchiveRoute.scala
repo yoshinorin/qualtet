@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 class ArchiveRoute[F[_]: Monad](
   archiveService: ArchiveService[F]
-) extends MethodNotAllowedSupport {
+) extends MethodNotAllowedSupport[IO] {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
     implicit val x = r

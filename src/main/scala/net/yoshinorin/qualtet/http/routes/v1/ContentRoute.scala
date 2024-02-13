@@ -18,7 +18,7 @@ class ContentRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   contentService: ContentService[F]
 ) extends RequestDecoder
-    with MethodNotAllowedSupport {
+    with MethodNotAllowedSupport[IO] {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 

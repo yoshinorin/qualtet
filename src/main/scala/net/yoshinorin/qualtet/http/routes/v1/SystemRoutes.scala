@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.ApplicationInfo
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
 
-class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupport {
+class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupport[IO] {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
     implicit val x = r

@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
 class FeedRoute[F[_]: Monad](
   feedService: FeedService[F]
-) extends MethodNotAllowedSupport {
+) extends MethodNotAllowedSupport[IO] {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
     implicit val x = r

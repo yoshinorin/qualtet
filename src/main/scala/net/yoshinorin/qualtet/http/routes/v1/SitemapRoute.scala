@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.domains.sitemaps.SitemapService
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
-class SitemapRoute[F[_]: Monad](sitemapService: SitemapService[F]) extends MethodNotAllowedSupport {
+class SitemapRoute[F[_]: Monad](sitemapService: SitemapService[F]) extends MethodNotAllowedSupport[IO] {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
     implicit val x = r

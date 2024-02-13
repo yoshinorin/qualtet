@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 class ContentTypeRoute[F[_]: Monad](
   contentTypeService: ContentTypeService[F]
-) extends MethodNotAllowedSupport {
+) extends MethodNotAllowedSupport[IO] {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
     implicit val x = r

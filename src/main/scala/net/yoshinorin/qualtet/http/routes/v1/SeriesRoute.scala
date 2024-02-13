@@ -16,7 +16,7 @@ class SeriesRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   seriesService: SeriesService[F]
 ) extends RequestDecoder
-    with MethodNotAllowedSupport {
+    with MethodNotAllowedSupport[IO] {
 
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def index: HttpRoutes[IO] =

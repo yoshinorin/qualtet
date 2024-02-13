@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
 class SearchRoute[F[_]: Monad](
   searchService: SearchService[F]
-) extends MethodNotAllowedSupport {
+) extends MethodNotAllowedSupport[IO] {
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
