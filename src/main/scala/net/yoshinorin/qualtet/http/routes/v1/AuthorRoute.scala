@@ -14,8 +14,7 @@ class AuthorRoute[F[_]: Monad](
   authorService: AuthorService[F]
 ) extends MethodNotAllowedSupport[IO] {
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
-    implicit val x = r
+  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ GET -> Root => this.get
       case request @ GET -> Root / authorName => this.get(authorName)

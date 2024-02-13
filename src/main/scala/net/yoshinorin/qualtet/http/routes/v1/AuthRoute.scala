@@ -11,8 +11,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder with MethodNotAllowedSupport[IO] {
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
-    implicit val x = r
+  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ POST -> Root => this.post(request)
       case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`

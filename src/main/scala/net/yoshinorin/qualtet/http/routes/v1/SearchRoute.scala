@@ -16,8 +16,7 @@ class SearchRoute[F[_]: Monad](
 
   private[this] val logger = LoggerFactory.getLogger(this.getClass)
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
-    implicit val x = r
+  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ GET -> _ => this.search(request.uri.query.multiParams)
       case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
