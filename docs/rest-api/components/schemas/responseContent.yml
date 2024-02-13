@@ -17,6 +17,7 @@ properties:
     example: "Post Title"
   robotsAttributes:
     type: string
+    description: "Comma separated values."
     example: "noarchive, noimageindex"
   externalResources:
     type: array
