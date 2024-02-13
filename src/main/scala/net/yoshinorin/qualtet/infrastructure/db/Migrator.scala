@@ -14,7 +14,7 @@ class Migrator(config: DBConfig) {
   /**
    * Do migration
    */
-  def migrate[F[_]: Monad](contentTypeService: ContentTypeService[F]): Unit = {
+  def migrate[F[_]: Monad](contentTypeService: ContentTypeService[F]) = {
     val _ = flyway.migrate()
     (for {
       _ <- contentTypeService.create(ContentType(name = "article"))
@@ -34,7 +34,7 @@ class Migrator(config: DBConfig) {
    * DROP all tables and re-create
    * NOTE: for development
    */
-  def recrate[F[_]: Monad](contentTypeService: ContentTypeService[F]): Unit = {
+  def recrate[F[_]: Monad](contentTypeService: ContentTypeService[F]) = {
     this.clean()
     this.migrate(contentTypeService)
   }

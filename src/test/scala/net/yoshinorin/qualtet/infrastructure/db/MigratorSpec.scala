@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.infrastructure.db
 
-import cats.effect.IO
 import net.yoshinorin.qualtet.fixture.Fixture.contentTypeService
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
@@ -16,14 +15,16 @@ class MigratorSpec extends AnyWordSpec {
   "Migrator" should {
 
     "be migrate" in {
-      val (a, p) = (for {
-        _ <- IO(Modules.migrator.migrate(contentTypeService))
+
+      Modules.migrator.migrate(contentTypeService).unsafeRunSync()
+
+      val result = (for {
         a <- contentTypeService.findByName("article")
         p <- contentTypeService.findByName("page")
       } yield (a, p)).unsafeRunSync()
 
-      assert(a.isDefined)
-      assert(p.isDefined)
+      assert(result._1.isDefined)
+      assert(result._2.isDefined)
     }
 
   }
