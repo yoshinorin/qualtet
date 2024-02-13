@@ -83,8 +83,14 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
   "SearchService" should {
 
     "be extract query string" in {
-      assert(searchService.validateAndExtractQueryString(Map(("q", List("abcde", "fghr", "jklmn")))) === List("abcde", "fghr", "jklmn"))
-      assert(searchService.validateAndExtractQueryString(Map(("q", List("aaaa", "bbbb", "cccc")))) === List("aaaa", "bbbb", "cccc"))
+      assert(searchService.extractQueryStringsFromQuery(Map(("q", List("abcde", "fghr", "jklmn")))) === List("abcde", "fghr", "jklmn"))
+      assert(searchService.extractQueryStringsFromQuery(Map(("q", List("aaaa", "bbbb", "cccc")))) === List("aaaa", "bbbb", "cccc"))
+      // NOTE: result should be lowercase
+      assert(searchService.extractQueryStringsFromQuery(Map(("q", List("AAAA", "BBBB", "CCCC")))) === List("aaaa", "bbbb", "cccc"))
+    }
+
+    "be not extract with wrong query key" in {
+      assert(searchService.extractQueryStringsFromQuery(Map(("wrong", List("AAAA", "BBBB", "CCCC")))) === List())
     }
 
     "be return sarch result" in {
@@ -119,41 +125,33 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       assert(s.contents.size === 1)
     }
 
-    // TODO: in-casesensitive assertion
-
     "be throw UnprocessableEntity Exception if query string is empty" in {
       assertThrows[UnprocessableEntity] {
-        searchService.validateAndExtractQueryString(Map(("", List())))
+        searchService.validateQueryStrings(List())
       }
     }
 
     "be throw UnprocessableEntity Exception if query value is empty" in {
       assertThrows[UnprocessableEntity] {
-        searchService.validateAndExtractQueryString(Map(("q", List())))
-      }
-    }
-
-    "be throw UnprocessableEntity Exception if query key is wrong" in {
-      assertThrows[UnprocessableEntity] {
-        searchService.validateAndExtractQueryString(Map(("wrong", List("abcde"))))
+        searchService.validateQueryStrings(List())
       }
     }
 
     "be throw UnprocessableEntity Exception if many query requested" in {
       assertThrows[UnprocessableEntity] {
-        searchService.validateAndExtractQueryString(Map(("q", List("abcde", "abcde", "abcde", "abcde"))))
+        searchService.validateQueryStrings(List("abcde", "abcde", "abcde", "abcde"))
       }
     }
 
     "be throw UnprocessableEntity Exception if query contains too short value" in {
       assertThrows[UnprocessableEntity] {
-        searchService.validateAndExtractQueryString(Map(("q", List("abcd", "abc", "abcd"))))
+        searchService.validateQueryStrings(List("abcd", "abc", "abcd"))
       }
     }
 
     "be throw UnprocessableEntity Exception if query contains invalid char" in {
       assertThrows[UnprocessableEntity] {
-        searchService.validateAndExtractQueryString(Map(("q", List("abcd", "ab(d", "abcd"))))
+        searchService.validateQueryStrings(List("abcd", "ab(d", "abcd"))
       }
     }
   }

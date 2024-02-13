@@ -22,17 +22,17 @@ class SearchService[F[_]: Monad](
     Continue(searchRepository.search(query), Action.done[Seq[(Int, ResponseSearch)]])
   }
 
+  private[search] def extractQueryStringsFromQuery(query: Map[String, List[String]]): List[String] = query.getOrElse("q", List()).map(_.trim.toLower)
+
   // TODO: move constant values
-  private[search] def validateAndExtractQueryString(query: Map[String, List[String]]): List[String] = {
-    val qs = query.getOrElse("q", List()).map(_.trim.toLower)
+  private[search] def validateQueryStrings(queryStrings: List[String]): Unit = {
     val validator: (Boolean, String) => Unit = (b, s) => { if b then throw new UnprocessableEntity(detail = s) else () }
-    validator(qs.isEmpty, "SEARCH_QUERY_REQUIRED")
-    validator(qs.sizeIs > searchConfig.maxWords, "TOO_MANY_SEARCH_WORDS")
-    qs.map { q =>
+    validator(queryStrings.isEmpty, "SEARCH_QUERY_REQUIRED")
+    validator(queryStrings.sizeIs > searchConfig.maxWords, "TOO_MANY_SEARCH_WORDS")
+    queryStrings.map { q =>
       validator(q.hasIgnoreChars, "INVALID_CHARS_INCLUDED")
       validator(q.length < searchConfig.minWordLength, "SEARCH_CHAR_LENGTH_TOO_SHORT")
       validator(q.length > searchConfig.maxWordLength, "SEARCH_CHAR_LENGTH_TOO_LONG")
-      q
     }
   }
 
@@ -74,14 +74,15 @@ class SearchService[F[_]: Monad](
   }
 
   def search(query: Map[String, List[String]]): IO[ResponseSearchWithCount] = {
+    val queryStrings = extractQueryStringsFromQuery(query)
     for {
-      qs <- IO(validateAndExtractQueryString(query))
-      searchResult <- transactor.transact(actions(qs))
+      _ <- IO(validateQueryStrings(queryStrings))
+      searchResult <- transactor.transact(actions(queryStrings))
     } yield
       if (searchResult.nonEmpty) {
         val r = searchResult.map { x =>
           val stripedContent = x._2.content.stripHtmlTags.filterIgnoreChars.toLower
-          x._2.copy(content = substrRecursively(stripedContent, calcSubStrRanges(positions(qs, stripedContent))))
+          x._2.copy(content = substrRecursively(stripedContent, calcSubStrRanges(positions(queryStrings, stripedContent))))
         }
         ResponseSearchWithCount(searchResult.map(_._1).headOption.getOrElse(0), r)
       } else {
