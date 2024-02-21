@@ -16,7 +16,7 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.routes.v1.SearchRouteSpec
+// testOnly net.yoshinorin.qualtet.http.routes.v1.SearchRouteV1Spec
 class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContents: List[RequestContent] = {
@@ -85,8 +85,12 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             val maybeError = unsafeDecode[ProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
-            assert(maybeError.detail === "SEARCH_QUERY_REQUIRED")
+            assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/")
+
+            val err = maybeError.errors.get.head
+            assert(err.code === "SEARCH_QUERY_REQUIRED")
+            assert(err.message === "Search query required.")
           }
         }
         .unsafeRunSync()
@@ -103,8 +107,12 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             val maybeError = unsafeDecode[ProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
-            assert(maybeError.detail === "SEARCH_CHAR_LENGTH_TOO_SHORT")
+            assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/?q=abc")
+
+            val err = maybeError.errors.get.head
+            assert(err.code === "SEARCH_CHAR_LENGTH_TOO_SHORT")
+            assert(err.message === "abc is too short. You must be more than 4 chars in one word.")
           }
         }
         .unsafeRunSync()
@@ -121,8 +129,12 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             val maybeError = unsafeDecode[ProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
-            assert(maybeError.detail === "SEARCH_QUERY_REQUIRED")
+            assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/?invalid=abcd")
+
+            val err = maybeError.errors.get.head
+            assert(err.code === "SEARCH_QUERY_REQUIRED")
+            assert(err.message === "Search query required.")
           }
         }
         .unsafeRunSync()
@@ -139,8 +151,12 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             val maybeError = unsafeDecode[ProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
-            assert(maybeError.detail === "INVALID_CHARS_INCLUDED")
+            assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/?q=a.b.c")
+
+            val err = maybeError.errors.get.head
+            assert(err.code === "INVALID_CHARS_INCLUDED")
+            assert(err.message === "Contains unusable chars in a.b.c")
           }
         }
         .unsafeRunSync()
@@ -157,9 +173,43 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             val maybeError = unsafeDecode[ProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
-            assert(maybeError.detail === "TOO_MANY_SEARCH_WORDS")
+            assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/?q=abcd&q=abcd&q=abcd&q=abcd")
+
+            val err = maybeError.errors.get.head
+            assert(err.code === "TOO_MANY_SEARCH_WORDS")
+            assert(err.message === "Search words must be less than 3. You specified 4.")
           }
+        }
+        .unsafeRunSync()
+    }
+
+    "be return UnprocessableEntity with accumulated errors" in {
+      client
+        .run(Request(method = Method.GET, uri = uri"/v1/search/?q=a.b.c&q=x&q=z.zzzzzzzzzzzzzzzzzzz&q=abcd&q=.y"))
+        .use { response =>
+          IO {
+            assert(response.status === UnprocessableEntity)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ProblemDetails](response)
+            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.status === 422)
+            assert(maybeError.detail === "Invalid search conditions. Please see error details.")
+            assert(maybeError.instance === "/v1/search/?q=a.b.c&q=x&q=z.zzzzzzzzzzzzzzzzzzz&q=abcd&q=.y")
+
+            val err = maybeError.errors.get
+            assert(err.filter(x => x.code.contains("TOO_MANY_SEARCH_WORDS")).size === 1)
+            assert(err.filter(x => x.code.contains("SEARCH_CHAR_LENGTH_TOO_SHORT")).size === 2)
+            assert(err.filter(x => x.code.contains("INVALID_CHARS_INCLUDED")).size === 3)
+            assert(err.filter(x => x.message.contains("Search words must be less than 3. You specified 5.")).size === 1)
+            assert(err.filter(x => x.message.contains("x is too short. You must be more than 4 chars in one word.")).size === 1)
+            assert(err.filter(x => x.message.contains(".y is too short. You must be more than 4 chars in one word.")).size === 1)
+            assert(err.filter(x => x.message.contains("Contains unusable chars in a.b.c")).size === 1)
+            assert(err.filter(x => x.message.contains("Contains unusable chars in z.zzzzzzzzzzzzzzzzzzz")).size === 1)
+            assert(err.filter(x => x.message.contains("Contains unusable chars in .y")).size === 1)
+          }
+
         }
         .unsafeRunSync()
     }

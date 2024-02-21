@@ -4,6 +4,7 @@ import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.Modules.*
+import net.yoshinorin.qualtet.message.{Error => Err}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
@@ -93,6 +94,41 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       assert(searchService.extractQueryStringsFromQuery(Map(("wrong", List("AAAA", "BBBB", "CCCC")))) === List())
     }
 
+    "be return query string is empty error" in {
+      val result = searchService.accumurateQueryStringsErrors(
+        List(
+        )
+      )
+      assert(
+        result === List(Err(message = "Search query required.", code = "SEARCH_QUERY_REQUIRED"))
+      )
+    }
+
+    "be return accumrated errors" in {
+      val result = searchService.accumurateQueryStringsErrors(
+        List(
+          "a",
+          "abc",
+          "d.",
+          "1234567890123456",
+          "aaaa",
+          "bbbb",
+          "cccc"
+        )
+      )
+      assert(
+        result === List(
+          Err(message = "a is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
+          Err(message = "abc is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
+          Err(message = "Contains unusable chars in d.", code = "INVALID_CHARS_INCLUDED"),
+          Err(message = "d. is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
+          Err(message = "Contains unusable chars in 1234567890123456", code = "INVALID_CHARS_INCLUDED"),
+          Err(message = "1234567890123456 is too long. You must be less than 15 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_LONG"),
+          Err(message = "Search words must be less than 3. You specified 7.", code = "TOO_MANY_SEARCH_WORDS")
+        )
+      )
+    }
+
     "be return sarch result" in {
       val s = searchService.search(Map(("q", List("searchService")))).unsafeRunSync()
       assert(s.count === 54)
@@ -127,31 +163,31 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "be throw UnprocessableEntity Exception if query string is empty" in {
       assertThrows[UnprocessableEntity] {
-        searchService.validateQueryStrings(List())
+        searchService.search(Map()).unsafeRunSync()
       }
     }
 
     "be throw UnprocessableEntity Exception if query value is empty" in {
       assertThrows[UnprocessableEntity] {
-        searchService.validateQueryStrings(List())
+        searchService.search(Map(("q", List()))).unsafeRunSync()
       }
     }
 
     "be throw UnprocessableEntity Exception if many query requested" in {
       assertThrows[UnprocessableEntity] {
-        searchService.validateQueryStrings(List("abcde", "abcde", "abcde", "abcde"))
+        searchService.search(Map(("q", List("abcde", "abcde", "abcde", "abcde")))).unsafeRunSync()
       }
     }
 
     "be throw UnprocessableEntity Exception if query contains too short value" in {
       assertThrows[UnprocessableEntity] {
-        searchService.validateQueryStrings(List("abcd", "abc", "abcd"))
+        searchService.search(Map(("q", List("abcd", "abc", "abcd")))).unsafeRunSync()
       }
     }
 
     "be throw UnprocessableEntity Exception if query contains invalid char" in {
       assertThrows[UnprocessableEntity] {
-        searchService.validateQueryStrings(List("abcd", "ab(d", "abcd"))
+        searchService.search(Map(("q", List("abcd", "ab(d", "abcd")))).unsafeRunSync()
       }
     }
   }

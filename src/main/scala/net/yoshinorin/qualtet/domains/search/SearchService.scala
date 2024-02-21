@@ -8,6 +8,7 @@ import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.config.SearchConfig
 import net.yoshinorin.qualtet.infrastructure.db.Transactor
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.message.{Error => Err}
 import net.yoshinorin.qualtet.types.Points
 import net.yoshinorin.qualtet.syntax.*
 
@@ -25,15 +26,50 @@ class SearchService[F[_]: Monad](
   private[search] def extractQueryStringsFromQuery(query: Map[String, List[String]]): List[String] = query.getOrElse("q", List()).map(_.trim.toLower)
 
   // TODO: move constant values
-  private[search] def validateQueryStrings(queryStrings: List[String]): Unit = {
-    val validator: (Boolean, String) => Unit = (b, s) => { if b then throw new UnprocessableEntity(detail = s) else () }
-    validator(queryStrings.isEmpty, "SEARCH_QUERY_REQUIRED")
-    validator(queryStrings.sizeIs > searchConfig.maxWords, "TOO_MANY_SEARCH_WORDS")
-    queryStrings.map { q =>
-      validator(q.hasIgnoreChars, "INVALID_CHARS_INCLUDED")
-      validator(q.length < searchConfig.minWordLength, "SEARCH_CHAR_LENGTH_TOO_SHORT")
-      validator(q.length > searchConfig.maxWordLength, "SEARCH_CHAR_LENGTH_TOO_LONG")
+  private[search] def accumurateQueryStringsErrors(queryStrings: List[String]): Seq[Err] = {
+    val validator: (Boolean, Err) => Option[Err] = (cond, err) => { if cond then Some(err) else None }
+    val isEmptyError = validator(
+      queryStrings.isEmpty,
+      Err(
+        code = "SEARCH_QUERY_REQUIRED",
+        message = "Search query required."
+      )
+    )
+
+    val tooManySearchWordsError = validator(
+      queryStrings.sizeIs > searchConfig.maxWords,
+      Err(
+        code = "TOO_MANY_SEARCH_WORDS",
+        message = s"Search words must be less than ${searchConfig.maxWords}. You specified ${queryStrings.size}."
+      )
+    )
+
+    val errorsByWords = queryStrings.map { q =>
+      List(
+        validator(
+          q.hasIgnoreChars,
+          Err(
+            code = "INVALID_CHARS_INCLUDED",
+            message = s"Contains unusable chars in ${q}"
+          )
+        ),
+        validator(
+          q.length < searchConfig.minWordLength,
+          Err(
+            code = "SEARCH_CHAR_LENGTH_TOO_SHORT",
+            message = s"${q} is too short. You must be more than ${searchConfig.minWordLength} chars in one word."
+          )
+        ),
+        validator(
+          q.length > searchConfig.maxWordLength,
+          Err(
+            code = "SEARCH_CHAR_LENGTH_TOO_LONG",
+            message = s"${q} is too long. You must be less than ${searchConfig.maxWordLength} chars in one word."
+          )
+        )
+      )
     }
+    (errorsByWords.flatten :+ isEmptyError :+ tooManySearchWordsError).collect { case Some(x) => x }
   }
 
   private[search] def positions(words: List[String], sentence: String): Seq[Points] = {
@@ -76,7 +112,10 @@ class SearchService[F[_]: Monad](
   def search(query: Map[String, List[String]]): IO[ResponseSearchWithCount] = {
     val queryStrings = extractQueryStringsFromQuery(query)
     for {
-      _ <- IO(validateQueryStrings(queryStrings))
+      accErrors <- IO(accumurateQueryStringsErrors(queryStrings))
+      _ <- IO(if (accErrors.nonEmpty) {
+        throw new UnprocessableEntity(detail = "Invalid search conditions. Please see error details.", errors = Some(accErrors))
+      })
       searchResult <- transactor.transact(actions(queryStrings))
     } yield
       if (searchResult.nonEmpty) {

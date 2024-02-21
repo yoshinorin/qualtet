@@ -34,7 +34,8 @@ object ResponseTranslator {
             title = e.title,
             status = UnprocessableEntity.code,
             detail = e.detail,
-            instance = req.uri.toString()
+            instance = req.uri.toString(),
+            errors = e.errors
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )

@@ -1,0 +1,8 @@
+type: object
+properties:
+  code:
+    type: string
+    example: "SEARCH_QUERY_REQUIRED"
+  message:
+    type: string
+    example: "Search query required."

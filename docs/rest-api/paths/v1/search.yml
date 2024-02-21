@@ -25,7 +25,53 @@ get:
                 items:
                   $ref: '../../components/schemas/responseSearch.yml'
     422:
-      description: Unprocessable request
+      description: |
+        Unprocessable request
+
+        ### Error Codes
+
+        | codes | message |
+        | --- | --- |
+        | SEARCH_QUERY_REQUIRED | Search query required. |
+        | TOO_MANY_SEARCH_WORDS | Search words must be less than `<numberFromConfig>`. You specified `<numberOfQueryParams>`. |
+        | INVALID_CHARS_INCLUDED | Contains unusable chars in `<queryParam>` |
+        | SEARCH_CHAR_LENGTH_TOO_SHORT | Contains unusable chars in `<queryParam>` |
+        | INVALID_CHARS_INCLUDED | Contains unusable chars in `<queryParamValueLength>` is too short. You must be more than `<numberFromConfig>` chars in one word. |
+        | SEARCH_CHAR_LENGTH_TOO_LONG | `<queryParamValueLength>` is too long. You must be less than `<numberFromConfig>` chars in one word. |
+
+        ### Full Example
+
+        ```json
+        {
+          "type": "https://yoshinorin.github.io/qualtet/rest-api/",
+          "title": "Unprocessable Entity",
+          "status": 422,
+          "detail": "Invalid search conditions. Please see error details.",
+          "instance": "/v1/search?q=a.b.c&q=x&q=zzzzzzzzzzzzzzz.zzzzzzzzzz&q=abcde",
+          "errors": [
+            {
+              "code": "INVALID_CHARS_INCLUDED",
+              "message": "Contains unusable chars in a.b.c"
+            },
+            {
+              "code": "SEARCH_CHAR_LENGTH_TOO_SHORT",
+              "message": "x is too short. You must be more than 2 chars in one word."
+            },
+            {
+              "code": "INVALID_CHARS_INCLUDED",
+              "message": "Contains unusable chars in zzzzzzzzzzzzzzz.zzzzzzzzzz"
+            },
+            {
+              "code": "SEARCH_CHAR_LENGTH_TOO_LONG",
+              "message": "zzzzzzzzzzzzzzz.zzzzzzzzzz is too long. You must be less than 15 chars in one word."
+            },
+            {
+              "code": "TOO_MANY_SEARCH_WORDS",
+              "message": "Search words must be less than 3. You specified 4."
+            }
+          ]
+        }
+        ```
       content:
         application/json+problem:
           schema:
@@ -46,3 +92,7 @@ get:
               instance:
                 type: string
                 example: "/v1/search"
+              errors:
+                type: array
+                items:
+                  $ref: '../../components/schemas/responseSearchUnprocessable.yml'

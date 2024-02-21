@@ -10,7 +10,7 @@ final case class ProblemDetails(
   status: Int,
   detail: String,
   instance: String,
-  errorCodes: Option[Seq[String]] = None
+  errors: Option[Seq[Error]] = None
 )
 
 object ProblemDetails {
@@ -25,4 +25,14 @@ object ProblemDetails {
       .withTransientEmpty(false)
       .withTransientDefault(false)
   )
+}
+
+final case class Error(
+  code: String,
+  message: String
+)
+
+object Error {
+  given codecError: JsonValueCodec[Error] = JsonCodecMaker.make
+  given codecErrors: JsonValueCodec[Option[Seq[Error]]] = JsonCodecMaker.make
 }
