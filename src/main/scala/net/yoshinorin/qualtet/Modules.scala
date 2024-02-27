@@ -1,22 +1,24 @@
 package net.yoshinorin.qualtet
 
+import doobie.ConnectionIO
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.ApplicationConfig
-import net.yoshinorin.qualtet.domains.archives.{ArchiveRepositoryDoobieInterpreter, ArchiveService}
-import net.yoshinorin.qualtet.domains.articles.{ArticleRepositoryDoobieInterpreter, ArticleService}
-import net.yoshinorin.qualtet.domains.authors.{AuthorRepositoryDoobieInterpreter, AuthorService}
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeRepositoryDoobieInterpreter, ContentTypeService}
-import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepositoryDoobieInterpretere, ContentTaggingService}
-import net.yoshinorin.qualtet.domains.contents.{ContentRepositoryDoobieInterpreter, ContentService}
-import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializingRepositoryDoobieInterpretere, ContentSerializingService}
-import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceRepositoryDoobieInterpreter, ExternalResourceService}
-import net.yoshinorin.qualtet.domains.robots.{RobotsRepositoryDoobieInterpreter, RobotsService}
-import net.yoshinorin.qualtet.domains.search.{SearchRepositoryDoobieInterpreter, SearchService}
-import net.yoshinorin.qualtet.domains.series.{SeriesRepositoryDoobieInterpreter, SeriesService}
-import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, SitemapsRepositoryDoobieInterpreter, Url}
-import net.yoshinorin.qualtet.domains.tags.{TagRepositoryDoobieInterpreter, TagService}
+import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveService}
+import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleService}
+import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorService}
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepository, ContentTaggingService}
+import net.yoshinorin.qualtet.domains.contents.{ContentRepository, ContentService}
+import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializingRepository, ContentSerializingService}
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeRepository
+import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceRepository, ExternalResourceService}
+import net.yoshinorin.qualtet.domains.robots.{RobotsRepository, RobotsService}
+import net.yoshinorin.qualtet.domains.search.{SearchRepository, SearchService}
+import net.yoshinorin.qualtet.domains.series.{SeriesRepository, SeriesService}
+import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, SitemapsRepository, Url}
+import net.yoshinorin.qualtet.domains.tags.{TagRepository, TagService}
 import net.yoshinorin.qualtet.auth.Signature
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.cache.CacheService
@@ -41,42 +43,42 @@ object Modules {
   val signature: Signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
   val jwtInstance: Jwt = new Jwt(config.jwt, JwtAlgorithm.RS256, keyPair, signature)
 
-  val authorRepository: AuthorRepositoryDoobieInterpreter = new AuthorRepositoryDoobieInterpreter()
+  val authorRepository: AuthorRepository[ConnectionIO] = summon[AuthorRepository[ConnectionIO]]
   val authorService = new AuthorService(authorRepository)
 
   val authService = new AuthService(authorService, jwtInstance)
 
-  val contentTypeRepository: ContentTypeRepositoryDoobieInterpreter = new ContentTypeRepositoryDoobieInterpreter()
+  val contentTypeRepository: ContentTypeRepository[ConnectionIO] = summon[ContentTypeRepository[ConnectionIO]]
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.contentType, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache: CacheModule[String, ContentType] = new CacheModule[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)
 
-  val robotsRepository: RobotsRepositoryDoobieInterpreter = new RobotsRepositoryDoobieInterpreter()
+  val robotsRepository: RobotsRepository[ConnectionIO] = summon[RobotsRepository[ConnectionIO]]
   val robotsService = new RobotsService(robotsRepository)
 
-  val externalResourceRepository: ExternalResourceRepositoryDoobieInterpreter = new ExternalResourceRepositoryDoobieInterpreter()
+  val externalResourceRepository: ExternalResourceRepository[ConnectionIO] = summon[ExternalResourceRepository[ConnectionIO]]
   val externalResourceService = new ExternalResourceService(externalResourceRepository)
 
-  val contentTaggingRepository: ContentTaggingRepositoryDoobieInterpretere = new ContentTaggingRepositoryDoobieInterpretere()
+  val contentTaggingRepository: ContentTaggingRepository[ConnectionIO] = summon[ContentTaggingRepository[ConnectionIO]]
   val contentTaggingService = new ContentTaggingService(contentTaggingRepository)
 
-  val tagRepository: TagRepositoryDoobieInterpreter = new TagRepositoryDoobieInterpreter()
+  val tagRepository: TagRepository[ConnectionIO] = summon[TagRepository[ConnectionIO]]
   val tagService = new TagService(tagRepository, contentTaggingService)
 
-  val searchRepository: SearchRepositoryDoobieInterpreter = new SearchRepositoryDoobieInterpreter()
+  val searchRepository: SearchRepository[ConnectionIO] = summon[SearchRepository[ConnectionIO]]
   val searchService = new SearchService(config.search, searchRepository)
 
-  val articleRepository = new ArticleRepositoryDoobieInterpreter()
+  val articleRepository: ArticleRepository[ConnectionIO] = summon[ArticleRepository[ConnectionIO]]
   val articleService = new ArticleService(articleRepository, contentTypeService)
 
-  val seriesRepository: SeriesRepositoryDoobieInterpreter = new SeriesRepositoryDoobieInterpreter()
+  val seriesRepository: SeriesRepository[ConnectionIO] = summon[SeriesRepository[ConnectionIO]]
   val seriesService = new SeriesService(seriesRepository, articleService)
 
-  val contentSerializingRepository: ContentSerializingRepositoryDoobieInterpretere = new ContentSerializingRepositoryDoobieInterpretere()
+  val contentSerializingRepository: ContentSerializingRepository[ConnectionIO] = summon[ContentSerializingRepository[ConnectionIO]]
   val contentSerializingService = new ContentSerializingService(contentSerializingRepository)
 
-  val contentRepository: ContentRepositoryDoobieInterpreter = new ContentRepositoryDoobieInterpreter()
+  val contentRepository: ContentRepository[ConnectionIO] = summon[ContentRepository[ConnectionIO]]
   val contentService =
     new ContentService(
       contentRepository,
@@ -90,10 +92,10 @@ object Modules {
       contentSerializingService
     )
 
-  val archiveRepository: ArchiveRepositoryDoobieInterpreter = new ArchiveRepositoryDoobieInterpreter()
+  val archiveRepository: ArchiveRepository[ConnectionIO] = summon[ArchiveRepository[ConnectionIO]]
   val archiveService = new ArchiveService(archiveRepository, contentTypeService)
 
-  val sitemapRepository: SitemapsRepositoryDoobieInterpreter = new SitemapsRepositoryDoobieInterpreter()
+  val sitemapRepository: SitemapsRepository[ConnectionIO] = summon[SitemapsRepository[ConnectionIO]]
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.sitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)

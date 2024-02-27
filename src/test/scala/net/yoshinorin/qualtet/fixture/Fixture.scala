@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.fixture
 
 import cats.Monad
 import cats.effect.IO
+import doobie.ConnectionIO
 import org.http4s.Uri
 import org.http4s.Response
 import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
@@ -17,7 +18,7 @@ import net.yoshinorin.qualtet.domains.authors.*
 import net.yoshinorin.qualtet.domains.contents.*
 import net.yoshinorin.qualtet.domains.contentTypes.*
 import net.yoshinorin.qualtet.domains.robots.*
-import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, SitemapsRepositoryDoobieInterpreter, Url}
+import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, SitemapsRepository, Url}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
   ArchiveRoute => ArchiveRouteV1,
@@ -64,7 +65,7 @@ object Fixture {
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
   val contentTypeService = new ContentTypeService(Modules.contentTypeRepository, contentTypeCache)
 
-  val sitemapRepository: SitemapsRepositoryDoobieInterpreter = new SitemapsRepositoryDoobieInterpreter()
+  val sitemapRepository: SitemapsRepository[ConnectionIO] = summon[SitemapsRepository[ConnectionIO]]
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
