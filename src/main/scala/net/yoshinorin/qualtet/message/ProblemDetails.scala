@@ -5,7 +5,7 @@ import com.github.plokhotnyuk.jsoniter_scala.core.*
 
 // https://datatracker.ietf.org/doc/html/rfc7807
 final case class ProblemDetails(
-  type_ : String = "https://yoshinorin.github.io/qualtet/rest-api/",
+  `type`: String = "https://yoshinorin.github.io/qualtet/rest-api/",
   title: String,
   status: Int,
   detail: String,
@@ -14,17 +14,7 @@ final case class ProblemDetails(
 )
 
 object ProblemDetails {
-  given codecProblemDetails: JsonValueCodec[ProblemDetails] = JsonCodecMaker.make(
-    CodecMakerConfig
-      .withFieldNameMapper { case "type_" =>
-        "type"
-      }
-      .withTransientEmpty(false)
-      .withSkipNestedOptionValues(false)
-      .withSkipUnexpectedFields(false)
-      .withTransientEmpty(false)
-      .withTransientDefault(false)
-  )
+  given codecProblemDetails: JsonValueCodec[ProblemDetails] = JsonCodecMaker.make
 }
 
 final case class Error(
