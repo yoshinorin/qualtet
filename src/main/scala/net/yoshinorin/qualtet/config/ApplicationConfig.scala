@@ -25,7 +25,7 @@ final case class ApplicationConfig(
 
 object ApplicationConfig {
 
-  private[this] val config: TypeSafeConfig = ConfigFactory.load
+  private val config: TypeSafeConfig = ConfigFactory.load
 
   private val dbUrl: String = config.getString("db.ctx.dataSource.url")
   private val dbUser: String = config.getString("db.ctx.dataSource.user")

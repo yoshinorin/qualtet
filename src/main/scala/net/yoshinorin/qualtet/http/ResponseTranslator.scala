@@ -14,7 +14,7 @@ import net.yoshinorin.qualtet.syntax.*
 object ResponseTranslator {
 
   // NOTE: can't use `ContextFunctions`.
-  private[this] def failToResponse(f: Fail)(using req: Request[IO]): IO[Response[IO]] = {
+  private def failToResponse(f: Fail)(using req: Request[IO]): IO[Response[IO]] = {
     f match {
       case e: Fail.NotFound =>
         NotFound(

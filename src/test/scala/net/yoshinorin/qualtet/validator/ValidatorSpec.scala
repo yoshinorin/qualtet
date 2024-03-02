@@ -15,58 +15,58 @@ class ValidatorSpec extends AnyWordSpec {
   "validate" should {
     "be return right" in {
       // NOTE: Workaround avoid compile error when use `===`. So, use `eqv` instead of it.
-      assert(Validator.validate("a")(x => x eqv "a")(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).value.unsafeRunSync().isRight)
-      assert(Validator.validate(1)(x => x eqv 1)(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).value.unsafeRunSync().isRight)
+      assert(Validator.validate("a")(x => x eqv "a")(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).value.unsafeRunSync().isRight)
+      assert(Validator.validate(1)(x => x eqv 1)(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).value.unsafeRunSync().isRight)
     }
 
     "not be throw if isRight" in {
-      val s = Validator.validate("a")(x => x eqv "a")(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).andThrow.unsafeRunSync()
+      val s = Validator.validate("a")(x => x eqv "a")(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).andThrow.unsafeRunSync()
       assert(s eqv "a")
-      val i = Validator.validate(1)(x => x eqv 1)(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).andThrow.unsafeRunSync()
+      val i = Validator.validate(1)(x => x eqv 1)(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).andThrow.unsafeRunSync()
       assert(i eqv 1)
     }
 
     "be return left" in {
-      assert(Validator.validate("a")(x => x =!= "a")(Unauthorized())(ioInstance).value.unsafeRunSync().isLeft)
-      assert(Validator.validate(1)(x => x =!= 1)(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).value.unsafeRunSync().isLeft)
+      assert(Validator.validate("a")(x => x =!= "a")(Unauthorized())(using ioInstance).value.unsafeRunSync().isLeft)
+      assert(Validator.validate(1)(x => x =!= 1)(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).value.unsafeRunSync().isLeft)
     }
 
     "be throw if isLeft" in {
       assertThrows[Unauthorized] {
-        Validator.validate("a")(x => x =!= "a")(Unauthorized())(ioInstance).andThrow.unsafeRunSync()
+        Validator.validate("a")(x => x =!= "a")(Unauthorized())(using ioInstance).andThrow.unsafeRunSync()
       }
 
       assertThrows[UnprocessableEntity] {
-        Validator.validate(1)(x => x =!= 1)(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).andThrow.unsafeRunSync()
+        Validator.validate(1)(x => x =!= 1)(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).andThrow.unsafeRunSync()
       }
     }
   }
 
   "validateUnless" should {
     "be return right" in {
-      assert(Validator.validateUnless("a")(x => x =!= "a")(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).value.unsafeRunSync().isRight)
-      assert(Validator.validateUnless(1)(x => x =!= 1)(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).value.unsafeRunSync().isRight)
+      assert(Validator.validateUnless("a")(x => x =!= "a")(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).value.unsafeRunSync().isRight)
+      assert(Validator.validateUnless(1)(x => x =!= 1)(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).value.unsafeRunSync().isRight)
     }
 
     "not be throw if isRight" in {
-      val s = Validator.validateUnless("a")(x => x =!= "a")(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).andThrow.unsafeRunSync()
+      val s = Validator.validateUnless("a")(x => x =!= "a")(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).andThrow.unsafeRunSync()
       assert(s eqv "a")
-      val i = Validator.validateUnless(1)(x => x =!= 1)(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).andThrow.unsafeRunSync()
+      val i = Validator.validateUnless(1)(x => x =!= 1)(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).andThrow.unsafeRunSync()
       assert(i eqv 1)
     }
 
     "be return left" in {
-      assert(Validator.validateUnless("a")(x => x eqv "a")(Unauthorized())(ioInstance).value.unsafeRunSync().isLeft)
-      assert(Validator.validateUnless(1)(x => x eqv 1)(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).value.unsafeRunSync().isLeft)
+      assert(Validator.validateUnless("a")(x => x eqv "a")(Unauthorized())(using ioInstance).value.unsafeRunSync().isLeft)
+      assert(Validator.validateUnless(1)(x => x eqv 1)(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).value.unsafeRunSync().isLeft)
     }
 
     "be throw if isLeft" in {
       assertThrows[Unauthorized] {
-        Validator.validateUnless("a")(x => x eqv "a")(Unauthorized())(ioInstance).andThrow.unsafeRunSync()
+        Validator.validateUnless("a")(x => x eqv "a")(Unauthorized())(using ioInstance).andThrow.unsafeRunSync()
       }
 
       assertThrows[UnprocessableEntity] {
-        Validator.validateUnless(1)(x => x eqv 1)(UnprocessableEntity(detail = "unprocessable!!"))(ioInstance).andThrow.unsafeRunSync()
+        Validator.validateUnless(1)(x => x eqv 1)(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).andThrow.unsafeRunSync()
       }
     }
   }

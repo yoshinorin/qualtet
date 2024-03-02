@@ -20,7 +20,7 @@ class TagRoute[F[_]: Monad](
   articleService: ArticleService[F]
 ) extends MethodNotAllowedSupport[IO] {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   private[http] def index: HttpRoutes[IO] =
     tagsWithoutAuth <+>

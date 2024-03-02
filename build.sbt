@@ -5,7 +5,7 @@ import LocalProcesses.*
 organization := "net.yoshinorin"
 name := "qualtet"
 version := "v2.11.0"
-scalaVersion := "3.3.3"
+scalaVersion := "3.4.0"
 val repository = "https://github.com/yoshinorin/qualtet"
 
 scalacOptions ++= Seq(
@@ -21,7 +21,8 @@ scalacOptions ++= Seq(
   "-Wunused:imports",
   "-Wunused:locals",
   "-Wunused:params",
-  "-Wunused:privates"
+  "-Wunused:privates",
+  "-rewrite -source 3.4-migration"
 )
 
 // https://github.com/rtimush/sbt-updates

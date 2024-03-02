@@ -14,20 +14,20 @@ lazy val commitHash = BuildInfo.commitHash match {
 lazy val runtime = Runtime()
 lazy val build = Build()
 
-private[this] final case class Runtime(
+private final case class Runtime(
   name: String = "Java",
   vendor: String = jvmVendor,
   version: String = runtimeVersion
 )
 
-private[this] final case class Build(
+private final case class Build(
   commit: String = commitHash,
   url: String = s"${BuildInfo.repository}/commit/${commitHash}",
   scalaVersion: String = BuildInfo.scalaVersion,
   sbtVersion: String = BuildInfo.sbtVersion
 )
 
-private[this] final case class ApplicationInfo(
+private final case class ApplicationInfo(
   name: String = BuildInfo.name,
   version: String = BuildInfo.version,
   repository: String = BuildInfo.repository,

@@ -13,7 +13,7 @@ class CacheService[F[_]: Monad](
   feedService: FeedService[F]
 ) {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   def invalidateAll(): IO[Unit] = {
     for {

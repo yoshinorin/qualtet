@@ -14,7 +14,7 @@ class SearchRoute[F[_]: Monad](
   searchService: SearchService[F]
 ) extends MethodNotAllowedSupport[IO] {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {

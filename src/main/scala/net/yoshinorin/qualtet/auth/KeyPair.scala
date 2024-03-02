@@ -7,8 +7,8 @@ import java.security.{KeyPairGenerator, PrivateKey, PublicKey, SecureRandom}
 
 class KeyPair(algorithm: String, length: Int, secureRandom: SecureRandom) {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
-  private[this] val keyPairGenerator = KeyPairGenerator.getInstance(algorithm)
+  private val logger = LoggerFactory.getLogger(this.getClass)
+  private val keyPairGenerator = KeyPairGenerator.getInstance(algorithm)
 
   keyPairGenerator.initialize(length, secureRandom)
 

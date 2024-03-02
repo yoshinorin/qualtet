@@ -5,8 +5,8 @@ import java.security.{PrivateKey, Signature => JavaSignature}
 
 class Signature(algorithm: String, message: Array[Byte], key: KeyPair) {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
-  private[this] val signature = JavaSignature.getInstance(algorithm)
+  private val logger = LoggerFactory.getLogger(this.getClass)
+  private val signature = JavaSignature.getInstance(algorithm)
 
   signature.initSign(key.privateKey)
   signature.update(message)

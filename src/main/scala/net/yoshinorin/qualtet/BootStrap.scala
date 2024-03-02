@@ -71,7 +71,7 @@ object BootStrap extends IOApp {
     tagRouteV1
   )
 
-  private[this] def server(host: Ipv4Address, port: Port, httpApp: HttpApp[IO]): Resource[IO, Server] = {
+  private def server(host: Ipv4Address, port: Port, httpApp: HttpApp[IO]): Resource[IO, Server] = {
     EmberServerBuilder
       .default[IO]
       .withHost(host)

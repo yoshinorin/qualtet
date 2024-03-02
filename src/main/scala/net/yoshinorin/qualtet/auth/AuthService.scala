@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory
 
 class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt) {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
-  private[this] val bcryptPasswordEncoder = new BCryptPasswordEncoder()
+  private val logger = LoggerFactory.getLogger(this.getClass)
+  private val bcryptPasswordEncoder = new BCryptPasswordEncoder()
 
   def generateToken(tokenRequest: RequestToken): IO[ResponseToken] = {
 

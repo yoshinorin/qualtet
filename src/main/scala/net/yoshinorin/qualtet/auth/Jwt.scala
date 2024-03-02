@@ -35,7 +35,7 @@ class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair
 
   import JwtClaim.*
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   /**
    * create JWT with authorId. authorId uses claim names in JWT.

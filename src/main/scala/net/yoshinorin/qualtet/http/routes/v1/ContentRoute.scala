@@ -20,7 +20,7 @@ class ContentRoute[F[_]: Monad](
 ) extends RequestDecoder
     with MethodNotAllowedSupport[IO] {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def index: HttpRoutes[IO] =

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 
 trait throwable {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   extension (e: Throwable) {
     def withLog[F[_]: Monad]: F[Throwable] = {

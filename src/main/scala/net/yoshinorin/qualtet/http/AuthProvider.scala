@@ -17,7 +17,7 @@ import net.yoshinorin.qualtet.syntax.*
 class AuthProvider[F[_]: Monad](
   authService: AuthService[F]
 ) {
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   // TODO: cleanup messy code
   private def authUser: Kleisli[IO, Request[IO], Either[Fail, (ResponseAuthor, String)]] =

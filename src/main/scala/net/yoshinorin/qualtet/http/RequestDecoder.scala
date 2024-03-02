@@ -11,7 +11,7 @@ import scala.util.control.NonFatal
 
 trait RequestDecoder {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   def decode[T <: Request[T]](maybeJsonString: String): JsonValueCodec[T] ?=> Either[Fail, T] = {
     try {

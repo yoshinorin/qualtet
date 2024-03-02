@@ -15,7 +15,7 @@ import cats.effect.unsafe.implicits.global
 
 object CreateAuthor {
 
-  private[this] val logger = LoggerFactory.getLogger(this.getClass)
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   given dbContext: DoobieTransactor = new DoobieTransactor(config.db)
   val authorRepository: AuthorRepository[ConnectionIO] = summon[AuthorRepository[ConnectionIO]]
