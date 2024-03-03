@@ -1,6 +1,9 @@
 package net.yoshinorin.qualtet
 
+import cats.effect.IO
 import doobie.ConnectionIO
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
+import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
@@ -34,6 +37,7 @@ object Modules {
 
   val config = ApplicationConfig.load
 
+  given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
   given dbContext: DoobieTransactor = new DoobieTransactor(config.db)
   val migrator: Migrator = new Migrator(config.db)
 

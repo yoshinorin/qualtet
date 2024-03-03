@@ -3,13 +3,12 @@ package net.yoshinorin.qualtet
 import cats.data.Kleisli
 import cats.effect.{ExitCode, IO, IOApp}
 import cats.effect.kernel.Resource
+import org.typelevel.log4cats.SelfAwareStructuredLogger
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
 import org.http4s.*
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Server
 import com.comcast.ip4s.*
-import org.typelevel.log4cats.SelfAwareStructuredLogger
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
-import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
 import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
@@ -32,8 +31,9 @@ import scala.concurrent.duration._
 
 object BootStrap extends IOApp {
 
-  given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
-  val logger: SelfAwareStructuredLogger[IO] = Log4CatsLoggerFactory[IO].getLogger
+  import net.yoshinorin.qualtet.Modules.log4catsLogger
+
+  val logger: SelfAwareStructuredLogger[IO] = Log4CatsLoggerFactory[IO].getLoggerFromClass(this.getClass)
 
   val authProvider = new AuthProvider(Modules.authService)
   val corsProvider = new CorsProvider(Modules.config.cors)
