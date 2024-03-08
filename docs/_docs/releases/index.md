@@ -5,6 +5,7 @@ title: Releases
 
 | Version | Code name | Released at |
 | --- | --- | --- |
+| [v2.12.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.12.0)                      | Scarlet Magata           |                        |
 | [v2.11.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.11.0)                      | Scarlet Linda            | 2023-11-03T06:07:42Z   |
 | [v2.10.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.10.0)                      | Scarlet Kanmapa          | 2023-09-01T15:46:38Z   |
 | [v2.9.1](https://github.com/yoshinorin/qualtet/releases/tag/v2.9.1)                        |                          | 2023-08-25T13:21:27Z   |
