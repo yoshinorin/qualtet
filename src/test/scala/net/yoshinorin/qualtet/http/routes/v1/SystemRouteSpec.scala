@@ -27,7 +27,7 @@ class SystemRouteV1Spec extends AnyWordSpec {
 
   "SystemRoute" should {
 
-    "be return Method Not Allowed" in {
+    "return Method Not Allowed" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/system"))
         .use { response =>
@@ -40,7 +40,7 @@ class SystemRouteV1Spec extends AnyWordSpec {
     }
 
     "health" should {
-      "be return 200" in {
+      "return 200" in {
         client
           .run(Request(method = Method.GET, uri = uri"/v1/system/health"))
           .use { response =>
@@ -54,7 +54,7 @@ class SystemRouteV1Spec extends AnyWordSpec {
     }
 
     "metadata" should {
-      "be return 200 if config.http.endpoints.system.metadata is enabled" in {
+      "return 200 if config.http.endpoints.system.metadata is enabled" in {
         clientForEnabledMetadataEndpoint
           .run(Request(method = Method.GET, uri = uri"/v1/system/metadata"))
           .use { response =>
@@ -73,7 +73,7 @@ class SystemRouteV1Spec extends AnyWordSpec {
           .unsafeRunSync()
       }
 
-      "be return 404 if config.http.endpoints.system.metadata is disabled" in {
+      "return 404 if config.http.endpoints.system.metadata is disabled" in {
         client
           .run(Request(method = Method.GET, uri = uri"/v1/system/metadata"))
           .use { response =>

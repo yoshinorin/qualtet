@@ -53,7 +53,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "SearchRoute" should {
-    "be return search result" in {
+    "return search result" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?q=searchRoute"))
         .use { response =>
@@ -74,7 +74,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return UnprocessableEntity without query params" in {
+    "return UnprocessableEntity without query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/"))
         .use { response =>
@@ -96,7 +96,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return UnprocessableEntity with query param short value" in {
+    "return UnprocessableEntity with query param short value" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?q=abc"))
         .use { response =>
@@ -118,7 +118,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return UnprocessableEntity with invalid query param" in {
+    "return UnprocessableEntity with invalid query param" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?invalid=abcd"))
         .use { response =>
@@ -140,7 +140,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return UnprocessableEntity with query param contains invalid values" in {
+    "return UnprocessableEntity with query param contains invalid values" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?q=a.b.c"))
         .use { response =>
@@ -162,7 +162,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return UnprocessableEntity with too many query params" in {
+    "return UnprocessableEntity with too many query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?q=abcd&q=abcd&q=abcd&q=abcd"))
         .use { response =>
@@ -184,7 +184,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return UnprocessableEntity with accumulated errors" in {
+    "return UnprocessableEntity with accumulated errors" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?q=a.b.c&q=x&q=z.zzzzzzzzzzzzzzzzzzz&q=abcd&q=.y"))
         .use { response =>

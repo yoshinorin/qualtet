@@ -75,7 +75,7 @@ class ArchiveRouteV1Spec extends AnyWordSpec {
     }
   }
 
-  "be return Method Not Allowed" in {
+  "return Method Not Allowed" in {
     client
       .run(Request(method = Method.DELETE, uri = uri"/v1/archives"))
       .use { response =>

@@ -56,7 +56,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
     val s1: Series = seriesService.findByName(requestSeries.head.name).unsafeRunSync().get
     val s2: Series = seriesService.findByName(requestSeries(1).name).unsafeRunSync().get
 
-    "be create a series" in {
+    "create a series" in {
       val json =
         """
           |{
@@ -83,7 +83,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return series" in {
+    "return series" in {
       val expectPartialJson =
         s"""
           |{
@@ -117,7 +117,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return specific series" in {
+    "return specific series" in {
       client
         .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${s1.name.value}"))))
         .use { response =>
@@ -136,7 +136,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return 404" in {
+    "return 404" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/series/not-exists"))
         .use { response =>
@@ -154,7 +154,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return Method Not Allowed" in {
+    "return Method Not Allowed" in {
       client
         .run(
           Request(
@@ -172,7 +172,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return 400 BadRequest caused by empty name" in {
+    "return 400 BadRequest caused by empty name" in {
       val json =
         """
           |{
@@ -200,7 +200,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return 400 BadRequest caused by empty title" in {
+    "return 400 BadRequest caused by empty title" in {
       val json =
         """
           |{
@@ -228,7 +228,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be reject caused by expired token" in {
+    "reject caused by expired token" in {
       val json =
         """
           |{
@@ -250,7 +250,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be reject POST endpoint caused by the authorization header is empty" in {
+    "reject POST endpoint caused by the authorization header is empty" in {
       client
         .run(Request(method = Method.POST, uri = uri"/v1/series/"))
         .use { response =>
@@ -262,7 +262,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be reject POST endpoint caused by invalid token" in {
+    "reject POST endpoint caused by invalid token" in {
       val entity = EntityEncoder[IO, String].toEntity("")
       client
         .run(

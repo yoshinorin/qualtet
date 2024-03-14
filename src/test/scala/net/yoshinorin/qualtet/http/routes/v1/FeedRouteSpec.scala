@@ -26,7 +26,7 @@ class FeedRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "FeedRoute" should {
-    "be return feeds" in {
+    "return feeds" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/feeds/index"))
         .use { response =>
@@ -42,7 +42,7 @@ class FeedRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return Method Not Allowed" in {
+    "return Method Not Allowed" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/feeds/index"))
         .use { response =>

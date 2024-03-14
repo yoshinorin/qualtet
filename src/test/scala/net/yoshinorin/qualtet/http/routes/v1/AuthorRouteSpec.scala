@@ -24,7 +24,7 @@ class AuthorRouteV1Spec extends AnyWordSpec {
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "AuthorRoute" should {
-    "be return two authors" in {
+    "return two authors" in {
       val expectJson =
         s"""
           |{
@@ -53,7 +53,7 @@ class AuthorRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return specific author" in {
+    "return specific author" in {
       val expectJson =
         s"""
           |{
@@ -76,7 +76,7 @@ class AuthorRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return 404" in {
+    "return 404" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/authors/jhondue-not-exists"))
         .use { response =>
@@ -94,7 +94,7 @@ class AuthorRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return Method Not Allowed" in {
+    "return Method Not Allowed" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/authors"))
         .use { response =>

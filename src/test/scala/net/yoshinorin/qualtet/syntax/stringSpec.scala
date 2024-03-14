@@ -8,7 +8,7 @@ class StringSpec extends AnyWordSpec {
 
   "stripHtmlTags" should {
 
-    "be replace all html tags" in {
+    "replace all html tags" in {
       val x = "<html>aiu<p>eo</p><script>kakiku</script>keko<a>sashisu</a>seso<br><code></code></html>owari".stripHtmlTags
       x === "aiueokakikukekosashisusesoowari"
     }
@@ -17,7 +17,7 @@ class StringSpec extends AnyWordSpec {
 
   "stripHtmlSpecialChars" should {
 
-    "be replace all html special chars" in {
+    "replace all html special chars" in {
       val x = "a&amp;b&#38;c&#169;d&#x27;e&quot;f&#xA0;g&lt;h&gt;i&quot;j".stripHtmlSpecialChars
       x === "abcdefghij"
     }
@@ -26,7 +26,7 @@ class StringSpec extends AnyWordSpec {
 
   "hasIgnoreChars" should {
 
-    "be detect ignore chars" in {
+    "detect ignore chars" in {
       assert("test;test".hasIgnoreChars === true)
       assert("\\testtest".hasIgnoreChars === true)
       assert("%testtest".hasIgnoreChars === true)
@@ -55,7 +55,7 @@ class StringSpec extends AnyWordSpec {
 
   "filterIgnoreChars" should {
 
-    "be filter ignore chars" in {
+    "filter ignore chars" in {
       "testtesあt".filterIgnoreChars === "testtesあt"
       "testtesいt".filterIgnoreChars === "testtesいt"
       "test$%^&@!test".filterIgnoreChars === "testtest"
@@ -71,7 +71,7 @@ class StringSpec extends AnyWordSpec {
       assert(" test ".trimOrThrow(Fail.BadRequest(detail = "error")) === "test")
     }
 
-    "be thrown exception" in {
+    "thrown exception" in {
       assertThrows[Fail.BadRequest] {
         "".trimOrThrow(Fail.BadRequest(detail = "error"))
       }
@@ -85,7 +85,7 @@ class StringSpec extends AnyWordSpec {
 
   "position" should {
 
-    "be return any word's start and end position in string" in {
+    "return any word's start and end position in string" in {
       val pos = "あいうえおかきくけこ。あい。あいう。うえお。かきく。あいうおお".position("あいう")
       assert(Seq((0, 3), (14, 17), (26, 29)) === pos)
 

@@ -9,7 +9,7 @@ import cats.effect.unsafe.implicits.global
 class CacheServiceModuleSpec extends AnyWordSpec {
 
   "CacheService" should {
-    "be invalidateAll callable" in {
+    "invalidateAll callable" in {
       assert(cacheService.invalidateAll().unsafeRunSync() === ())
     }
   }

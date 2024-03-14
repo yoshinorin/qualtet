@@ -8,7 +8,7 @@ class PointsSpec extends AnyWordSpec {
 
   "IntTupleOps" should {
 
-    "be return expanded values" in {
+    "return expanded values" in {
       assert((0, 1).expand(1, 1, 2) === (0, 2))
       assert((0, 1).expand(1, 1, 1) === (0, 1))
       assert((10, 20).expand(1, 5, 99) === (9, 25))

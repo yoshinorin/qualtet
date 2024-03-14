@@ -43,7 +43,7 @@ class ArticleRouteV1Spec extends AnyWordSpec {
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "ArticleRoute" should {
-    "be return articles with default query params" in {
+    "return articles with default query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/articles"))
         .use { response =>
@@ -59,7 +59,7 @@ class ArticleRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return articles with query params" in {
+    "return articles with query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/articles/?page=1&limit=5"))
         .use { response =>
@@ -75,7 +75,7 @@ class ArticleRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return 10 articles with query params" in {
+    "return 10 articles with query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/articles?page=1&limit=50"))
         .use { response =>
@@ -109,7 +109,7 @@ class ArticleRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return Method Not Allowed" in {
+    "return Method Not Allowed" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/articles"))
         .use { response =>

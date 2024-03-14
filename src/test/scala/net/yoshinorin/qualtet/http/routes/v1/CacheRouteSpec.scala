@@ -22,7 +22,7 @@ class CacheRouteSpec extends AnyWordSpec {
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "CacheRoute" should {
-    "be invalidate all caches" in {
+    "invalidate all caches" in {
 
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))))
@@ -35,7 +35,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject caused by expired token" in {
+    "reject caused by expired token" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + expiredToken))))
         .use { response =>
@@ -47,7 +47,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject caused by the authorization header is empty" in {
+    "reject caused by the authorization header is empty" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/caches/"))
         .use { response =>
@@ -59,7 +59,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject caused by invalid token" ignore {
+    "reject caused by invalid token" ignore {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalidToken"))))
         .use { response =>
@@ -71,7 +71,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return user not found" in {
+    "return user not found" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/caches/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + nonExistsUserToken))))
         .use { response =>
@@ -83,7 +83,7 @@ class CacheRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return Method Not Allowed" in {
+    "return Method Not Allowed" in {
       client
         .run(Request(method = Method.POST, uri = uri"/v1/caches", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))))
         .use { response =>

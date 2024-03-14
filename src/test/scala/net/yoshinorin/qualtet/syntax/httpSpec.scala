@@ -10,12 +10,12 @@ class HttpSpec extends AnyWordSpec {
 
     "asRequestQueryParamater" should {
 
-      "be convert to RequestQueryParamater" in {
+      "convert to RequestQueryParamater" in {
         val result = Map(("page" -> "3"), ("limit" -> "2")).asRequestQueryParamater
         assert(result === RequestQueryParamater(Some(3), Some(2)))
       }
 
-      "be convert to RequestQueryParamater with default value if key is empty" in {
+      "convert to RequestQueryParamater with default value if key is empty" in {
         val result = Map().asRequestQueryParamater
         assert(result === RequestQueryParamater(Some(1), Some(10)))
       }

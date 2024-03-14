@@ -20,7 +20,7 @@ class ContentTypeRouteV1Spec extends AnyWordSpec {
 
   "ContentTypeRoute" should {
 
-    "be return content-types" in {
+    "return content-types" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/content-types/"))
         .use { response =>
@@ -35,7 +35,7 @@ class ContentTypeRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return content-type:articles" in {
+    "return content-type:articles" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/content-types/article"))
         .use { response =>
@@ -51,7 +51,7 @@ class ContentTypeRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return content-type:page" in {
+    "return content-type:page" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/content-types/page"))
         .use { response =>
@@ -67,7 +67,7 @@ class ContentTypeRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return content-type:not-exists" in {
+    "return content-type:not-exists" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/content-types/not-exists"))
         .use { response =>
@@ -85,7 +85,7 @@ class ContentTypeRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return Method Not Allowed" in {
+    "return Method Not Allowed" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/content-types"))
         .use { response =>

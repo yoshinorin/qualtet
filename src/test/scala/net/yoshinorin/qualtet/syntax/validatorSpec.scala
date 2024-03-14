@@ -12,7 +12,7 @@ class ValidatorSpec extends AnyWordSpec {
   val ioInstance = implicitly[cats.Monad[IO]]
 
   "validate" should {
-    "be return right" in {
+    "return right" in {
 
       // NOTE: Workaround avoid compile error when use `===`. So, use `eqv` instead of it.
       assert("a".toEitherF(x => x eqv "a")(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).value.unsafeRunSync().isRight)
@@ -26,12 +26,12 @@ class ValidatorSpec extends AnyWordSpec {
       assert(i eqv 1)
     }
 
-    "be return left" in {
+    "return left" in {
       assert("a".toEitherF(x => x =!= "a")(Unauthorized())(using ioInstance).value.unsafeRunSync().isLeft)
       assert(1.toEitherF(x => x =!= 1)(UnprocessableEntity(detail = "unprocessable!!"))(using ioInstance).value.unsafeRunSync().isLeft)
     }
 
-    "be throw if isLeft" in {
+    "throw if isLeft" in {
       assertThrows[Unauthorized] {
         "a".toEitherF(x => x =!= "a")(Unauthorized())(using ioInstance).andThrow.unsafeRunSync()
       }

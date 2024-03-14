@@ -59,7 +59,7 @@ class ContentSpec extends AnyWordSpec {
   }
 
   "RequestContent" should {
-    "be thrown BadRequest if title is empty" in {
+    "thrown BadRequest if title is empty" in {
       assertThrows[BadRequest] {
         RequestContent(
           contentType = "article",
@@ -74,7 +74,7 @@ class ContentSpec extends AnyWordSpec {
       }
     }
 
-    "be thrown BadRequest if rawContent is empty" in {
+    "thrown BadRequest if rawContent is empty" in {
       assertThrows[BadRequest] {
         RequestContent(
           contentType = "article",
@@ -89,7 +89,7 @@ class ContentSpec extends AnyWordSpec {
       }
     }
 
-    "be thrown BadRequest if htmlContent is empty" in {
+    "thrown BadRequest if htmlContent is empty" in {
       assertThrows[BadRequest] {
         RequestContent(
           contentType = "article",

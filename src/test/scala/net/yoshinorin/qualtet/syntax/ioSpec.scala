@@ -15,7 +15,7 @@ class IoSpec extends AnyWordSpec {
       assert(i("something").throwIfNone(UnprocessableEntity(detail = "unprocessable!!")).unsafeRunSync() === "something")
     }
 
-    "be thrown if None" in {
+    "thrown if None" in {
       val i: Option[String] => IO[Option[String]] = _ => IO(None)
       assertThrows[UnprocessableEntity] {
         i(None).throwIfNone(UnprocessableEntity(detail = "unprocessable!!")).unsafeRunSync()

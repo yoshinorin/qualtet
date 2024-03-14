@@ -83,18 +83,18 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   "SearchService" should {
 
-    "be extract query string" in {
+    "extract query string" in {
       assert(searchService.extractQueryStringsFromQuery(Map(("q", List("abcde", "fghr", "jklmn")))) === List("abcde", "fghr", "jklmn"))
       assert(searchService.extractQueryStringsFromQuery(Map(("q", List("aaaa", "bbbb", "cccc")))) === List("aaaa", "bbbb", "cccc"))
       // NOTE: result should be lowercase
       assert(searchService.extractQueryStringsFromQuery(Map(("q", List("AAAA", "BBBB", "CCCC")))) === List("aaaa", "bbbb", "cccc"))
     }
 
-    "be not extract with wrong query key" in {
+    "not extract with wrong query key" in {
       assert(searchService.extractQueryStringsFromQuery(Map(("wrong", List("AAAA", "BBBB", "CCCC")))) === List())
     }
 
-    "be return query string is empty error" in {
+    "return query string is empty error" in {
       val result = searchService.accumurateQueryStringsErrors(
         List(
         )
@@ -104,7 +104,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
     }
 
-    "be return accumrated errors" in {
+    "return accumrated errors" in {
       val result = searchService.accumurateQueryStringsErrors(
         List(
           "a",
@@ -129,63 +129,63 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
     }
 
-    "be return sarch result" in {
+    "return sarch result" in {
       val s = searchService.search(Map(("q", List("searchService")))).unsafeRunSync()
       assert(s.count === 54)
       assert(s.contents.size === 30)
     }
 
-    "be return empty sarch result" in {
+    "return empty sarch result" in {
       val s = searchService.search(Map(("q", List("notfound")))).unsafeRunSync()
       assert(s.count === 0)
       assert(s.contents.size === 0)
     }
 
     /* TODO:
-    "be filtered http url" in {
+    "filtered http url" in {
       val s = searchService.search(Map(("q", List("http")))).unsafeRunSync()
       assert(s.count === 1)
       assert(s.contents.size === 1)
     }
 
-    "be filtered https url" in {
+    "filtered https url" in {
       val s = searchService.search(Map(("q", List("https")))).unsafeRunSync()
       assert(s.count === 0)
       assert(s.contents.size === 0)
     }
      */
 
-    "be return `AND` sarch result" in {
+    "return `AND` sarch result" in {
       val s = searchService.search(Map(("q", List("searchService", "Last")))).unsafeRunSync()
       assert(s.count === 1)
       assert(s.contents.size === 1)
     }
 
-    "be throw UnprocessableEntity Exception if query string is empty" in {
+    "throw UnprocessableEntity Exception if query string is empty" in {
       assertThrows[UnprocessableEntity] {
         searchService.search(Map()).unsafeRunSync()
       }
     }
 
-    "be throw UnprocessableEntity Exception if query value is empty" in {
+    "throw UnprocessableEntity Exception if query value is empty" in {
       assertThrows[UnprocessableEntity] {
         searchService.search(Map(("q", List()))).unsafeRunSync()
       }
     }
 
-    "be throw UnprocessableEntity Exception if many query requested" in {
+    "throw UnprocessableEntity Exception if many query requested" in {
       assertThrows[UnprocessableEntity] {
         searchService.search(Map(("q", List("abcde", "abcde", "abcde", "abcde")))).unsafeRunSync()
       }
     }
 
-    "be throw UnprocessableEntity Exception if query contains too short value" in {
+    "throw UnprocessableEntity Exception if query contains too short value" in {
       assertThrows[UnprocessableEntity] {
         searchService.search(Map(("q", List("abcd", "abc", "abcd")))).unsafeRunSync()
       }
     }
 
-    "be throw UnprocessableEntity Exception if query contains invalid char" in {
+    "throw UnprocessableEntity Exception if query contains invalid char" in {
       assertThrows[UnprocessableEntity] {
         searchService.search(Map(("q", List("abcd", "ab(d", "abcd")))).unsafeRunSync()
       }

@@ -11,7 +11,7 @@ class CreateAuthorSpec extends AnyWordSpec {
 
   "CreateAuthor" should {
 
-    "be create author" in {
+    "create author" in {
       CreateAuthor.main(Array(author.name.value, author.displayName.value, "pass"))
 
       // TODO: Need assertion. Sometimes return `None` after change 9817e9fc7a57cb1e8eac1c168a715f9486ed0dc7

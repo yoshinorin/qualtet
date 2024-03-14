@@ -18,7 +18,7 @@ class ArchiveServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   "ArchiveService" should {
 
-    "be get" in {
+    "get" in {
       val result = archiveService.get.unsafeRunSync()
       assert(result.size >= 39)
     }

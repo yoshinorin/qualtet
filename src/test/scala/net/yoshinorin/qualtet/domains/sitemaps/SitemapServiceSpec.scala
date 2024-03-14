@@ -9,7 +9,7 @@ import cats.effect.unsafe.implicits.global
 class SitemapServiceSpec extends AnyWordSpec {
 
   "invalidate" should {
-    "be callable" in {
+    "callable" in {
       assert(sitemapService.invalidate().unsafeRunSync() === ())
     }
   }

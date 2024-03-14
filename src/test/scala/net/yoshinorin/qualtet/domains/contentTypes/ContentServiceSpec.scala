@@ -9,7 +9,7 @@ import cats.effect.unsafe.implicits.global
 class ContentTypeServiceSpec extends AnyWordSpec {
 
   "invalidate" should {
-    "be callable" in {
+    "callable" in {
       assert(contentTypeService.invalidate().unsafeRunSync() === ())
     }
   }

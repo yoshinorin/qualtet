@@ -37,21 +37,21 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   "SeriesService" should {
 
-    "be get all series" in {
+    "get all series" in {
       val result = seriesService.getAll.unsafeRunSync().filter(s => s.name.value.contains("seriesservice-series"))
 
       // TODO: fix test data and assertion
       assert(result.size >= 2)
     }
 
-    "be findByName" in {
+    "findByName" in {
       val result = seriesService.findByName(SeriesName("seriesservice-series")).unsafeRunSync()
 
       assert(result.size === 1)
       assert(result.get.title === "Series Service Spec")
     }
 
-    "be get" in {
+    "get" in {
       val result = seriesService.get(SeriesName("seriesservice-series")).unsafeRunSync()
 
       assert(result.title === "Series Service Spec")
@@ -60,7 +60,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       assert(result.articles.head.path.value === "/test/SeriesService-0")
     }
 
-    "be upsert" in {
+    "upsert" in {
       seriesService
         .create(
           RequestSeries(

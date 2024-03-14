@@ -14,7 +14,7 @@ class MigratorSpec extends AnyWordSpec {
 
   "Migrator" should {
 
-    "be migrate" in {
+    "migrate" in {
 
       Modules.migrator.migrate(contentTypeService).unsafeRunSync()
 

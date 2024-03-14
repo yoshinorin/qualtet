@@ -39,7 +39,7 @@ class ContentTaggingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   "ContentTaggingService" should {
 
-    "be delete bulky" in {
+    "delete bulky" in {
       // TODO: clean up
       val contents1 = contentService.findByPath(Path("/test/ContentTaggingServiceSpec-1")).unsafeRunSync().get
       val contents = contentService.findByPathWithMeta(Path("/test/ContentTaggingServiceSpec-1")).unsafeRunSync().get

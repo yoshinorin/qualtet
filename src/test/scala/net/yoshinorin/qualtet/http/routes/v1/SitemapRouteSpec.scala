@@ -26,7 +26,7 @@ class SitemapRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "SitemapRoute" should {
-    "be return json for sitemap.xml" in {
+    "return json for sitemap.xml" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/sitemaps"))
         .use { response =>
@@ -42,7 +42,7 @@ class SitemapRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return Method Not Allowed" in {
+    "return Method Not Allowed" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/sitemaps"))
         .use { response =>

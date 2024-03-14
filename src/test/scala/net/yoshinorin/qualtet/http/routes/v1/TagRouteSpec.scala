@@ -42,7 +42,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
     val t: Seq[ResponseTag] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.startsWith("tagRouteTag"))
 
-    "be return tags" in {
+    "return tags" in {
       val expectJson =
         s"""
           |{
@@ -69,7 +69,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return specific tag" in {
+    "return specific tag" in {
       client
         .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${t(0).name.value}"))))
         .use { response =>
@@ -101,7 +101,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
     /*
      TODO: Why do these tests are returns 404?
-    "be return specific tag contents with query params" in {
+    "return specific tag contents with query params" in {
       client
         // .run(Request(method = Method.GET, uri = new Uri().withPath(s"/tags/${t(1).name.value}?page=1&limit=10")))
         .run(Request(method = Method.GET, uri = host.withPath("/tags/tagRoute-0?page=1&limit=10")))
@@ -115,7 +115,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return 10 specific tag contents with query params" in {
+    "return 10 specific tag contents with query params" in {
       client
         // .run(Request(method = Method.GET, uri = new Uri().withPath(s"/tags/${t(0).name.value}?page=1&limit=50")))
         .run(Request(method = Method.GET, uri = host.withPath(s"/tags/tagRoute-0?page=1&limit=50")))
@@ -130,7 +130,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
     }
      */
 
-    "be return 404" in {
+    "return 404" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/tags/not-exists"))
         .use { response =>
@@ -148,7 +148,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be delete a tag" in {
+    "delete a tag" in {
       val tag = tagService.findByName(t(4).name).unsafeRunSync().get
 
       // 204 (first time)
@@ -193,7 +193,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return 404 DELETE endopoint" in {
+    "return 404 DELETE endopoint" in {
       val id = TagId(generateUlid())
       client
         .run(
@@ -218,7 +218,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be reject DELETE endpoint caused by invalid token" in {
+    "reject DELETE endpoint caused by invalid token" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/tags/reject", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalid token"))))
         .use { response =>
@@ -230,7 +230,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "be return Method Not Allowed" in {
+    "return Method Not Allowed" in {
       val tag = tagService.findByName(t(2).name).unsafeRunSync().get
       client
         .run(

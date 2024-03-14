@@ -25,11 +25,11 @@ class FeedSpec extends AnyWordSpec {
 
   "ResponseFeed" should {
 
-    "be convert as JSON" in {
+    "convert as JSON" in {
       feed1.asJson
     }
 
-    "be convert as JSON Array" in {
+    "convert as JSON Array" in {
       Seq(feed1, feed2).asJson
     }
 

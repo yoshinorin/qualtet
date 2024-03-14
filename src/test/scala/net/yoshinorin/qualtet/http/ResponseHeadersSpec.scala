@@ -21,7 +21,7 @@ class ResponseHeadersSpec extends AnyWordSpec {
 
   "Response" should {
 
-    "be contains specific headers" in {
+    "contains specific headers" in {
       client
         .run(Request(method = Method.GET, uri = uri"/"))
         .use { response =>
@@ -35,7 +35,7 @@ class ResponseHeadersSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be contains x-request-id header and its value is same with request value (UUID4)" in {
+    "contains x-request-id header and its value is same with request value (UUID4)" in {
       val uuid4String = "76de4439-1521-4bf4-86bf-ccd38afc416a"
       client
         .run(Request(method = Method.GET, uri = uri"/", headers = Headers(Header.Raw(ci"X-Request-Id", uuid4String))))
@@ -49,7 +49,7 @@ class ResponseHeadersSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be contains x-request-id header and its value is same with request value (NOT a UUID)" in {
+    "contains x-request-id header and its value is same with request value (NOT a UUID)" in {
       val notUuidString = "not uuid string"
       client
         .run(Request(method = Method.GET, uri = uri"/", headers = Headers(Header.Raw(ci"X-Request-Id", notUuidString))))

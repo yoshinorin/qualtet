@@ -27,7 +27,7 @@ class FeedServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     assert(result === result.sortWith((x, y) => x.published > y.published))
   }
 
-  "be invalidate cache" in {
+  "invalidate cache" in {
     assert(net.yoshinorin.qualtet.fixture.Fixture.feedService.invalidate().unsafeRunSync() === ())
   }
 

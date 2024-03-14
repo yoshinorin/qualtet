@@ -22,7 +22,7 @@ class AuthRouteV1Spec extends AnyWordSpec {
 
   "AuthRoute" should {
 
-    "be return JWT correctly" in {
+    "return JWT correctly" in {
       val json =
         s"""
           |{
@@ -46,7 +46,7 @@ class AuthRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject with unauthorized (wrong JSON format)" in {
+    "reject with unauthorized (wrong JSON format)" in {
       val wrongJsonFormat =
         s"""
           |{
@@ -67,7 +67,7 @@ class AuthRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject with unauthorized (can not decode request JSON without password key)" in {
+    "reject with unauthorized (can not decode request JSON without password key)" in {
       val wrongJson =
         s"""
           |{
@@ -87,7 +87,7 @@ class AuthRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject with unauthorized (can not decode request JSON without authorId key)" in {
+    "reject with unauthorized (can not decode request JSON without authorId key)" in {
       val wrongJson =
         """
           |{
@@ -107,7 +107,7 @@ class AuthRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject with wrong-password" in {
+    "reject with wrong-password" in {
       val json =
         s"""
            |{
@@ -128,7 +128,7 @@ class AuthRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return if user not exists" in {
+    "return if user not exists" in {
       val json =
         s"""
            |{
@@ -155,7 +155,7 @@ class AuthRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return Method Not Allowed" in {
+    "return Method Not Allowed" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/token"))
         .use { response =>

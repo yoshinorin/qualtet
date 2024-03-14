@@ -67,7 +67,7 @@ class ContentServiceSpec extends AnyWordSpec {
 
     }
 
-    "be upsert" in {
+    "upsert" in {
 
       val requestContent: RequestContent = RequestContent(
         contentType = "article",
@@ -119,7 +119,7 @@ class ContentServiceSpec extends AnyWordSpec {
 
     }
 
-    "be create with none meta values" in {
+    "create with none meta values" in {
       contentService.createContentFromRequest(AuthorName(author.name.value), requestContentNoMetas).unsafeRunSync()
       val createdContent = contentService.findByPathWithMeta(requestContentNoMetas.path).unsafeRunSync().get
       assert(createdContent.externalResources.isEmpty)
@@ -127,7 +127,7 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(createdContent.content === "this is a html content")
     }
 
-    "be find by id" in {
+    "find by id" in {
       val createRequestContent = requestContent1.copy(
         path = Path("ContentServiceSpec-FindById")
       )
@@ -140,7 +140,7 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(result.get.path === createRequestContent.path)
     }
 
-    "be return htmlContent if include its field when request create" in {
+    "return htmlContent if include its field when request create" in {
       val updatedRequestContent = requestContent1.copy(
         htmlContent = "<h1>this is a html content<h1>"
       )
@@ -149,7 +149,7 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(updatedContent.content === updatedRequestContent.htmlContent)
     }
 
-    "be delete" in {
+    "delete" in {
       // create test data for delete
       val willBeDeleteContent: RequestContent = RequestContent(
         contentType = "article",
@@ -207,25 +207,25 @@ class ContentServiceSpec extends AnyWordSpec {
       // assert(afterDeleteOps._4.get.path === willNotDeleteContent.path)
     }
 
-    "be throw Content NotFound Exception when not exists content to delete" in {
+    "throw Content NotFound Exception when not exists content to delete" in {
       assertThrows[NotFound] {
         contentService.delete(ContentId(generateUlid())).unsafeRunSync()
       }
     }
 
-    "be throw Author UnprocessableEntity Exception" in {
+    "throw Author UnprocessableEntity Exception" in {
       assertThrows[UnprocessableEntity] {
         contentService.createContentFromRequest(AuthorName("not_exists_user"), requestContent1).unsafeRunSync()
       }
     }
 
-    "be throw Content-Type UnprocessableEntity Exception" in {
+    "throw Content-Type UnprocessableEntity Exception" in {
       assertThrows[UnprocessableEntity] {
         contentService.createContentFromRequest(AuthorName(author.name.value), requestContent1.copy(contentType = "not_exists_content-type")).unsafeRunSync()
       }
     }
 
-    "be throw Series UnprocessableEntity Exception" in {
+    "throw Series UnprocessableEntity Exception" in {
       assertThrows[UnprocessableEntity] {
         contentService
           .createContentFromRequest(AuthorName(author.name.value), requestContent1.copy(series = Some(SeriesName("not_exists_series_name"))))

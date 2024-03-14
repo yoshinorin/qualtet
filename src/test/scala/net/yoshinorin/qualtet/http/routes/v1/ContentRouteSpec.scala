@@ -28,7 +28,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "ContentRoute" should {
-    "be create a content (HTTP Header Bearer is UpperCase)" in {
+    "create a content (HTTP Header Bearer is UpperCase)" in {
       val json =
         """
           |{
@@ -65,7 +65,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be create a content (HTTP Header bearer is LowerCase)" in {
+    "create a content (HTTP Header bearer is LowerCase)" in {
       val json =
         """
           |{
@@ -92,7 +92,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be delete a content" in {
+    "delete a content" in {
       val content = contentService.findByPath(Path("/test/ContentRouteSpec1")).unsafeRunSync().get
 
       // 204 (first time)
@@ -136,7 +136,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return 404 DELETE endopoint" in {
+    "return 404 DELETE endopoint" in {
       val id = ContentId(generateUlid())
 
       client
@@ -162,7 +162,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject DELETE endpoint caused by invalid token" in {
+    "reject DELETE endpoint caused by invalid token" in {
       client
         .run(
           Request(
@@ -180,7 +180,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return 400 BadRequest caused by empty title" in {
+    "return 400 BadRequest caused by empty title" in {
       val json =
         """
           |{
@@ -213,7 +213,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return 400 BadRequest caused by empty rawContent" in {
+    "return 400 BadRequest caused by empty rawContent" in {
       val json =
         """
           |{
@@ -246,7 +246,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return 400 BadRequest caused by empty htmlContent" in {
+    "return 400 BadRequest caused by empty htmlContent" in {
       val json =
         """
           |{
@@ -279,7 +279,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject caused by expired token" in {
+    "reject caused by expired token" in {
       val json =
         """
           |{
@@ -308,7 +308,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject POST endpoint caused by the authorization header is empty" in {
+    "reject POST endpoint caused by the authorization header is empty" in {
       client
         .run(Request(method = Method.POST, uri = uri"/v1/contents/"))
         .use { response =>
@@ -320,7 +320,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject POST endpoint caused by invalid token" in {
+    "reject POST endpoint caused by invalid token" in {
       val entity = EntityEncoder[IO, String].toEntity("")
       client
         .run(
@@ -340,7 +340,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return user not found" in {
+    "return user not found" in {
       val entity = EntityEncoder[IO, String].toEntity("")
       client
         .run(
@@ -360,7 +360,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject with bad request (wrong JSON format)" in {
+    "reject with bad request (wrong JSON format)" in {
       val wrongJsonFormat =
         """
           |{
@@ -393,7 +393,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be reject with bad request (lack of JSON key)" in {
+    "reject with bad request (lack of JSON key)" in {
       val wrongJsonFormat =
         """
           |{
@@ -421,7 +421,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return specific content" in {
+    "return specific content" in {
       val now = Instant.now.getEpochSecond
 
       // NOTE: create content and related data for test
@@ -482,7 +482,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
 
     // 401 Invalid JWT with POST
 
-    "be return 404 with non-trailing slash" in {
+    "return 404 with non-trailing slash" in {
       client
         .run(
           Request(
@@ -505,7 +505,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
-    "be return 404 with trailing slash" in {
+    "return 404 with trailing slash" in {
       client
         .run(
           Request(
