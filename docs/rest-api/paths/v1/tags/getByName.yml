@@ -9,7 +9,7 @@ get:
         application/json:
           schema:
             items:
-              $ref: './components/schemas/simpleArticle.yml'
+              $ref: '../../../components/schemas/simpleArticle.yml'
     404:
       description: Tag not found
       content:
