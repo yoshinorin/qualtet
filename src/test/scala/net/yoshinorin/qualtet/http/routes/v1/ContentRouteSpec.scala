@@ -13,6 +13,7 @@ import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, Path, Reques
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.message.ProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
+import net.yoshinorin.qualtet.fixture.Fixture.{router => fixtureRouter}
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -25,7 +26,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
 
   val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
-  val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
+  val client: Client[IO] = Client.fromHttpApp(fixtureRouter.routes.orNotFound)
 
   "ContentRoute" should {
     "create a content (HTTP Header Bearer is UpperCase)" in {

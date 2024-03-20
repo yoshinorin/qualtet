@@ -26,6 +26,23 @@ import net.yoshinorin.qualtet.auth.Signature
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
+import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
+import net.yoshinorin.qualtet.http.routes.HomeRoute
+import net.yoshinorin.qualtet.http.routes.v1.{
+  ArchiveRoute => ArchiveRouteV1,
+  ArticleRoute => ArticleRouteV1,
+  AuthRoute => AuthRouteV1,
+  AuthorRoute => AuthorRouteV1,
+  CacheRoute => CacheRouteV1,
+  ContentRoute => ContentRouteV1,
+  ContentTypeRoute => ContentTypeRouteV1,
+  FeedRoute => FeedRouteV1,
+  SearchRoute => SearchRouteV1,
+  SeriesRoute => SeriesRouteV1,
+  SitemapRoute => SitemapRouteV1,
+  SystemRoute => SystemRouteV1,
+  TagRoute => TagRouteV1
+}
 import net.yoshinorin.qualtet.infrastructure.db.Migrator
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 
@@ -115,4 +132,41 @@ object Modules {
     contentTypeService,
     feedService
   )
+
+  val authProvider = new AuthProvider(Modules.authService)
+  val corsProvider = new CorsProvider(Modules.config.cors)
+
+  val archiveRouteV1 = new ArchiveRouteV1(Modules.archiveService)
+  val articleRouteV1 = new ArticleRouteV1(Modules.articleService)
+  val authorRouteV1 = new AuthorRouteV1(Modules.authorService)
+  val authRouteV1 = new AuthRouteV1(Modules.authService)
+  val cacheRouteV1 = new CacheRouteV1(authProvider, Modules.cacheService)
+  val contentTypeRouteV1 = new ContentTypeRouteV1(Modules.contentTypeService)
+  val contentRouteV1 = new ContentRouteV1(authProvider, Modules.contentService)
+  val feedRouteV1 = new FeedRouteV1(Modules.feedService)
+  val homeRoute: HomeRoute = new HomeRoute()
+  val searchRouteV1 = new SearchRouteV1(Modules.searchService)
+  val seriesRouteV1 = new SeriesRouteV1(authProvider, Modules.seriesService)
+  val sitemapRouteV1 = new SitemapRouteV1(Modules.sitemapService)
+  val systemRouteV1 = new SystemRouteV1(Modules.config.http.endpoints.system)
+  val tagRouteV1 = new TagRouteV1(authProvider, Modules.tagService, Modules.articleService)
+
+  val router = new net.yoshinorin.qualtet.http.Router(
+    corsProvider,
+    archiveRouteV1,
+    articleRouteV1,
+    authorRouteV1,
+    authRouteV1,
+    cacheRouteV1,
+    contentRouteV1,
+    contentTypeRouteV1,
+    feedRouteV1,
+    homeRoute,
+    searchRouteV1,
+    seriesRouteV1,
+    sitemapRouteV1,
+    systemRouteV1,
+    tagRouteV1
+  )
+
 }
