@@ -62,10 +62,10 @@ paths:
     $ref: './paths/v1/authors.yml'
   /v1/authors/{authorName}:
     $ref: './paths/v1/author.yml'
-  /v1/contents:
-    $ref: './paths/v1/contents/post.yml'
   /v1/contents/{contentPath}:
     $ref: './paths/v1/contents/getByPath.yml'
+  /v1/contents:
+    $ref: './paths/v1/contents/post.yml'
   /v1/contents/{contentId}:
     $ref: './paths/v1/contents/deleteById.yml'
   /v1/tags:
