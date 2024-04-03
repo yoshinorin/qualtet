@@ -9,6 +9,7 @@ on:
       - '.github/workflows/pages.yml'
       - LICENSE
       - README.md
+  workflow_dispatch:
 
 jobs:
   build:
