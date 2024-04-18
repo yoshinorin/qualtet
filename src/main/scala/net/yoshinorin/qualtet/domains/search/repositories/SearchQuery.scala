@@ -6,7 +6,6 @@ import doobie.util.query.Query0
 
 object SearchQuery {
   // https://tpolecat.github.io/doobie/docs/08-Fragments.html
-  @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
   def search(query: List[String]): Read[(Int, ResponseSearch)] ?=> Query0[(Int, ResponseSearch)] = {
     // TODO: LIMIT should be configurable
     // TODO: ORDER BY asc, title...etc

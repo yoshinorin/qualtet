@@ -42,9 +42,6 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Dependencies.dependencies
   )
   .settings(
-    Compile / compile / wartremoverWarnings ++= Wartremover.rules
-  )
-  .settings(
     assembly / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
   )
   .settings(

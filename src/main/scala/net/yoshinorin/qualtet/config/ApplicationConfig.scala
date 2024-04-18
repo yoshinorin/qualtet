@@ -36,7 +36,6 @@ object ApplicationConfig {
   private val httpEndpoints: HttpEndpointsConfig =
     HttpEndpointsConfig(system = HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(config.getBoolean("http.endpoints.system.metadata.enabled"))))
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   private val corsAllowOrigins: List[String] = config.getList("cors.allow-origins").unwrapped().asInstanceOf[ArrayList[String]].asScala.toList
 
   private val jwtIss: String = config.getString("jwt.iss")
