@@ -29,7 +29,7 @@ class DoobieTransactor(config: DBConfig) extends Transactor[ConnectionIO, IO] {
   )
 
   override def perform[R](action: Action[R]): ConnectionIO[R] = action match {
-    case continue: Continue[_, R, ConnectionIO] => continue.request.flatMap { t => perform(continue.next(t)) }
+    case continue: Continue[ConnectionIO, R, _] => continue.request.flatMap { t => perform(continue.next(t)) }
     case done: Done[R] => done.value.pure[ConnectionIO]
   }
 
