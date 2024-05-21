@@ -18,7 +18,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         java: [21]
-        scala: [3.4.1]
+        scala: [3.4.2]
       fail-fast: false
     steps:
       - name: Checkout
