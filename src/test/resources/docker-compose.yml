@@ -1,12 +1,12 @@
 version: '3'
 services:
   qualtet_test_db:
-    image: ghcr.io/yoshinorin/docker-mariadb:v10.11.7
+    image: ghcr.io/yoshinorin/docker-mariadb:v11.4.2
     environment:
-      MYSQL_ROOT_PASSWORD: pass
-      MYSQL_USER: root
-      MYSQL_PASSWORD: pass
-      MYSQL_DATABASE: qualtet
+      MARIADB_ROOT_PASSWORD: pass
+      MARIADB_USER: root
+      MARIADB_PASSWORD: pass
+      MARIADB_DATABASE: qualtet
     volumes:
       - ../../../test-out-data/data/local:/var/lib/mysql
       - ../../../test-out-data/logs/mysql:/var/log/mysql
@@ -14,5 +14,7 @@ services:
       - "33066"
     ports:
       - "33066:3306"
-    command: ["mysqld", "--character-set-server=utf8mb4", "--general_log=1", "--general_log_file=/var/log/mysql/general.log"]
+    command: >
+        mariadbd --character-set-server=utf8mb4 --general_log=1 --general_log_file=/var/log/mysql/general.log &&
+        mariadb-upgrade
     restart: unless-stopped
