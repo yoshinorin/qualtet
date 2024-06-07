@@ -24,7 +24,6 @@ object Dependencies {
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "test-internal",
     "org.mariadb.jdbc" % "mariadb-java-client" % "3.3.3",
     "org.tpolecat" %% "doobie-core" % doobieVersion,
-    "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
     "org.wvlet.airframe" %% "airframe-ulid" % "24.5.2",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.1.8",
