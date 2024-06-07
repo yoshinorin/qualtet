@@ -10,9 +10,9 @@ import cats.effect.*
 import cats.effect.IO
 import net.yoshinorin.qualtet.actions.{Action, Continue, Done}
 import net.yoshinorin.qualtet.config.DBConfig
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.Executer
 
-class DoobieTransactor(config: DBConfig) extends Transactor[ConnectionIO, IO] {
+class DoobieExecuter(config: DBConfig) extends Executer[ConnectionIO, IO] {
 
   val executors: ExecutorService = Executors.newCachedThreadPool()
   val executionContexts: ExecutionContextExecutor = scala.concurrent.ExecutionContext.fromExecutor(executors)

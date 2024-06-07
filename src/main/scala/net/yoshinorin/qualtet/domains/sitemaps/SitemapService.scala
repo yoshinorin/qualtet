@@ -5,13 +5,13 @@ import cats.Monad
 import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.Cacheable
 
 class SitemapService[F[_]: Monad](
   sitemapRepository: SitemapsRepository[F],
   cache: CacheModule[String, Seq[Url]]
-)(using transactor: Transactor[F, IO])
+)(using transactor: Executer[F, IO])
     extends Cacheable {
 
   private val cacheKey = "sitemaps-full-cache"

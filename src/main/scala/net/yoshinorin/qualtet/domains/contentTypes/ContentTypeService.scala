@@ -7,13 +7,13 @@ import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.domains.Cacheable
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
 class ContentTypeService[F[_]: Monad](
   contentRepository: ContentTypeRepository[F],
   cache: CacheModule[String, ContentType]
-)(using transactor: Transactor[F, IO])
+)(using transactor: Executer[F, IO])
     extends Cacheable {
 
   def upsertActions(data: ContentType): Action[Int] = {

@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.infrastructure.db
 import cats.Monad
 import net.yoshinorin.qualtet.actions.Action
 
-trait Transactor[F[_], G[_]: Monad] {
+trait Executer[F[_], G[_]: Monad] {
   def perform[R](a: Action[R]): F[R]
   def transact[T](t: F[T]): G[T]
   def transact[R](a: Action[R]): G[R]

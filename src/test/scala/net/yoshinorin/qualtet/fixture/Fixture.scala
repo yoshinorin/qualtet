@@ -41,7 +41,7 @@ import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import cats.effect.unsafe.implicits.global
 import net.yoshinorin.qualtet.domains.series.{RequestSeries, SeriesName}
 
@@ -56,7 +56,7 @@ object Fixture {
   val p: String = Modules.config.http.port.toString()
   val host = Uri.unsafeFromString(s"http://${h}:${p}")
 
-  given dbContext: DoobieTransactor = new DoobieTransactor(Modules.config.db)
+  given dbContext: DoobieExecuter = new DoobieExecuter(Modules.config.db)
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
 
   // TODO: from config for cache options

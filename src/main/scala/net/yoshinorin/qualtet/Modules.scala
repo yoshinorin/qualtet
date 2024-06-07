@@ -44,7 +44,7 @@ import net.yoshinorin.qualtet.http.routes.v1.{
   TagRoute => TagRouteV1
 }
 import net.yoshinorin.qualtet.infrastructure.db.Migrator
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 
 import pdi.jwt.JwtAlgorithm
 import java.security.SecureRandom
@@ -55,7 +55,7 @@ object Modules {
   val config = ApplicationConfig.load
 
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
-  given dbContext: DoobieTransactor = new DoobieTransactor(config.db)
+  given dbContext: DoobieExecuter = new DoobieExecuter(config.db)
   val migrator: Migrator = new Migrator(config.db)
 
   // NOTE: for generate JWT. They are reset when re-boot application.

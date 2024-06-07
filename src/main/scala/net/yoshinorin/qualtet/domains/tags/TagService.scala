@@ -6,7 +6,7 @@ import cats.implicits.*
 import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.syntax.*
@@ -14,7 +14,7 @@ import net.yoshinorin.qualtet.syntax.*
 class TagService[F[_]: Monad](
   tagRepository: TagRepository[F],
   contentTaggingService: ContentTaggingService[F]
-)(using transactor: Transactor[F, IO]) {
+)(using transactor: Executer[F, IO]) {
 
   def bulkUpsertActions(data: Option[List[Tag]]): Action[Int] = {
     data match {

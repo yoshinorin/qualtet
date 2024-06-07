@@ -9,13 +9,13 @@ import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
 class ArticleService[F[_]: Monad](
   articleRepository: ArticleRepository[F],
   contentTypeService: ContentTypeService[F]
-)(using transactor: Transactor[F, IO]) {
+)(using transactor: Executer[F, IO]) {
 
   def actions(
     contentTypeId: ContentTypeId,

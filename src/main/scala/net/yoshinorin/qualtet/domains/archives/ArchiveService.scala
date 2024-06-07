@@ -5,7 +5,7 @@ import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.message.Fail.NotFound
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.syntax.*
 import cats.Monad
@@ -13,7 +13,7 @@ import cats.Monad
 class ArchiveService[F[_]: Monad](
   archiveRepository: ArchiveRepository[F],
   contentTypeService: ContentTypeService[F]
-)(using transactor: Transactor[F, IO]) {
+)(using transactor: Executer[F, IO]) {
 
   def actions(contentTypeId: ContentTypeId): Action[Seq[ResponseArchive]] = {
     Continue(archiveRepository.get(contentTypeId), Action.done[Seq[ResponseArchive]])

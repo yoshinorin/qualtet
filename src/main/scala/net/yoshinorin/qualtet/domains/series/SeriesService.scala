@@ -5,7 +5,7 @@ import cats.Monad
 import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID
@@ -13,7 +13,7 @@ import wvlet.airframe.ulid.ULID
 class SeriesService[F[_]: Monad](
   seriesRepository: SeriesRepository[F],
   articleService: ArticleService[F]
-)(using transactor: Transactor[F, IO]) {
+)(using transactor: Executer[F, IO]) {
 
   def upsertActions(data: Series): Action[Int] = {
     Continue(seriesRepository.upsert(data), Action.done[Int])

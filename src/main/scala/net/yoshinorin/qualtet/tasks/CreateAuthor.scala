@@ -6,7 +6,7 @@ import doobie.ConnectionIO
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, AuthorRepository, AuthorService, BCryptPassword}
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
@@ -17,7 +17,7 @@ object CreateAuthor {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
-  given dbContext: DoobieTransactor = new DoobieTransactor(config.db)
+  given dbContext: DoobieExecuter = new DoobieExecuter(config.db)
   val authorRepository: AuthorRepository[ConnectionIO] = summon[AuthorRepository[ConnectionIO]]
   val authorService = new AuthorService(authorRepository)
 

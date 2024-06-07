@@ -3,14 +3,14 @@ package net.yoshinorin.qualtet.domains.authors
 import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.syntax.*
 
 class AuthorService[F[_]: Monad](
   authorRepository: AuthorRepository[F]
-)(using transactor: Transactor[F, IO]) {
+)(using transactor: Executer[F, IO]) {
 
   def upsertActions(data: Author): Action[Int] = {
     Continue(authorRepository.upsert(data), Action.done[Int])

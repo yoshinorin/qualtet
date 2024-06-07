@@ -6,7 +6,7 @@ import cats.implicits.*
 import net.yoshinorin.qualtet.actions.Action.*
 import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.config.SearchConfig
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
 import net.yoshinorin.qualtet.message.{Error => Err}
 import net.yoshinorin.qualtet.types.Points
@@ -17,7 +17,7 @@ import scala.annotation.tailrec
 class SearchService[F[_]: Monad](
   searchConfig: SearchConfig,
   searchRepository: SearchRepository[F]
-)(using transactor: Transactor[F, IO]) {
+)(using transactor: Executer[F, IO]) {
 
   def actions(query: List[String]): Action[Seq[(Int, ResponseSearch)]] = {
     Continue(searchRepository.search(query), Action.done[Seq[(Int, ResponseSearch)]])

@@ -14,7 +14,7 @@ import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTa
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesService}
-import net.yoshinorin.qualtet.infrastructure.db.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
 class ContentService[F[_]: Monad](
@@ -28,7 +28,7 @@ class ContentService[F[_]: Monad](
   seriesService: SeriesService[F],
   contentSerializingService: ContentSerializingService[F]
 )(using
-  transactor: Transactor[F, IO]
+  transactor: Executer[F, IO]
 ) {
 
   def upsertActions(data: Content): Action[Int] = {
