@@ -14,7 +14,7 @@ import net.yoshinorin.qualtet.syntax.*
 class TagService[F[_]: Monad](
   tagRepository: TagRepository[F],
   contentTaggingService: ContentTaggingService[F]
-)(using transactor: Executer[F, IO]) {
+)(using executer: Executer[F, IO]) {
 
   def bulkUpsertActions(data: Option[List[Tag]]): Action[Int] = {
     data match {
@@ -49,7 +49,7 @@ class TagService[F[_]: Monad](
    * @return tags
    */
   def getAll: IO[Seq[ResponseTag]] = {
-    transactor.transact(getAllActions)
+    executer.transact(getAllActions)
   }
 
   /**
@@ -59,7 +59,7 @@ class TagService[F[_]: Monad](
    * @return maybe Tag
    */
   def findById(id: TagId): IO[Option[Tag]] = {
-    transactor.transact(findByIdActions(id))
+    executer.transact(findByIdActions(id))
   }
 
   /**
@@ -69,7 +69,7 @@ class TagService[F[_]: Monad](
    * @return maybe Tag
    */
   def findByName(tagName: TagName): IO[Option[Tag]] = {
-    transactor.transact(findByNameActions(tagName))
+    executer.transact(findByNameActions(tagName))
   }
 
   /**
@@ -105,13 +105,13 @@ class TagService[F[_]: Monad](
    */
   def delete(id: TagId): IO[Unit] = {
     val queries = for {
-      contentTaggingDelete <- transactor.perform(contentTaggingService.deleteByTagIdActions(id))
-      tagDelete <- transactor.perform(deleteActions(id))
+      contentTaggingDelete <- executer.perform(contentTaggingService.deleteByTagIdActions(id))
+      tagDelete <- executer.perform(deleteActions(id))
     } yield (contentTaggingDelete, tagDelete)
 
     for {
       _ <- this.findById(id).throwIfNone(NotFound(detail = s"tag not found: ${id}"))
-      _ <- transactor.transact2(queries)
+      _ <- executer.transact2(queries)
     } yield ()
   }
 }

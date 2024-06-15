@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 class AuthorService[F[_]: Monad](
   authorRepository: AuthorRepository[F]
-)(using transactor: Executer[F, IO]) {
+)(using executer: Executer[F, IO]) {
 
   def upsertActions(data: Author): Action[Int] = {
     Continue(authorRepository.upsert(data), Action.done[Int])
@@ -40,7 +40,7 @@ class AuthorService[F[_]: Monad](
    */
   def create(data: Author): IO[ResponseAuthor] = {
     for {
-      _ <- transactor.transact(upsertActions(data))
+      _ <- executer.transact(upsertActions(data))
       a <- this.findByName(data.name).throwIfNone(InternalServerError("user not found"))
     } yield a
   }
@@ -51,7 +51,7 @@ class AuthorService[F[_]: Monad](
    * @return Authors
    */
   def getAll: IO[Seq[ResponseAuthor]] = {
-    transactor.transact(fetchActions)
+    executer.transact(fetchActions)
   }
 
   /**
@@ -61,7 +61,7 @@ class AuthorService[F[_]: Monad](
    * @return Author
    */
   def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
-    transactor.transact(findByIdActions(id))
+    executer.transact(findByIdActions(id))
   }
 
   /**
@@ -71,7 +71,7 @@ class AuthorService[F[_]: Monad](
    * @return Author
    */
   def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
-    transactor.transact(findByIdWithPasswordActions(id))
+    executer.transact(findByIdWithPasswordActions(id))
   }
 
   /**
@@ -81,7 +81,7 @@ class AuthorService[F[_]: Monad](
    * @return Author
    */
   def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
-    transactor.transact(findByNameActions(name))
+    executer.transact(findByNameActions(name))
   }
 
 }

@@ -17,7 +17,7 @@ import scala.annotation.tailrec
 class SearchService[F[_]: Monad](
   searchConfig: SearchConfig,
   searchRepository: SearchRepository[F]
-)(using transactor: Executer[F, IO]) {
+)(using executer: Executer[F, IO]) {
 
   def actions(query: List[String]): Action[Seq[(Int, ResponseSearch)]] = {
     Continue(searchRepository.search(query), Action.done[Seq[(Int, ResponseSearch)]])
@@ -114,7 +114,7 @@ class SearchService[F[_]: Monad](
       _ <- IO(if (accErrors.nonEmpty) {
         throw new UnprocessableEntity(detail = "Invalid search conditions. Please see error details.", errors = Some(accErrors))
       })
-      searchResult <- transactor.transact(actions(queryStrings))
+      searchResult <- executer.transact(actions(queryStrings))
     } yield
       if (searchResult.nonEmpty) {
         val r = searchResult.map { x =>

@@ -13,7 +13,7 @@ import cats.Monad
 class ArchiveService[F[_]: Monad](
   archiveRepository: ArchiveRepository[F],
   contentTypeService: ContentTypeService[F]
-)(using transactor: Executer[F, IO]) {
+)(using executer: Executer[F, IO]) {
 
   def actions(contentTypeId: ContentTypeId): Action[Seq[ResponseArchive]] = {
     Continue(archiveRepository.get(contentTypeId), Action.done[Seq[ResponseArchive]])
@@ -22,7 +22,7 @@ class ArchiveService[F[_]: Monad](
   def get: IO[Seq[ResponseArchive]] = {
     for {
       c <- contentTypeService.findByName("article").throwIfNone(NotFound(detail = "content-type not found: article"))
-      articles <- transactor.transact(actions(c.id))
+      articles <- executer.transact(actions(c.id))
     } yield articles
   }
 

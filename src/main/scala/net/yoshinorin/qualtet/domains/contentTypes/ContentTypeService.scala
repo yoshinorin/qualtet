@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.syntax.*
 class ContentTypeService[F[_]: Monad](
   contentRepository: ContentTypeRepository[F],
   cache: CacheModule[String, ContentType]
-)(using transactor: Executer[F, IO])
+)(using executer: Executer[F, IO])
     extends Cacheable {
 
   def upsertActions(data: ContentType): Action[Int] = {
@@ -35,7 +35,7 @@ class ContentTypeService[F[_]: Monad](
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
-          _ <- transactor.transact(upsertActions(data))
+          _ <- executer.transact(upsertActions(data))
           c <- this.findByName(data.name).throwIfNone(InternalServerError("contentType not found"))
         } yield c
     }
@@ -56,7 +56,7 @@ class ContentTypeService[F[_]: Monad](
 
     def fromDB(name: String): IO[Option[ContentType]] = {
       for {
-        x <- transactor.transact(actions(name))
+        x <- executer.transact(actions(name))
       } yield (x, cache.put(name, x))._1
     }
 
@@ -73,7 +73,7 @@ class ContentTypeService[F[_]: Monad](
    * @return ContentTypes
    */
   def getAll: IO[Seq[ContentType]] = {
-    transactor.transact(getAllActions)
+    executer.transact(getAllActions)
   }
 
   def invalidate(): IO[Unit] = {

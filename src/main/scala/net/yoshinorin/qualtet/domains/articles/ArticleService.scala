@@ -15,7 +15,7 @@ import net.yoshinorin.qualtet.syntax.*
 class ArticleService[F[_]: Monad](
   articleRepository: ArticleRepository[F],
   contentTypeService: ContentTypeService[F]
-)(using transactor: Executer[F, IO]) {
+)(using executer: Executer[F, IO]) {
 
   def actions(
     contentTypeId: ContentTypeId,
@@ -53,7 +53,7 @@ class ArticleService[F[_]: Monad](
   )(f: (ContentTypeId, A, ArticlesQueryParameter) => Action[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
       c <- contentTypeService.findByName("article").throwIfNone(NotFound(detail = "content-type not found: article"))
-      articlesWithCount <- transactor.transact(f(c.id, data, queryParam))
+      articlesWithCount <- executer.transact(f(c.id, data, queryParam))
     } yield
       if (articlesWithCount.nonEmpty) {
         ResponseArticleWithCount(articlesWithCount.map(_._1).headOption.getOrElse(0), articlesWithCount.map(_._2))
