@@ -1,7 +1,5 @@
 package net.yoshinorin.qualtet.infrastructure.db.doobie
 
-import java.util.concurrent.{ExecutorService, Executors}
-import scala.concurrent.ExecutionContextExecutor
 import cats.implicits.catsSyntaxApplicativeId
 import doobie.*
 import doobie.implicits.*
@@ -12,11 +10,10 @@ import net.yoshinorin.qualtet.infrastructure.db.Executer
 
 class DoobieExecuter(tx: Transactor[IO]) extends Executer[ConnectionIO, IO] {
 
-  val executors: ExecutorService = Executors.newCachedThreadPool()
-  val executionContexts: ExecutionContextExecutor = scala.concurrent.ExecutionContext.fromExecutor(executors)
-
   // NOTE: No-need ContextShift: https://typelevel.org/cats-effect/docs/migration-guide#contextshift
   // implicit val cs: ContextShift[IO] = IO.contextShift(executionContexts)
+  // val executors: ExecutorService = Executors.newCachedThreadPool()
+  // val executionContexts: ExecutionContextExecutor = scala.concurrent.ExecutionContext.fromExecutor(executors)
 
   override def perform[R](action: Action[R]): ConnectionIO[R] = action match {
     case continue: Continue[ConnectionIO, R, _] => continue.request.flatMap { t => perform(continue.next(t)) }
