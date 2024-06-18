@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.tasks
 import cats.effect.IO
 import cats.implicits.catsSyntaxEq
 import doobie.ConnectionIO
+import doobie.util.transactor.Transactor.Aux
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, AuthorRepository, AuthorService, BCryptPassword}
@@ -12,12 +13,15 @@ import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 
 import cats.effect.unsafe.implicits.global
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 
 object CreateAuthor {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
-  given dbContext: DoobieExecuter = new DoobieExecuter(config.db)
+  val doobieTransactor: DoobieTransactor[Aux] = summon[DoobieTransactor[Aux]]
+
+  given dbContext: DoobieExecuter = new DoobieExecuter(doobieTransactor.make(config.db))
   val authorRepository: AuthorRepository[ConnectionIO] = summon[AuthorRepository[ConnectionIO]]
   val authorService = new AuthorService(authorRepository)
 

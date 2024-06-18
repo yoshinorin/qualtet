@@ -10,7 +10,8 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
 class MigratorSpec extends AnyWordSpec {
 
-  given dbContext: DoobieExecuter = new DoobieExecuter(Modules.config.db)
+  val tx = Modules.doobieTransactor.make(Modules.config.db)
+  given dbContext: DoobieExecuter = new DoobieExecuter(tx)
 
   "Migrator" should {
 

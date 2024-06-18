@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet
 
 import cats.effect.IO
 import doobie.ConnectionIO
+import doobie.util.transactor.Transactor.Aux
 import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
 import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache, Caffeine}
@@ -49,13 +50,16 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import pdi.jwt.JwtAlgorithm
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
+import doobie.util.transactor.Transactor
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieTransactor
 
 object Modules {
 
   val config = ApplicationConfig.load
+  val doobieTransactor: DoobieTransactor[Aux] = summon[DoobieTransactor[Aux]]
 
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
-  given dbContext: DoobieExecuter = new DoobieExecuter(config.db)
+  given dbContext: DoobieExecuter = new DoobieExecuter(doobieTransactor.make(config.db))
   val migrator: Migrator = new Migrator(config.db)
 
   // NOTE: for generate JWT. They are reset when re-boot application.

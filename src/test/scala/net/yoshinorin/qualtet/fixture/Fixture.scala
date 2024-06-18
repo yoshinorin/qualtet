@@ -56,7 +56,8 @@ object Fixture {
   val p: String = Modules.config.http.port.toString()
   val host = Uri.unsafeFromString(s"http://${h}:${p}")
 
-  given dbContext: DoobieExecuter = new DoobieExecuter(Modules.config.db)
+  val tx = Modules.doobieTransactor.make(Modules.config.db)
+  given dbContext: DoobieExecuter = new DoobieExecuter(tx)
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
 
   // TODO: from config for cache options

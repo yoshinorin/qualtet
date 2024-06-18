@@ -4,6 +4,7 @@ import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
+import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -13,7 +14,8 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingServiceSpec
 class ContentTaggingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  given dbContext: DoobieExecuter = new DoobieExecuter(config.db)
+  val tx = doobieTransactor.make(Modules.config.db)
+  given dbContext: DoobieExecuter = new DoobieExecuter(tx)
 
   val requestContents: List[RequestContent] = {
     List(1, 2)
