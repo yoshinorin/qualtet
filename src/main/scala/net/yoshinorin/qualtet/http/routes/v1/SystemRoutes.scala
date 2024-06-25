@@ -16,7 +16,7 @@ class SystemRoute(config: HttpSystemEndpointConfig) {
       case request @ GET -> Root / "health" => this.health
       case request @ GET -> Root / "metadata" =>
         if config.metadata.enabled then this.metadata else NotFound()
-      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }

@@ -17,7 +17,7 @@ class AuthorRoute[F[_]: Monad](
     (r match {
       case request @ GET -> Root => this.get
       case request @ GET -> Root / authorName => this.get(authorName)
-      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }

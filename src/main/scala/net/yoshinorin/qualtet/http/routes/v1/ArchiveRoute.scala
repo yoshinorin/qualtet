@@ -16,7 +16,7 @@ class ArchiveRoute[F[_]: Monad](
     implicit val x = r
     (r match {
       case request @ GET -> Root => this.get
-      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }

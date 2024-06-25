@@ -14,7 +14,7 @@ class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ POST -> Root => this.post(request)
-      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(POST)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }

@@ -18,7 +18,7 @@ class ArticleRoute[F[_]: Monad](
       case request @ GET -> Root =>
         val q = request.uri.query.params.asRequestQueryParamater
         this.get(q.page, q.limit)
-      case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
+      case request @ OPTIONS -> Root => NoContent()
       case request @ _ =>
         MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)

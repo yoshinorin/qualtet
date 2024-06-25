@@ -31,7 +31,7 @@ class TagRoute[F[_]: Monad](
       implicit val r = request
       this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
     case request @ OPTIONS -> Root =>
-      NoContent() // TODO: return `Allow Header`
+      NoContent()
     case request @ GET -> Root / nameOrId =>
       implicit val r = request
       val q = request.uri.query.params.asRequestQueryParamater
