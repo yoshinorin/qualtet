@@ -9,14 +9,13 @@ import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.series.{RequestSeries, Series, SeriesName, SeriesService}
-import net.yoshinorin.qualtet.http.{AuthProvider, MethodNotAllowedSupport, RequestDecoder}
+import net.yoshinorin.qualtet.http.{AuthProvider, RequestDecoder}
 import net.yoshinorin.qualtet.syntax.*
 
 class SeriesRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   seriesService: SeriesService[F]
-) extends RequestDecoder
-    with MethodNotAllowedSupport[IO] {
+) extends RequestDecoder {
 
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def index: HttpRoutes[IO] =
@@ -38,8 +37,7 @@ class SeriesRoute[F[_]: Monad](
       case ContextRequest(_, r) =>
         r match {
           case request @ POST -> Root => this.post(ctxRequest.context)
-          case request @ _ =>
-            methodNotAllowed(r, Allow(Set(GET, POST, DELETE)))
+          case request @ _ => MethodNotAllowed(Allow(Set(GET, POST, DELETE)))
         }
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }

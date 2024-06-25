@@ -4,12 +4,12 @@ import cats.effect.IO
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
-import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
+
 import net.yoshinorin.qualtet.ApplicationInfo
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
 
-class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupport[IO] {
+class SystemRoute(config: HttpSystemEndpointConfig) {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
@@ -17,8 +17,7 @@ class SystemRoute(config: HttpSystemEndpointConfig) extends MethodNotAllowedSupp
       case request @ GET -> Root / "metadata" =>
         if config.metadata.enabled then this.metadata else NotFound()
       case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-      case request @ _ =>
-        methodNotAllowed(request, Allow(Set(GET)))
+      case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 

@@ -8,11 +8,10 @@ import org.http4s.dsl.io.*
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.search.SearchService
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
 class SearchRoute[F[_]: Monad](
   searchService: SearchService[F]
-) extends MethodNotAllowedSupport[IO] {
+) {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -20,8 +19,7 @@ class SearchRoute[F[_]: Monad](
     (r match {
       case request @ GET -> _ => this.search(request.uri.query.multiParams)
       case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-      case request @ _ =>
-        methodNotAllowed(request, Allow(Set(GET)))
+      case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 

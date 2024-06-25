@@ -8,19 +8,17 @@ import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
 class AuthorRoute[F[_]: Monad](
   authorService: AuthorService[F]
-) extends MethodNotAllowedSupport[IO] {
+) {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ GET -> Root => this.get
       case request @ GET -> Root / authorName => this.get(authorName)
       case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-      case request @ _ =>
-        methodNotAllowed(request, Allow(Set(GET)))
+      case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 

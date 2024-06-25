@@ -7,20 +7,19 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
+
 import net.yoshinorin.qualtet.syntax.*
 
 class ContentTypeRoute[F[_]: Monad](
   contentTypeService: ContentTypeService[F]
-) extends MethodNotAllowedSupport[IO] {
+) {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ GET -> Root => this.get
       case request @ GET -> Root / name => this.get(name)
       case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-      case request @ _ =>
-        methodNotAllowed(request, Allow(Set(GET)))
+      case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 

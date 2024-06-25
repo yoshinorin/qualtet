@@ -6,12 +6,12 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, MethodNotAllowedSupport}
+import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.syntax.*
 
 class ArticleRoute[F[_]: Monad](
   articleService: ArticleService[F]
-) extends MethodNotAllowedSupport[IO] {
+) {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
@@ -20,7 +20,7 @@ class ArticleRoute[F[_]: Monad](
         this.get(q.page, q.limit)
       case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
       case request @ _ =>
-        methodNotAllowed(request, Allow(Set(GET)))
+        MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 

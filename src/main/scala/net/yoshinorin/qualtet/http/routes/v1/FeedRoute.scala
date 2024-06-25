@@ -8,18 +8,16 @@ import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
 class FeedRoute[F[_]: Monad](
   feedService: FeedService[F]
-) extends MethodNotAllowedSupport[IO] {
+) {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ GET -> Root / name => this.get(name)
       case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-      case request @ _ =>
-        methodNotAllowed(request, Allow(Set(GET)))
+      case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 

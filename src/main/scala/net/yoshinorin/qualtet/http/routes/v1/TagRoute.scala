@@ -11,14 +11,14 @@ import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, AuthProvider, MethodNotAllowedSupport}
+import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, AuthProvider}
 import net.yoshinorin.qualtet.syntax.*
 
 class TagRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   tagService: TagService[F],
   articleService: ArticleService[F]
-) extends MethodNotAllowedSupport[IO] {
+) {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -44,8 +44,7 @@ class TagRoute[F[_]: Monad](
       case ContextRequest(_, r) =>
         r match {
           case request @ DELETE -> Root / nameOrId => this.delete(nameOrId)
-          case request @ _ =>
-            methodNotAllowed(r, Allow(Set(GET, DELETE)))
+          case request @ _ => MethodNotAllowed(Allow(Set(GET, DELETE)))
         }
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }

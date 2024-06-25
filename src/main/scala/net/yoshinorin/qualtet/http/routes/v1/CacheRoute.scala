@@ -8,20 +8,19 @@ import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.cache.CacheService
-import net.yoshinorin.qualtet.http.{AuthProvider, MethodNotAllowedSupport}
+import net.yoshinorin.qualtet.http.AuthProvider
 
 class CacheRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   cacheService: CacheService[F]
-) extends MethodNotAllowedSupport[IO] {
+) {
 
   private[http] def index: HttpRoutes[IO] = authProvider.authenticate(AuthedRoutes.of { ctxRequest =>
     (ctxRequest match
       case ContextRequest(_, r) =>
         r match
           case request @ DELETE -> Root => this.delete(ctxRequest.context._1)
-          case request @ _ =>
-            methodNotAllowed(r, Allow(Set(DELETE)))
+          case request @ _ => MethodNotAllowed(Allow(Set(DELETE)))
     )
   })
 

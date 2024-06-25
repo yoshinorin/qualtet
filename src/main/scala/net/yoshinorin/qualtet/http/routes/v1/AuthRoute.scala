@@ -6,17 +6,16 @@ import org.http4s.headers.{Allow, `Content-Type`, `WWW-Authenticate`}
 import org.http4s.{Challenge, HttpRoutes, MediaType, Request, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken}
-import net.yoshinorin.qualtet.http.{MethodNotAllowedSupport, RequestDecoder}
+import net.yoshinorin.qualtet.http.RequestDecoder
 import net.yoshinorin.qualtet.syntax.*
 
-class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder with MethodNotAllowedSupport[IO] {
+class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ POST -> Root => this.post(request)
       case request @ OPTIONS -> Root => NoContent() // TODO: return `Allow Header`
-      case request @ _ =>
-        methodNotAllowed(request, Allow(Set(POST)))
+      case request @ _ => MethodNotAllowed(Allow(Set(POST)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 

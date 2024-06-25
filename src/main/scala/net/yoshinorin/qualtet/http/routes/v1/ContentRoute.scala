@@ -12,13 +12,11 @@ import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService, Path, RequestContent}
 import net.yoshinorin.qualtet.http.{AuthProvider, RequestDecoder}
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.http.MethodNotAllowedSupport
 
 class ContentRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   contentService: ContentService[F]
-) extends RequestDecoder
-    with MethodNotAllowedSupport[IO] {
+) extends RequestDecoder {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -48,8 +46,7 @@ class ContentRoute[F[_]: Monad](
         r match {
           case request @ POST -> Root => this.post(ctxRequest.context)
           case request @ DELETE -> Root / id => this.delete(id)
-          case request @ _ =>
-            methodNotAllowed(r, Allow(Set(GET, POST, DELETE)))
+          case request @ _ => MethodNotAllowed(Allow(Set(GET, POST, DELETE)))
         }
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
