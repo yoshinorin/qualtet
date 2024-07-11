@@ -79,10 +79,9 @@ class ContentService[F[_]: Monad](
       maybeContentSerializing <- request.series match {
         case None => IO(None)
         case Some(seriesName) =>
-          seriesService.findByName(seriesName).flatMap { x =>
-            x match
-              case None => IO.raiseError(UnprocessableEntity(detail = s"series not found: ${seriesName}"))
-              case Some(s) => IO(Option(ContentSerializing(s.id, contentId)))
+          seriesService.findByName(seriesName).flatMap {
+            case None => IO.raiseError(UnprocessableEntity(detail = s"series not found: ${seriesName}"))
+            case Some(s) => IO(Option(ContentSerializing(s.id, contentId)))
           }
       }
       createdContent <- this.create(
