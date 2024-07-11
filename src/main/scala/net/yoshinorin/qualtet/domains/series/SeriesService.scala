@@ -34,18 +34,15 @@ class SeriesService[F[_]: Monad](
    * @return created Series
    */
   def create(data: RequestSeries): IO[Series] = {
-    this.findByName(data.name).flatMap {
-      case Some(s: Series) =>
-        for {
-          _ <- executer.transact(upsertActions(Series(s.id, s.name, data.title, data.description)))
-          s <- this.findByName(data.name).throwIfNone(NotFound(detail = "series not found"))
-        } yield s
-      case None =>
-        for {
-          _ <- executer.transact(upsertActions(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.title, data.description)))
-          s <- this.findByName(data.name).throwIfNone(NotFound(detail = "series not found"))
-        } yield s
-    }
+    this
+      .findByName(data.name)
+      .flatMap {
+        case Some(s: Series) => executer.transact(upsertActions(Series(s.id, s.name, data.title, data.description)))
+        case None => executer.transact(upsertActions(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.title, data.description)))
+      }
+      .flatMap { s =>
+        this.findByName(data.name).throwIfNone(NotFound(detail = "series not found"))
+      }
   }
 
   /**
