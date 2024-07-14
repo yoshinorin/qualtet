@@ -2,10 +2,10 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.30.1"
+  val jsoniterVersion = "2.30.7"
   val doobieVersion = "1.0.0-RC5"
   val jwtScalaVersion = "10.0.1"
-  val flywayVersion = "10.14.0"
+  val flywayVersion = "10.15.2"
   val http4sVersion = "1.0.0-M41"
   val log4catsVersion = "2.7.0"
 
@@ -25,16 +25,16 @@ object Dependencies {
     "org.mariadb.jdbc" % "mariadb-java-client" % "3.3.3",
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "24.5.2",
+    "org.wvlet.airframe" %% "airframe-ulid" % "24.7.0",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.1.8",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
     "ch.qos.logback" % "logback-classic" % "1.5.6",
     "net.logstash.logback" % "logstash-logback-encoder" % "7.4",
     "org.codehaus.janino" % "janino" % "3.1.12",
-    "org.springframework.security" % "spring-security-core" % "6.3.0",
+    "org.springframework.security" % "spring-security-core" % "6.3.1",
     "org.slf4j" % "slf4j-api" % "2.0.13",
-    "org.scalatest" %% "scalatest" % "3.2.18" % "test",
+    "org.scalatest" %% "scalatest" % "3.2.19" % "test",
     "org.mockito" % "mockito-core" % "5.12.0" % "test"
   )
 }
