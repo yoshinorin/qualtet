@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.config.SearchConfig
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
-import net.yoshinorin.qualtet.message.{Error => Err}
+import net.yoshinorin.qualtet.http.{Error => Err}
 import net.yoshinorin.qualtet.types.Points
 import net.yoshinorin.qualtet.syntax.*
 

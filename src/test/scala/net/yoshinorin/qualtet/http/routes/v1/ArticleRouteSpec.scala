@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.message.ProblemDetails
+import net.yoshinorin.qualtet.http.ResponseProblemDetails
 import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.fixture.Fixture.{author, router, unsafeDecode}
 import org.scalatest.wordspec.AnyWordSpec
@@ -99,7 +99,7 @@ class ArticleRouteV1Spec extends AnyWordSpec {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "articles not found")

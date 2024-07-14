@@ -10,7 +10,7 @@ import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.series.{RequestSeries, Series, SeriesName}
-import net.yoshinorin.qualtet.message.ProblemDetails
+import net.yoshinorin.qualtet.http.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.{authProvider => fixtureAuthProvider}
 import net.yoshinorin.qualtet.Modules.*
@@ -145,7 +145,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "series not found: not-exists")
@@ -191,7 +191,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "name is required")
@@ -219,7 +219,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "title is required")

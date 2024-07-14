@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, Path, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.message.ProblemDetails
+import net.yoshinorin.qualtet.http.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.{router => fixtureRouter}
 import net.yoshinorin.qualtet.Modules.*
@@ -127,7 +127,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail.startsWith("content not found: "))
@@ -153,7 +153,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === s"content not found: ${id.value}")
@@ -204,7 +204,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "title required.")
@@ -237,7 +237,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "rawContent required.")
@@ -270,7 +270,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "htmlContent required.")
@@ -384,7 +384,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "Wrong JSON format or missing required field. Please see API document.")
@@ -412,7 +412,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === BadRequest)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
             assert(maybeError.detail === "Wrong JSON format or missing required field. Please see API document.")
@@ -496,7 +496,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "Not Found")
@@ -519,7 +519,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "Not Found")

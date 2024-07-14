@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.tags.{ResponseTag, TagId}
-import net.yoshinorin.qualtet.message.ProblemDetails
+import net.yoshinorin.qualtet.http.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.{authProvider => fixtureAuthProvider}
 import net.yoshinorin.qualtet.Modules.*
@@ -139,7 +139,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail.startsWith("articles not found"))
@@ -184,7 +184,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail.startsWith("tag not found: "))
@@ -209,7 +209,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail.startsWith("tag not found: "))

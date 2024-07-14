@@ -7,7 +7,7 @@ import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, ResponseAuthor}
-import net.yoshinorin.qualtet.message.ProblemDetails
+import net.yoshinorin.qualtet.http.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, router, unsafeDecode}
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -84,7 +84,7 @@ class AuthorRouteV1Spec extends AnyWordSpec {
             assert(response.status === NotFound)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
             assert(maybeError.detail === "Not Found")

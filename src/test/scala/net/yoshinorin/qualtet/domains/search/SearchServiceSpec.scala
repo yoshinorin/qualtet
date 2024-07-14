@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.Modules.*
-import net.yoshinorin.qualtet.message.{Error => Err}
+import net.yoshinorin.qualtet.http.{Error => Err}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity

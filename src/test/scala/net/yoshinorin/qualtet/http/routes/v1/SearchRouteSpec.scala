@@ -9,7 +9,7 @@ import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.search.ResponseSearchWithCount
-import net.yoshinorin.qualtet.message.ProblemDetails
+import net.yoshinorin.qualtet.http.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -82,7 +82,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
@@ -104,7 +104,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
@@ -126,7 +126,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
@@ -148,7 +148,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
@@ -170,7 +170,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
@@ -192,7 +192,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === UnprocessableEntity)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
-            val maybeError = unsafeDecode[ProblemDetails](response)
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Unprocessable Entity")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")

@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.message
 
-import net.yoshinorin.qualtet.message.{Error => Err}
+import net.yoshinorin.qualtet.http.{Error => Err}
 
 sealed trait Fail extends Exception
 

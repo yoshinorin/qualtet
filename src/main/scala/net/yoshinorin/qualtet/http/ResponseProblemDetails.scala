@@ -1,10 +1,10 @@
-package net.yoshinorin.qualtet.message
+package net.yoshinorin.qualtet.http
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 
 // https://datatracker.ietf.org/doc/html/rfc7807
-final case class ProblemDetails(
+final case class ResponseProblemDetails(
   `type`: String = "https://yoshinorin.github.io/qualtet/rest-api/",
   title: String,
   status: Int,
@@ -13,8 +13,8 @@ final case class ProblemDetails(
   errors: Option[Seq[Error]] = None
 )
 
-object ProblemDetails {
-  given codecProblemDetails: JsonValueCodec[ProblemDetails] = JsonCodecMaker.make
+object ResponseProblemDetails {
+  given codecResponseProblemDetails: JsonValueCodec[ResponseProblemDetails] = JsonCodecMaker.make
 }
 
 final case class Error(

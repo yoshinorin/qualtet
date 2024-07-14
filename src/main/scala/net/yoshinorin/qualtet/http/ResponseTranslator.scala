@@ -8,7 +8,6 @@ import org.http4s.Challenge
 import org.http4s.headers.{`Content-Type`, `WWW-Authenticate`}
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.message.ProblemDetails
 import net.yoshinorin.qualtet.syntax.*
 
 object ResponseTranslator {
@@ -18,7 +17,7 @@ object ResponseTranslator {
     f match {
       case e: Fail.NotFound =>
         NotFound(
-          ProblemDetails(
+          ResponseProblemDetails(
             title = e.title,
             status = NotFound.code,
             detail = e.detail,
@@ -30,7 +29,7 @@ object ResponseTranslator {
         Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
       case e: Fail.UnprocessableEntity =>
         UnprocessableEntity(
-          ProblemDetails(
+          ResponseProblemDetails(
             title = e.title,
             status = UnprocessableEntity.code,
             detail = e.detail,
@@ -41,7 +40,7 @@ object ResponseTranslator {
         )
       case e: Fail.BadRequest =>
         BadRequest(
-          ProblemDetails(
+          ResponseProblemDetails(
             title = e.title,
             status = BadRequest.code,
             detail = e.detail,
@@ -51,7 +50,7 @@ object ResponseTranslator {
         )
       case e: Fail.Forbidden =>
         Forbidden(
-          ProblemDetails(
+          ResponseProblemDetails(
             title = e.title,
             status = Forbidden.code,
             detail = e.detail,
@@ -61,7 +60,7 @@ object ResponseTranslator {
         )
       case e: Fail.InternalServerError =>
         InternalServerError(
-          ProblemDetails(
+          ResponseProblemDetails(
             title = e.title,
             status = InternalServerError.code,
             detail = e.detail,
@@ -87,7 +86,7 @@ object ResponseTranslator {
         Ok(x.asJson, `Content-Type`(MediaType.application.json))
       case None =>
         NotFound(
-          ProblemDetails(
+          ResponseProblemDetails(
             title = "Not Found",
             status = NotFound.code,
             detail = "Not Found",
