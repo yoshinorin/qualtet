@@ -33,16 +33,15 @@ object CreateAuthor {
     // https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage-bcrypt
     val bcryptPasswordEncoder = new BCryptPasswordEncoder()
     (for {
-      _ <- authorService.create(
+      author <- authorService.create(
         Author(name = AuthorName(args(0)), displayName = AuthorDisplayName(args(1)), password = BCryptPassword(bcryptPasswordEncoder.encode(args(2))))
       )
-      author <- authorService.findByName(AuthorName(args(0)))
     } yield author)
       .handleErrorWith { e =>
         IO.pure(e)
       }
       .unsafeRunSync() match {
-      case Some(a: ResponseAuthor) =>
+      case a: ResponseAuthor =>
         logger.info(s"author created: ${a.asJson}")
         logger.info("shutting down...")
       case e: Exception =>
