@@ -19,7 +19,7 @@ object RobotsRepository {
         Write[(String, String)].contramap(p => (p.contentId.value, p.attributes.value))
 
       override def upsert(data: Robots): ConnectionIO[Int] = RobotsQuery.upsert.run(data)
-      override def delete(contentId: ContentId): ConnectionIO[Unit] = RobotsQuery.delete(contentId).option.map(_ => ())
+      override def delete(contentId: ContentId): ConnectionIO[Unit] = RobotsQuery.delete(contentId).run.map(_ => ())
 
     }
   }

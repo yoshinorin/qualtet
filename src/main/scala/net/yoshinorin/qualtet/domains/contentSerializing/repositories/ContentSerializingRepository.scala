@@ -45,15 +45,15 @@ object ContentSerializingRepository {
       }
 
       override def deleteBySeriesId(id: SeriesId): ConnectionIO[Unit] = {
-        ContentSerializingQuery.deleteBySeriesId(id).option.map(_ => ())
+        ContentSerializingQuery.deleteBySeriesId(id).run.map(_ => ())
       }
 
       override def deleteByContentId(id: ContentId): ConnectionIO[Unit] = {
-        ContentSerializingQuery.deleteByContentId(id).option.map(_ => ())
+        ContentSerializingQuery.deleteByContentId(id).run.map(_ => ())
       }
 
       override def delete(seriesId: SeriesId, contentIds: Seq[ContentId]): ConnectionIO[Unit] = {
-        ContentSerializingQuery.delete(seriesId, contentIds).option.map(_ => ())
+        ContentSerializingQuery.delete(seriesId, contentIds).run.map(_ => ())
       }
       override def fakeRequestInt: ConnectionIO[Int] = 0.pure[ConnectionIO]
       override def fakeRequestUnit: ConnectionIO[Unit] = ().pure[ConnectionIO]

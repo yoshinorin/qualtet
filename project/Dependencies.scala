@@ -22,7 +22,7 @@ object Dependencies {
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "test-internal",
-    "org.mariadb.jdbc" % "mariadb-java-client" % "3.3.3",
+    "org.mariadb.jdbc" % "mariadb-java-client" % "3.4.0",
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
     "org.wvlet.airframe" %% "airframe-ulid" % "24.7.0",

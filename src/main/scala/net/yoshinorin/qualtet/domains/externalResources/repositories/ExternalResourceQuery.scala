@@ -2,8 +2,7 @@ package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.Write
 import doobie.implicits.toSqlInterpolator
-import doobie.util.update.Update
-import doobie.util.query
+import doobie.util.update.{Update, Update0}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object ExternalResourceQuery {
@@ -20,9 +19,8 @@ object ExternalResourceQuery {
     Update[ExternalResource](q)
   }
 
-  def delete(id: ContentId): query.Query0[Unit] = {
-    sql"DELETE FROM external_resources WHERE content_id = ${id.value}"
-      .query[Unit]
+  def delete(id: ContentId): Update0 = {
+    sql"DELETE FROM external_resources WHERE content_id = ${id.value}".update
   }
 
 }

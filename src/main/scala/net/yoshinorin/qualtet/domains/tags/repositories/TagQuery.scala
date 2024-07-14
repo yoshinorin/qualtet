@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.tags
 import doobie.{Read, Write}
 import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
-import doobie.util.update.Update
+import doobie.util.update.{Update, Update0}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object TagQuery {
@@ -59,9 +59,8 @@ object TagQuery {
     Update[Tag](q)
   }
 
-  def delete(id: TagId): Query0[Unit] = {
-    sql"DELETE FROM tags WHERE id = ${id.value}"
-      .query[Unit]
+  def delete(id: TagId): Update0 = {
+    sql"DELETE FROM tags WHERE id = ${id.value}".update
   }
 
 }

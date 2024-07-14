@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import doobie.{Read, Write}
 import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
-import doobie.util.update.Update
+import doobie.util.update.{Update, Update0}
 
 object ContentQuery {
 
@@ -22,9 +22,8 @@ object ContentQuery {
     Update[Content](q)
   }
 
-  def delete(id: ContentId): Query0[Unit] = {
-    sql"DELETE FROM contents WHERE id = ${id.value}"
-      .query[Unit]
+  def delete(id: ContentId): Update0 = {
+    sql"DELETE FROM contents WHERE id = ${id.value}".update
   }
 
   def findById(id: ContentId): Read[Content] ?=> Query0[Content] = {

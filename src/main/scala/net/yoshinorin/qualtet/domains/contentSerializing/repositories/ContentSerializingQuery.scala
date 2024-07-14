@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.domains.contentSerializing
 import cats.data.NonEmptyList
 import doobie.{Read, Write}
 import doobie.implicits.toSqlInterpolator
-import doobie.util.update.Update
-import doobie.util.query
+import doobie.util.update.{Update, Update0}
+import doobie.util.{fragments, query}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.series.SeriesId
 
@@ -26,21 +26,21 @@ object ContentSerializingQuery {
     Update[ContentSerializing](q)
   }
 
-  def deleteBySeriesId(id: SeriesId): query.Query0[Unit] = {
-    sql"DELETE FROM contents_serializing WHERE series_id = ${id.value}"
-      .query[Unit]
+  def deleteBySeriesId(id: SeriesId): Update0 = {
+    sql"DELETE FROM contents_serializing WHERE series_id = ${id.value}".update
   }
 
-  def deleteByContentId(id: ContentId): query.Query0[Unit] = {
-    sql"DELETE FROM contents_serializing WHERE content_id = ${id.value}"
-      .query[Unit]
+  def deleteByContentId(id: ContentId): Update0 = {
+    sql"DELETE FROM contents_serializing WHERE content_id = ${id.value}".update
   }
 
-  def delete(seriesId: SeriesId, contentIds: Seq[ContentId]): query.Query0[Unit] = {
-    (fr"""
+  def delete(seriesId: SeriesId, contentIds: Seq[ContentId]): Update0 = {
+    val query = fr"""
       DELETE FROM contents_serializing
       WHERE series_id = ${seriesId.value}
-      AND """ ++ doobie.util.fragments.in(fr"content_id", NonEmptyList.fromList(contentIds.toList.map(c => c.value)).get)).query[Unit]
+      AND """ ++ fragments.in(fr"content_id", NonEmptyList.fromList(contentIds.toList.map(c => c.value)).get)
+
+    query.update
   }
 
 }

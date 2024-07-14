@@ -21,7 +21,7 @@ object ExternalResourceRepository {
         Write[(String, String, String)].contramap(p => (p.contentId.value, p.kind.value, p.name))
 
       override def bulkUpsert(data: List[ExternalResource]): ConnectionIO[Int] = ExternalResourceQuery.bulkUpsert.updateMany(data)
-      override def delete(contentId: ContentId): ConnectionIO[Unit] = ExternalResourceQuery.delete(contentId).option.map(_ => ())
+      override def delete(contentId: ContentId): ConnectionIO[Unit] = ExternalResourceQuery.delete(contentId).run.map(_ => ())
       override def fakeRequest(): ConnectionIO[Int] = 0.pure[ConnectionIO]
     }
   }

@@ -115,7 +115,7 @@ object ContentRepository {
         ContentQuery.findByPathWithMeta(path).option
       }
       override def delete(id: ContentId): ConnectionIO[Unit] = {
-        ContentQuery.delete(id).option.map(_ => ())
+        ContentQuery.delete(id).run.map(_ => ())
       }
     }
   }

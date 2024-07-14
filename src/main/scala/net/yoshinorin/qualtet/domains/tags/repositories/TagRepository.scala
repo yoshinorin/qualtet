@@ -52,7 +52,7 @@ object TagRepository {
         TagQuery.findByContentId(conetntId).to[Seq]
       }
       override def delete(id: TagId): ConnectionIO[Unit] = {
-        TagQuery.delete(id).option.map(_ => ())
+        TagQuery.delete(id).run.map(_ => ())
       }
       override def fakeRequest(): ConnectionIO[Int] = 0.pure[ConnectionIO]
 

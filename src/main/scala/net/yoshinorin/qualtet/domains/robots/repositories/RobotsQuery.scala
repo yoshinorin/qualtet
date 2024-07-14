@@ -2,8 +2,7 @@ package net.yoshinorin.qualtet.domains.robots
 
 import doobie.Write
 import doobie.implicits.toSqlInterpolator
-import doobie.util.update.Update
-import doobie.util.query
+import doobie.util.update.{Update, Update0}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object RobotsQuery {
@@ -18,9 +17,8 @@ object RobotsQuery {
     Update[Robots](q)
   }
 
-  def delete(id: ContentId): query.Query0[Unit] = {
-    sql"DELETE FROM robots WHERE content_id = ${id.value}"
-      .query[Unit]
+  def delete(id: ContentId): Update0 = {
+    sql"DELETE FROM robots WHERE content_id = ${id.value}".update
   }
 
 }

@@ -39,13 +39,13 @@ object ContentTaggingRepository {
         ContentTaggingQuery.findByTagId(id).to[Seq]
       }
       override def deleteByContentId(id: ContentId): ConnectionIO[Unit] = {
-        ContentTaggingQuery.deleteByContentId(id).option.map(_ => ())
+        ContentTaggingQuery.deleteByContentId(id).run.map(_ => ())
       }
       override def deleteByTagId(id: TagId): ConnectionIO[Unit] = {
-        ContentTaggingQuery.deleteByTagId(id).option.map(_ => ())
+        ContentTaggingQuery.deleteByTagId(id).run.map(_ => ())
       }
       override def delete(contentId: ContentId, tagIds: Seq[TagId]): ConnectionIO[Unit] = {
-        ContentTaggingQuery.delete(contentId, tagIds).option.map(_ => ())
+        ContentTaggingQuery.delete(contentId, tagIds).run.map(_ => ())
       }
       override def fakeRequestInt: ConnectionIO[Int] = 0.pure[ConnectionIO]
       override def fakeRequestUnit: ConnectionIO[Unit] = ().pure[ConnectionIO]
