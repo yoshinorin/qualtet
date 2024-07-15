@@ -7,7 +7,7 @@ import cats.implicits.*
 import net.yoshinorin.qualtet.config.SearchConfig
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
-import net.yoshinorin.qualtet.http.{Error => Err}
+import net.yoshinorin.qualtet.http.ProblemDetailsError
 import net.yoshinorin.qualtet.types.Points
 import net.yoshinorin.qualtet.syntax.*
 
@@ -27,11 +27,11 @@ class SearchService[F[_]: Monad](
   private[search] def extractQueryStringsFromQuery(query: Map[String, List[String]]): List[String] = query.getOrElse("q", List()).map(_.trim.toLower)
 
   // TODO: move constant values
-  private[search] def accumurateQueryStringsErrors(queryStrings: List[String]): Seq[Err] = {
-    val validator: (Boolean, Err) => Option[Err] = (cond, err) => { if cond then Some(err) else None }
+  private[search] def accumurateQueryStringsErrors(queryStrings: List[String]): Seq[ProblemDetailsError] = {
+    val validator: (Boolean, ProblemDetailsError) => Option[ProblemDetailsError] = (cond, err) => { if cond then Some(err) else None }
     val isEmptyError = validator(
       queryStrings.isEmpty,
-      Err(
+      ProblemDetailsError(
         code = "SEARCH_QUERY_REQUIRED",
         message = "Search query required."
       )
@@ -39,7 +39,7 @@ class SearchService[F[_]: Monad](
 
     val tooManySearchWordsError = validator(
       queryStrings.sizeIs > searchConfig.maxWords,
-      Err(
+      ProblemDetailsError(
         code = "TOO_MANY_SEARCH_WORDS",
         message = s"Search words must be less than ${searchConfig.maxWords}. You specified ${queryStrings.size}."
       )
@@ -49,21 +49,21 @@ class SearchService[F[_]: Monad](
       List(
         validator(
           q.hasIgnoreChars,
-          Err(
+          ProblemDetailsError(
             code = "INVALID_CHARS_INCLUDED",
             message = s"Contains unusable chars in ${q}"
           )
         ),
         validator(
           q.length < searchConfig.minWordLength,
-          Err(
+          ProblemDetailsError(
             code = "SEARCH_CHAR_LENGTH_TOO_SHORT",
             message = s"${q} is too short. You must be more than ${searchConfig.minWordLength} chars in one word."
           )
         ),
         validator(
           q.length > searchConfig.maxWordLength,
-          Err(
+          ProblemDetailsError(
             code = "SEARCH_CHAR_LENGTH_TOO_LONG",
             message = s"${q} is too long. You must be less than ${searchConfig.maxWordLength} chars in one word."
           )

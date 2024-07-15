@@ -10,19 +10,19 @@ final case class ResponseProblemDetails(
   status: Int,
   detail: String,
   instance: String,
-  errors: Option[Seq[Error]] = None
+  errors: Option[Seq[ProblemDetailsError]] = None
 )
 
 object ResponseProblemDetails {
   given codecResponseProblemDetails: JsonValueCodec[ResponseProblemDetails] = JsonCodecMaker.make
 }
 
-final case class Error(
+final case class ProblemDetailsError(
   code: String,
   message: String
 )
 
-object Error {
-  given codecError: JsonValueCodec[Error] = JsonCodecMaker.make
-  given codecErrors: JsonValueCodec[Option[Seq[Error]]] = JsonCodecMaker.make
+object ProblemDetailsError {
+  given codecProblemDetailsError: JsonValueCodec[ProblemDetailsError] = JsonCodecMaker.make
+  given codecProblemDetailsErrors: JsonValueCodec[Option[Seq[ProblemDetailsError]]] = JsonCodecMaker.make
 }

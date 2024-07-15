@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.Modules.*
-import net.yoshinorin.qualtet.http.{Error => Err}
+import net.yoshinorin.qualtet.http.ProblemDetailsError
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
@@ -100,7 +100,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         )
       )
       assert(
-        result === List(Err(message = "Search query required.", code = "SEARCH_QUERY_REQUIRED"))
+        result === List(ProblemDetailsError(message = "Search query required.", code = "SEARCH_QUERY_REQUIRED"))
       )
     }
 
@@ -118,13 +118,13 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
       assert(
         result === List(
-          Err(message = "a is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
-          Err(message = "abc is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
-          Err(message = "Contains unusable chars in d.", code = "INVALID_CHARS_INCLUDED"),
-          Err(message = "d. is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
-          Err(message = "Contains unusable chars in 1234567890123456", code = "INVALID_CHARS_INCLUDED"),
-          Err(message = "1234567890123456 is too long. You must be less than 15 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_LONG"),
-          Err(message = "Search words must be less than 3. You specified 7.", code = "TOO_MANY_SEARCH_WORDS")
+          ProblemDetailsError(message = "a is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
+          ProblemDetailsError(message = "abc is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
+          ProblemDetailsError(message = "Contains unusable chars in d.", code = "INVALID_CHARS_INCLUDED"),
+          ProblemDetailsError(message = "d. is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
+          ProblemDetailsError(message = "Contains unusable chars in 1234567890123456", code = "INVALID_CHARS_INCLUDED"),
+          ProblemDetailsError(message = "1234567890123456 is too long. You must be less than 15 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_LONG"),
+          ProblemDetailsError(message = "Search words must be less than 3. You specified 7.", code = "TOO_MANY_SEARCH_WORDS")
         )
       )
     }
