@@ -1,10 +1,9 @@
 package net.yoshinorin.qualtet.domains.tags
 
+import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
-import net.yoshinorin.qualtet.actions.Action.*
-import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.message.Fail.NotFound
@@ -16,31 +15,43 @@ class TagService[F[_]: Monad](
   contentTaggingService: ContentTaggingService[F]
 )(using executer: Executer[F, IO]) {
 
-  def bulkUpsertActions(data: Option[List[Tag]]): Action[Int] = {
-    data match {
-      case Some(d) => Continue(tagRepository.bulkUpsert(d), Action.done[Int])
-      case None => Continue(tagRepository.fakeRequest(), Action.done[Int])
+  def bulkUpsertActions(data: Option[List[Tag]]): ContT[F, Int, Int] = {
+    ContT.apply[F, Int, Int] { next =>
+      data match {
+        case Some(d) => tagRepository.bulkUpsert(d)
+        case None => tagRepository.fakeRequest()
+      }
     }
   }
 
-  def getAllActions: Action[Seq[ResponseTag]] = {
-    Continue(tagRepository.getAll(), Action.done[Seq[ResponseTag]])
+  def getAllActions: ContT[F, Seq[ResponseTag], Seq[ResponseTag]] = {
+    ContT.apply[F, Seq[ResponseTag], Seq[ResponseTag]] { next =>
+      tagRepository.getAll()
+    }
   }
 
-  def findByIdActions(id: TagId): Action[Option[Tag]] = {
-    Continue(tagRepository.findById(id), Action.done[Option[Tag]])
+  def findByIdActions(id: TagId): ContT[F, Option[Tag], Option[Tag]] = {
+    ContT.apply[F, Option[Tag], Option[Tag]] { next =>
+      tagRepository.findById(id)
+    }
   }
 
-  def findByNameActions(tagName: TagName): Action[Option[Tag]] = {
-    Continue(tagRepository.findByName(tagName), Action.done[Option[Tag]])
+  def findByNameActions(tagName: TagName): ContT[F, Option[Tag], Option[Tag]] = {
+    ContT.apply[F, Option[Tag], Option[Tag]] { next =>
+      tagRepository.findByName(tagName)
+    }
   }
 
-  def findByContentIdActions(contenId: ContentId): Action[Seq[Tag]] = {
-    Continue(tagRepository.findByContentId(contenId), Action.done[Seq[Tag]])
+  def findByContentIdActions(contenId: ContentId): ContT[F, Seq[Tag], Seq[Tag]] = {
+    ContT.apply[F, Seq[Tag], Seq[Tag]] { next =>
+      tagRepository.findByContentId(contenId)
+    }
   }
 
-  def deleteActions(id: TagId): Action[Unit] = {
-    Continue(tagRepository.delete(id), Action.done[Unit])
+  def deleteActions(id: TagId): ContT[F, Unit, Unit] = {
+    ContT.apply[F, Unit, Unit] { next =>
+      tagRepository.delete(id)
+    }
   }
 
   /**

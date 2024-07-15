@@ -1,12 +1,13 @@
 package net.yoshinorin.qualtet.infrastructure.db.doobie
 
+import cats.data.ContT
 import cats.implicits.catsSyntaxApplicativeId
 import doobie.*
 import doobie.implicits.*
 import cats.effect.*
 import cats.effect.IO
-import net.yoshinorin.qualtet.actions.{Action, Continue, Done}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
+import doobie.free.connection.ConnectionIO
 
 class DoobieExecuter(tx: Transactor[IO]) extends Executer[ConnectionIO, IO] {
 
@@ -15,14 +16,13 @@ class DoobieExecuter(tx: Transactor[IO]) extends Executer[ConnectionIO, IO] {
   // val executors: ExecutorService = Executors.newCachedThreadPool()
   // val executionContexts: ExecutionContextExecutor = scala.concurrent.ExecutionContext.fromExecutor(executors)
 
-  override def perform[R](action: Action[R]): ConnectionIO[R] = action match {
-    case continue: Continue[ConnectionIO, R, _] => continue.request.flatMap { t => perform(continue.next(t)) }
-    case done: Done[R] => done.value.pure[ConnectionIO]
+  override def perform[R](c: ContT[doobie.ConnectionIO, R, R]): ConnectionIO[R] = {
+    c.run { x => x.pure[ConnectionIO] }
   }
 
-  override def transact[T](connectionIO: ConnectionIO[T]): IO[T] = connectionIO.transact(tx)
+  override def transact[R](t: ContT[doobie.ConnectionIO, R, R]): IO[R] = transact(t.run { x => x.pure[ConnectionIO] })
 
-  override def transact[R](action: Action[R]): IO[R] = transact(perform(action))
+  override def transact[T](connectionIO: ConnectionIO[T]): IO[T] = connectionIO.transact(tx)
 
   override def transact2[T1, T2](ts: (ConnectionIO[(T1, T2)])): IO[T2] = {
     for {

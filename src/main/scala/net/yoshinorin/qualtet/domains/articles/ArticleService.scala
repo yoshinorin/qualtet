@@ -1,9 +1,8 @@
 package net.yoshinorin.qualtet.domains.articles
 
+import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
-import net.yoshinorin.qualtet.actions.Action.*
-import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
 import net.yoshinorin.qualtet.message.Fail.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
@@ -21,36 +20,36 @@ class ArticleService[F[_]: Monad](
     contentTypeId: ContentTypeId,
     none: Unit = (),
     queryParams: ArticlesQueryParameter
-  ): Action[Seq[(Int, ResponseArticle)]] = {
-    Continue(articleRepository.getWithCount(contentTypeId, queryParams), Action.done[Seq[(Int, ResponseArticle)]])
+  ): ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] = {
+    ContT.apply[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] { next =>
+      articleRepository.getWithCount(contentTypeId, queryParams)
+    }
   }
 
   def tagActions(
     contentTypeId: ContentTypeId,
     tagName: TagName,
     queryParams: ArticlesQueryParameter
-  ): Action[Seq[(Int, ResponseArticle)]] = {
-    Continue(
-      articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams),
-      Action.done[Seq[(Int, ResponseArticle)]]
-    )
+  ): ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] = {
+    ContT.apply[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] { next =>
+      articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams)
+    }
   }
 
   def seriesActions(
     contentTypeId: ContentTypeId,
     seriesName: SeriesName,
     queryParams: ArticlesQueryParameter // TODO: `Optional`
-  ): Action[Seq[(Int, ResponseArticle)]] = {
-    Continue(
-      articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName),
-      Action.done[Seq[(Int, ResponseArticle)]]
-    )
+  ): ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] = {
+    ContT.apply[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] { next =>
+      articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName)
+    }
   }
 
   def get[A](
     data: A = (),
     queryParam: ArticlesQueryParameter
-  )(f: (ContentTypeId, A, ArticlesQueryParameter) => Action[Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
+  )(f: (ContentTypeId, A, ArticlesQueryParameter) => ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
       c <- contentTypeService.findByName("article").throwIfNone(NotFound(detail = "content-type not found: article"))
       articlesWithCount <- executer.transact(f(c.id, data, queryParam))

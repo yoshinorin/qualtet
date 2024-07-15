@@ -1,10 +1,9 @@
 package net.yoshinorin.qualtet.domains.search
 
+import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
-import net.yoshinorin.qualtet.actions.Action.*
-import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.config.SearchConfig
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
@@ -19,8 +18,10 @@ class SearchService[F[_]: Monad](
   searchRepository: SearchRepository[F]
 )(using executer: Executer[F, IO]) {
 
-  def actions(query: List[String]): Action[Seq[(Int, ResponseSearch)]] = {
-    Continue(searchRepository.search(query), Action.done[Seq[(Int, ResponseSearch)]])
+  def actions(query: List[String]): ContT[F, Seq[(Int, ResponseSearch)], Seq[(Int, ResponseSearch)]] = {
+    ContT.apply[F, Seq[(Int, ResponseSearch)], Seq[(Int, ResponseSearch)]] { next =>
+      searchRepository.search(query)
+    }
   }
 
   private[search] def extractQueryStringsFromQuery(query: Map[String, List[String]]): List[String] = query.getOrElse("q", List()).map(_.trim.toLower)

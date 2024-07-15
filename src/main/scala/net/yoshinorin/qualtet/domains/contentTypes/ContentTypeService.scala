@@ -1,10 +1,9 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
+import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.actions.Action.*
-import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.infrastructure.db.Executer
@@ -16,12 +15,16 @@ class ContentTypeService[F[_]: Monad](
 )(using executer: Executer[F, IO])
     extends Cacheable {
 
-  def upsertActions(data: ContentType): Action[Int] = {
-    Continue(contentRepository.upsert(data), Action.done[Int])
+  def upsertActions(data: ContentType): ContT[F, Int, Int] = {
+    ContT.apply[F, Int, Int] { next =>
+      contentRepository.upsert(data)
+    }
   }
 
-  def getAllActions: Action[Seq[ContentType]] = {
-    Continue(contentRepository.getAll(), Action.done[Seq[ContentType]])
+  def getAllActions: ContT[F, Seq[ContentType], Seq[ContentType]] = {
+    ContT.apply[F, Seq[ContentType], Seq[ContentType]] { next =>
+      contentRepository.getAll()
+    }
   }
 
   /**
@@ -50,8 +53,10 @@ class ContentTypeService[F[_]: Monad](
    */
   def findByName(name: String): IO[Option[ContentType]] = {
 
-    def actions(name: String): Action[Option[ContentType]] = {
-      Continue(contentRepository.findByName(name), Action.done[Option[ContentType]])
+    def actions(name: String): ContT[F, Option[ContentType], Option[ContentType]] = {
+      ContT.apply[F, Option[ContentType], Option[ContentType]] { next =>
+        contentRepository.findByName(name)
+      }
     }
 
     def fromDB(name: String): IO[Option[ContentType]] = {

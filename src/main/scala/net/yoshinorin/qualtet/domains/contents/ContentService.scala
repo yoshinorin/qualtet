@@ -1,10 +1,9 @@
 package net.yoshinorin.qualtet.domains.contents
 
+import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
-import net.yoshinorin.qualtet.actions.Action.*
-import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
@@ -31,24 +30,34 @@ class ContentService[F[_]: Monad](
   executer: Executer[F, IO]
 ) {
 
-  def upsertActions(data: Content): Action[Int] = {
-    Continue(contentRepository.upsert(data), Action.done[Int])
+  def upsertActions(data: Content): ContT[F, Int, Int] = {
+    ContT.apply[F, Int, Int] { next =>
+      contentRepository.upsert(data)
+    }
   }
 
-  def deleteActions(id: ContentId): Action[Unit] = {
-    Continue(contentRepository.delete(id), Action.done[Unit])
+  def deleteActions(id: ContentId): ContT[F, Unit, Unit] = {
+    ContT.apply[F, Unit, Unit] { next =>
+      contentRepository.delete(id)
+    }
   }
 
-  def findByIdActions(id: ContentId): Action[Option[Content]] = {
-    Continue(contentRepository.findById(id), Action.done[Option[Content]])
+  def findByIdActions(id: ContentId): ContT[F, Option[Content], Option[Content]] = {
+    ContT.apply[F, Option[Content], Option[Content]] { next =>
+      contentRepository.findById(id)
+    }
   }
 
-  def findByPathActions(path: Path): Action[Option[Content]] = {
-    Continue(contentRepository.findByPath(path), Action.done[Option[Content]])
+  def findByPathActions(path: Path): ContT[F, Option[Content], Option[Content]] = {
+    ContT.apply[F, Option[Content], Option[Content]] { next =>
+      contentRepository.findByPath(path)
+    }
   }
 
-  def findByPathWithMetaActions(path: Path): Action[Option[ReadContentDbRow]] = {
-    Continue(contentRepository.findByPathWithMeta(path), Action.done[Option[ReadContentDbRow]])
+  def findByPathWithMetaActions(path: Path): ContT[F, Option[ReadContentDbRow], Option[ReadContentDbRow]] = {
+    ContT.apply[F, Option[ReadContentDbRow], Option[ReadContentDbRow]] { next =>
+      contentRepository.findByPathWithMeta(path)
+    }
   }
 
   /**
@@ -207,7 +216,7 @@ class ContentService[F[_]: Monad](
     executer.transact(findByIdActions(id))
   }
 
-  def findBy[A](data: A)(f: A => Action[Option[ReadContentDbRow]]): IO[Option[ResponseContent]] = {
+  def findBy[A](data: A)(f: A => ContT[F, Option[ReadContentDbRow], Option[ReadContentDbRow]]): IO[Option[ResponseContent]] = {
     executer.transact(f(data)).flatMap {
       case None => IO(None)
       case Some(x) =>

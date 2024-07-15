@@ -1,9 +1,8 @@
 package net.yoshinorin.qualtet.domains.series
 
+import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
-import net.yoshinorin.qualtet.actions.Action.*
-import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.message.Fail.NotFound
@@ -15,16 +14,22 @@ class SeriesService[F[_]: Monad](
   articleService: ArticleService[F]
 )(using executer: Executer[F, IO]) {
 
-  def upsertActions(data: Series): Action[Int] = {
-    Continue(seriesRepository.upsert(data), Action.done[Int])
+  def upsertActions(data: Series): ContT[F, Int, Int] = {
+    ContT.apply[F, Int, Int] { next =>
+      seriesRepository.upsert(data)
+    }
   }
 
-  def findByNameActions(name: SeriesName): Action[Option[Series]] = {
-    Continue(seriesRepository.findByName(name), Action.done[Option[Series]])
+  def findByNameActions(name: SeriesName): ContT[F, Option[Series], Option[Series]] = {
+    ContT.apply[F, Option[Series], Option[Series]] { next =>
+      seriesRepository.findByName(name)
+    }
   }
 
-  def fetchActions: Action[Seq[Series]] = {
-    Continue(seriesRepository.getAll(), Action.done[Seq[Series]])
+  def fetchActions: ContT[F, Seq[Series], Seq[Series]] = {
+    ContT.apply[F, Seq[Series], Seq[Series]] { next =>
+      seriesRepository.getAll()
+    }
   }
 
   /**

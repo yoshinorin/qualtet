@@ -1,9 +1,8 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
+import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
-import net.yoshinorin.qualtet.actions.Action.*
-import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.Cacheable
@@ -16,8 +15,10 @@ class SitemapService[F[_]: Monad](
 
   private val cacheKey = "sitemaps-full-cache"
 
-  def getActions: Action[Seq[Url]] = {
-    Continue(sitemapRepository.get(), Action.done[Seq[Url]])
+  def getActions: ContT[F, Seq[Url], Seq[Url]] = {
+    ContT.apply[F, Seq[Url], Seq[Url]] { next =>
+      sitemapRepository.get()
+    }
   }
 
   def get(): IO[Seq[Url]] = {

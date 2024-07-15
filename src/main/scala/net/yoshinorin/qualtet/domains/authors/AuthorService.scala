@@ -1,35 +1,44 @@
 package net.yoshinorin.qualtet.domains.authors
 
+import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.message.Fail.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.actions.Action.*
-import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.syntax.*
 
 class AuthorService[F[_]: Monad](
   authorRepository: AuthorRepository[F]
 )(using executer: Executer[F, IO]) {
 
-  def upsertActions(data: Author): Action[Int] = {
-    Continue(authorRepository.upsert(data), Action.done[Int])
+  def upsertActions(data: Author): ContT[F, Int, Int] = {
+    ContT.apply[F, Int, Int] { next =>
+      authorRepository.upsert(data)
+    }
   }
 
-  def fetchActions: Action[Seq[ResponseAuthor]] = {
-    Continue(authorRepository.getAll(), Action.done[Seq[ResponseAuthor]])
+  def fetchActions: ContT[F, Seq[ResponseAuthor], Seq[ResponseAuthor]] = {
+    ContT.apply[F, Seq[ResponseAuthor], Seq[ResponseAuthor]] { next =>
+      authorRepository.getAll()
+    }
   }
 
-  def findByIdActions(id: AuthorId): Action[Option[ResponseAuthor]] = {
-    Continue(authorRepository.findById(id), Action.done[Option[ResponseAuthor]])
+  def findByIdActions(id: AuthorId): ContT[F, Option[ResponseAuthor], Option[ResponseAuthor]] = {
+    ContT.apply[F, Option[ResponseAuthor], Option[ResponseAuthor]] { next =>
+      authorRepository.findById(id)
+    }
   }
 
-  def findByIdWithPasswordActions(id: AuthorId): Action[Option[Author]] = {
-    Continue(authorRepository.findByIdWithPassword(id), Action.done[Option[Author]])
+  def findByIdWithPasswordActions(id: AuthorId): ContT[F, Option[Author], Option[Author]] = {
+    ContT.apply[F, Option[Author], Option[Author]] { next =>
+      authorRepository.findByIdWithPassword(id)
+    }
   }
 
-  def findByNameActions(name: AuthorName): Action[Option[ResponseAuthor]] = {
-    Continue(authorRepository.findByName(name), Action.done[Option[ResponseAuthor]])
+  def findByNameActions(name: AuthorName): ContT[F, Option[ResponseAuthor], Option[ResponseAuthor]] = {
+    ContT.apply[F, Option[ResponseAuthor], Option[ResponseAuthor]] { next =>
+      authorRepository.findByName(name)
+    }
   }
 
   /**

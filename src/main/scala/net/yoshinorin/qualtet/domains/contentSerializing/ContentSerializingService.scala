@@ -1,8 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentSerializing
 
+import cats.data.ContT
 import cats.Monad
-import net.yoshinorin.qualtet.actions.Action.*
-import net.yoshinorin.qualtet.actions.{Action, Continue}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.series.SeriesId
 
@@ -10,39 +9,51 @@ class ContentSerializingService[F[_]: Monad](
   contentSerializingRepository: ContentSerializingRepository[F]
 ) {
 
-  def findBySeriesIdActions(id: SeriesId): Action[Seq[ContentSerializing]] = {
-    Continue(contentSerializingRepository.findBySeriesId(id), Action.done[Seq[ContentSerializing]])
-  }
-
-  def upsertActions(data: Option[ContentSerializing]): Action[Int] = {
-    data match {
-      case Some(d) => Continue(contentSerializingRepository.upsert(d), Action.done[Int])
-      case None => Continue(contentSerializingRepository.fakeRequestInt, Action.done[Int])
+  def findBySeriesIdActions(id: SeriesId): ContT[F, Seq[ContentSerializing], Seq[ContentSerializing]] = {
+    ContT.apply[F, Seq[ContentSerializing], Seq[ContentSerializing]] { next =>
+      contentSerializingRepository.findBySeriesId(id)
     }
   }
 
-  def bulkUpsertActions(data: Option[List[ContentSerializing]]): Action[Int] = {
-    data match {
-      case Some(d) => Continue(contentSerializingRepository.bulkUpsert(d), Action.done[Int])
-      case None => Continue(contentSerializingRepository.fakeRequestInt, Action.done[Int])
+  def upsertActions(data: Option[ContentSerializing]): ContT[F, Int, Int] = {
+    ContT.apply[F, Int, Int] { next =>
+      data match {
+        case Some(d) => contentSerializingRepository.upsert(d)
+        case None => contentSerializingRepository.fakeRequestInt
+      }
     }
   }
 
-  def deleteBySeriesIdActions(id: SeriesId): Action[Unit] = {
-    Continue(contentSerializingRepository.deleteBySeriesId(id), Action.done[Unit])
+  def bulkUpsertActions(data: Option[List[ContentSerializing]]): ContT[F, Int, Int] = {
+    ContT.apply[F, Int, Int] { next =>
+      data match {
+        case Some(d) => contentSerializingRepository.bulkUpsert(d)
+        case None => contentSerializingRepository.fakeRequestInt
+      }
+    }
   }
 
-  def deleteByContentIdActions(id: ContentId): Action[Unit] = {
-    Continue(contentSerializingRepository.deleteByContentId(id), Action.done[Unit])
+  def deleteBySeriesIdActions(id: SeriesId): ContT[F, Unit, Unit] = {
+    ContT.apply[F, Unit, Unit] { next =>
+      contentSerializingRepository.deleteBySeriesId(id)
+    }
   }
 
-  def deleteActions(seriesId: SeriesId, contentIds: Seq[ContentId]): Action[Unit] = {
-    Continue(contentSerializingRepository.delete(seriesId, contentIds), Action.done[Unit])
+  def deleteByContentIdActions(id: ContentId): ContT[F, Unit, Unit] = {
+    ContT.apply[F, Unit, Unit] { next =>
+      contentSerializingRepository.deleteByContentId(id)
+    }
   }
 
-  def bulkDeleteActions(data: (SeriesId, Seq[ContentId])): Action[Unit] = {
+  def deleteActions(seriesId: SeriesId, contentIds: Seq[ContentId]): ContT[F, Unit, Unit] = {
+    ContT.apply[F, Unit, Unit] { next =>
+      contentSerializingRepository.delete(seriesId, contentIds)
+    }
+  }
+
+  def bulkDeleteActions(data: (SeriesId, Seq[ContentId])): ContT[F, Unit, Unit] = {
     data._2.size match {
-      case 0 => Continue(contentSerializingRepository.fakeRequestUnit, Action.done[Unit])
+      case 0 => ContT.apply[F, Unit, Unit] { next => contentSerializingRepository.fakeRequestUnit }
       case _ => this.deleteActions(data._1, data._2)
     }
   }
