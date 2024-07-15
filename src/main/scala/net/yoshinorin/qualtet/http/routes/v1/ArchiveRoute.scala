@@ -12,8 +12,7 @@ class ArchiveRoute[F[_]: Monad](
   archiveService: ArchiveService[F]
 ) {
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { r =>
-    implicit val x = r
+  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ GET -> Root => this.get
       case request @ OPTIONS -> Root => NoContent()
