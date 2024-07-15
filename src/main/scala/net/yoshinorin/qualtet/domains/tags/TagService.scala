@@ -6,7 +6,7 @@ import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.message.Fail.NotFound
+import net.yoshinorin.qualtet.domains.errors.NotFound
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.syntax.*
 

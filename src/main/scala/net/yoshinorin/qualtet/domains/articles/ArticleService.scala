@@ -4,7 +4,7 @@ import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
-import net.yoshinorin.qualtet.message.Fail.NotFound
+import net.yoshinorin.qualtet.domains.errors.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter

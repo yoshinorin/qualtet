@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.robots
 
-import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.domains.errors.UnprocessableEntity
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.{contentId, fullRobotsAttributes}

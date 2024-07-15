@@ -4,7 +4,7 @@ import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.message.Fail.InternalServerError
+import net.yoshinorin.qualtet.domains.errors.InternalServerError
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*

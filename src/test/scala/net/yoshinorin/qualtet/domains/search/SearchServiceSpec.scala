@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.http.ProblemDetailsError
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
-import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.domains.errors.UnprocessableEntity
 
 import cats.effect.unsafe.implicits.global
 

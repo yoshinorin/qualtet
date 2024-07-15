@@ -5,7 +5,7 @@ import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.message.Fail.NotFound
+import net.yoshinorin.qualtet.domains.errors.NotFound
 import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID
 

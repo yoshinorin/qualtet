@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
+import net.yoshinorin.qualtet.domains.errors.{NotFound, Unauthorized}
 import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.fixture.Fixture.*

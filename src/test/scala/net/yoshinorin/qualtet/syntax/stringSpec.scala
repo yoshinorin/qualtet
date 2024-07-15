@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.message.Fail
+import net.yoshinorin.qualtet.domains.errors.BadRequest
 
 // testOnly net.yoshinorin.qualtet.syntax.StringSpec
 class StringSpec extends AnyWordSpec {
@@ -67,17 +67,17 @@ class StringSpec extends AnyWordSpec {
   "trimOrThrow" should {
 
     "not be thrown exception" in {
-      assert("test".trimOrThrow(Fail.BadRequest(detail = "error")) === "test")
-      assert(" test ".trimOrThrow(Fail.BadRequest(detail = "error")) === "test")
+      assert("test".trimOrThrow(BadRequest(detail = "error")) === "test")
+      assert(" test ".trimOrThrow(BadRequest(detail = "error")) === "test")
     }
 
     "thrown exception" in {
-      assertThrows[Fail.BadRequest] {
-        "".trimOrThrow(Fail.BadRequest(detail = "error"))
+      assertThrows[BadRequest] {
+        "".trimOrThrow(BadRequest(detail = "error"))
       }
 
-      assertThrows[Fail.BadRequest] {
-        " ".trimOrThrow(Fail.BadRequest(detail = "error"))
+      assertThrows[BadRequest] {
+        " ".trimOrThrow(BadRequest(detail = "error"))
       }
     }
 

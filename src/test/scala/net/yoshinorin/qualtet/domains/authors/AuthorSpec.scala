@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.authors
 
 import net.yoshinorin.qualtet.domains.authors.{AuthorDisplayName, AuthorId, AuthorName, BCryptPassword}
-import net.yoshinorin.qualtet.message.Fail.{Unauthorized, UnprocessableEntity}
+import net.yoshinorin.qualtet.domains.errors.{Unauthorized, UnprocessableEntity}
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec

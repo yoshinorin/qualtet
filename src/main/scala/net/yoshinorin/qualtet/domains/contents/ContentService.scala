@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
-import net.yoshinorin.qualtet.message.Fail.{InternalServerError, NotFound, UnprocessableEntity}
+import net.yoshinorin.qualtet.domains.errors.{InternalServerError, NotFound, UnprocessableEntity}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}

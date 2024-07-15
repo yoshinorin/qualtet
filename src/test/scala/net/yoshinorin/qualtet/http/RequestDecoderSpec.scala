@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.http
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.RequestContent
-import net.yoshinorin.qualtet.message.Fail.BadRequest
+import net.yoshinorin.qualtet.domains.errors.BadRequest
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import org.scalatest.wordspec.AnyWordSpec
 

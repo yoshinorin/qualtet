@@ -6,7 +6,7 @@ import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.config.SearchConfig
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.domains.errors.UnprocessableEntity
 import net.yoshinorin.qualtet.http.ProblemDetailsError
 import net.yoshinorin.qualtet.types.Points
 import net.yoshinorin.qualtet.syntax.*

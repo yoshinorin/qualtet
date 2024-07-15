@@ -4,7 +4,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.ValueExtender
 import net.yoshinorin.qualtet.domains.contents.ContentId
-import net.yoshinorin.qualtet.message.Fail.UnprocessableEntity
+import net.yoshinorin.qualtet.domains.errors.UnprocessableEntity
 
 opaque type Attributes = String
 object Attributes extends ValueExtender[Attributes] {

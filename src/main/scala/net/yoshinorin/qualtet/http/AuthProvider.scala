@@ -10,8 +10,7 @@ import org.http4s.headers.Authorization
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.auth.AuthService
-import net.yoshinorin.qualtet.message.Fail
-import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
+import net.yoshinorin.qualtet.domains.errors.{Error, NotFound, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
 
 class AuthProvider[F[_]: Monad](
@@ -20,15 +19,15 @@ class AuthProvider[F[_]: Monad](
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   // TODO: cleanup messy code
-  private def authUser: Kleisli[IO, Request[IO], Either[Fail, (ResponseAuthor, String)]] =
+  private def authUser: Kleisli[IO, Request[IO], Either[Error, (ResponseAuthor, String)]] =
     Kleisli({ request =>
-      request.headers.get[Authorization].asEither[Fail](Unauthorized("Authorization header is none")) match {
-        case Left(f: Fail) => IO(Left(f))
+      request.headers.get[Authorization].asEither[Error](Unauthorized("Authorization header is none")) match {
+        case Left(f: Error) => IO(Left(f))
         case Right(auth: Authorization) =>
           val renderString = auth.credentials.renderString.replace("Bearer ", "").replace("bearer ", "")
           for {
             maybeAuthor <- authService.findAuthorFromJwtString(renderString)
-            author <- IO(maybeAuthor.asEither[Fail](NotFound(detail = "author not found")))
+            author <- IO(maybeAuthor.asEither[Error](NotFound(detail = "author not found")))
             payload <- request.as[String]
           } yield {
             author match {
@@ -44,7 +43,7 @@ class AuthProvider[F[_]: Monad](
       }
     })
 
-  private def onFailure: AuthedRoutes[Fail, IO] = Kleisli { req =>
+  private def onFailure: AuthedRoutes[Error, IO] = Kleisli { req =>
     OptionT.pure[IO](Response[IO](status = Status.Unauthorized))
   }
 

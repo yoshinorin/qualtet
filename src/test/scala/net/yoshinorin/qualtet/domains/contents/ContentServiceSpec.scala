@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contents
 
 import net.yoshinorin.qualtet.domains.authors.AuthorName
-import net.yoshinorin.qualtet.message.Fail.{NotFound, UnprocessableEntity}
+import net.yoshinorin.qualtet.domains.errors.{NotFound, UnprocessableEntity}
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.Modules.*

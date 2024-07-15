@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.tags.Tag
-import net.yoshinorin.qualtet.message.Fail.BadRequest
+import net.yoshinorin.qualtet.domains.errors.BadRequest
 import net.yoshinorin.qualtet.syntax.*
 
 opaque type ContentId = String

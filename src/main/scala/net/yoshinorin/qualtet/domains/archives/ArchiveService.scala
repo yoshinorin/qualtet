@@ -4,7 +4,7 @@ import cats.Monad
 import cats.data.ContT
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.message.Fail.NotFound
+import net.yoshinorin.qualtet.domains.errors.NotFound
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.syntax.*

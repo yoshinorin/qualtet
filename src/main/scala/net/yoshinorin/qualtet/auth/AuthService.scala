@@ -4,7 +4,7 @@ import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorService, BCryptPassword, ResponseAuthor}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import net.yoshinorin.qualtet.message.Fail.{NotFound, Unauthorized}
+import net.yoshinorin.qualtet.domains.errors.{NotFound, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
 import org.slf4j.LoggerFactory
 

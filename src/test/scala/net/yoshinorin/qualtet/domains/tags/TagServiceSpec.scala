@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.domains.tags
 
 import net.yoshinorin.qualtet.domains.contents.Path
+import net.yoshinorin.qualtet.domains.errors.NotFound
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
-import net.yoshinorin.qualtet.message.Fail
 
 import cats.effect.unsafe.implicits.global
 
@@ -71,7 +71,7 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     }
 
     "throw NotFound exception when delete" in {
-      assertThrows[Fail.NotFound] {
+      assertThrows[NotFound] {
         tagService.delete(TagId(generateUlid())).unsafeRunSync()
       }
     }
