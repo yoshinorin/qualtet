@@ -27,9 +27,9 @@ object ApplicationConfig {
 
   private val config: TypeSafeConfig = ConfigFactory.load
 
-  private val dbUrl: String = config.getString("db.ctx.dataSource.url")
-  private val dbUser: String = config.getString("db.ctx.dataSource.user")
-  private val dbPassword: String = config.getString("db.ctx.dataSource.password")
+  private val dbUrl: String = config.getString("db.dataSource.url")
+  private val dbUser: String = config.getString("db.dataSource.user")
+  private val dbPassword: String = config.getString("db.dataSource.password")
 
   private val httpHost: String = config.getString("http.host")
   private val httpPort: Int = config.getInt("http.port")
