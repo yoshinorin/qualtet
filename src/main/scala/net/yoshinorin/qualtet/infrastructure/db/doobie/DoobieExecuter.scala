@@ -11,11 +11,6 @@ import doobie.free.connection.ConnectionIO
 
 class DoobieExecuter(tx: Transactor[IO]) extends Executer[ConnectionIO, IO] {
 
-  // NOTE: No-need ContextShift: https://typelevel.org/cats-effect/docs/migration-guide#contextshift
-  // implicit val cs: ContextShift[IO] = IO.contextShift(executionContexts)
-  // val executors: ExecutorService = Executors.newCachedThreadPool()
-  // val executionContexts: ExecutionContextExecutor = scala.concurrent.ExecutionContext.fromExecutor(executors)
-
   override def perform[R](c: ContT[doobie.ConnectionIO, R, R]): ConnectionIO[R] = {
     c.run { x => x.pure[ConnectionIO] }
   }
@@ -42,16 +37,4 @@ class DoobieExecuter(tx: Transactor[IO]) extends Executer[ConnectionIO, IO] {
     } yield r._8
   }
 
-  /*
-  implicit final class PerformOps[R](action: Action[R]) {
-    def perform: ConnectionIO[R] = action match {
-      case continue: Continue[_, R, ConnectionIO] => continue.request.flatMap { t => continue.next(t).perform }
-      case done: Done[R] => done.value.pure[ConnectionIO]
-    }
-  }
-
-  implicit final class TransactOps[T](connectionIO: ConnectionIO[T]) {
-    def andTransact: IO[T] = connectionIO.transact(transactor)
-  }
-   */
 }

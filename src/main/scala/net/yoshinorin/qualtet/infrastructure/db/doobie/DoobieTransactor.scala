@@ -13,22 +13,6 @@ trait DoobieTransactor[F[G[_], _]] {
 
 object DoobieTransactor {
 
-  /*
-  given DoobieTransactor: DoobieTransactor[Aux] = {
-    new DoobieTransactor[Aux] {
-      override def make(config: DBConfig): Transactor[IO] = {
-        Transactor.fromDriverManager[IO](
-          driver = "org.mariadb.jdbc.Driver",
-          url = config.url,
-          user = config.user,
-          password = config.password,
-          logHandler = None
-        )
-      }
-    }
-  }
-   */
-
   given DoobieTransactor: DoobieTransactor[Aux] = {
     new DoobieTransactor[Aux] {
       override def make(config: DBConfig): Resource[IO, HikariTransactor[IO]] = {
