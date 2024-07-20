@@ -56,13 +56,14 @@ object Modules {
   val config = ApplicationConfig.load
   val doobieTransactor: DoobieTransactor[Aux] = summon[DoobieTransactor[Aux]]
   val transactorResource = doobieTransactor.make(config.db)
+  given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
 }
 
 class Modules(tx: Transactor[IO]) {
 
-  val config = ApplicationConfig.load
+  import Modules.log4catsLogger
 
-  given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
+  val config = Modules.config
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(tx)
 
   val migrator: Migrator = new Migrator(config.db)

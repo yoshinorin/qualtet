@@ -5,7 +5,6 @@ import cats.effect.{ExitCode, IO, IOApp}
 import cats.effect.kernel.Resource
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
-import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
 import org.http4s.*
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Server
@@ -15,7 +14,7 @@ import scala.concurrent.duration._
 
 object BootStrap extends IOApp {
 
-  given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
+  import Modules.log4catsLogger
 
   val logger: SelfAwareStructuredLogger[IO] = Log4CatsLoggerFactory[IO].getLoggerFromClass(this.getClass)
 
