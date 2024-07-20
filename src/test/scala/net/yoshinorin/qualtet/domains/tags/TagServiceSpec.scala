@@ -12,7 +12,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.TagServiceSpec
 class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  given dbContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
+  given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
 
   val requestContents = makeRequestContents(10, "tagService")
 
@@ -42,7 +42,7 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "findByContentId" in {
       val r = (for {
         c <- contentService.findByPath(Path("/test/tagService-4"))
-        t <- dbContext.transact(tagService.findByContentIdActions(c.get.id))
+        t <- doobieExecuterContext.transact(tagService.findByContentIdActions(c.get.id))
       } yield t).unsafeRunSync()
       assert(r.head.name === TagName("tagServiceTag4"))
     }

@@ -66,7 +66,7 @@ object Fixture {
   )
   private val modules = Modules(fixtureTx)
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
-  given dbContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
+  given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
 
   val migrator = modules.migrator
   val articleService = modules.articleService

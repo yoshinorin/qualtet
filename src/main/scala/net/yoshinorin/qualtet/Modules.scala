@@ -63,7 +63,7 @@ class Modules(tx: Transactor[IO]) {
   val config = ApplicationConfig.load
 
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
-  given dbContext: DoobieExecuter = new DoobieExecuter(tx)
+  given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(tx)
 
   val migrator: Migrator = new Migrator(config.db)
 
