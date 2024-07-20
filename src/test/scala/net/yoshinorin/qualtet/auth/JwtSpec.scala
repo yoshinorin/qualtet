@@ -20,7 +20,7 @@ import java.time.Instant
 class JwtSpec extends AnyWordSpec {
 
   val mod = Modules(fixtureTx)
-  val config = Modules.config
+  val config = mod.config
   val jc: JwtClaim = JwtClaim(
     iss = config.jwt.iss,
     aud = config.jwt.aud,

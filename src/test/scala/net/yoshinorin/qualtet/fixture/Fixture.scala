@@ -11,6 +11,7 @@ import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
+import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.CorsProvider
 import net.yoshinorin.qualtet.cache.CacheModule
@@ -53,15 +54,16 @@ object Fixture {
     ULID.newULIDString.toLower
   }
 
-  val h: String = Modules.config.http.host
-  val p: String = Modules.config.http.port.toString()
+  val config = ApplicationConfig.load
+  val h: String = config.http.host
+  val p: String = config.http.port.toString()
   val host = Uri.unsafeFromString(s"http://${h}:${p}")
 
   val fixtureTx = Transactor.fromDriverManager[IO](
     driver = "org.mariadb.jdbc.Driver",
-    url = Modules.config.db.url,
-    user = Modules.config.db.user,
-    password = Modules.config.db.password,
+    url = config.db.url,
+    user = config.db.user,
+    password = config.db.password,
     logHandler = None
   )
   private val modules = Modules(fixtureTx)

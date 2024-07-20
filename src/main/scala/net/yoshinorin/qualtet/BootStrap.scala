@@ -30,11 +30,10 @@ object BootStrap extends IOApp {
   }
 
   def run(args: List[String]): IO[ExitCode] = {
-    val host = Ipv4Address.fromString(Modules.config.http.host).getOrElse(ipv4"127.0.0.1")
-    val port = Port.fromInt(Modules.config.http.port).getOrElse(port"9001")
-
     Modules.transactorResource.use { tx =>
       val modules = new Modules(tx)
+      val host = Ipv4Address.fromString(modules.config.http.host).getOrElse(ipv4"127.0.0.1")
+      val port = Port.fromInt(modules.config.http.port).getOrElse(port"9001")
       (for {
         _ <- logger.info(ApplicationInfo.asJson)
         _ <- IO(modules.migrator.migrate(modules.contentTypeService))

@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.config
 
-import net.yoshinorin.qualtet.Modules.*
+import net.yoshinorin.qualtet.fixture.Fixture.config
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.config.ConfigSpec

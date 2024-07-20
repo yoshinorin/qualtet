@@ -53,8 +53,9 @@ import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
 
 object Modules {
-  val config = ApplicationConfig.load
-  val doobieTransactor: DoobieTransactor[Aux] = summon[DoobieTransactor[Aux]]
+  private val config = ApplicationConfig.load
+  private val doobieTransactor: DoobieTransactor[Aux] = summon[DoobieTransactor[Aux]]
+
   val transactorResource = doobieTransactor.make(config.db)
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
 }
