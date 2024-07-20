@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.domains.search
 import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.http.ProblemDetailsError
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll

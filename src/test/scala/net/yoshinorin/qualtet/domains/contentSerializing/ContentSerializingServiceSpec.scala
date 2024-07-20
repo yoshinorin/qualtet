@@ -4,9 +4,6 @@ import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
-import net.yoshinorin.qualtet.Modules
-import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 
@@ -15,9 +12,6 @@ import org.scalatest.Ignore
 // testOnly net.yoshinorin.qualtet.domains.contentTaggings.ContentSerializingServiceSpec
 @Ignore // TODO: write testcode when implement delete feature
 class ContentSerializingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
-
-  val tx = doobieTransactor.make(Modules.config.db)
-  given dbContext: DoobieExecuter = new DoobieExecuter(tx)
 
   val requestSeries: RequestSeries = RequestSeries(
     title = "Content Serializing Service Spec",

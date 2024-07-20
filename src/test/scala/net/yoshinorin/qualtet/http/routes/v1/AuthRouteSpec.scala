@@ -9,8 +9,7 @@ import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.auth.ResponseToken
 import net.yoshinorin.qualtet.http.ResponseProblemDetails
-import net.yoshinorin.qualtet.Modules.*
-import net.yoshinorin.qualtet.fixture.Fixture.{author, router, unsafeDecode}
+import net.yoshinorin.qualtet.fixture.Fixture.{author, authorService, router, unsafeDecode}
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 

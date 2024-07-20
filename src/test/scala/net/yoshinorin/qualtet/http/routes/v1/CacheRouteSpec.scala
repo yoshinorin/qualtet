@@ -8,8 +8,7 @@ import org.http4s.implicits.*
 import org.typelevel.ci.*
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.Modules.*
-import net.yoshinorin.qualtet.fixture.Fixture.{author, expiredToken, nonExistsUserToken, router}
+import net.yoshinorin.qualtet.fixture.Fixture.{authService, author, authorService, expiredToken, nonExistsUserToken, router}
 import net.yoshinorin.qualtet.auth.RequestToken
 
 import cats.effect.unsafe.implicits.global

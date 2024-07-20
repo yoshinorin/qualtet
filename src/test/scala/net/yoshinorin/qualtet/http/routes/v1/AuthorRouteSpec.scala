@@ -8,8 +8,7 @@ import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, ResponseAuthor}
 import net.yoshinorin.qualtet.http.ResponseProblemDetails
-import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, router, unsafeDecode}
-import net.yoshinorin.qualtet.Modules.*
+import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, authorService, router, unsafeDecode}
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 

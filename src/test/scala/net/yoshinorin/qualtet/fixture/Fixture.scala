@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.fixture
 import cats.Monad
 import cats.effect.IO
 import doobie.ConnectionIO
+import doobie.util.transactor.Transactor
 import org.http4s.Uri
 import org.http4s.Response
 import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
@@ -56,15 +57,34 @@ object Fixture {
   val p: String = Modules.config.http.port.toString()
   val host = Uri.unsafeFromString(s"http://${h}:${p}")
 
-  val tx = Modules.doobieTransactor.make(Modules.config.db)
-  given dbContext: DoobieExecuter = new DoobieExecuter(tx)
+  val fixtureTx = Transactor.fromDriverManager[IO](
+    driver = "org.mariadb.jdbc.Driver",
+    url = Modules.config.db.url,
+    user = Modules.config.db.user,
+    password = Modules.config.db.password,
+    logHandler = None
+  )
+  private val modules = Modules(fixtureTx)
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
+  given dbContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
+
+  val migrator = modules.migrator
+  val articleService = modules.articleService
+  val archiveService = modules.archiveService
+  val authorService = modules.authorService
+  val authService = modules.authService
+  val cacheService = modules.cacheService
+  val contentService = modules.contentService
+  val contentTaggingService = modules.contentTaggingService
+  val tagService = modules.tagService
+  val seriesService = modules.seriesService
+  val searchService = modules.searchService
 
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService = new ContentTypeService(Modules.contentTypeRepository, contentTypeCache)
+  val contentTypeService = new ContentTypeService(modules.contentTypeRepository, contentTypeCache)
 
   val sitemapRepository: SitemapsRepository[ConnectionIO] = summon[SitemapsRepository[ConnectionIO]]
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
@@ -75,25 +95,25 @@ object Fixture {
   val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
   val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
-  val feedService = new FeedService(feedCache, Modules.articleService)
+  val feedService = new FeedService(feedCache, modules.articleService)
 
-  val authProvider = new AuthProvider(Modules.authService)
-  val corsProvider = new CorsProvider(Modules.config.cors)
+  val authProvider = new AuthProvider(modules.authService)
+  val corsProvider = new CorsProvider(modules.config.cors)
 
-  val archiveRouteV1 = new ArchiveRouteV1(Modules.archiveService)
-  val articleRouteV1 = new ArticleRouteV1(Modules.articleService)
-  val authorRouteV1 = new AuthorRouteV1(Modules.authorService)
-  val authRouteV1 = new AuthRouteV1(Modules.authService)
-  val cacheRouteV1 = new CacheRouteV1(authProvider, Modules.cacheService)
-  val contentTypeRouteV1 = new ContentTypeRouteV1(Modules.contentTypeService)
-  val contentRouteV1 = new ContentRouteV1(authProvider, Modules.contentService)
-  val feedRouteV1 = new FeedRouteV1(Modules.feedService)
+  val archiveRouteV1 = new ArchiveRouteV1(modules.archiveService)
+  val articleRouteV1 = new ArticleRouteV1(modules.articleService)
+  val authorRouteV1 = new AuthorRouteV1(modules.authorService)
+  val authRouteV1 = new AuthRouteV1(modules.authService)
+  val cacheRouteV1 = new CacheRouteV1(authProvider, modules.cacheService)
+  val contentTypeRouteV1 = new ContentTypeRouteV1(modules.contentTypeService)
+  val contentRouteV1 = new ContentRouteV1(authProvider, modules.contentService)
+  val feedRouteV1 = new FeedRouteV1(modules.feedService)
   val homeRoute: HomeRoute = new HomeRoute()
-  val searchRouteV1 = new SearchRouteV1(Modules.searchService)
-  val seriesRouteV1 = new SeriesRouteV1(authProvider, Modules.seriesService)
-  val sitemapRouteV1 = new SitemapRouteV1(Modules.sitemapService)
-  val systemRouteV1 = new SystemRouteV1(Modules.config.http.endpoints.system)
-  val tagRouteV1 = new TagRouteV1(authProvider, Modules.tagService, Modules.articleService)
+  val searchRouteV1 = new SearchRouteV1(modules.searchService)
+  val seriesRouteV1 = new SeriesRouteV1(authProvider, modules.seriesService)
+  val sitemapRouteV1 = new SitemapRouteV1(modules.sitemapService)
+  val systemRouteV1 = new SystemRouteV1(modules.config.http.endpoints.system)
+  val tagRouteV1 = new TagRouteV1(authProvider, modules.tagService, modules.articleService)
 
   val router = new net.yoshinorin.qualtet.http.Router(
     corsProvider,
@@ -201,13 +221,13 @@ object Fixture {
 
   def createContents(requestContents: List[RequestContent]) = {
     requestContents.foreach { rc =>
-      Modules.contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync()
+      modules.contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync()
     }
   }
 
   def createSeries(requestSeries: List[RequestSeries]) = {
     requestSeries.foreach { rs =>
-      Modules.seriesService.create(rs).unsafeRunSync()
+      modules.seriesService.create(rs).unsafeRunSync()
     }
   }
 

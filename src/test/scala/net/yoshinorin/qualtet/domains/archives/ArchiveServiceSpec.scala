@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.domains.archives
 
-import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll

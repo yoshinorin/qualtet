@@ -4,7 +4,6 @@ import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.errors.{NotFound, UnprocessableEntity}
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.Modules.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources

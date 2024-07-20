@@ -14,7 +14,6 @@ import net.yoshinorin.qualtet.domains.tags.{ResponseTag, TagId}
 import net.yoshinorin.qualtet.http.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.{authProvider => fixtureAuthProvider}
-import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 

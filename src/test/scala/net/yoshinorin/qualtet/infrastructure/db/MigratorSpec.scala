@@ -1,8 +1,6 @@
 package net.yoshinorin.qualtet.infrastructure.db
 
-import net.yoshinorin.qualtet.fixture.Fixture.contentTypeService
-import net.yoshinorin.qualtet.Modules
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
+import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeService, migrator}
 import org.scalatest.wordspec.AnyWordSpec
 
 import cats.effect.unsafe.implicits.global
@@ -10,14 +8,11 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
 class MigratorSpec extends AnyWordSpec {
 
-  val tx = Modules.doobieTransactor.make(Modules.config.db)
-  given dbContext: DoobieExecuter = new DoobieExecuter(tx)
-
   "Migrator" should {
 
     "migrate" in {
 
-      Modules.migrator.migrate(contentTypeService).unsafeRunSync()
+      migrator.migrate(contentTypeService).unsafeRunSync()
 
       val result = (for {
         a <- contentTypeService.findByName("article")

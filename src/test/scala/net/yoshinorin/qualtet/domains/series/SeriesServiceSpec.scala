@@ -3,9 +3,6 @@ package net.yoshinorin.qualtet.domains.tags
 import net.yoshinorin.qualtet.domains.contents.Path
 import net.yoshinorin.qualtet.domains.series.{RequestSeries, SeriesName}
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
-import net.yoshinorin.qualtet.Modules
-import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 
@@ -13,9 +10,6 @@ import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.SeriesServiceSpec
 class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
-
-  val tx = doobieTransactor.make(Modules.config.db)
-  given dbContext: DoobieExecuter = new DoobieExecuter(tx)
 
   val requestSeries: List[RequestSeries] = List(
     RequestSeries(

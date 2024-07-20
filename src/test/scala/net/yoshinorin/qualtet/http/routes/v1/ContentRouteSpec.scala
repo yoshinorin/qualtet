@@ -14,7 +14,6 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.http.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.{router => fixtureRouter}
-import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.Instant

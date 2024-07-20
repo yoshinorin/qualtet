@@ -13,7 +13,6 @@ import net.yoshinorin.qualtet.domains.series.{RequestSeries, Series, SeriesName}
 import net.yoshinorin.qualtet.http.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.{authProvider => fixtureAuthProvider}
-import net.yoshinorin.qualtet.Modules.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 
