@@ -145,7 +145,7 @@ class Modules(tx: Transactor[IO]) {
   )
 
   val authProvider = new AuthProvider(authService)
-  val corsProvider = new CorsProvider(Modules.config.cors)
+  val corsProvider = new CorsProvider(config.cors)
 
   val archiveRouteV1 = new ArchiveRouteV1(archiveService)
   val articleRouteV1 = new ArticleRouteV1(articleService)
