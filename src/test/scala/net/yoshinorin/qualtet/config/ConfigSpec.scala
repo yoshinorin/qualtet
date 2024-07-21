@@ -11,6 +11,8 @@ class ConfigSpec extends AnyWordSpec {
       assert(config.db.url === "jdbc:mariadb://127.0.0.1:33066/qualtet?useUnicode=true&characterEncoding=utf8mb4")
       assert(config.db.user === "root")
       assert(config.db.password === "pass")
+      assert(config.db.connectionPool.maxLifetime === 1234567)
+      assert(config.db.connectionPool.maximumPoolSize === 99)
     }
 
     "http server configuration gettable from application.conf" in {

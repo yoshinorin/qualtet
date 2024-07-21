@@ -22,6 +22,10 @@ Qualtet reads all settings from the system environment variable. You have to set
 |`QUALTET_DB_DATASOURCE_URL`|Data source url for JDBC connection.|`string`|-|`jdbc:mariadb://127.0.0.1/cahsper?useUnicode=true&characterEncoding=utf8mb4`|
 |`QUALTET_DB_USER`|Database user name.|`string`|-|`root`|
 |`QUALTET_DB_PASSWORD`|Database user password.|`string`|-|`pass`|
+|`QUALTET_DB_CONNECTION_POOL_MAX_LIFETIME`|Maximum lifetime of a connection in the pool.|`int`|`1800000`|`1800000`|
+|`QUALTET_DB_CONNECTION_POOL_MAX_POOLSIZE`|Maximum size that the pool.|`int`|`10`|`10`|
+
+Please see the [HikariCP doc](https://github.com/brettwooldridge/HikariCP) for details of the connection pool settings.
 
 ### HTTP Server
 

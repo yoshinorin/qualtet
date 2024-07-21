@@ -5,7 +5,8 @@ import scala.jdk.CollectionConverters.*
 
 import java.util.ArrayList
 
-final case class DBConfig(url: String, user: String, password: String)
+final case class DBConfig(url: String, user: String, password: String, connectionPool: DBConnectionPool)
+final case class DBConnectionPool(maxLifetime: Long, maximumPoolSize: Int)
 final case class HttpConfig(host: String, port: Int, endpoints: HttpEndpointsConfig)
 final case class HttpEndpointsConfig(system: HttpSystemEndpointConfig)
 final case class HttpSystemEndpointMetadata(enabled: Boolean)
@@ -30,6 +31,8 @@ object ApplicationConfig {
   private val dbUrl: String = config.getString("db.dataSource.url")
   private val dbUser: String = config.getString("db.dataSource.user")
   private val dbPassword: String = config.getString("db.dataSource.password")
+  private val dbConnectionPool: DBConnectionPool =
+    DBConnectionPool(maxLifetime = config.getLong("db.connection-pool.maxLifetime"), maximumPoolSize = config.getInt("db.connection-pool.maximumPoolSize"))
 
   private val httpHost: String = config.getString("http.host")
   private val httpPort: Int = config.getInt("http.port")
@@ -51,7 +54,7 @@ object ApplicationConfig {
   private val searchMaxWordLength: Int = config.getInt("search.max-word-length")
 
   def load: ApplicationConfig = ApplicationConfig(
-    db = DBConfig(dbUrl, dbUser, dbPassword),
+    db = DBConfig(dbUrl, dbUser, dbPassword, dbConnectionPool),
     http = HttpConfig(httpHost, httpPort, httpEndpoints),
     cors = CorsConfig(corsAllowOrigins),
     jwt = JwtConfig(jwtIss, jwtAud, jwtExpiration),
