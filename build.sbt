@@ -28,13 +28,13 @@ scalacOptions ++= Seq(
 // https://github.com/rtimush/sbt-updates
 dependencyAllowPreRelease := true
 
-val createAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
+val createOrUpdateAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
 lazy val root = (project in file("."))
   .settings(
-    createAuthor := Def.inputTaskDyn {
+    createOrUpdateAuthor := Def.inputTaskDyn {
       import sbt.Def.spaceDelimited
       val args = spaceDelimited("<args>").parsed
-      val task = (Compile / runMain).toTask(s" net.yoshinorin.qualtet.tasks.CreateAuthor ${args.mkString(" ")}")
+      val task = (Compile / runMain).toTask(s" net.yoshinorin.qualtet.tasks.CreateOrUpdateAuthor ${args.mkString(" ")}")
       task
     }.evaluated
   )

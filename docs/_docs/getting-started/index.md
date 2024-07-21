@@ -97,13 +97,13 @@ $ sbt
 
 ...
 
-$ sbt:qualtet> createAuthor <name> <displayName> <password>
+$ sbt:qualtet> createOrUpdateAuthor <name> <displayName> <password>
 
 // example
-$ sbt:qualtet> createAuthor jhonDue JD pass
+$ sbt:qualtet> createOrUpdateAuthor jhonDue JD pass
 
 // result
-2021-08-03 21:54:03 +0900 [INFO] from net.yoshinorin.qualtet.tasks.createAuthor$ - author created: {
+2021-08-03 21:54:03 +0900 [INFO] from net.yoshinorin.qualtet.tasks.createOrUpdateAuthor$ - author created: {
   "id" : "01fgvhkzpyghp23wvp4p87nx29",
   "name" : "jhonDue",
   "displayName" : "JD",

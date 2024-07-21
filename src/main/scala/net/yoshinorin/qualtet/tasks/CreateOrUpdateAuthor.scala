@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 
 import cats.effect.unsafe.implicits.global
 
-object CreateAuthor extends IOApp {
+object CreateOrUpdateAuthor extends IOApp {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 

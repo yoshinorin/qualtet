@@ -21,7 +21,7 @@ class Testing extends Docker {
         |;Test / scalafmt
         |;runTestDbContainer
         |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
-        |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
+        |;testOnly net.yoshinorin.qualtet.tasks.CreateOrUpdateAuthorSpec
         |;test
         |;shutDownTestDbContainer
         |""".stripMargin
@@ -29,7 +29,7 @@ class Testing extends Docker {
     val upDbAndCreateMinData = {
       """;runTestDbContainer
         |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
-        |;testOnly net.yoshinorin.qualtet.tasks.CreateAuthorSpec
+        |;testOnly net.yoshinorin.qualtet.tasks.CreateOrUpdateAuthorSpec
         |""".stripMargin
     }
   }

@@ -16,7 +16,7 @@ $ docker compose -f ./docker-compose.local.yml up
 
 ```sh
 $ sbt
-$ sbt:qualtet> createAuthor <name> <displayName> <password>
+$ sbt:qualtet> createOrUpdateAuthor <name> <displayName> <password>
 ```
 
 3. shut down docker once that runs seq `1.`
@@ -41,7 +41,7 @@ $ cd <source code dir>
 $ sbt run
 Multiple main classes detected. Select one to run:
  [1] net.yoshinorin.qualtet.BootStrap
- [2] net.yoshinorin.qualtet.tasks.CreateAuthor
+ [2] net.yoshinorin.qualtet.tasks.CreateOrUpdateAuthor
 
 Enter number: 1
 ```
