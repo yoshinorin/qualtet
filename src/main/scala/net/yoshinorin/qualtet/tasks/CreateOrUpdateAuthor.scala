@@ -30,7 +30,6 @@ object CreateOrUpdateAuthor extends IOApp {
           Author(name = AuthorName(args(0)), displayName = AuthorDisplayName(args(1)), password = BCryptPassword(bcryptPasswordEncoder.encode(args(2))))
         )
         _ <- IO(logger.info(s"author created: ${author.asJson}"))
-        _ <- IO(println(s"author created: ${author.asJson}"))
       } yield author)
         .handleErrorWith { e =>
           e match
