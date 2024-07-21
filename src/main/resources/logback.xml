@@ -52,7 +52,6 @@
                 </encoder>
                 <filter class="ch.qos.logback.classic.filter.LevelFilter">
                     <level>DEBUG</level>
-                    <onMatch>DENY</onMatch>
                 </filter>
             </appender>
         </then>
