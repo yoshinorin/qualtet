@@ -5,7 +5,7 @@ object Dependencies {
   val jsoniterVersion = "2.30.7"
   val doobieVersion = "1.0.0-RC5"
   val jwtScalaVersion = "10.0.1"
-  val flywayVersion = "10.15.2"
+  val flywayVersion = "10.16.0"
   val http4sVersion = "1.0.0-M41"
   val log4catsVersion = "2.7.0"
 
@@ -22,11 +22,11 @@ object Dependencies {
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "test-internal",
-    "org.mariadb.jdbc" % "mariadb-java-client" % "3.4.0",
+    "org.mariadb.jdbc" % "mariadb-java-client" % "3.4.1",
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "24.7.0",
+    "org.wvlet.airframe" %% "airframe-ulid" % "24.7.1",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.1.8",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
