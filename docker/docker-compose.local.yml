@@ -1,4 +1,3 @@
-version: '3'
 services:
   qualtet_local_db:
     image: ghcr.io/yoshinorin/docker-mariadb:v11.4.2
