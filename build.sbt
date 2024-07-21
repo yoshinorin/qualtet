@@ -4,7 +4,7 @@ import LocalProcesses.*
 
 organization := "net.yoshinorin"
 name := "qualtet"
-version := "v2.13.0"
+version := "v2.14.0"
 scalaVersion := "3.4.2"
 val repository = "https://github.com/yoshinorin/qualtet"
 
