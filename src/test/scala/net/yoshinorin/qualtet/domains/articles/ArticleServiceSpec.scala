@@ -12,28 +12,27 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.ArticleServiceSpec
 class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val sameTagNameRequestContents: List[RequestContent] = {
-    (1 until 15).toList
-      .map(_.toString())
-      .map(i =>
-        RequestContent(
-          contentType = "article",
-          path = Path(s"/test/same/tags/${i}"),
-          title = s"this is a same tag title ${i}",
-          rawContent = s"this is a same tag raw content ${i}",
-          htmlContent = s"this is a html content ${i}",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List("SameTag"),
-          externalResources = List()
-        )
-      )
-  }
-
-  val requestContents = makeRequestContents(30, "articles")
-
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
+    val requestContents = makeRequestContents(30, "articles")
     createContents(requestContents)
+
+    val sameTagNameRequestContents: List[RequestContent] = {
+      (1 until 15).toList
+        .map(_.toString())
+        .map(i =>
+          RequestContent(
+            contentType = "article",
+            path = Path(s"/test/same/tags/${i}"),
+            title = s"this is a same tag title ${i}",
+            rawContent = s"this is a same tag raw content ${i}",
+            htmlContent = s"this is a html content ${i}",
+            robotsAttributes = Attributes("noarchive, noimageindex"),
+            tags = List("SameTag"),
+            externalResources = List()
+          )
+        )
+    }
     createContents(sameTagNameRequestContents)
   }
 

@@ -11,23 +11,22 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.SeriesServiceSpec
 class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestSeries: List[RequestSeries] = List(
-    RequestSeries(
-      title = "Series Service Spec",
-      name = SeriesName("seriesservice-series"),
-      None
-    ),
-    RequestSeries(
-      title = "Series Service Spec2",
-      name = SeriesName("seriesservice-series2"),
-      None
-    )
-  )
-
-  val requestContents = makeRequestContents(5, "SeriesService", Some(requestSeries.head.name))
-
   override protected def beforeAll(): Unit = {
+    val requestSeries: List[RequestSeries] = List(
+      RequestSeries(
+        title = "Series Service Spec",
+        name = SeriesName("seriesservice-series"),
+        None
+      ),
+      RequestSeries(
+        title = "Series Service Spec2",
+        name = SeriesName("seriesservice-series2"),
+        None
+      )
+    )
     createSeries(requestSeries)
+
+    val requestContents = makeRequestContents(5, "SeriesService", Some(requestSeries.head.name))
     createContents(requestContents)
   }
 

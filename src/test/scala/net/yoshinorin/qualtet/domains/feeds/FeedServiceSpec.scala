@@ -10,10 +10,9 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.FeedServiceSpec
 class FeedServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestContents = makeRequestContents(30, "feeds")
-
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
+    val requestContents = makeRequestContents(30, "feeds")
     createContents(requestContents)
   }
 

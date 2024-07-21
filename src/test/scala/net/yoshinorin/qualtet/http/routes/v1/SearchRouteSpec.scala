@@ -19,34 +19,34 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.v1.SearchRouteV1Spec
 class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestContents: List[RequestContent] = {
-    (0 until 49).toList
-      .map(_.toString())
-      .map(i =>
-        RequestContent(
-          contentType = "article",
-          path = Path(s"/test/searchRoute-${i}"),
-          title = s"this is a searchRoute title ${i}",
-          rawContent = s"this is a searchRoute raw content ${i}",
-          htmlContent = s"this is a searchRoute html content ${i}",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(s"searchRoute${i}"),
-          externalResources = List()
-        )
-      ) :+ RequestContent(
-      contentType = "article",
-      path = Path(s"/test/searchServiceLast"),
-      title = s"this is a searchService titleLast",
-      rawContent = s"this is a searchService raw contentLast",
-      htmlContent = s"this is a searchService html contentLast",
-      robotsAttributes = Attributes("noarchive, noimageindex"),
-      tags = List(s"searchServiceLast"),
-      externalResources = List()
-    )
-  }
-
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
+    val requestContents: List[RequestContent] = {
+      (0 until 49).toList
+        .map(_.toString())
+        .map(i =>
+          RequestContent(
+            contentType = "article",
+            path = Path(s"/test/searchRoute-${i}"),
+            title = s"this is a searchRoute title ${i}",
+            rawContent = s"this is a searchRoute raw content ${i}",
+            htmlContent = s"this is a searchRoute html content ${i}",
+            robotsAttributes = Attributes("noarchive, noimageindex"),
+            tags = List(s"searchRoute${i}"),
+            externalResources = List()
+          )
+        ) :+ RequestContent(
+        contentType = "article",
+        path = Path(s"/test/searchServiceLast"),
+        title = s"this is a searchService titleLast",
+        rawContent = s"this is a searchService raw contentLast",
+        htmlContent = s"this is a searchService html contentLast",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = List(s"searchServiceLast"),
+        externalResources = List()
+      )
+    }
+
     createContents(requestContents)
   }
 

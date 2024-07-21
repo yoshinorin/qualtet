@@ -13,70 +13,69 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.search.SearchServiceSpec
 class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestContents: List[RequestContent] = {
-    (0 until 49).toList
-      .map(_.toString())
-      .map(i =>
-        RequestContent(
-          contentType = "article",
-          path = Path(s"/test/searchService-${i}"),
-          title = s"this is a searchService title ${i}",
-          rawContent = s"this is a searchService raw content ${i}",
-          htmlContent = s"this is a searchService html content ${i}",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(s"searchService${i}"),
-          externalResources = List()
-        )
-      ) :+ RequestContent(
-      contentType = "article",
-      path = Path(s"/test/searchServiceLast"),
-      title = s"this is a searchService titleLast",
-      rawContent = s"this is a searchService raw contentLast",
-      htmlContent = s"this is a searchService html contentLast",
-      robotsAttributes = Attributes("noarchive, noimageindex"),
-      tags = List(s"searchServiceLast"),
-      externalResources = List()
-    ) :+ RequestContent(
-      contentType = "article",
-      path = Path(s"/test/searchServiceIncludesUrl1"),
-      title = s"this is a searchService IncludesUrl1",
-      rawContent = s"this is a searchService raw contentIncludesUrl1 https://example.com aaabbbccc",
-      htmlContent = s"this is a searchService html contentIncludesUrl1 https://example.com aaabbbccc",
-      robotsAttributes = Attributes("noarchive, noimageindex"),
-      tags = List(s"IncludesUrl1"),
-      externalResources = List()
-    ) :+ RequestContent(
-      contentType = "article",
-      path = Path(s"/test/searchServiceIncludesUrl2"),
-      title = s"this is a searchService IncludesUrl2",
-      rawContent = s"this is a searchService raw contentIncludesUrl2 http://example.com aaabbbccc",
-      htmlContent = s"this is a searchService html contentIncludesUrl2 http://example.com aaabbbccc",
-      robotsAttributes = Attributes("noarchive, noimageindex"),
-      tags = List(s"IncludesUrl2"),
-      externalResources = List()
-    ) :+ RequestContent(
-      contentType = "article",
-      path = Path(s"/test/searchServiceIncludesWrongUrl"),
-      title = s"this is a searchService IncludesWrongUrl1",
-      rawContent = s"this is a searchService raw contentIncludesWrongUrl1 htt://example.com aaabbbccc",
-      htmlContent = s"this is a searchService html contentIncludesWrongUrl1 htt://example.com aaabbbccc",
-      robotsAttributes = Attributes("noarchive, noimageindex"),
-      tags = List(s"IncludesWrongUrl1"),
-      externalResources = List()
-    ) :+ RequestContent(
-      contentType = "article",
-      path = Path(s"/test/searchServiceIncludesHttpString"),
-      title = s"this is a searchService IncludesHttpString",
-      rawContent = s"this is a searchService raw contentIncludesHttp String http://example.com aaabbbccc http",
-      htmlContent = s"this is a searchService html contentIncludesHttp String http://example.com aaabbbccc http",
-      robotsAttributes = Attributes("noarchive, noimageindex"),
-      tags = List(s"IncludesHttpString"),
-      externalResources = List()
-    )
-  }
-
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
+    val requestContents: List[RequestContent] = {
+      (0 until 49).toList
+        .map(_.toString())
+        .map(i =>
+          RequestContent(
+            contentType = "article",
+            path = Path(s"/test/searchService-${i}"),
+            title = s"this is a searchService title ${i}",
+            rawContent = s"this is a searchService raw content ${i}",
+            htmlContent = s"this is a searchService html content ${i}",
+            robotsAttributes = Attributes("noarchive, noimageindex"),
+            tags = List(s"searchService${i}"),
+            externalResources = List()
+          )
+        ) :+ RequestContent(
+        contentType = "article",
+        path = Path(s"/test/searchServiceLast"),
+        title = s"this is a searchService titleLast",
+        rawContent = s"this is a searchService raw contentLast",
+        htmlContent = s"this is a searchService html contentLast",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = List(s"searchServiceLast"),
+        externalResources = List()
+      ) :+ RequestContent(
+        contentType = "article",
+        path = Path(s"/test/searchServiceIncludesUrl1"),
+        title = s"this is a searchService IncludesUrl1",
+        rawContent = s"this is a searchService raw contentIncludesUrl1 https://example.com aaabbbccc",
+        htmlContent = s"this is a searchService html contentIncludesUrl1 https://example.com aaabbbccc",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = List(s"IncludesUrl1"),
+        externalResources = List()
+      ) :+ RequestContent(
+        contentType = "article",
+        path = Path(s"/test/searchServiceIncludesUrl2"),
+        title = s"this is a searchService IncludesUrl2",
+        rawContent = s"this is a searchService raw contentIncludesUrl2 http://example.com aaabbbccc",
+        htmlContent = s"this is a searchService html contentIncludesUrl2 http://example.com aaabbbccc",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = List(s"IncludesUrl2"),
+        externalResources = List()
+      ) :+ RequestContent(
+        contentType = "article",
+        path = Path(s"/test/searchServiceIncludesWrongUrl"),
+        title = s"this is a searchService IncludesWrongUrl1",
+        rawContent = s"this is a searchService raw contentIncludesWrongUrl1 htt://example.com aaabbbccc",
+        htmlContent = s"this is a searchService html contentIncludesWrongUrl1 htt://example.com aaabbbccc",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = List(s"IncludesWrongUrl1"),
+        externalResources = List()
+      ) :+ RequestContent(
+        contentType = "article",
+        path = Path(s"/test/searchServiceIncludesHttpString"),
+        title = s"this is a searchService IncludesHttpString",
+        rawContent = s"this is a searchService raw contentIncludesHttp String http://example.com aaabbbccc http",
+        htmlContent = s"this is a searchService html contentIncludesHttp String http://example.com aaabbbccc http",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = List(s"IncludesHttpString"),
+        externalResources = List()
+      )
+    }
     createContents(requestContents)
   }
 

@@ -14,25 +14,24 @@ class ContentTaggingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
 
-  val requestContents: List[RequestContent] = {
-    List(1, 2)
-      .map(_.toString())
-      .map(i =>
-        RequestContent(
-          contentType = "article",
-          path = Path(s"/test/ContentTaggingServiceSpec-${i}"),
-          title = s"this is a ContentTaggingServiceSpec title ${i}",
-          rawContent = s"this is a ContentTaggingServiceSpec raw content ${i}",
-          htmlContent = s"this is a ContentTaggingServiceSpec html content ${i}",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(s"ContentTaggingServiceSpec${i}.1", s"ContentTaggingServiceSpec${i}.2", s"ContentTaggingServiceSpec${i}.3"),
-          externalResources = List()
-        )
-      )
-  }
-
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
+    val requestContents: List[RequestContent] = {
+      List(1, 2)
+        .map(_.toString())
+        .map(i =>
+          RequestContent(
+            contentType = "article",
+            path = Path(s"/test/ContentTaggingServiceSpec-${i}"),
+            title = s"this is a ContentTaggingServiceSpec title ${i}",
+            rawContent = s"this is a ContentTaggingServiceSpec raw content ${i}",
+            htmlContent = s"this is a ContentTaggingServiceSpec html content ${i}",
+            robotsAttributes = Attributes("noarchive, noimageindex"),
+            tags = List(s"ContentTaggingServiceSpec${i}.1", s"ContentTaggingServiceSpec${i}.2", s"ContentTaggingServiceSpec${i}.3"),
+            externalResources = List()
+          )
+        )
+    }
     createContents(requestContents)
   }
 

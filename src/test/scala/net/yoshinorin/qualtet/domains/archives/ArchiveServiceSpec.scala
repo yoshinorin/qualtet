@@ -8,10 +8,9 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.ArchiveServiceSpec
 class ArchiveServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestContents = makeRequestContents(40, "archives")
-
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
+    val requestContents = makeRequestContents(40, "archives")
     createContents(requestContents)
   }
 

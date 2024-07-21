@@ -14,10 +14,9 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
 
-  val requestContents = makeRequestContents(10, "tagService")
-
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
+    val requestContents = makeRequestContents(10, "tagService")
     createContents(requestContents)
   }
 
