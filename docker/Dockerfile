@@ -21,7 +21,7 @@ RUN sh commit-hash.sh \
 
 # Runtime image
 # NOTE: need jdk image for inspect heapdump (e.g: need jstat etc)
-FROM eclipse-temurin:21.0.2_13-jdk-jammy
+FROM eclipse-temurin:21.0.4_7-jdk-noble
 
 WORKDIR /usr/opt/qualtet
 
