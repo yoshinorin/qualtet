@@ -35,4 +35,4 @@ properties:
         example: "3.4.2"
       sbtVersion:
         type: string
-        example: "1.10.0"
+        example: "1.10.1"
