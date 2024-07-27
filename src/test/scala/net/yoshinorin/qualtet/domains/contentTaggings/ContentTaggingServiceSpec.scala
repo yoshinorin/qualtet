@@ -43,7 +43,7 @@ class ContentTaggingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       val contents = contentService.findByPathWithMeta(Path("/test/ContentTaggingServiceSpec-1")).unsafeRunSync().get
       val shouledDeleteContentTaggings = (contents1.id, Seq(contents.tags.head.id, contents.tags.last.id))
 
-      doobieExecuterContext.transact(contentTaggingService.bulkDeleteActions(shouledDeleteContentTaggings)).unsafeRunSync()
+      doobieExecuterContext.transact(contentTaggingService.bulkDeleteCont(shouledDeleteContentTaggings)).unsafeRunSync()
       val result = contentService.findByPathWithMeta(Path("/test/ContentTaggingServiceSpec-1")).unsafeRunSync().get
 
       assert(result.tags.size === 1)
@@ -52,7 +52,7 @@ class ContentTaggingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "not be delete any tag" in {
       val beforeDelete = contentService.findByPath(Path("/test/ContentTaggingServiceSpec-2")).unsafeRunSync().get
-      doobieExecuterContext.transact(contentTaggingService.bulkDeleteActions(beforeDelete.id, Seq())).unsafeRunSync()
+      doobieExecuterContext.transact(contentTaggingService.bulkDeleteCont(beforeDelete.id, Seq())).unsafeRunSync()
       val afterDelete = contentService.findByPathWithMeta(Path("/test/ContentTaggingServiceSpec-2")).unsafeRunSync().get
 
       assert(afterDelete.tags.size === 3)

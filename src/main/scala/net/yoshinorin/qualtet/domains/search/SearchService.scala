@@ -18,7 +18,7 @@ class SearchService[F[_]: Monad](
   searchRepository: SearchRepository[F]
 )(using executer: Executer[F, IO]) {
 
-  def actions(query: List[String]): ContT[F, Seq[(Int, ResponseSearch)], Seq[(Int, ResponseSearch)]] = {
+  def cont(query: List[String]): ContT[F, Seq[(Int, ResponseSearch)], Seq[(Int, ResponseSearch)]] = {
     ContT.apply[F, Seq[(Int, ResponseSearch)], Seq[(Int, ResponseSearch)]] { next =>
       searchRepository.search(query)
     }
@@ -115,7 +115,7 @@ class SearchService[F[_]: Monad](
       _ <- IO(if (accErrors.nonEmpty) {
         throw new UnprocessableEntity(detail = "Invalid search conditions. Please see error details.", errors = Some(accErrors))
       })
-      searchResult <- executer.transact(actions(queryStrings))
+      searchResult <- executer.transact(cont(queryStrings))
     } yield
       if (searchResult.nonEmpty) {
         val r = searchResult.map { x =>

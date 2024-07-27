@@ -14,13 +14,13 @@ class SeriesService[F[_]: Monad](
   articleService: ArticleService[F]
 )(using executer: Executer[F, IO]) {
 
-  def upsertActions(data: Series): ContT[F, Int, Int] = {
+  def upsertCont(data: Series): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       seriesRepository.upsert(data)
     }
   }
 
-  def findByNameActions(name: SeriesName): ContT[F, Option[Series], Option[Series]] = {
+  def findByNameCont(name: SeriesName): ContT[F, Option[Series], Option[Series]] = {
     ContT.apply[F, Option[Series], Option[Series]] { next =>
       seriesRepository.findByName(name)
     }
@@ -42,8 +42,8 @@ class SeriesService[F[_]: Monad](
     this
       .findByName(data.name)
       .flatMap {
-        case Some(s: Series) => executer.transact(upsertActions(Series(s.id, s.name, data.title, data.description)))
-        case None => executer.transact(upsertActions(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.title, data.description)))
+        case Some(s: Series) => executer.transact(upsertCont(Series(s.id, s.name, data.title, data.description)))
+        case None => executer.transact(upsertCont(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.title, data.description)))
       }
       .flatMap { s =>
         this.findByName(data.name).throwIfNone(NotFound(detail = "series not found"))
@@ -57,12 +57,12 @@ class SeriesService[F[_]: Monad](
    * @return Series Instance
    */
   def findByName(name: SeriesName): IO[Option[Series]] = {
-    executer.transact(findByNameActions(name))
+    executer.transact(findByNameCont(name))
   }
 
   def get(name: SeriesName): IO[ResponseSeries] = {
     for {
-      series <- executer.transact(findByNameActions(name)).throwIfNone(NotFound(detail = s"series not found: ${name.value}"))
+      series <- executer.transact(findByNameCont(name)).throwIfNone(NotFound(detail = s"series not found: ${name.value}"))
       seriesWithArticles <- articleService.getBySeriesName(series.name)
     } yield {
       ResponseSeries(series.id, series.name, series.title, series.description, seriesWithArticles.articles)

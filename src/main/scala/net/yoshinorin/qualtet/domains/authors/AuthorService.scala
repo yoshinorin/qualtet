@@ -11,7 +11,7 @@ class AuthorService[F[_]: Monad](
   authorRepository: AuthorRepository[F]
 )(using executer: Executer[F, IO]) {
 
-  def upsertActions(data: Author): ContT[F, Int, Int] = {
+  def upsertCont(data: Author): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       authorRepository.upsert(data)
     }
@@ -23,19 +23,19 @@ class AuthorService[F[_]: Monad](
     }
   }
 
-  def findByIdActions(id: AuthorId): ContT[F, Option[ResponseAuthor], Option[ResponseAuthor]] = {
+  def findByIdCont(id: AuthorId): ContT[F, Option[ResponseAuthor], Option[ResponseAuthor]] = {
     ContT.apply[F, Option[ResponseAuthor], Option[ResponseAuthor]] { next =>
       authorRepository.findById(id)
     }
   }
 
-  def findByIdWithPasswordActions(id: AuthorId): ContT[F, Option[Author], Option[Author]] = {
+  def findByIdWithPasswordCont(id: AuthorId): ContT[F, Option[Author], Option[Author]] = {
     ContT.apply[F, Option[Author], Option[Author]] { next =>
       authorRepository.findByIdWithPassword(id)
     }
   }
 
-  def findByNameActions(name: AuthorName): ContT[F, Option[ResponseAuthor], Option[ResponseAuthor]] = {
+  def findByNameCont(name: AuthorName): ContT[F, Option[ResponseAuthor], Option[ResponseAuthor]] = {
     ContT.apply[F, Option[ResponseAuthor], Option[ResponseAuthor]] { next =>
       authorRepository.findByName(name)
     }
@@ -49,7 +49,7 @@ class AuthorService[F[_]: Monad](
    */
   def create(data: Author): IO[ResponseAuthor] = {
     for {
-      _ <- executer.transact(upsertActions(data))
+      _ <- executer.transact(upsertCont(data))
       a <- this.findByName(data.name).throwIfNone(InternalServerError("user not found"))
     } yield a
   }
@@ -70,7 +70,7 @@ class AuthorService[F[_]: Monad](
    * @return Author
    */
   def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
-    executer.transact(findByIdActions(id))
+    executer.transact(findByIdCont(id))
   }
 
   /**
@@ -80,7 +80,7 @@ class AuthorService[F[_]: Monad](
    * @return Author
    */
   def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
-    executer.transact(findByIdWithPasswordActions(id))
+    executer.transact(findByIdWithPasswordCont(id))
   }
 
   /**
@@ -90,7 +90,7 @@ class AuthorService[F[_]: Monad](
    * @return Author
    */
   def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
-    executer.transact(findByNameActions(name))
+    executer.transact(findByNameCont(name))
   }
 
 }

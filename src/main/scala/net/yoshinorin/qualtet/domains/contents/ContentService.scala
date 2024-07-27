@@ -30,31 +30,31 @@ class ContentService[F[_]: Monad](
   executer: Executer[F, IO]
 ) {
 
-  def upsertActions(data: Content): ContT[F, Int, Int] = {
+  def upsertCont(data: Content): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       contentRepository.upsert(data)
     }
   }
 
-  def deleteActions(id: ContentId): ContT[F, Unit, Unit] = {
+  def deleteCont(id: ContentId): ContT[F, Unit, Unit] = {
     ContT.apply[F, Unit, Unit] { next =>
       contentRepository.delete(id)
     }
   }
 
-  def findByIdActions(id: ContentId): ContT[F, Option[Content], Option[Content]] = {
+  def findByIdCont(id: ContentId): ContT[F, Option[Content], Option[Content]] = {
     ContT.apply[F, Option[Content], Option[Content]] { next =>
       contentRepository.findById(id)
     }
   }
 
-  def findByPathActions(path: Path): ContT[F, Option[Content], Option[Content]] = {
+  def findByPathCont(path: Path): ContT[F, Option[Content], Option[Content]] = {
     ContT.apply[F, Option[Content], Option[Content]] { next =>
       contentRepository.findByPath(path)
     }
   }
 
-  def findByPathWithMetaActions(path: Path): ContT[F, Option[ReadContentDbRow], Option[ReadContentDbRow]] = {
+  def findByPathWithMetaCont(path: Path): ContT[F, Option[ReadContentDbRow], Option[ReadContentDbRow]] = {
     ContT.apply[F, Option[ReadContentDbRow], Option[ReadContentDbRow]] { next =>
       contentRepository.findByPathWithMeta(path)
     }
@@ -132,16 +132,16 @@ class ContentService[F[_]: Monad](
     val maybeExternalResources = externalResources.flatMap(a => a.values.map(v => ExternalResource(data.id, a.kind, v)))
 
     val queries = for {
-      contentUpsert <- executer.perform(upsertActions(data))
-      robotsUpsert <- executer.perform(robotsService.upsertActions(Robots(data.id, robotsAttributes)))
-      currentTags <- executer.perform(tagService.findByContentIdActions(data.id))
-      tagsDiffDelete <- executer.perform(contentTaggingService.bulkDeleteActions(data.id, currentTags.map(_.id).diff(tags.getOrElse(List()).map(t => t.id))))
-      tagsBulkUpsert <- executer.perform(tagService.bulkUpsertActions(tags))
+      contentUpsert <- executer.perform(upsertCont(data))
+      robotsUpsert <- executer.perform(robotsService.upsertCont(Robots(data.id, robotsAttributes)))
+      currentTags <- executer.perform(tagService.findByContentIdCont(data.id))
+      tagsDiffDelete <- executer.perform(contentTaggingService.bulkDeleteCont(data.id, currentTags.map(_.id).diff(tags.getOrElse(List()).map(t => t.id))))
+      tagsBulkUpsert <- executer.perform(tagService.bulkUpsertCont(tags))
       // TODO: check diff and clean up contentTagging before upsert
-      contentTaggingBulkUpsert <- executer.perform(contentTaggingService.bulkUpsertActions(contentTagging))
-      contentSerializingUpsert <- executer.perform(contentSerializingService.upsertActions(contentSerializing))
+      contentTaggingBulkUpsert <- executer.perform(contentTaggingService.bulkUpsertCont(contentTagging))
+      contentSerializingUpsert <- executer.perform(contentSerializingService.upsertCont(contentSerializing))
       // TODO: check diff and clean up external_resources before upsert
-      externalResourceBulkUpsert <- executer.perform(externalResourceService.bulkUpsertActions(maybeExternalResources))
+      externalResourceBulkUpsert <- executer.perform(externalResourceService.bulkUpsertCont(maybeExternalResources))
     } yield (
       contentUpsert,
       currentTags,
@@ -168,11 +168,11 @@ class ContentService[F[_]: Monad](
   def delete(id: ContentId): IO[Unit] = {
 
     val queries = for {
-      externalResourcesDelete <- executer.perform(externalResourceService.deleteActions(id))
+      externalResourcesDelete <- executer.perform(externalResourceService.deleteCont(id))
       // TODO: Tags should be deleted automatically after delete a content which are not refer from other contents.
-      contentTaggingDelete <- executer.perform(contentTaggingService.deleteByContentIdActions(id))
-      robotsDelete <- executer.perform(robotsService.deleteActions(id))
-      contentDelete <- executer.perform(deleteActions(id))
+      contentTaggingDelete <- executer.perform(contentTaggingService.deleteByContentIdCont(id))
+      robotsDelete <- executer.perform(robotsService.deleteCont(id))
+      contentDelete <- executer.perform(deleteCont(id))
     } yield (
       externalResourcesDelete,
       contentTaggingDelete,
@@ -193,7 +193,7 @@ class ContentService[F[_]: Monad](
    * @return ResponseContent instance
    */
   def findByPath(path: Path): IO[Option[Content]] = {
-    executer.transact(findByPathActions(path))
+    executer.transact(findByPathCont(path))
   }
 
   /**
@@ -203,7 +203,7 @@ class ContentService[F[_]: Monad](
    * @return ResponseContent instance
    */
   def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
-    this.findBy(path)(findByPathWithMetaActions)
+    this.findBy(path)(findByPathWithMetaCont)
   }
 
   /**
@@ -213,7 +213,7 @@ class ContentService[F[_]: Monad](
    * @return ResponseContent instance
    */
   def findById(id: ContentId): IO[Option[Content]] = {
-    executer.transact(findByIdActions(id))
+    executer.transact(findByIdCont(id))
   }
 
   def findBy[A](data: A)(f: A => ContT[F, Option[ReadContentDbRow], Option[ReadContentDbRow]]): IO[Option[ResponseContent]] = {

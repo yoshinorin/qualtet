@@ -15,7 +15,7 @@ class ContentTypeService[F[_]: Monad](
 )(using executer: Executer[F, IO])
     extends Cacheable {
 
-  def upsertActions(data: ContentType): ContT[F, Int, Int] = {
+  def upsertCont(data: ContentType): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       contentRepository.upsert(data)
     }
@@ -38,7 +38,7 @@ class ContentTypeService[F[_]: Monad](
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
-          _ <- executer.transact(upsertActions(data))
+          _ <- executer.transact(upsertCont(data))
           c <- this.findByName(data.name).throwIfNone(InternalServerError("contentType not found"))
         } yield c
     }
@@ -53,7 +53,7 @@ class ContentTypeService[F[_]: Monad](
    */
   def findByName(name: String): IO[Option[ContentType]] = {
 
-    def actions(name: String): ContT[F, Option[ContentType], Option[ContentType]] = {
+    def cont(name: String): ContT[F, Option[ContentType], Option[ContentType]] = {
       ContT.apply[F, Option[ContentType], Option[ContentType]] { next =>
         contentRepository.findByName(name)
       }
@@ -61,7 +61,7 @@ class ContentTypeService[F[_]: Monad](
 
     def fromDB(name: String): IO[Option[ContentType]] = {
       for {
-        x <- executer.transact(actions(name))
+        x <- executer.transact(cont(name))
       } yield (x, cache.put(name, x))._1
     }
 

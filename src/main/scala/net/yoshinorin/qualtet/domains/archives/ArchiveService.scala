@@ -14,7 +14,7 @@ class ArchiveService[F[_]: Monad](
   contentTypeService: ContentTypeService[F]
 )(using executer: Executer[F, IO]) {
 
-  def actions(contentTypeId: ContentTypeId): ContT[F, Seq[ResponseArchive], Seq[ResponseArchive]] = {
+  def cont(contentTypeId: ContentTypeId): ContT[F, Seq[ResponseArchive], Seq[ResponseArchive]] = {
     ContT.apply[F, Seq[ResponseArchive], Seq[ResponseArchive]] { next =>
       archiveRepository.get(contentTypeId)
     }
@@ -23,7 +23,7 @@ class ArchiveService[F[_]: Monad](
   def get: IO[Seq[ResponseArchive]] = {
     for {
       c <- contentTypeService.findByName("article").throwIfNone(NotFound(detail = "content-type not found: article"))
-      articles <- executer.transact(actions(c.id))
+      articles <- executer.transact(cont(c.id))
     } yield articles
   }
 

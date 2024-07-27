@@ -15,7 +15,7 @@ class TagService[F[_]: Monad](
   contentTaggingService: ContentTaggingService[F]
 )(using executer: Executer[F, IO]) {
 
-  def bulkUpsertActions(data: Option[List[Tag]]): ContT[F, Int, Int] = {
+  def bulkUpsertCont(data: Option[List[Tag]]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       data match {
         case Some(d) => tagRepository.bulkUpsert(d)
@@ -30,25 +30,25 @@ class TagService[F[_]: Monad](
     }
   }
 
-  def findByIdActions(id: TagId): ContT[F, Option[Tag], Option[Tag]] = {
+  def findByIdCont(id: TagId): ContT[F, Option[Tag], Option[Tag]] = {
     ContT.apply[F, Option[Tag], Option[Tag]] { next =>
       tagRepository.findById(id)
     }
   }
 
-  def findByNameActions(tagName: TagName): ContT[F, Option[Tag], Option[Tag]] = {
+  def findByNameCont(tagName: TagName): ContT[F, Option[Tag], Option[Tag]] = {
     ContT.apply[F, Option[Tag], Option[Tag]] { next =>
       tagRepository.findByName(tagName)
     }
   }
 
-  def findByContentIdActions(contenId: ContentId): ContT[F, Seq[Tag], Seq[Tag]] = {
+  def findByContentIdCont(contenId: ContentId): ContT[F, Seq[Tag], Seq[Tag]] = {
     ContT.apply[F, Seq[Tag], Seq[Tag]] { next =>
       tagRepository.findByContentId(contenId)
     }
   }
 
-  def deleteActions(id: TagId): ContT[F, Unit, Unit] = {
+  def deleteCont(id: TagId): ContT[F, Unit, Unit] = {
     ContT.apply[F, Unit, Unit] { next =>
       tagRepository.delete(id)
     }
@@ -70,7 +70,7 @@ class TagService[F[_]: Monad](
    * @return maybe Tag
    */
   def findById(id: TagId): IO[Option[Tag]] = {
-    executer.transact(findByIdActions(id))
+    executer.transact(findByIdCont(id))
   }
 
   /**
@@ -80,7 +80,7 @@ class TagService[F[_]: Monad](
    * @return maybe Tag
    */
   def findByName(tagName: TagName): IO[Option[Tag]] = {
-    executer.transact(findByNameActions(tagName))
+    executer.transact(findByNameCont(tagName))
   }
 
   /**
@@ -116,8 +116,8 @@ class TagService[F[_]: Monad](
    */
   def delete(id: TagId): IO[Unit] = {
     val queries = for {
-      contentTaggingDelete <- executer.perform(contentTaggingService.deleteByTagIdActions(id))
-      tagDelete <- executer.perform(deleteActions(id))
+      contentTaggingDelete <- executer.perform(contentTaggingService.deleteByTagIdCont(id))
+      tagDelete <- executer.perform(deleteCont(id))
     } yield (contentTaggingDelete, tagDelete)
 
     for {

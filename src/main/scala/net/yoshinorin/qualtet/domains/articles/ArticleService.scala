@@ -16,7 +16,7 @@ class ArticleService[F[_]: Monad](
   contentTypeService: ContentTypeService[F]
 )(using executer: Executer[F, IO]) {
 
-  def actions(
+  def cont(
     contentTypeId: ContentTypeId,
     none: Unit = (),
     queryParams: ArticlesQueryParameter
@@ -26,7 +26,7 @@ class ArticleService[F[_]: Monad](
     }
   }
 
-  def tagActions(
+  def tagCont(
     contentTypeId: ContentTypeId,
     tagName: TagName,
     queryParams: ArticlesQueryParameter
@@ -36,7 +36,7 @@ class ArticleService[F[_]: Monad](
     }
   }
 
-  def seriesActions(
+  def seriesCont(
     contentTypeId: ContentTypeId,
     seriesName: SeriesName,
     queryParams: ArticlesQueryParameter // TODO: `Optional`
@@ -62,15 +62,15 @@ class ArticleService[F[_]: Monad](
   }
 
   def getWithCount(queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
-    this.get(queryParam = queryParam)(actions)
+    this.get(queryParam = queryParam)(cont)
   }
 
   def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
-    this.get(tagName, queryParam)(tagActions)
+    this.get(tagName, queryParam)(tagCont)
   }
 
   def getBySeriesName(seriesName: SeriesName): IO[ResponseArticleWithCount] = {
-    this.get(seriesName, ArticlesQueryParameter(0, 100))(seriesActions)
+    this.get(seriesName, ArticlesQueryParameter(0, 100))(seriesCont)
   }
 
 }
