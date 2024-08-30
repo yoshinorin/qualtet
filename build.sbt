@@ -14,7 +14,7 @@ scalacOptions ++= Seq(
   "-deprecation",
   "-feature",
   "-unchecked",
-  "-Ykind-projector",
+  "-Xkind-projector",
   "-Wvalue-discard",
   "-Wunused:implicits",
   "-Wunused:explicits",
