@@ -21,8 +21,7 @@ scalacOptions ++= Seq(
   "-Wunused:imports",
   "-Wunused:locals",
   "-Wunused:params",
-  "-Wunused:privates",
-  "-rewrite -source 3.4-migration"
+  "-Wunused:privates"
 )
 
 // https://github.com/rtimush/sbt-updates
