@@ -5,7 +5,6 @@ import cats.Monad
 import cats.data.{Kleisli, OptionT}
 import org.http4s.server.AuthMiddleware
 import org.http4s.{AuthedRoutes, Request, Response, Status}
-import org.http4s.dsl.io.*
 import org.http4s.headers.Authorization
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
