@@ -26,14 +26,12 @@ final case class JwtClaim(
 )
 
 object JwtClaim {
-  // TODO: use `given`
-  // given codecJwtClaim: JsonValueCodec[JwtClaim] = JsonCodecMaker.make
-  implicit val codecJwtClaim: JsonValueCodec[JwtClaim] = JsonCodecMaker.make
+  given codecJwtClaim: JsonValueCodec[JwtClaim] = JsonCodecMaker.make
 }
 
 class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signature) {
 
-  import JwtClaim.*
+  import JwtClaim.codecJwtClaim
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
