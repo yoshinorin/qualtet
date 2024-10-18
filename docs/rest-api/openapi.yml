@@ -65,7 +65,7 @@ paths:
   /v1/contents/{contentPath}:
     $ref: './paths/v1/contents/getByPath.yml'
   /v1/contents:
-    $ref: './paths/v1/contents/post.yml'
+    $ref: './paths/v1/contents/upsert.yml'
   /v1/contents/{contentId}:
     $ref: './paths/v1/contents/deleteById.yml'
   /v1/tags:
