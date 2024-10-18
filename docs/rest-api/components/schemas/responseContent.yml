@@ -48,3 +48,17 @@ properties:
     type: long
     description: Unix time
     example: 1627095819
+required:
+  - id
+  - authorId
+  - contentTypeId
+  - title
+  - robotsAttributes
+  - externalResources
+  - tags
+  - description
+  - content
+  - length
+  - authorName
+  - publishedAt
+  - updatedAt

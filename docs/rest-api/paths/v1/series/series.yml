@@ -53,5 +53,11 @@ post:
               instance:
                 type: string
                 example: "/v1/series/"
+            required:
+              - type
+              - title
+              - status
+              - detail
+              - instance
     401:
       description: Unauthorized

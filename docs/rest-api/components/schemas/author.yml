@@ -14,3 +14,8 @@ properties:
     type: long
     description: Unix time
     example: 1625065318
+required:
+  - id
+  - name
+  - displayName
+  - createdAt

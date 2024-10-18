@@ -29,3 +29,6 @@ get:
                 type: array
                 items:
                   $ref: '../../components/schemas/article.yml'
+            required:
+              - count
+              - articles

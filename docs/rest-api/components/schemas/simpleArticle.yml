@@ -11,3 +11,7 @@ properties:
     type: long
     description: Unix time
     example: 1625065318
+required:
+  - path
+  - title
+  - publishedAt

@@ -33,3 +33,10 @@ get:
               instance:
                 type: string
                 example: "/v1/series/{seriesName}"
+            required:
+              - type
+              - title
+              - status
+              - detail
+              - instance
+

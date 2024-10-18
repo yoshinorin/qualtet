@@ -40,5 +40,12 @@ post:
               instance:
                 type: string
                 example: "/v1/token"
+            required:
+              - type
+              - title
+              - status
+              - detail
+              - instance
+
     401:
       description: Unauthorized

@@ -6,3 +6,6 @@ properties:
   values:
     type: array
     example: "['mathjax','marmaid']"
+required:
+  - kind
+  - values

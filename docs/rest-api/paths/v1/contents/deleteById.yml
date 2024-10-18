@@ -31,3 +31,10 @@ delete:
               instance:
                 type: string
                 example: "/v1/contents/{contentId}"
+            required:
+              - type
+              - title
+              - status
+              - detail
+              - instance
+

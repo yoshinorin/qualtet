@@ -7,3 +7,6 @@ properties:
   name:
     type: string
     example: "diary"
+required:
+  - id
+  - name

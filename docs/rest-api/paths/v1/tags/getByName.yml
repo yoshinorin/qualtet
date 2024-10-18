@@ -32,3 +32,10 @@ get:
               instance:
                 type: string
                 example: "/v1/tags/{tagName}"
+            required:
+              - type
+              - title
+              - status
+              - detail
+              - instance
+

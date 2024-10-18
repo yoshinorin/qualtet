@@ -6,3 +6,6 @@ properties:
   message:
     type: string
     example: "Search query required."
+required:
+  - code
+  - message

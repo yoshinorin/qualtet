@@ -16,3 +16,5 @@ get:
               status:
                 type: string
                 example: operational
+            required:
+              - status

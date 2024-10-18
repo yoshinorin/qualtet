@@ -31,3 +31,10 @@ delete:
               instance:
                 type: string
                 example: "/v1/tags/{tagId}"
+            required:
+              - type
+              - title
+              - status
+              - detail
+              - instance
+

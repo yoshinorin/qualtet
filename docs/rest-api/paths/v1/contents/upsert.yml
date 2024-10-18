@@ -40,6 +40,13 @@ post:
               instance:
                 type: string
                 example: "/v1/contents/"
+            required:
+              - type
+              - title
+              - status
+              - detail
+              - instance
+
     401:
       description: Unauthorized
     422:
@@ -67,3 +74,10 @@ post:
               instance:
                 type: string
                 example: "/v1/contents"
+            required:
+              - type
+              - title
+              - status
+              - detail
+              - instance
+

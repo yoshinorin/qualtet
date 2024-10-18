@@ -31,3 +31,9 @@ get:
               instance:
                 type: string
                 example: "/v1/system/metadata"
+            required:
+              - type
+              - title
+              - status
+              - detail
+              - instance

@@ -21,6 +21,10 @@ properties:
       version:
         type: string
         example: "17.0.5"
+    required:
+      - runtime
+      - vendor
+      - version
   build:
     type: object
     properties:
@@ -36,3 +40,14 @@ properties:
       sbtVersion:
         type: string
         example: "1.10.1"
+    required:
+      - commit
+      - url
+      - scalaVersion
+      - sbtVersion
+required:
+  - name
+  - version
+  - repository
+  - runtime
+  - build

@@ -11,3 +11,7 @@ properties:
     description: number of related articles
     type: number
     example: 28
+required:
+  - id
+  - name
+  - count

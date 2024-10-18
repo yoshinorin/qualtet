@@ -6,3 +6,6 @@ properties:
   lastMod:
     type: string
     example: "YYYY-MM-DD"
+required:
+  - loc
+  - lastMod

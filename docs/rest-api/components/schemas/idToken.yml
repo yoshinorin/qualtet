@@ -3,3 +3,5 @@ properties:
   token:
     type: string
     example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3Mi...."
+required:
+  - token
