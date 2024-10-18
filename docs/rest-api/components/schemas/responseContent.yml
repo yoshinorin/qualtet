@@ -38,7 +38,7 @@ properties:
     example: 1252
   authorName:
     type: string
-    description: "This field return from `authors.display_name` coloumn value."
+    description: "This field return from `authors.display_name` column value."
     example: "Jhon Due"
   publishedAt:
     type: long
