@@ -99,12 +99,14 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    /*
-     TODO: Why do these tests are returns 404?
     "return specific tag contents with query params" in {
       client
-        // .run(Request(method = Method.GET, uri = new Uri().withPath(s"/tags/${t(1).name.value}?page=1&limit=10")))
-        .run(Request(method = Method.GET, uri = host.withPath("/tags/tagRoute-0?page=1&limit=10")))
+        .run(
+          Request(
+            method = Method.GET,
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${t(0).name.value}")).withQueryParam("page", "1").withQueryParam("limit", "10")
+          )
+        )
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -117,18 +119,21 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
     "return 10 specific tag contents with query params" in {
       client
-        // .run(Request(method = Method.GET, uri = new Uri().withPath(s"/tags/${t(0).name.value}?page=1&limit=50")))
-        .run(Request(method = Method.GET, uri = host.withPath(s"/tags/tagRoute-0?page=1&limit=50")))
+        .run(
+          Request(
+            method = Method.GET,
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${t(1).name.value}")).withQueryParam("page", "1").withQueryParam("limit", "50")
+          )
+        )
         .use { response =>
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("/test/tagRoute-0"))
+            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("/test/tagRoute-1"))
           }
         }
         .unsafeRunSync()
     }
-     */
 
     "return 404" in {
       client
