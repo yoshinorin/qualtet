@@ -10,14 +10,14 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../../components/schemas/requestContent.yml'
+          $ref: '../../../components/schemas/request/content.yml'
   responses:
     201:
       description: Create or Update succeeded
       content:
         application/json:
           schema:
-            $ref: '../../../components/schemas/responseContent.yml'
+            $ref: '../../../components/schemas/response/content.yml'
     400:
       description: BadRequest
       content:

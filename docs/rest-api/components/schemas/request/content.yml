@@ -9,7 +9,7 @@ properties:
   externalResources:
     type: array
     items:
-      $ref: './externalResource.yml'
+      $ref: '../common/externalResource.yml'
   title:
     type: string
     example: "Post Title"

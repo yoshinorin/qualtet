@@ -9,7 +9,7 @@ get:
         application/json:
           schema:
             type: object
-            $ref: '../../components/schemas/author.yml'
+            $ref: '../../components/schemas/response/author.yml'
     404:
       description: Author not found
       content:

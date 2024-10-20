@@ -10,7 +10,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../../components/schemas/series.yml'
+              $ref: '../../../components/schemas/response/series.yml'
 post:
   summary: Create or Update a series
   tags:
@@ -23,14 +23,14 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../../components/schemas/requestSeries.yml'
+          $ref: '../../../components/schemas/request/series.yml'
   responses:
     201:
       description: Create or Update succeeded
       content:
         application/json:
           schema:
-            $ref: '../../../components/schemas/series.yml'
+            $ref: '../../../components/schemas/response/series.yml'
     400:
       description: BadRequest
       content:

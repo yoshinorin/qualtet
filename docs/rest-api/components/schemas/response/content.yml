@@ -22,11 +22,11 @@ properties:
   externalResources:
     type: array
     items:
-      $ref: './externalResource.yml'
+      $ref: '../common/externalResource.yml'
   tags:
     type: array
     items:
-      $ref: './tag.yml'
+      $ref: '../common/tag.yml'
   description:
     type: string
     example: "Post description... not HTML strings"

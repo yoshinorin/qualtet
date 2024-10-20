@@ -23,7 +23,7 @@ get:
               contents:
                 type: array
                 items:
-                  $ref: '../../components/schemas/responseSearch.yml'
+                  $ref: '../../components/schemas/response/search.yml'
             required:
               - count
               - contents
@@ -98,7 +98,7 @@ get:
               errors:
                 type: array
                 items:
-                  $ref: '../../components/schemas/responseSearchUnprocessable.yml'
+                  $ref: '../../components/schemas/errors/searchUnprocessable.yml'
             required:
               - type
               - title

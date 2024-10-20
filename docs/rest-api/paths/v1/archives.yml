@@ -10,4 +10,4 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../components/schemas/simpleArticle.yml'
+              $ref: '../../components/schemas/response/simpleArticle.yml'

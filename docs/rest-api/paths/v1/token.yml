@@ -10,14 +10,14 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/requestToken.yml'
+          $ref: '../../components/schemas/request/token.yml'
   responses:
     201:
       description: Create an IDToken succeeded
       content:
         application/json:
           schema:
-            $ref: '../../components/schemas/idToken.yml'
+            $ref: '../../components/schemas/response/idToken.yml'
     400:
       description: Payload is wrong
       content:

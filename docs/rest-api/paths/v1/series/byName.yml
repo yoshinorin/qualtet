@@ -10,7 +10,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../../components/schemas/series.yml'
+              $ref: '../../../components/schemas/response/series.yml'
     404:
       description: Series not found
       content:

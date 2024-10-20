@@ -9,4 +9,4 @@ get:
         application/json:
           schema:
             items:
-              $ref: '../../../components/schemas/tagWithCount.yml'
+              $ref: '../../../components/schemas/response/tagWithCount.yml'

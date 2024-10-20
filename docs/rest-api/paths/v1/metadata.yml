@@ -8,7 +8,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../components/schemas/applicationInfo.yml'
+            $ref: '../../components/schemas/response/applicationInfo.yml'
     404:
       description: Resource not found (If envval `QUALTET_HTTP_ENDPOINT_SYSTEM_METADATA_ENABLED` is `false` or not exists)
       content:

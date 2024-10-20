@@ -9,4 +9,4 @@ get:
         application/json:
           schema:
             items:
-              $ref: '../../components/schemas/contentType.yml'
+              $ref: '../../components/schemas/response/contentType.yml'
