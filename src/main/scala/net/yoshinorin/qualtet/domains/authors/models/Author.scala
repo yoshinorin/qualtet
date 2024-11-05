@@ -58,15 +58,3 @@ final case class Author(
   password: BCryptPassword,
   createdAt: Long = ZonedDateTime.now.toEpochSecond
 )
-
-final case class ResponseAuthor(
-  id: AuthorId = AuthorId.apply(),
-  name: AuthorName,
-  displayName: AuthorDisplayName,
-  createdAt: Long = ZonedDateTime.now.toEpochSecond
-)
-
-object ResponseAuthor {
-  given codecAuthor: JsonValueCodec[ResponseAuthor] = JsonCodecMaker.make
-  given codecAuthors: JsonValueCodec[Seq[ResponseAuthor]] = JsonCodecMaker.make
-}

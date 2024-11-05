@@ -25,13 +25,3 @@ object Tag {
   given codecTag: JsonValueCodec[Tag] = JsonCodecMaker.make
   given codecTags: JsonValueCodec[Option[Seq[Tag]]] = JsonCodecMaker.make
 }
-
-final case class ResponseTag(
-  id: TagId,
-  name: TagName,
-  count: Int
-)
-object ResponseTag {
-  given codecResponseTag: JsonValueCodec[ResponseTag] = JsonCodecMaker.make
-  given codecResponseTags: JsonValueCodec[Seq[ResponseTag]] = JsonCodecMaker.make
-}
