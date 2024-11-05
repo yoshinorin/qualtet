@@ -140,7 +140,8 @@ object ResponseContent {
   )
   given codecResponseContents: JsonValueCodec[Seq[ResponseContent]] = JsonCodecMaker.make
 }
-final case class ReadContentDbRow(
+
+final case class ContentReadModel(
   id: ContentId,
   title: String,
   robotsAttributes: Attributes,

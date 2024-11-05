@@ -6,7 +6,7 @@ trait ContentRepository[F[_]] {
   def upsert(data: Content): F[Int]
   def findById(id: ContentId): F[Option[Content]]
   def findByPath(path: Path): F[Option[Content]]
-  def findByPathWithMeta(path: Path): F[Option[ReadContentDbRow]]
+  def findByPathWithMeta(path: Path): F[Option[ContentReadModel]]
   def delete(id: ContentId): F[Unit]
 }
 
@@ -54,7 +54,7 @@ object ContentRepository {
             )
         }
 
-      given contentDbRawRead: Read[ReadContentDbRow] =
+      given contentDbRawRead: Read[ContentReadModel] =
         Read[(String, String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
           case (
                 id,
@@ -69,7 +69,7 @@ object ContentRepository {
                 publishedAt,
                 updatedAt
               ) =>
-            ReadContentDbRow(
+            ContentReadModel(
               ContentId(id),
               title,
               Attributes(robotsAttributes),
@@ -109,7 +109,7 @@ object ContentRepository {
       override def findByPath(path: Path): ConnectionIO[Option[Content]] = {
         ContentQuery.findByPath(path).option
       }
-      override def findByPathWithMeta(path: Path): ConnectionIO[Option[ReadContentDbRow]] = {
+      override def findByPathWithMeta(path: Path): ConnectionIO[Option[ContentReadModel]] = {
         // NOTE: use `.option` instead of `.query[Option[T]].unique`
         //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
         ContentQuery.findByPathWithMeta(path).option
