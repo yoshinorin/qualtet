@@ -6,7 +6,7 @@ object Dependencies {
   val doobieVersion = "1.0.0-RC6"
   val jwtScalaVersion = "10.0.1"
   val flywayVersion = "10.20.1"
-  val http4sVersion = "1.0.0-M42"
+  val http4sVersion = "1.0.0-M43"
   val log4catsVersion = "2.7.0"
 
   val dependencies = Seq(
