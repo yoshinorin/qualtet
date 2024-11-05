@@ -13,7 +13,8 @@ import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorService}
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
+import net.yoshinorin.qualtet.domains.contentTypes.ContentType
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepository, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.contents.{ContentRepository, ContentService}
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializingRepository, ContentSerializingService}

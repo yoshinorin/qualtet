@@ -5,7 +5,7 @@ import net.yoshinorin.qualtet.domains.errors.UnprocessableEntity
 import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 
-// testOnly net.yoshinorin.qualtet.domains.models.externalResources.ExternalResourcesSpec
+// testOnly net.yoshinorin.qualtet.domains.externalResources.ExternalResourcesSpec
 class ExternalResourcesSpec extends AnyWordSpec {
 
   "ExternalResources" should {

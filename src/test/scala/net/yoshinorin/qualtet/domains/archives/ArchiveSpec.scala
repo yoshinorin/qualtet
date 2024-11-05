@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.contents.Path
 
-// testOnly net.yoshinorin.qualtet.domains.models.archives.ArchiveSpec
+// testOnly net.yoshinorin.qualtet.domains.archives.ArchiveSpec
 class ArchiveSpec extends AnyWordSpec {
 
   "ResponseArchive" should {

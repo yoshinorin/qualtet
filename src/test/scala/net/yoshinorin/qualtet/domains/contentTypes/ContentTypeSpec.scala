@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.fixture.Fixture.contentTypeId
 import org.scalatest.wordspec.AnyWordSpec
 
-// testOnly net.yoshinorin.qualtet.domains.models.contentTypes.ContentTypeSpec
+// testOnly net.yoshinorin.qualtet.domains.contentTypes.ContentTypeSpec
 class ContentTypeSpec extends AnyWordSpec {
 
   "ContentTypeId" should {

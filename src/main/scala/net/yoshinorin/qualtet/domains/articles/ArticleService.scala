@@ -3,7 +3,8 @@ package net.yoshinorin.qualtet.domains.articles
 import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.NotFound
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName

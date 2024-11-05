@@ -8,7 +8,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
 
-// testOnly net.yoshinorin.qualtet.domains.models.author.AuthorSpec
+// testOnly net.yoshinorin.qualtet.domains.author.AuthorSpec
 class AuthorSpec extends AnyWordSpec {
 
   "AuthorId" should {

@@ -2,7 +2,8 @@ package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
 import cats.Monad
-import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorService, BCryptPassword, ResponseAuthor}
+import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorService, ResponseAuthor}
+import net.yoshinorin.qualtet.domains.authors.{BCryptPassword, ResponseAuthor}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.errors.{NotFound, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*

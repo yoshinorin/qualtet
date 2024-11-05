@@ -2,7 +2,8 @@ package net.yoshinorin.qualtet.infrastructure.db
 
 import cats.Monad
 import net.yoshinorin.qualtet.config.DBConfig
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
+import net.yoshinorin.qualtet.domains.contentTypes.ContentType
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.FluentConfiguration
 

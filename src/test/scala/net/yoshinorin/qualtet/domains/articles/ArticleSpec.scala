@@ -6,7 +6,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.contents.Path
 
-// testOnly net.yoshinorin.qualtet.domains.models.articles.ArticleSpec
+// testOnly net.yoshinorin.qualtet.domains.articles.ArticleSpec
 class ArticleSpec extends AnyWordSpec {
 
   val responseArticle1: ResponseArticle = ResponseArticle(

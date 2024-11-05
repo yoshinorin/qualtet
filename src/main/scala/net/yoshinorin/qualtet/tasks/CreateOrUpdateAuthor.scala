@@ -4,7 +4,8 @@ import cats.implicits.catsSyntaxEq
 import cats.effect.{ExitCode, IO, IOApp}
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, BCryptPassword}
+import net.yoshinorin.qualtet.domains.authors.{AuthorDisplayName, AuthorName, BCryptPassword}
+import net.yoshinorin.qualtet.domains.authors.Author
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor

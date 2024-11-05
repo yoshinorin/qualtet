@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.domains.sitemaps.{LastMod, Loc}
 import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 
-// testOnly net.yoshinorin.qualtet.domains.models.sitemaps.SitemapsSpec
+// testOnly net.yoshinorin.qualtet.domains.sitemaps.SitemapsSpec
 class SitemapsSpec extends AnyWordSpec {
 
   "Loc" should {
