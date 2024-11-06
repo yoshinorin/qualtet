@@ -54,4 +54,24 @@ jobs:
           # COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
+  assemble:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 360
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        java: [21]
+        scala: [3.5.2]
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - name: Assemble
+        working-directory: .
+        run: sbt assembly
