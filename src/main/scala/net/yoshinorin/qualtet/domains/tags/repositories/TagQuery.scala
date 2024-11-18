@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object TagQuery {
 
-  def getAll: Read[ResponseTag] ?=> Query0[ResponseTag] = {
+  def getAll: Read[TagWithCountReadModel] ?=> Query0[TagWithCountReadModel] = {
     sql"""
       SELECT
         tags.id,
@@ -24,20 +24,20 @@ object TagQuery {
       ORDER BY
         tags.name
     """
-      .query[ResponseTag]
+      .query[TagWithCountReadModel]
   }
 
-  def findByName(data: TagName): Read[Tag] ?=> Query0[Tag] = {
+  def findByName(data: TagName): Read[TagReadModel] ?=> Query0[TagReadModel] = {
     sql"SELECT * FROM tags WHERE name = ${data.value}"
-      .query[Tag]
+      .query[TagReadModel]
   }
 
-  def findById(id: TagId): Read[Tag] ?=> Query0[Tag] = {
+  def findById(id: TagId): Read[TagReadModel] ?=> Query0[TagReadModel] = {
     sql"SELECT * FROM tags WHERE id = ${id.value}"
-      .query[Tag]
+      .query[TagReadModel]
   }
 
-  def findByContentId(id: ContentId): Read[Tag] ?=> Query0[Tag] = {
+  def findByContentId(id: ContentId): Read[TagReadModel] ?=> Query0[TagReadModel] = {
     sql"""
       SELECT tags.*
       FROM
@@ -46,7 +46,7 @@ object TagQuery {
         ON tags.id = contents_tagging.tag_id
       WHERE contents_tagging.content_id = ${id.value}
     """
-      .query[Tag]
+      .query[TagReadModel]
   }
 
   def bulkUpsert: Write[Tag] ?=> Update[Tag] = {

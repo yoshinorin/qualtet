@@ -18,14 +18,14 @@ object SeriesQuery {
     Update[Series](q)
   }
 
-  def findByName(name: SeriesName): Read[Series] ?=> Query0[Series] = {
+  def findByName(name: SeriesName): Read[SeriesReadModel] ?=> Query0[SeriesReadModel] = {
     sql"SELECT * FROM series WHERE name = ${name.value}"
-      .query[Series]
+      .query[SeriesReadModel]
   }
 
-  def getAll: Read[Series] ?=> Query0[Series] = {
+  def getAll: Read[SeriesReadModel] ?=> Query0[SeriesReadModel] = {
     sql"SELECT * FROM series"
-      .query[Series]
+      .query[SeriesReadModel]
   }
 
 }

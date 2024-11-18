@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.articles
 import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.NotFound
@@ -23,7 +24,11 @@ class ArticleService[F[_]: Monad](
     queryParams: ArticlesQueryParameter
   ): ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] = {
     ContT.apply[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] { next =>
-      articleRepository.getWithCount(contentTypeId, queryParams)
+      articleRepository.getWithCount(contentTypeId, queryParams).map { article =>
+        article.map { case (count, article) =>
+          (count, ResponseArticle(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
+        }
+      }
     }
   }
 
@@ -33,7 +38,11 @@ class ArticleService[F[_]: Monad](
     queryParams: ArticlesQueryParameter
   ): ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] = {
     ContT.apply[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] { next =>
-      articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams)
+      articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams).map { article =>
+        article.map { case (count, article) =>
+          (count, ResponseArticle(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
+        }
+      }
     }
   }
 
@@ -43,7 +52,11 @@ class ArticleService[F[_]: Monad](
     queryParams: ArticlesQueryParameter // TODO: `Optional`
   ): ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] = {
     ContT.apply[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] { next =>
-      articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName)
+      articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName).map { article =>
+        article.map { case (count, article) =>
+          (count, ResponseArticle(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
+        }
+      }
     }
   }
 

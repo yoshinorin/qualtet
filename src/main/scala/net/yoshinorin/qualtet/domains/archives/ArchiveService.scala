@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.archives
 
 import cats.Monad
 import cats.data.ContT
+import cats.implicits.*
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.errors.NotFound
@@ -16,7 +17,9 @@ class ArchiveService[F[_]: Monad](
 
   def cont(contentTypeId: ContentTypeId): ContT[F, Seq[ResponseArchive], Seq[ResponseArchive]] = {
     ContT.apply[F, Seq[ResponseArchive], Seq[ResponseArchive]] { next =>
-      archiveRepository.get(contentTypeId)
+      archiveRepository.get(contentTypeId).map { archives =>
+        archives.map(a => ResponseArchive(a.path, a.title, a.publishedAt))
+      }
     }
   }
 

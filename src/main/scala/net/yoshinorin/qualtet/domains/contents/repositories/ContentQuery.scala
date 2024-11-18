@@ -26,17 +26,17 @@ object ContentQuery {
     sql"DELETE FROM contents WHERE id = ${id.value}".update
   }
 
-  def findById(id: ContentId): Read[Content] ?=> Query0[Content] = {
+  def findById(id: ContentId): Read[ContentReadModel] ?=> Query0[ContentReadModel] = {
     sql"SELECT * FROM contents WHERE id = ${id.value}"
-      .query[Content]
+      .query[ContentReadModel]
   }
 
-  def findByPath(path: Path): Read[Content] ?=> Query0[Content] = {
+  def findByPath(path: Path): Read[ContentReadModel] ?=> Query0[ContentReadModel] = {
     sql"SELECT * FROM contents WHERE path = ${path.value}"
-      .query[Content]
+      .query[ContentReadModel]
   }
 
-  def findByPathWithMeta(path: Path): Read[ContentReadModel] ?=> Query0[ContentReadModel] = {
+  def findByPathWithMeta(path: Path): Read[ContentWithMetaReadModel] ?=> Query0[ContentWithMetaReadModel] = {
     sql"""
        SELECT
          contents.id AS id,
@@ -67,7 +67,7 @@ object ContentQuery {
        HAVING
    	     COUNT(*) > 0
     """
-      .query[ContentReadModel]
+      .query[ContentWithMetaReadModel]
   }
 
 }

@@ -10,9 +10,9 @@ import net.yoshinorin.qualtet.domains.series.SeriesId
 
 object ContentSerializingQuery {
 
-  def findBySeriesId(id: SeriesId): Read[ContentSerializing] ?=> query.Query0[ContentSerializing] = {
+  def findBySeriesId(id: SeriesId): Read[ContentSerializingReadModel] ?=> query.Query0[ContentSerializingReadModel] = {
     sql"SELECT * FROM contents_serializing FROM series_id = ${id.value}"
-      .query[ContentSerializing]
+      .query[ContentSerializingReadModel]
   }
 
   def bulkUpsert: Write[ContentSerializing] ?=> Update[ContentSerializing] = {

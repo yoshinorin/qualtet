@@ -10,9 +10,9 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object ContentTaggingQuery {
 
-  def findByTagId(id: TagId): Read[ContentTagging] ?=> query.Query0[ContentTagging] = {
+  def findByTagId(id: TagId): Read[ContentTaggingReadModel] ?=> query.Query0[ContentTaggingReadModel] = {
     sql"SELECT * FROM contents_tagging FROM tag_id = ${id.value}"
-      .query[ContentTagging]
+      .query[ContentTaggingReadModel]
   }
 
   def bulkUpsert: Write[ContentTagging] ?=> Update[ContentTagging] = {

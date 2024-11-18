@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
 trait SitemapsRepository[F[_]] {
-  def get(): F[Seq[Url]]
+  def get(): F[Seq[UrlReadModel]]
 }
 
 object SitemapsRepository {
@@ -12,10 +12,10 @@ object SitemapsRepository {
   given SitemapsRepository: SitemapsRepository[ConnectionIO] = {
     new SitemapsRepository[ConnectionIO] {
 
-      given tagRead: Read[Url] =
-        Read[(String, String)].map { case (loc, mod) => Url(Loc(loc), LastMod(mod)) }
+      given tagRead: Read[UrlReadModel] =
+        Read[(String, String)].map { case (loc, mod) => UrlReadModel(Loc(loc), LastMod(mod)) }
 
-      override def get(): ConnectionIO[Seq[Url]] = {
+      override def get(): ConnectionIO[Seq[UrlReadModel]] = {
         SitemapsQuery.get.to[Seq]
       }
 

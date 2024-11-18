@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.archives
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 
 trait ArchiveRepository[F[_]] {
-  def get(contentTypeId: ContentTypeId): F[Seq[ResponseArchive]]
+  def get(contentTypeId: ContentTypeId): F[Seq[ArchiveReadModel]]
 }
 
 object ArchiveRepository {
@@ -14,12 +14,12 @@ object ArchiveRepository {
 
   given ArchiveRepository: ArchiveRepository[ConnectionIO] = {
     new ArchiveRepository[ConnectionIO] {
-      given responseArchivesRead: Read[ResponseArchive] =
+      given archivesRead: Read[ArchiveReadModel] =
         Read[(String, String, Long)].map { case (path, title, publishedAt) =>
-          ResponseArchive(Path(path), title, publishedAt)
+          ArchiveReadModel(Path(path), title, publishedAt)
         }
 
-      override def get(contentTypeId: ContentTypeId): ConnectionIO[Seq[ResponseArchive]] = ArchiveQuery.get(contentTypeId).to[Seq]
+      override def get(contentTypeId: ContentTypeId): ConnectionIO[Seq[ArchiveReadModel]] = ArchiveQuery.get(contentTypeId).to[Seq]
     }
   }
 

@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.domains.series
 
 trait SeriesRepository[F[_]] {
   def upsert(data: Series): F[Int]
-  def findByName(name: SeriesName): F[Option[Series]]
-  def getAll(): F[Seq[Series]]
+  def findByName(name: SeriesName): F[Option[SeriesReadModel]]
+  def getAll(): F[Seq[SeriesReadModel]]
 }
 
 object SeriesRepository {
@@ -19,9 +19,9 @@ object SeriesRepository {
           (s.id.value, s.name.value, s.title, s.description)
         }
 
-      given seriesRead: Read[Series] =
+      given seriesRead: Read[SeriesReadModel] =
         Read[(String, String, String, Option[String])].map { case (seriesId, name, title, description) =>
-          Series(
+          SeriesReadModel(
             SeriesId(seriesId),
             SeriesName(name),
             title,
@@ -29,10 +29,10 @@ object SeriesRepository {
           )
         }
 
-      given seriesWithOptionRead: Read[Option[Series]] =
+      given seriesWithOptionRead: Read[Option[SeriesReadModel]] =
         Read[(String, String, String, Option[String])].map { case (seriesId, name, title, description) =>
           Some(
-            Series(
+            SeriesReadModel(
               SeriesId(seriesId),
               SeriesName(name),
               title,
@@ -46,11 +46,11 @@ object SeriesRepository {
         SeriesQuery.upsert.run(data)
       }
 
-      override def findByName(name: SeriesName): ConnectionIO[Option[Series]] = {
+      override def findByName(name: SeriesName): ConnectionIO[Option[SeriesReadModel]] = {
         SeriesQuery.findByName(name).option
       }
 
-      override def getAll(): ConnectionIO[Seq[Series]] = {
+      override def getAll(): ConnectionIO[Seq[SeriesReadModel]] = {
         SeriesQuery.getAll.to[Seq]
       }
 

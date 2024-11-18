@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.sitemaps
 import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.Cacheable
@@ -17,7 +18,11 @@ class SitemapService[F[_]: Monad](
 
   def getActions: ContT[F, Seq[Url], Seq[Url]] = {
     ContT.apply[F, Seq[Url], Seq[Url]] { next =>
-      sitemapRepository.get()
+      sitemapRepository.get().map { x =>
+        x.map { s =>
+          Url(s.loc, s.lastMod)
+        }
+      }
     }
   }
 

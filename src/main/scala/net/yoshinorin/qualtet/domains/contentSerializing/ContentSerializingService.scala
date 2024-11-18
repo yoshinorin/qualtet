@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.contentSerializing
 
 import cats.data.ContT
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.series.SeriesId
 
@@ -11,7 +12,9 @@ class ContentSerializingService[F[_]: Monad](
 
   def findBySeriesIdCont(id: SeriesId): ContT[F, Seq[ContentSerializing], Seq[ContentSerializing]] = {
     ContT.apply[F, Seq[ContentSerializing], Seq[ContentSerializing]] { next =>
-      contentSerializingRepository.findBySeriesId(id)
+      contentSerializingRepository.findBySeriesId(id).map { cs =>
+        cs.map(c => ContentSerializing(c.seriesId, c.contentId))
+      }
     }
   }
 

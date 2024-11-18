@@ -26,25 +26,39 @@ class TagService[F[_]: Monad](
 
   def getAllActions: ContT[F, Seq[ResponseTag], Seq[ResponseTag]] = {
     ContT.apply[F, Seq[ResponseTag], Seq[ResponseTag]] { next =>
-      tagRepository.getAll()
+      tagRepository.getAll().map { x =>
+        x.map { case TagWithCountReadModel(id, name, count) => ResponseTag(id, name, count) }
+      }
     }
   }
 
   def findByIdCont(id: TagId): ContT[F, Option[Tag], Option[Tag]] = {
     ContT.apply[F, Option[Tag], Option[Tag]] { next =>
-      tagRepository.findById(id)
+      tagRepository.findById(id).map { x =>
+        x.map { t =>
+          Tag(t.id, t.name)
+        }
+      }
     }
   }
 
   def findByNameCont(tagName: TagName): ContT[F, Option[Tag], Option[Tag]] = {
     ContT.apply[F, Option[Tag], Option[Tag]] { next =>
-      tagRepository.findByName(tagName)
+      tagRepository.findByName(tagName).map { x =>
+        x.map { t =>
+          Tag(t.id, t.name)
+        }
+      }
     }
   }
 
   def findByContentIdCont(contenId: ContentId): ContT[F, Seq[Tag], Seq[Tag]] = {
     ContT.apply[F, Seq[Tag], Seq[Tag]] { next =>
-      tagRepository.findByContentId(contenId)
+      tagRepository.findByContentId(contenId).map { x =>
+        x.map { t =>
+          Tag(t.id, t.name)
+        }
+      }
     }
   }
 

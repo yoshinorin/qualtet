@@ -17,13 +17,13 @@ object ContentTypeQuery {
     Update[ContentType](q)
   }
 
-  def getAll: Read[ContentType] ?=> Query0[ContentType] = {
+  def getAll: Read[ContentTypeReadModel] ?=> Query0[ContentTypeReadModel] = {
     sql"SELECT * FROM content_types"
-      .query[ContentType]
+      .query[ContentTypeReadModel]
   }
 
-  def findByName(name: String): Read[ContentType] ?=> Query0[ContentType] = {
+  def findByName(name: String): Read[ContentTypeReadModel] ?=> Query0[ContentTypeReadModel] = {
     sql"SELECT * FROM content_types WHERE name = ${name}"
-      .query[ContentType]
+      .query[ContentTypeReadModel]
   }
 }

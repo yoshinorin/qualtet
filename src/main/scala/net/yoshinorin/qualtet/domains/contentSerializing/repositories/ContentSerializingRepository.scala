@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.domains.series.SeriesId
 trait ContentSerializingRepository[F[_]] {
   def upsert(data: ContentSerializing): F[Int]
   def bulkUpsert(data: List[ContentSerializing]): F[Int]
-  def findBySeriesId(id: SeriesId): F[Seq[ContentSerializing]]
+  def findBySeriesId(id: SeriesId): F[Seq[ContentSerializingReadModel]]
   def deleteBySeriesId(id: SeriesId): F[Unit]
   def deleteByContentId(id: ContentId): F[Unit]
   def delete(seriesId: SeriesId, contentIds: Seq[ContentId]): F[Unit]
@@ -23,8 +23,8 @@ object ContentSerializingRepository {
 
   given ContentSerializingRepository: ContentSerializingRepository[ConnectionIO] = {
     new ContentSerializingRepository[ConnectionIO] {
-      given contentSerializingRead: Read[ContentSerializing] =
-        Read[(String, String)].map { case (seriesId, contentId) => ContentSerializing(SeriesId(seriesId), ContentId(contentId)) }
+      given contentSerializingRead: Read[ContentSerializingReadModel] =
+        Read[(String, String)].map { case (seriesId, contentId) => ContentSerializingReadModel(SeriesId(seriesId), ContentId(contentId)) }
 
       given contentSerializingWithOptionRead: Read[Option[ContentSerializing]] =
         Read[(String, String)].map { case (seriesId, contentId) => Some(ContentSerializing(SeriesId(seriesId), ContentId(contentId))) }
@@ -40,7 +40,7 @@ object ContentSerializingRepository {
         ContentSerializingQuery.bulkUpsert.updateMany(data)
       }
 
-      override def findBySeriesId(id: SeriesId): ConnectionIO[Seq[ContentSerializing]] = {
+      override def findBySeriesId(id: SeriesId): ConnectionIO[Seq[ContentSerializingReadModel]] = {
         ContentSerializingQuery.findBySeriesId(id).to[Seq]
       }
 

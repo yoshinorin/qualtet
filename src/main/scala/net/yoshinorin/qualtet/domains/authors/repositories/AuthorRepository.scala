@@ -7,7 +7,7 @@ trait AuthorRepository[F[_]] {
    *
    * @return Authors
    */
-  def getAll(): F[Seq[ResponseAuthor]]
+  def getAll(): F[Seq[AuthorWithoutPasswordReadModel]]
 
   /**
    * create a authorName
@@ -23,7 +23,7 @@ trait AuthorRepository[F[_]] {
    * @param id authorName's id
    * @return Author
    */
-  def findById(id: AuthorId): F[Option[ResponseAuthor]]
+  def findById(id: AuthorId): F[Option[AuthorWithoutPasswordReadModel]]
 
   /**
    * find a Author by id
@@ -31,7 +31,7 @@ trait AuthorRepository[F[_]] {
    * @param id authorName's id
    * @return Author
    */
-  def findByIdWithPassword(id: AuthorId): F[Option[Author]]
+  def findByIdWithPassword(id: AuthorId): F[Option[AuthorReadModel]]
 
   /**
    * find a Author by name
@@ -39,7 +39,7 @@ trait AuthorRepository[F[_]] {
    * @param name authorName's name
    * @return Author
    */
-  def findByName(name: AuthorName): F[Option[ResponseAuthor]]
+  def findByName(name: AuthorName): F[Option[AuthorWithoutPasswordReadModel]]
 }
 
 object AuthorRepository {
@@ -50,40 +50,40 @@ object AuthorRepository {
   given AuthorRepository: AuthorRepository[ConnectionIO] = {
     new AuthorRepository[ConnectionIO] {
 
-      given responseAuthorRead: Read[ResponseAuthor] =
+      given authorWithoutPasswordRead: Read[AuthorWithoutPasswordReadModel] =
         Read[(String, String, String, Long)].map { case (id, name, displayName, createdAt) =>
-          ResponseAuthor(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), createdAt)
+          AuthorWithoutPasswordReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), createdAt)
         }
 
-      given responseAuthorWithOptionRead: Read[Option[ResponseAuthor]] =
+      given authorWithoutPasswordOptionRead: Read[Option[AuthorWithoutPasswordReadModel]] =
         Read[(String, String, String, Long)].map { case (id, name, displayName, createdAt) =>
-          Some(ResponseAuthor(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), createdAt))
+          Some(AuthorWithoutPasswordReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), createdAt))
         }
 
-      given authorRead: Read[Author] =
+      given authorRead: Read[AuthorReadModel] =
         Read[(String, String, String, String, Long)].map { case (id, name, displayName, password, createdAt) =>
-          Author(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt)
+          AuthorReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt)
         }
 
-      given authorWithOptionRead: Read[Option[Author]] =
+      given authorWithOptionRead: Read[Option[AuthorReadModel]] =
         Read[(String, String, String, String, Long)].map { case (id, name, displayName, password, createdAt) =>
-          Some(Author(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt))
+          Some(AuthorReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt))
         }
 
-      given responseAuthorWrite: Write[Author] =
+      given authorWrite: Write[Author] =
         Write[(String, String, String, String, Long)]
           .contramap(a => (a.id.value, a.name.value, a.displayName.value, a.password.value, a.createdAt))
 
-      override def getAll(): ConnectionIO[Seq[ResponseAuthor]] = AuthorQuery.getAll.to[Seq]
+      override def getAll(): ConnectionIO[Seq[AuthorWithoutPasswordReadModel]] = AuthorQuery.getAll.to[Seq]
 
       // TODO: Do not do `run` here
       override def upsert(data: Author): ConnectionIO[Int] = AuthorQuery.upsert.run(data)
 
-      override def findById(id: AuthorId): ConnectionIO[Option[ResponseAuthor]] = AuthorQuery.findById(id).option
+      override def findById(id: AuthorId): ConnectionIO[Option[AuthorWithoutPasswordReadModel]] = AuthorQuery.findById(id).option
 
-      override def findByIdWithPassword(id: AuthorId): ConnectionIO[Option[Author]] = AuthorQuery.findByIdWithPassword(id).option
+      override def findByIdWithPassword(id: AuthorId): ConnectionIO[Option[AuthorReadModel]] = AuthorQuery.findByIdWithPassword(id).option
 
-      override def findByName(name: AuthorName): ConnectionIO[Option[ResponseAuthor]] = AuthorQuery.findByName(name).option
+      override def findByName(name: AuthorName): ConnectionIO[Option[AuthorWithoutPasswordReadModel]] = AuthorQuery.findByName(name).option
 
     }
   }

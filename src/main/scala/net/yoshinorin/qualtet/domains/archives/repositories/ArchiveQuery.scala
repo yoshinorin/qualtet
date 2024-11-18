@@ -7,14 +7,14 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 
 object ArchiveQuery {
 
-  def get(contentTypeId: ContentTypeId): Read[ResponseArchive] ?=> Query0[ResponseArchive] = {
+  def get(contentTypeId: ContentTypeId): Read[ArchiveReadModel] ?=> Query0[ArchiveReadModel] = {
     sql"""
       SELECT path, title, published_at
       FROM contents
         WHERE content_type_id = ${contentTypeId.value}
         ORDER BY published_at desc
     """
-      .query[ResponseArchive]
+      .query[ArchiveReadModel]
   }
 
 }

@@ -18,23 +18,23 @@ object AuthorQuery {
     Update[Author](q)
   }
 
-  def getAll: Read[ResponseAuthor] ?=> Query0[ResponseAuthor] = {
+  def getAll: Read[AuthorWithoutPasswordReadModel] ?=> Query0[AuthorWithoutPasswordReadModel] = {
     sql"SELECT id, name, display_name, created_at FROM authors"
-      .query[ResponseAuthor]
+      .query[AuthorWithoutPasswordReadModel]
   }
 
-  def findById(id: AuthorId): Read[ResponseAuthor] ?=> Query0[ResponseAuthor] = {
+  def findById(id: AuthorId): Read[AuthorWithoutPasswordReadModel] ?=> Query0[AuthorWithoutPasswordReadModel] = {
     sql"SELECT id, name, display_name, created_at FROM authors where id = ${id.value}"
-      .query[ResponseAuthor]
+      .query[AuthorWithoutPasswordReadModel]
   }
 
-  def findByIdWithPassword(id: AuthorId): Read[Author] ?=> Query0[Author] = {
+  def findByIdWithPassword(id: AuthorId): Read[AuthorReadModel] ?=> Query0[AuthorReadModel] = {
     sql"SELECT id, name, display_name, password, created_at FROM authors where id = ${id.value}"
-      .query[Author]
+      .query[AuthorReadModel]
   }
 
-  def findByName(name: AuthorName): Read[ResponseAuthor] ?=> Query0[ResponseAuthor] = {
+  def findByName(name: AuthorName): Read[AuthorWithoutPasswordReadModel] ?=> Query0[AuthorWithoutPasswordReadModel] = {
     sql"SELECT id, name, display_name, created_at FROM authors where name = ${name.value}"
-      .query[ResponseAuthor]
+      .query[AuthorWithoutPasswordReadModel]
   }
 }

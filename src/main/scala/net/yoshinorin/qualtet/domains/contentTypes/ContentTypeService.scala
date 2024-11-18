@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.contentTypes
 import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.errors.InternalServerError
 import net.yoshinorin.qualtet.domains.Cacheable
@@ -23,7 +24,9 @@ class ContentTypeService[F[_]: Monad](
 
   def getAllActions: ContT[F, Seq[ContentType], Seq[ContentType]] = {
     ContT.apply[F, Seq[ContentType], Seq[ContentType]] { next =>
-      contentRepository.getAll()
+      contentRepository.getAll().map { cr =>
+        cr.map { c => ContentType(c.id, c.name) }
+      }
     }
   }
 
@@ -55,7 +58,10 @@ class ContentTypeService[F[_]: Monad](
 
     def cont(name: String): ContT[F, Option[ContentType], Option[ContentType]] = {
       ContT.apply[F, Option[ContentType], Option[ContentType]] { next =>
-        contentRepository.findByName(name)
+        contentRepository.findByName(name).map {
+          case Some(c) => Some(ContentType(c.id, c.name))
+          case None => None
+        }
       }
     }
 

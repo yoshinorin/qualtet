@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.authors
 import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.errors.InternalServerError
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
@@ -19,25 +20,66 @@ class AuthorService[F[_]: Monad](
 
   def fetchActions: ContT[F, Seq[ResponseAuthor], Seq[ResponseAuthor]] = {
     ContT.apply[F, Seq[ResponseAuthor], Seq[ResponseAuthor]] { next =>
-      authorRepository.getAll()
+      authorRepository.getAll().map { authors =>
+        authors.map { author =>
+          ResponseAuthor(
+            id = author.id,
+            name = author.name,
+            displayName = author.displayName,
+            createdAt = author.createdAt
+          )
+        }
+      }
     }
   }
 
   def findByIdCont(id: AuthorId): ContT[F, Option[ResponseAuthor], Option[ResponseAuthor]] = {
     ContT.apply[F, Option[ResponseAuthor], Option[ResponseAuthor]] { next =>
-      authorRepository.findById(id)
+      authorRepository.findById(id).map { author =>
+        author.map { a =>
+          ResponseAuthor(
+            id = a.id,
+            name = a.name,
+            displayName = a.displayName,
+            createdAt = a.createdAt
+          )
+        }
+      }
     }
   }
 
   def findByIdWithPasswordCont(id: AuthorId): ContT[F, Option[Author], Option[Author]] = {
     ContT.apply[F, Option[Author], Option[Author]] { next =>
-      authorRepository.findByIdWithPassword(id)
+      authorRepository.findByIdWithPassword(id).map { author =>
+        author match {
+          case Some(a) =>
+            Some(
+              Author(
+                id = a.id,
+                name = a.name,
+                displayName = a.displayName,
+                password = a.password,
+                createdAt = a.createdAt
+              )
+            )
+          case None => None
+        }
+      }
     }
   }
 
   def findByNameCont(name: AuthorName): ContT[F, Option[ResponseAuthor], Option[ResponseAuthor]] = {
     ContT.apply[F, Option[ResponseAuthor], Option[ResponseAuthor]] { next =>
-      authorRepository.findByName(name)
+      authorRepository.findByName(name).map { author =>
+        author.map { a =>
+          ResponseAuthor(
+            id = a.id,
+            name = a.name,
+            displayName = a.displayName,
+            createdAt = a.createdAt
+          )
+        }
+      }
     }
   }
 

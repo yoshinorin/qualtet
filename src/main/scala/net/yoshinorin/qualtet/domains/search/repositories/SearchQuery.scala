@@ -6,7 +6,7 @@ import doobie.util.query.Query0
 
 object SearchQuery {
   // https://tpolecat.github.io/doobie/docs/08-Fragments.html
-  def search(query: List[String]): Read[(Int, ResponseSearch)] ?=> Query0[(Int, ResponseSearch)] = {
+  def search(query: List[String]): Read[(Int, SearchResuletReadModel)] ?=> Query0[(Int, SearchResuletReadModel)] = {
     // TODO: LIMIT should be configurable
     // TODO: ORDER BY asc, title...etc
     // TODO: AND, OR
@@ -41,6 +41,6 @@ object SearchQuery {
         published_at DESC
       LIMIT 30
     """
-      .query[(Int, ResponseSearch)]
+      .query[(Int, SearchResuletReadModel)]
   }
 }

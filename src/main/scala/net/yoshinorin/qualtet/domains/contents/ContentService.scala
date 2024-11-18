@@ -45,19 +45,75 @@ class ContentService[F[_]: Monad](
 
   def findByIdCont(id: ContentId): ContT[F, Option[Content], Option[Content]] = {
     ContT.apply[F, Option[Content], Option[Content]] { next =>
-      contentRepository.findById(id)
+      contentRepository.findById(id).map { content =>
+        content match {
+          case Some(c) =>
+            Some(
+              Content(
+                id = c.id,
+                authorId = c.authorId,
+                contentTypeId = c.contentTypeId,
+                path = c.path,
+                title = c.title,
+                rawContent = c.rawContent,
+                htmlContent = c.htmlContent,
+                publishedAt = c.publishedAt,
+                updatedAt = c.updatedAt
+              )
+            )
+          case None => None
+        }
+      }
     }
   }
 
   def findByPathCont(path: Path): ContT[F, Option[Content], Option[Content]] = {
     ContT.apply[F, Option[Content], Option[Content]] { next =>
-      contentRepository.findByPath(path)
+      contentRepository.findByPath(path).map { content =>
+        content match {
+          case Some(c) =>
+            Some(
+              Content(
+                id = c.id,
+                authorId = c.authorId,
+                contentTypeId = c.contentTypeId,
+                path = c.path,
+                title = c.title,
+                rawContent = c.rawContent,
+                htmlContent = c.htmlContent,
+                publishedAt = c.publishedAt,
+                updatedAt = c.updatedAt
+              )
+            )
+          case None => None
+        }
+      }
     }
   }
 
-  def findByPathWithMetaCont(path: Path): ContT[F, Option[ContentReadModel], Option[ContentReadModel]] = {
-    ContT.apply[F, Option[ContentReadModel], Option[ContentReadModel]] { next =>
-      contentRepository.findByPathWithMeta(path)
+  def findByPathWithMetaCont(path: Path): ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]] = {
+    ContT.apply[F, Option[ContentWithMeta], Option[ContentWithMeta]] { next =>
+      contentRepository.findByPathWithMeta(path).map { content =>
+        content match {
+          case Some(c) =>
+            Some(
+              ContentWithMeta(
+                id = c.id,
+                title = c.title,
+                robotsAttributes = c.robotsAttributes,
+                externalResourceKindKeys = c.externalResourceKindKeys,
+                externalResourceKindValues = c.externalResourceKindValues,
+                tagIds = c.tagIds,
+                tagNames = c.tagNames,
+                content = c.content,
+                authorName = c.authorName,
+                publishedAt = c.publishedAt,
+                updatedAt = c.updatedAt
+              )
+            )
+          case None => None
+        }
+      }
     }
   }
 
@@ -217,7 +273,7 @@ class ContentService[F[_]: Monad](
     executer.transact(findByIdCont(id))
   }
 
-  def findBy[A](data: A)(f: A => ContT[F, Option[ContentReadModel], Option[ContentReadModel]]): IO[Option[ResponseContent]] = {
+  def findBy[A](data: A)(f: A => ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]]): IO[Option[ResponseContent]] = {
     executer.transact(f(data)).flatMap {
       case None => IO(None)
       case Some(x) =>

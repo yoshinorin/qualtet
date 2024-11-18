@@ -20,7 +20,11 @@ class SearchService[F[_]: Monad](
 
   def cont(query: List[String]): ContT[F, Seq[(Int, ResponseSearch)], Seq[(Int, ResponseSearch)]] = {
     ContT.apply[F, Seq[(Int, ResponseSearch)], Seq[(Int, ResponseSearch)]] { next =>
-      searchRepository.search(query)
+      searchRepository.search(query).map { x =>
+        x.map { case (count, search) =>
+          (count, ResponseSearch(search.path, search.title, search.content, search.publishedAt, search.updatedAt))
+        }
+      }
     }
   }
 

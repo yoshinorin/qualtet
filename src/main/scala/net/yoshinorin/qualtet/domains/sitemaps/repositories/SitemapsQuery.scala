@@ -6,7 +6,7 @@ import doobie.util.query.Query0
 
 object SitemapsQuery {
 
-  def get: Read[Url] ?=> Query0[Url] = {
+  def get: Read[UrlReadModel] ?=> Query0[UrlReadModel] = {
     sql"""
       SELECT path AS loc, updated_at AS lastmod
       FROM contents
@@ -16,7 +16,7 @@ object SitemapsQuery {
         robots.attributes NOT LIKE '%noindex%'
       ORDER BY updated_at DESC
     """
-      .query[Url]
+      .query[UrlReadModel]
   }
 
 }

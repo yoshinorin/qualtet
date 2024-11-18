@@ -4,9 +4,9 @@ import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
 
 trait ContentRepository[F[_]] {
   def upsert(data: Content): F[Int]
-  def findById(id: ContentId): F[Option[Content]]
-  def findByPath(path: Path): F[Option[Content]]
-  def findByPathWithMeta(path: Path): F[Option[ContentReadModel]]
+  def findById(id: ContentId): F[Option[ContentReadModel]]
+  def findByPath(path: Path): F[Option[ContentReadModel]]
+  def findByPathWithMeta(path: Path): F[Option[ContentWithMetaReadModel]]
   def delete(id: ContentId): F[Unit]
 }
 
@@ -20,10 +20,10 @@ object ContentRepository {
 
   given ContentRepository: ContentRepository[ConnectionIO] = {
     new ContentRepository[ConnectionIO] {
-      given contentRead: Read[Content] =
+      given contentRead: Read[ContentReadModel] =
         Read[(String, String, String, String, String, String, String, Long, Long)].map {
           case (contentId, authorId, contentTypeId, path, title, rawContent, htmlContent, publishedAt, updatedAt) =>
-            Content(
+            ContentReadModel(
               ContentId(contentId),
               AuthorId(authorId),
               ContentTypeId(contentTypeId),
@@ -36,11 +36,11 @@ object ContentRepository {
             )
         }
 
-      given contentWithOptionRead: Read[Option[Content]] =
+      given contentWithOptionRead: Read[Option[ContentReadModel]] =
         Read[(String, String, String, String, String, String, String, Long, Long)].map {
           case (contentId, authorId, contentTypeId, path, title, rawContent, htmlContent, publishedAt, updatedAt) =>
             Some(
-              Content(
+              ContentReadModel(
                 ContentId(contentId),
                 AuthorId(authorId),
                 ContentTypeId(contentTypeId),
@@ -54,7 +54,7 @@ object ContentRepository {
             )
         }
 
-      given contentDbRawRead: Read[ContentReadModel] =
+      given contentWithMetaRead: Read[ContentWithMetaReadModel] =
         Read[(String, String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
           case (
                 id,
@@ -69,7 +69,7 @@ object ContentRepository {
                 publishedAt,
                 updatedAt
               ) =>
-            ContentReadModel(
+            ContentWithMetaReadModel(
               ContentId(id),
               title,
               Attributes(robotsAttributes),
@@ -103,13 +103,13 @@ object ContentRepository {
       override def upsert(data: Content): ConnectionIO[Int] = {
         ContentQuery.upsert.run(data)
       }
-      override def findById(id: ContentId): ConnectionIO[Option[Content]] = {
+      override def findById(id: ContentId): ConnectionIO[Option[ContentReadModel]] = {
         ContentQuery.findById(id).option
       }
-      override def findByPath(path: Path): ConnectionIO[Option[Content]] = {
+      override def findByPath(path: Path): ConnectionIO[Option[ContentReadModel]] = {
         ContentQuery.findByPath(path).option
       }
-      override def findByPathWithMeta(path: Path): ConnectionIO[Option[ContentReadModel]] = {
+      override def findByPathWithMeta(path: Path): ConnectionIO[Option[ContentWithMetaReadModel]] = {
         // NOTE: use `.option` instead of `.query[Option[T]].unique`
         //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
         ContentQuery.findByPathWithMeta(path).option

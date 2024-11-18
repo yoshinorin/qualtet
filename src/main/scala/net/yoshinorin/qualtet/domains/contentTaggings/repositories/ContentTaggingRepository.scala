@@ -5,7 +5,7 @@ import net.yoshinorin.qualtet.domains.tags.TagId
 
 trait ContentTaggingRepository[F[_]] {
   def bulkUpsert(data: List[ContentTagging]): F[Int]
-  def findByTagId(id: TagId): F[Seq[ContentTagging]]
+  def findByTagId(id: TagId): F[Seq[ContentTaggingReadModel]]
   def deleteByContentId(id: ContentId): F[Unit]
   def deleteByTagId(id: TagId): F[Unit]
   def delete(contentId: ContentId, tagIds: Seq[TagId]): F[Unit]
@@ -23,11 +23,11 @@ object ContentTaggingRepository {
   given ContentTaggingRepository: ContentTaggingRepository[ConnectionIO] = {
     new ContentTaggingRepository[ConnectionIO] {
 
-      given contentTaggingRead: Read[ContentTagging] =
-        Read[(String, String)].map { case (contentId, tagId) => ContentTagging(ContentId(contentId), TagId(tagId)) }
+      given contentTaggingRead: Read[ContentTaggingReadModel] =
+        Read[(String, String)].map { case (contentId, tagId) => ContentTaggingReadModel(ContentId(contentId), TagId(tagId)) }
 
-      given contentTaggingWithOptionRead: Read[Option[ContentTagging]] =
-        Read[(String, String)].map { case (contentId, tagId) => Some(ContentTagging(ContentId(contentId), TagId(tagId))) }
+      given contentTaggingWithOptionRead: Read[Option[ContentTaggingReadModel]] =
+        Read[(String, String)].map { case (contentId, tagId) => Some(ContentTaggingReadModel(ContentId(contentId), TagId(tagId))) }
 
       given contentTaggingWrite: Write[ContentTagging] =
         Write[(String, String)].contramap(c => (c.contentId.value, c.tagId.value))
@@ -35,7 +35,7 @@ object ContentTaggingRepository {
       override def bulkUpsert(data: List[ContentTagging]): ConnectionIO[Int] = {
         ContentTaggingQuery.bulkUpsert.updateMany(data)
       }
-      override def findByTagId(id: TagId): ConnectionIO[Seq[ContentTagging]] = {
+      override def findByTagId(id: TagId): ConnectionIO[Seq[ContentTaggingReadModel]] = {
         ContentTaggingQuery.findByTagId(id).to[Seq]
       }
       override def deleteByContentId(id: ContentId): ConnectionIO[Unit] = {

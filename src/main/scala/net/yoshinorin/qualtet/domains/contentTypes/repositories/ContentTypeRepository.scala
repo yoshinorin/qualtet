@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.domains.contentTypes
 
 trait ContentTypeRepository[F[_]] {
   def upsert(data: ContentType): F[Int]
-  def getAll(): F[Seq[ContentType]]
-  def findByName(name: String): F[Option[ContentType]]
+  def getAll(): F[Seq[ContentTypeReadModel]]
+  def findByName(name: String): F[Option[ContentTypeReadModel]]
 }
 
 object ContentTypeRepository {
@@ -13,11 +13,11 @@ object ContentTypeRepository {
 
   given ContentTypeRepository: ContentTypeRepository[ConnectionIO] = {
     new ContentTypeRepository[ConnectionIO] {
-      given contentTypeRead: Read[ContentType] =
-        Read[(String, String)].map { case (id, name) => ContentType(ContentTypeId(id), name) }
+      given contentTypeRead: Read[ContentTypeReadModel] =
+        Read[(String, String)].map { case (id, name) => ContentTypeReadModel(ContentTypeId(id), name) }
 
-      given contentTypeWithOptionRead: Read[Option[ContentType]] =
-        Read[(String, String)].map { case (id, name) => Some(ContentType(ContentTypeId(id), name)) }
+      given contentTypeWithOptionRead: Read[Option[ContentTypeReadModel]] =
+        Read[(String, String)].map { case (id, name) => Some(ContentTypeReadModel(ContentTypeId(id), name)) }
 
       given contentTypeWrite: Write[ContentType] =
         Write[(String, String)].contramap(c => (c.id.value, c.name))
@@ -26,10 +26,10 @@ object ContentTypeRepository {
       override def upsert(data: ContentType): ConnectionIO[Int] = {
         ContentTypeQuery.upsert.run(data)
       }
-      override def getAll(): ConnectionIO[Seq[ContentType]] = {
+      override def getAll(): ConnectionIO[Seq[ContentTypeReadModel]] = {
         ContentTypeQuery.getAll.to[Seq]
       }
-      override def findByName(name: String): ConnectionIO[Option[ContentType]] = {
+      override def findByName(name: String): ConnectionIO[Option[ContentTypeReadModel]] = {
         ContentTypeQuery.findByName(name).option
       }
     }

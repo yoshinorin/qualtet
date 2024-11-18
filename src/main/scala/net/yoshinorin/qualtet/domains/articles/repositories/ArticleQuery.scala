@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
 
 object ArticleQuery {
 
-  def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams): Read[(Int, ResponseArticle)] ?=> Query0[(Int, ResponseArticle)] = {
+  def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
     sql"""
       SELECT
         count(1) OVER () AS count,
@@ -31,14 +31,14 @@ object ArticleQuery {
       OFFSET
         ${sqlParams.offset}
     """
-      .query[(Int, ResponseArticle)]
+      .query[(Int, ArticleReadModel)]
   }
 
   def findByTagNameWithCount(
     contentTypeId: ContentTypeId,
     tagName: TagName,
     sqlParams: SqlParams
-  ): Read[(Int, ResponseArticle)] ?=> Query0[(Int, ResponseArticle)] = {
+  ): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
     sql"""
       SELECT
         count(1) OVER () AS count,
@@ -65,10 +65,10 @@ object ArticleQuery {
       OFFSET
         ${sqlParams.offset}
     """
-      .query[(Int, ResponseArticle)]
+      .query[(Int, ArticleReadModel)]
   }
 
-  def findBySeriesNameWithCount(contentTypeId: ContentTypeId, seriesName: SeriesName): Read[(Int, ResponseArticle)] ?=> Query0[(Int, ResponseArticle)] = {
+  def findBySeriesNameWithCount(contentTypeId: ContentTypeId, seriesName: SeriesName): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
     sql"""
         SELECT
         count(1) OVER () AS count,
@@ -91,6 +91,6 @@ object ArticleQuery {
       ORDER BY
         published_at ASC
     """
-      .query[(Int, ResponseArticle)]
+      .query[(Int, ArticleReadModel)]
   }
 }

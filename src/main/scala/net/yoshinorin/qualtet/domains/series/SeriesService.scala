@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.series
 import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.errors.NotFound
@@ -22,13 +23,21 @@ class SeriesService[F[_]: Monad](
 
   def findByNameCont(name: SeriesName): ContT[F, Option[Series], Option[Series]] = {
     ContT.apply[F, Option[Series], Option[Series]] { next =>
-      seriesRepository.findByName(name)
+      seriesRepository.findByName(name).map { x =>
+        x.map { s =>
+          Series(s.id, s.name, s.title, s.description)
+        }
+      }
     }
   }
 
   def fetchActions: ContT[F, Seq[Series], Seq[Series]] = {
     ContT.apply[F, Seq[Series], Seq[Series]] { next =>
-      seriesRepository.getAll()
+      seriesRepository.getAll().map { x =>
+        x.map { s =>
+          Series(s.id, s.name, s.title, s.description)
+        }
+      }
     }
   }
 

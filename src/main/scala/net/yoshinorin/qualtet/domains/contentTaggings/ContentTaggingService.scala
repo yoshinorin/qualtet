@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.contentTaggings
 import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.tags.TagId
 import net.yoshinorin.qualtet.infrastructure.db.Executer
@@ -13,7 +14,9 @@ class ContentTaggingService[F[_]: Monad](
 
   def findByTagIdCont(id: TagId): ContT[F, Seq[ContentTagging], Seq[ContentTagging]] = {
     ContT.apply[F, Seq[ContentTagging], Seq[ContentTagging]] { next =>
-      contentTaggingRepository.findByTagId(id)
+      contentTaggingRepository.findByTagId(id).map { ct =>
+        ct.map(c => ContentTagging(c.contentId, c.tagId))
+      }
     }
   }
 
