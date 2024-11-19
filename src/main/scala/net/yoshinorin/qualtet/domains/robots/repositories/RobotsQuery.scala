@@ -7,14 +7,14 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object RobotsQuery {
 
-  def upsert: Write[Robots] ?=> Update[Robots] = {
+  def upsert: Write[RobotsWriteModel] ?=> Update[RobotsWriteModel] = {
     val q = s"""
           INSERT INTO robots (content_id, attributes)
             VALUES (?, ?)
           ON DUPLICATE KEY UPDATE
             attributes = VALUES(attributes)
         """
-    Update[Robots](q)
+    Update[RobotsWriteModel](q)
   }
 
   def delete(id: ContentId): Update0 = {

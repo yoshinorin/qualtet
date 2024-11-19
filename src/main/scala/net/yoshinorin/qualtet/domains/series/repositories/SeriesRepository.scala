@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.series
 
 trait SeriesRepository[F[_]] {
-  def upsert(data: Series): F[Int]
+  def upsert(data: SeriesWriteModel): F[Int]
   def findByName(name: SeriesName): F[Option[SeriesReadModel]]
   def getAll(): F[Seq[SeriesReadModel]]
 }
@@ -14,7 +14,7 @@ object SeriesRepository {
   given SeriesRepository: SeriesRepository[ConnectionIO] = {
     new SeriesRepository[ConnectionIO] {
 
-      given seriesWrite: Write[Series] =
+      given seriesWrite: Write[SeriesWriteModel] =
         Write[(String, String, String, Option[String])].contramap { s =>
           (s.id.value, s.name.value, s.title, s.description)
         }
@@ -42,7 +42,7 @@ object SeriesRepository {
         }
 
       // TODO: do not `run` here
-      override def upsert(data: Series): ConnectionIO[Int] = {
+      override def upsert(data: SeriesWriteModel): ConnectionIO[Int] = {
         SeriesQuery.upsert.run(data)
       }
 

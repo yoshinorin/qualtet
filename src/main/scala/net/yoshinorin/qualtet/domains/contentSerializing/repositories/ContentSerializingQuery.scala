@@ -15,7 +15,7 @@ object ContentSerializingQuery {
       .query[ContentSerializingReadModel]
   }
 
-  def bulkUpsert: Write[ContentSerializing] ?=> Update[ContentSerializing] = {
+  def bulkUpsert: Write[ContentSerializingWriteModel] ?=> Update[ContentSerializingWriteModel] = {
     val q = s"""
           INSERT INTO contents_serializing (series_id, content_id)
             VALUES (?, ?)
@@ -23,7 +23,7 @@ object ContentSerializingQuery {
             series_id = VALUES(series_id),
             content_id = VALUES(content_id)
         """
-    Update[ContentSerializing](q)
+    Update[ContentSerializingWriteModel](q)
   }
 
   def deleteBySeriesId(id: SeriesId): Update0 = {

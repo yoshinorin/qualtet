@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
 trait ContentTypeRepository[F[_]] {
-  def upsert(data: ContentType): F[Int]
+  def upsert(data: ContentTypeWriteModel): F[Int]
   def getAll(): F[Seq[ContentTypeReadModel]]
   def findByName(name: String): F[Option[ContentTypeReadModel]]
 }
@@ -19,11 +19,11 @@ object ContentTypeRepository {
       given contentTypeWithOptionRead: Read[Option[ContentTypeReadModel]] =
         Read[(String, String)].map { case (id, name) => Some(ContentTypeReadModel(ContentTypeId(id), name)) }
 
-      given contentTypeWrite: Write[ContentType] =
+      given contentTypeWrite: Write[ContentTypeWriteModel] =
         Write[(String, String)].contramap(c => (c.id.value, c.name))
 
       // TODO: do not `run` here
-      override def upsert(data: ContentType): ConnectionIO[Int] = {
+      override def upsert(data: ContentTypeWriteModel): ConnectionIO[Int] = {
         ContentTypeQuery.upsert.run(data)
       }
       override def getAll(): ConnectionIO[Seq[ContentTypeReadModel]] = {

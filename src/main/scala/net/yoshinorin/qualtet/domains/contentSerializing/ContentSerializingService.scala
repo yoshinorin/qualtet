@@ -21,7 +21,10 @@ class ContentSerializingService[F[_]: Monad](
   def upsertCont(data: Option[ContentSerializing]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       data match {
-        case Some(d) => contentSerializingRepository.upsert(d)
+        case Some(d) => {
+          val w = ContentSerializingWriteModel(seriesId = d.seriesId, contentId = d.contentId)
+          contentSerializingRepository.upsert(w)
+        }
         case None => contentSerializingRepository.fakeRequestInt
       }
     }
@@ -30,7 +33,10 @@ class ContentSerializingService[F[_]: Monad](
   def bulkUpsertCont(data: Option[List[ContentSerializing]]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       data match {
-        case Some(d) => contentSerializingRepository.bulkUpsert(d)
+        case Some(d) => {
+          val ws = d.map(w => ContentSerializingWriteModel(seriesId = w.seriesId, contentId = w.contentId))
+          contentSerializingRepository.bulkUpsert(ws)
+        }
         case None => contentSerializingRepository.fakeRequestInt
       }
     }

@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.tags
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
 trait TagRepository[F[_]] {
-  def bulkUpsert(data: List[Tag]): F[Int]
+  def bulkUpsert(data: List[TagWriteModel]): F[Int]
   def getAll(): F[Seq[TagWithCountReadModel]]
   def findById(id: TagId): F[Option[TagReadModel]]
   def findByName(id: TagName): F[Option[TagReadModel]]
@@ -33,10 +33,10 @@ object TagRepository {
       given tagReadWithOption: Read[Option[TagReadModel]] =
         Read[(String, String)].map { case (id, name) => Some(TagReadModel(TagId(id), TagName(name))) }
 
-      given tagWrite: Write[Tag] =
+      given tagWrite: Write[TagWriteModel] =
         Write[(String, String)].contramap(p => (p.id.value, p.name.value))
 
-      override def bulkUpsert(data: List[Tag]): ConnectionIO[Int] = {
+      override def bulkUpsert(data: List[TagWriteModel]): ConnectionIO[Int] = {
         TagQuery.bulkUpsert.updateMany(data)
       }
       override def getAll(): ConnectionIO[Seq[TagWithCountReadModel]] = {

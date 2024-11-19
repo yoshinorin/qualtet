@@ -18,7 +18,10 @@ class TagService[F[_]: Monad](
   def bulkUpsertCont(data: Option[List[Tag]]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       data match {
-        case Some(d) => tagRepository.bulkUpsert(d)
+        case Some(d) => {
+          val ws = d.map { t => TagWriteModel(id = t.id, name = t.name) }
+          tagRepository.bulkUpsert(ws)
+        }
         case None => tagRepository.fakeRequest()
       }
     }

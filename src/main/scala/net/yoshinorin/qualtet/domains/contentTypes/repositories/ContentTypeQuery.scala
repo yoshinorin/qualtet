@@ -7,14 +7,14 @@ import doobie.util.update.Update
 
 object ContentTypeQuery {
 
-  def upsert: Write[ContentType] ?=> Update[ContentType] = {
+  def upsert: Write[ContentTypeWriteModel] ?=> Update[ContentTypeWriteModel] = {
     val q = s"""
           INSERT INTO content_types (id, name)
             VALUES (?, ?)
           ON DUPLICATE KEY UPDATE
             name = VALUES(name)
         """
-    Update[ContentType](q)
+    Update[ContentTypeWriteModel](q)
   }
 
   def getAll: Read[ContentTypeReadModel] ?=> Query0[ContentTypeReadModel] = {

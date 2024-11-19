@@ -17,7 +17,8 @@ class SeriesService[F[_]: Monad](
 
   def upsertCont(data: Series): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
-      seriesRepository.upsert(data)
+      val w = SeriesWriteModel(id = data.id, name = data.name, title = data.title, description = data.description)
+      seriesRepository.upsert(w)
     }
   }
 

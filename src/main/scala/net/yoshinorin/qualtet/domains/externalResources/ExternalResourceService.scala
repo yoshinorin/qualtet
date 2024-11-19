@@ -10,7 +10,10 @@ class ExternalResourceService[F[_]: Monad](
 
   def bulkUpsertCont(data: List[ExternalResource]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
-      externalResourceRepository.bulkUpsert(data)
+      val ws = data.map { d =>
+        ExternalResourceWriteModel(contentId = d.contentId, kind = d.kind, name = d.name)
+      }
+      externalResourceRepository.bulkUpsert(ws)
     }
   }
 

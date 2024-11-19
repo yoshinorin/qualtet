@@ -9,7 +9,8 @@ class RobotsService[F[_]: Monad](
 ) {
   def upsertCont(data: Robots): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
-      robotsRepository.upsert(data)
+      val w = RobotsWriteModel(contentId = data.contentId, attributes = data.attributes)
+      robotsRepository.upsert(w)
     }
   }
 

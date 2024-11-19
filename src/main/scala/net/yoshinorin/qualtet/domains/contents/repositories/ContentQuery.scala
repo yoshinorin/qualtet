@@ -7,7 +7,7 @@ import doobie.util.update.{Update, Update0}
 
 object ContentQuery {
 
-  def upsert: Write[Content] ?=> Update[Content] = {
+  def upsert: Write[ContentWriteModel] ?=> Update[ContentWriteModel] = {
     val q = s"""
           INSERT INTO contents (id, author_id, content_type_id, path, title, raw_content, html_content, published_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -19,7 +19,7 @@ object ContentQuery {
             published_at = VALUES(published_at),
             updated_at = VALUES(updated_at)
         """
-    Update[Content](q)
+    Update[ContentWriteModel](q)
   }
 
   def delete(id: ContentId): Update0 = {

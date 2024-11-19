@@ -7,7 +7,7 @@ import doobie.util.update.Update
 
 object AuthorQuery {
 
-  def upsert: Write[Author] ?=> Update[Author] = {
+  def upsert: Write[AuthorWriteModel] ?=> Update[AuthorWriteModel] = {
     val q = s"""
           INSERT INTO authors (id, name, display_name, password, created_at)
             VALUES (?, ?, ?, ?, ?)
@@ -15,7 +15,7 @@ object AuthorQuery {
             display_name = VALUES(display_name),
             password = VALUES(password)
         """
-    Update[Author](q)
+    Update[AuthorWriteModel](q)
   }
 
   def getAll: Read[AuthorWithoutPasswordReadModel] ?=> Query0[AuthorWithoutPasswordReadModel] = {

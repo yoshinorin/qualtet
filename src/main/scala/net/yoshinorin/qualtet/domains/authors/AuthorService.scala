@@ -14,7 +14,14 @@ class AuthorService[F[_]: Monad](
 
   def upsertCont(data: Author): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
-      authorRepository.upsert(data)
+      val w = AuthorWriteModel(
+        id = data.id,
+        name = data.name,
+        displayName = data.displayName,
+        password = data.password,
+        createdAt = data.createdAt
+      )
+      authorRepository.upsert(w)
     }
   }
 

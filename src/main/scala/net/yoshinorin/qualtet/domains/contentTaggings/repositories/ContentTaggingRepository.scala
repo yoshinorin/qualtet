@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.tags.TagId
 
 trait ContentTaggingRepository[F[_]] {
-  def bulkUpsert(data: List[ContentTagging]): F[Int]
+  def bulkUpsert(data: List[ContentTaggingWriteModel]): F[Int]
   def findByTagId(id: TagId): F[Seq[ContentTaggingReadModel]]
   def deleteByContentId(id: ContentId): F[Unit]
   def deleteByTagId(id: TagId): F[Unit]
@@ -29,10 +29,10 @@ object ContentTaggingRepository {
       given contentTaggingWithOptionRead: Read[Option[ContentTaggingReadModel]] =
         Read[(String, String)].map { case (contentId, tagId) => Some(ContentTaggingReadModel(ContentId(contentId), TagId(tagId))) }
 
-      given contentTaggingWrite: Write[ContentTagging] =
+      given contentTaggingWrite: Write[ContentTaggingWriteModel] =
         Write[(String, String)].contramap(c => (c.contentId.value, c.tagId.value))
 
-      override def bulkUpsert(data: List[ContentTagging]): ConnectionIO[Int] = {
+      override def bulkUpsert(data: List[ContentTaggingWriteModel]): ConnectionIO[Int] = {
         ContentTaggingQuery.bulkUpsert.updateMany(data)
       }
       override def findByTagId(id: TagId): ConnectionIO[Seq[ContentTaggingReadModel]] = {

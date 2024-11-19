@@ -49,14 +49,14 @@ object TagQuery {
       .query[TagReadModel]
   }
 
-  def bulkUpsert: Write[Tag] ?=> Update[Tag] = {
+  def bulkUpsert: Write[TagWriteModel] ?=> Update[TagWriteModel] = {
     val q = s"""
           INSERT INTO tags (id, name)
             VALUES (?, ?)
           ON DUPLICATE KEY UPDATE
             name = VALUES(name)
         """
-    Update[Tag](q)
+    Update[TagWriteModel](q)
   }
 
   def delete(id: TagId): Update0 = {

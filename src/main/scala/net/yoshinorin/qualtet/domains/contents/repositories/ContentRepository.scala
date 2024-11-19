@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
 
 trait ContentRepository[F[_]] {
-  def upsert(data: Content): F[Int]
+  def upsert(data: ContentWriteModel): F[Int]
   def findById(id: ContentId): F[Option[ContentReadModel]]
   def findByPath(path: Path): F[Option[ContentReadModel]]
   def findByPathWithMeta(path: Path): F[Option[ContentWithMetaReadModel]]
@@ -84,7 +84,7 @@ object ContentRepository {
             )
         }
 
-      given contentWrite: Write[Content] =
+      given contentWrite: Write[ContentWriteModel] =
         Write[(String, String, String, String, String, String, String, Long, Long)].contramap(c =>
           (
             c.id.value,
@@ -100,7 +100,7 @@ object ContentRepository {
         )
 
       // TODO: do not `run` here
-      override def upsert(data: Content): ConnectionIO[Int] = {
+      override def upsert(data: ContentWriteModel): ConnectionIO[Int] = {
         ContentQuery.upsert.run(data)
       }
       override def findById(id: ContentId): ConnectionIO[Option[ContentReadModel]] = {

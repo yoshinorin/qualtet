@@ -7,7 +7,7 @@ import doobie.util.update.Update
 
 object SeriesQuery {
 
-  def upsert: doobie.Write[Series] ?=> doobie.Update[Series] = {
+  def upsert: doobie.Write[SeriesWriteModel] ?=> doobie.Update[SeriesWriteModel] = {
     val q = s"""
           INSERT INTO series (id, name, title, description)
             VALUES (?, ?, ?, ?)
@@ -15,7 +15,7 @@ object SeriesQuery {
             title = VALUES(title),
             description = VALUES(description)
         """
-    Update[Series](q)
+    Update[SeriesWriteModel](q)
   }
 
   def findByName(name: SeriesName): Read[SeriesReadModel] ?=> Query0[SeriesReadModel] = {

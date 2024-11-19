@@ -12,10 +12,10 @@ trait AuthorRepository[F[_]] {
   /**
    * create a authorName
    *
-   * @param data Instance of Author
+   * @param data Instance of AuthorWriteModel
    * @return dummy long id (Doobie return Int)
    */
-  def upsert(data: Author): F[Int]
+  def upsert(data: AuthorWriteModel): F[Int]
 
   /**
    * find a Author by id
@@ -70,14 +70,14 @@ object AuthorRepository {
           Some(AuthorReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt))
         }
 
-      given authorWrite: Write[Author] =
+      given authorWrite: Write[AuthorWriteModel] =
         Write[(String, String, String, String, Long)]
           .contramap(a => (a.id.value, a.name.value, a.displayName.value, a.password.value, a.createdAt))
 
       override def getAll(): ConnectionIO[Seq[AuthorWithoutPasswordReadModel]] = AuthorQuery.getAll.to[Seq]
 
       // TODO: Do not do `run` here
-      override def upsert(data: Author): ConnectionIO[Int] = AuthorQuery.upsert.run(data)
+      override def upsert(data: AuthorWriteModel): ConnectionIO[Int] = AuthorQuery.upsert.run(data)
 
       override def findById(id: AuthorId): ConnectionIO[Option[AuthorWithoutPasswordReadModel]] = AuthorQuery.findById(id).option
 

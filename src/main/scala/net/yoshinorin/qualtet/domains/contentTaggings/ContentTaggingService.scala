@@ -23,7 +23,10 @@ class ContentTaggingService[F[_]: Monad](
   def bulkUpsertCont(data: Option[List[ContentTagging]]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       data match {
-        case Some(d) => contentTaggingRepository.bulkUpsert(d)
+        case Some(d) => {
+          val ws = d.map(c => ContentTaggingWriteModel(c.contentId, c.tagId))
+          contentTaggingRepository.bulkUpsert(ws)
+        }
         case None => contentTaggingRepository.fakeRequestInt
       }
     }

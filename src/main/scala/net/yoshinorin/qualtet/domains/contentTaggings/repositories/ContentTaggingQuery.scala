@@ -15,7 +15,7 @@ object ContentTaggingQuery {
       .query[ContentTaggingReadModel]
   }
 
-  def bulkUpsert: Write[ContentTagging] ?=> Update[ContentTagging] = {
+  def bulkUpsert: Write[ContentTaggingWriteModel] ?=> Update[ContentTaggingWriteModel] = {
     val q = s"""
           INSERT INTO contents_tagging (content_id, tag_id)
             VALUES (?, ?)
@@ -23,7 +23,7 @@ object ContentTaggingQuery {
             content_id = VALUES(content_id),
             tag_id = VALUES(tag_id)
         """
-    Update[ContentTagging](q)
+    Update[ContentTaggingWriteModel](q)
   }
 
   def deleteByContentId(id: ContentId): Update0 = {

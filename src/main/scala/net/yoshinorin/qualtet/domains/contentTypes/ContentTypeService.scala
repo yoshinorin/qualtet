@@ -18,7 +18,8 @@ class ContentTypeService[F[_]: Monad](
 
   def upsertCont(data: ContentType): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
-      contentRepository.upsert(data)
+      val w = ContentTypeWriteModel(id = data.id, name = data.name)
+      contentRepository.upsert(w)
     }
   }
 
