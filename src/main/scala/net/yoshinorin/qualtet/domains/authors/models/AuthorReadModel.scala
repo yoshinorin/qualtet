@@ -1,18 +1,16 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import java.time.ZonedDateTime
-
 final case class AuthorReadModel(
-  id: AuthorId = AuthorId.apply(),
+  id: AuthorId,
   name: AuthorName,
   displayName: AuthorDisplayName,
   password: BCryptPassword,
-  createdAt: Long = ZonedDateTime.now.toEpochSecond
+  createdAt: Long
 )
 
 final case class AuthorWithoutPasswordReadModel(
-  id: AuthorId = AuthorId.apply(),
+  id: AuthorId,
   name: AuthorName,
   displayName: AuthorDisplayName,
-  createdAt: Long = ZonedDateTime.now.toEpochSecond
+  createdAt: Long
 )

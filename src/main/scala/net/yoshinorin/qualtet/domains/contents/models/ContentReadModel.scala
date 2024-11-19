@@ -19,7 +19,7 @@ final case class ContentWithMetaReadModel(
 )
 
 final case class ContentReadModel(
-  id: ContentId = ContentId.apply(),
+  id: ContentId,
   authorId: AuthorId,
   contentTypeId: ContentTypeId,
   path: Path,
