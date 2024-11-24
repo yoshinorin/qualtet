@@ -16,7 +16,7 @@ class SitemapService[F[_]: Monad](
 
   private val cacheKey = "sitemaps-full-cache"
 
-  def getActions: ContT[F, Seq[Url], Seq[Url]] = {
+  def getCont: ContT[F, Seq[Url], Seq[Url]] = {
     ContT.apply[F, Seq[Url], Seq[Url]] { next =>
       sitemapRepository.get().map { x =>
         x.map { s =>
@@ -31,7 +31,7 @@ class SitemapService[F[_]: Monad](
       case Some(x: Seq[Url]) => IO(x)
       case _ =>
         for {
-          x <- executer.transact(getActions)
+          x <- executer.transact(getCont)
         } yield (x, cache.put(cacheKey, x))._1
     }
   }

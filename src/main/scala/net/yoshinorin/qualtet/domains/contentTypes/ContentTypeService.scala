@@ -23,7 +23,7 @@ class ContentTypeService[F[_]: Monad](
     }
   }
 
-  def getAllActions: ContT[F, Seq[ContentType], Seq[ContentType]] = {
+  def getAllCont: ContT[F, Seq[ContentType], Seq[ContentType]] = {
     ContT.apply[F, Seq[ContentType], Seq[ContentType]] { next =>
       contentRepository.getAll().map { cr =>
         cr.map { c => ContentType(c.id, c.name) }
@@ -85,7 +85,7 @@ class ContentTypeService[F[_]: Monad](
    * @return ContentTypes
    */
   def getAll: IO[Seq[ContentType]] = {
-    executer.transact(getAllActions)
+    executer.transact(getAllCont)
   }
 
   def invalidate(): IO[Unit] = {

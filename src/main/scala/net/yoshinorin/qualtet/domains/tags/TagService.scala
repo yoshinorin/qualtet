@@ -27,7 +27,7 @@ class TagService[F[_]: Monad](
     }
   }
 
-  def getAllActions: ContT[F, Seq[ResponseTag], Seq[ResponseTag]] = {
+  def getAllCont: ContT[F, Seq[ResponseTag], Seq[ResponseTag]] = {
     ContT.apply[F, Seq[ResponseTag], Seq[ResponseTag]] { next =>
       tagRepository.getAll().map { x =>
         x.map { case TagWithCountReadModel(id, name, count) => ResponseTag(id, name, count) }
@@ -77,7 +77,7 @@ class TagService[F[_]: Monad](
    * @return tags
    */
   def getAll: IO[Seq[ResponseTag]] = {
-    executer.transact(getAllActions)
+    executer.transact(getAllCont)
   }
 
   /**

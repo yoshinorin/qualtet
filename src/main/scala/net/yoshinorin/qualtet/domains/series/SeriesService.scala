@@ -32,7 +32,7 @@ class SeriesService[F[_]: Monad](
     }
   }
 
-  def fetchActions: ContT[F, Seq[Series], Seq[Series]] = {
+  def fetchCont: ContT[F, Seq[Series], Seq[Series]] = {
     ContT.apply[F, Seq[Series], Seq[Series]] { next =>
       seriesRepository.getAll().map { x =>
         x.map { s =>
@@ -85,7 +85,7 @@ class SeriesService[F[_]: Monad](
    * @return Series
    */
   def getAll: IO[Seq[Series]] = {
-    executer.transact(fetchActions)
+    executer.transact(fetchCont)
   }
 
 }

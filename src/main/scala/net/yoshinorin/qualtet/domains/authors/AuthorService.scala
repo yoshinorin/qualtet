@@ -25,7 +25,7 @@ class AuthorService[F[_]: Monad](
     }
   }
 
-  def fetchActions: ContT[F, Seq[ResponseAuthor], Seq[ResponseAuthor]] = {
+  def fetchCont: ContT[F, Seq[ResponseAuthor], Seq[ResponseAuthor]] = {
     ContT.apply[F, Seq[ResponseAuthor], Seq[ResponseAuthor]] { next =>
       authorRepository.getAll().map { authors =>
         authors.map { author =>
@@ -109,7 +109,7 @@ class AuthorService[F[_]: Monad](
    * @return Authors
    */
   def getAll: IO[Seq[ResponseAuthor]] = {
-    executer.transact(fetchActions)
+    executer.transact(fetchCont)
   }
 
   /**
