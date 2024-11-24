@@ -29,7 +29,7 @@ object SeriesRepository {
           )
         }
 
-      given seriesWithOptionRead: Read[Option[SeriesReadModel]] =
+      given seriesOrOptionRead: Read[Option[SeriesReadModel]] =
         Read[(String, String, String, Option[String])].map { case (seriesId, name, title, description) =>
           Some(
             SeriesReadModel(

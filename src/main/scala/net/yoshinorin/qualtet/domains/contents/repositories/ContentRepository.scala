@@ -36,7 +36,7 @@ object ContentRepository {
             )
         }
 
-      given contentWithOptionRead: Read[Option[ContentReadModel]] =
+      given contentOrOptionRead: Read[Option[ContentReadModel]] =
         Read[(String, String, String, String, String, String, String, Long, Long)].map {
           case (contentId, authorId, contentTypeId, path, title, rawContent, htmlContent, publishedAt, updatedAt) =>
             Some(

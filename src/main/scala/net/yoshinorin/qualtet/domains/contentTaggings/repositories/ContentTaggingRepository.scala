@@ -26,7 +26,7 @@ object ContentTaggingRepository {
       given contentTaggingRead: Read[ContentTaggingReadModel] =
         Read[(String, String)].map { case (contentId, tagId) => ContentTaggingReadModel(ContentId(contentId), TagId(tagId)) }
 
-      given contentTaggingWithOptionRead: Read[Option[ContentTaggingReadModel]] =
+      given contentTaggingOrOptionRead: Read[Option[ContentTaggingReadModel]] =
         Read[(String, String)].map { case (contentId, tagId) => Some(ContentTaggingReadModel(ContentId(contentId), TagId(tagId))) }
 
       given contentTaggingWrite: Write[ContentTaggingWriteModel] =

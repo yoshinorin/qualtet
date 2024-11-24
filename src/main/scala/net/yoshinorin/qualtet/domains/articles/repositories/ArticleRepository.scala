@@ -19,7 +19,7 @@ object ArticleRepository {
 
   given ArticleRepository: ArticleRepository[ConnectionIO] = {
     new ArticleRepository[ConnectionIO] {
-      given articleWithCountRead: Read[(Int, ArticleReadModel)] =
+      given articlesWithCountRead: Read[(Int, ArticleReadModel)] =
         Read[(Int, (String, String, String, String, Long, Long))].map { case (cnt, (id, path, title, content, publishedAt, updatedAt)) =>
           (cnt, ArticleReadModel(ContentId(id), Path(path), title, content, publishedAt, updatedAt))
         }

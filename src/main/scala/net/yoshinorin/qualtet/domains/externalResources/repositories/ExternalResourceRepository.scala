@@ -17,7 +17,7 @@ object ExternalResourceRepository {
   given ExternalResourceRepository: ExternalResourceRepository[ConnectionIO] = {
     new ExternalResourceRepository[ConnectionIO] {
 
-      given tagWrite: Write[ExternalResourceWriteModel] =
+      given externalResourceWrite: Write[ExternalResourceWriteModel] =
         Write[(String, String, String)].contramap(p => (p.contentId.value, p.kind.value, p.name))
 
       override def bulkUpsert(data: List[ExternalResourceWriteModel]): ConnectionIO[Int] = ExternalResourceQuery.bulkUpsert.updateMany(data)

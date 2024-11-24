@@ -16,7 +16,7 @@ object ContentTypeRepository {
       given contentTypeRead: Read[ContentTypeReadModel] =
         Read[(String, String)].map { case (id, name) => ContentTypeReadModel(ContentTypeId(id), name) }
 
-      given contentTypeWithOptionRead: Read[Option[ContentTypeReadModel]] =
+      given contentTypeOrOptionRead: Read[Option[ContentTypeReadModel]] =
         Read[(String, String)].map { case (id, name) => Some(ContentTypeReadModel(ContentTypeId(id), name)) }
 
       given contentTypeWrite: Write[ContentTypeWriteModel] =

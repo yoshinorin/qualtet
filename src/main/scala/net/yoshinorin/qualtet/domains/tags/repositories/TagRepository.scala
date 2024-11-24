@@ -21,16 +21,16 @@ object TagRepository {
   given TagRepository: TagRepository[ConnectionIO] = {
     new TagRepository[ConnectionIO] {
 
-      given responseTagRead: Read[TagWithCountReadModel] =
+      given tagWithCountRead: Read[TagWithCountReadModel] =
         Read[(String, String, Int)].map { case (id, name, count) => TagWithCountReadModel(TagId(id), TagName(name), count) }
 
-      given responseTagReadWithOption: Read[Option[TagWithCountReadModel]] =
+      given tagWithCountReadOrOption: Read[Option[TagWithCountReadModel]] =
         Read[(String, String, Int)].map { case (id, name, count) => Some(TagWithCountReadModel(TagId(id), TagName(name), count)) }
 
       given tagRead: Read[TagReadModel] =
         Read[(String, String)].map { case (id, name) => TagReadModel(TagId(id), TagName(name)) }
 
-      given tagReadWithOption: Read[Option[TagReadModel]] =
+      given tagOrOptionRead: Read[Option[TagReadModel]] =
         Read[(String, String)].map { case (id, name) => Some(TagReadModel(TagId(id), TagName(name))) }
 
       given tagWrite: Write[TagWriteModel] =

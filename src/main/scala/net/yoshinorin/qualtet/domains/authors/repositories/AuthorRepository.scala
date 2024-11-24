@@ -55,7 +55,7 @@ object AuthorRepository {
           AuthorWithoutPasswordReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), createdAt)
         }
 
-      given authorWithoutPasswordOptionRead: Read[Option[AuthorWithoutPasswordReadModel]] =
+      given authorWithoutPasswordOrOptionRead: Read[Option[AuthorWithoutPasswordReadModel]] =
         Read[(String, String, String, Long)].map { case (id, name, displayName, createdAt) =>
           Some(AuthorWithoutPasswordReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), createdAt))
         }
@@ -65,7 +65,7 @@ object AuthorRepository {
           AuthorReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt)
         }
 
-      given authorWithOptionRead: Read[Option[AuthorReadModel]] =
+      given authorOrOptionRead: Read[Option[AuthorReadModel]] =
         Read[(String, String, String, String, Long)].map { case (id, name, displayName, password, createdAt) =>
           Some(AuthorReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt))
         }
