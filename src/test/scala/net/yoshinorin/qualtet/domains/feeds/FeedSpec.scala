@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.feeds
 
-import net.yoshinorin.qualtet.domains.contents.Path
+import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 

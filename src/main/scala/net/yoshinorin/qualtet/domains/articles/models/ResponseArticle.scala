@@ -2,7 +2,8 @@ package net.yoshinorin.qualtet.domains.articles
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
+import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.syntax.*
 
 import scala.util.Random

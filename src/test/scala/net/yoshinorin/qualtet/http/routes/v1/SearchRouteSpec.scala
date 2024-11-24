@@ -6,7 +6,8 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
-import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
+import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.RequestContent
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.search.ResponseSearchWithCount
 import net.yoshinorin.qualtet.http.ResponseProblemDetails

@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
-import net.yoshinorin.qualtet.domains.contents.{Path, RequestContent}
+import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.RequestContent
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter

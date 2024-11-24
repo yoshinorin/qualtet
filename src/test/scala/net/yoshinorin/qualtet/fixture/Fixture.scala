@@ -15,6 +15,7 @@ import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.CorsProvider
 import net.yoshinorin.qualtet.cache.CacheModule
+import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.articles.*
 import net.yoshinorin.qualtet.domains.authors.*
 import net.yoshinorin.qualtet.domains.contents.*

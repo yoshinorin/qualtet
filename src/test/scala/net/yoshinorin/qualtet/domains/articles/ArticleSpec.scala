@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.contents.ContentId
-import net.yoshinorin.qualtet.domains.contents.Path
+import net.yoshinorin.qualtet.domains.Path
 
 // testOnly net.yoshinorin.qualtet.domains.articles.ArticleSpec
 class ArticleSpec extends AnyWordSpec {

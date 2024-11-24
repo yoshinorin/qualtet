@@ -4,6 +4,7 @@ import doobie.{Read, Write}
 import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
 import doobie.util.update.{Update, Update0}
+import net.yoshinorin.qualtet.domains.Path
 
 object ContentQuery {
 

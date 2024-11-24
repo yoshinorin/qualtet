@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.domains.contents
 
+import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.authors.AuthorId
-import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
+import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName}

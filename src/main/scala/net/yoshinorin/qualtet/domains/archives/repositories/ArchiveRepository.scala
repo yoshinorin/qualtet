@@ -10,7 +10,7 @@ object ArchiveRepository {
 
   import doobie.Read
   import doobie.ConnectionIO
-  import net.yoshinorin.qualtet.domains.contents.Path
+  import net.yoshinorin.qualtet.domains.Path
 
   given ArchiveRepository: ArchiveRepository[ConnectionIO] = {
     new ArchiveRepository[ConnectionIO] {

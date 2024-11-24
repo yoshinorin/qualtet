@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.archives
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.contents.Path
+import net.yoshinorin.qualtet.domains.Path
 
 final case class ResponseArchive(
   path: Path,

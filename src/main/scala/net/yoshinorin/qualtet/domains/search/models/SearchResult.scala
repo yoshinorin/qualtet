@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.search
 
-import net.yoshinorin.qualtet.domains.contents.Path
+import net.yoshinorin.qualtet.domains.Path
 
 final case class SearchResult(
   path: Path,

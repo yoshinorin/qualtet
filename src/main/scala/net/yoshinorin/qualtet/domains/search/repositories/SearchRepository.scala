@@ -8,7 +8,7 @@ object SearchRepository {
 
   import doobie.Read
   import doobie.ConnectionIO
-  import net.yoshinorin.qualtet.domains.contents.Path
+  import net.yoshinorin.qualtet.domains.Path
 
   given SearchRepository: SearchRepository[ConnectionIO] = {
     new SearchRepository[ConnectionIO] {

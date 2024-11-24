@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.articles
 
+import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.tags.TagName
@@ -15,7 +16,7 @@ object ArticleRepository {
 
   import doobie.Read
   import doobie.ConnectionIO
-  import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
+  import net.yoshinorin.qualtet.domains.contents.ContentId
 
   given ArticleRepository: ArticleRepository[ConnectionIO] = {
     new ArticleRepository[ConnectionIO] {

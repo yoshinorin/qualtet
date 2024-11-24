@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import net.yoshinorin.qualtet.domains.contents.Path
+import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.errors.NotFound
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter

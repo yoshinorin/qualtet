@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.archives
 
 import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.domains.contents.Path
+import net.yoshinorin.qualtet.domains.Path
 
 // testOnly net.yoshinorin.qualtet.domains.archives.ArchiveSpec
 class ArchiveSpec extends AnyWordSpec {

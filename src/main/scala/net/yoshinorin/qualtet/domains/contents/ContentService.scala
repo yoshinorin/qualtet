@@ -4,6 +4,7 @@ import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
+import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.authors.AuthorService
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingService}

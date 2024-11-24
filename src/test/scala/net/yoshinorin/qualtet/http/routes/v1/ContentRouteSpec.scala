@@ -9,7 +9,8 @@ import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, Path, RequestContent, ResponseContent}
+import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.http.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*

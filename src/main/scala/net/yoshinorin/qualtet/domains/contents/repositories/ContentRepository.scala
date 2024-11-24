@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import net.yoshinorin.qualtet.domains.contents.{ContentId, Path}
+import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentId
 
 trait ContentRepository[F[_]] {
   def upsert(data: ContentWriteModel): F[Int]

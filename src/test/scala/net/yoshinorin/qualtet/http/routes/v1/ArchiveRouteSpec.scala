@@ -8,7 +8,7 @@ import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.archives.{ArchiveService, ResponseArchive}
-import net.yoshinorin.qualtet.domains.contents.Path
+import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.fixture.Fixture
 import org.mockito.Mockito
 import org.mockito.Mockito.when

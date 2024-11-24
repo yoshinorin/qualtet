@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
+import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.errors.{NotFound, UnprocessableEntity}
 import net.yoshinorin.qualtet.domains.series.SeriesName

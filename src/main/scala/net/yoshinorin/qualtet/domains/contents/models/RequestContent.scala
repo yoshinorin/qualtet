@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import java.time.ZonedDateTime
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
+import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes

@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.search
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.contents.Path
+import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.syntax.*
 
 final case class ResponseSearch(
