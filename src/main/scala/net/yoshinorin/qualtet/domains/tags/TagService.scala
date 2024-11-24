@@ -30,7 +30,7 @@ class TagService[F[_]: Monad](
   def getAllCont: ContT[F, Seq[ResponseTag], Seq[ResponseTag]] = {
     ContT.apply[F, Seq[ResponseTag], Seq[ResponseTag]] { next =>
       tagRepository.getAll().map { x =>
-        x.map { case TagWithCountReadModel(id, name, count) => ResponseTag(id, name, count) }
+        x.map { case (cnt, tag) => ResponseTag(count = cnt, id = tag.id, name = tag.name) }
       }
     }
   }

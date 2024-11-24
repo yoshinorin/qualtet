@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 trait TagRepository[F[_]] {
   def bulkUpsert(data: List[TagWriteModel]): F[Int]
-  def getAll(): F[Seq[TagWithCountReadModel]]
+  def getAll(): F[Seq[(Int, TagReadModel)]]
   def findById(id: TagId): F[Option[TagReadModel]]
   def findByName(id: TagName): F[Option[TagReadModel]]
   def findByContentId(conetntId: ContentId): F[Seq[TagReadModel]]
@@ -21,8 +21,8 @@ object TagRepository {
   given TagRepository: TagRepository[ConnectionIO] = {
     new TagRepository[ConnectionIO] {
 
-      given tagWithCountRead: Read[TagWithCountReadModel] =
-        Read[(String, String, Int)].map { case (id, name, count) => TagWithCountReadModel(TagId(id), TagName(name), count) }
+      given tagWithCountRead: Read[(Int, TagReadModel)] =
+        Read[(Int, (String, String))].map { case (count, (id, name)) => (count, TagReadModel(TagId(id), TagName(name))) }
 
       given tagRead: Read[TagReadModel] =
         Read[(String, String)].map { case (id, name) => TagReadModel(TagId(id), TagName(name)) }
@@ -36,7 +36,7 @@ object TagRepository {
       override def bulkUpsert(data: List[TagWriteModel]): ConnectionIO[Int] = {
         TagQuery.bulkUpsert.updateMany(data)
       }
-      override def getAll(): ConnectionIO[Seq[TagWithCountReadModel]] = {
+      override def getAll(): ConnectionIO[Seq[(Int, TagReadModel)]] = {
         TagQuery.getAll.to[Seq]
       }
       override def findById(id: TagId): ConnectionIO[Option[TagReadModel]] = {

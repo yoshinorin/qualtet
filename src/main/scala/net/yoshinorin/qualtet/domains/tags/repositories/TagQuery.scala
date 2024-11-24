@@ -8,12 +8,12 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object TagQuery {
 
-  def getAll: Read[TagWithCountReadModel] ?=> Query0[TagWithCountReadModel] = {
+  def getAll: Read[(Int, TagReadModel)] ?=> Query0[(Int, TagReadModel)] = {
     sql"""
       SELECT
+        COUNT(*) AS count,
         tags.id,
-        tags.name,
-        COUNT(*) AS count
+        tags.name
       FROM tags
       INNER JOIN contents_tagging
         ON contents_tagging.tag_id = tags.id
@@ -24,7 +24,7 @@ object TagQuery {
       ORDER BY
         tags.name
     """
-      .query[TagWithCountReadModel]
+      .query[(Int, TagReadModel)]
   }
 
   def findByName(data: TagName): Read[TagReadModel] ?=> Query0[TagReadModel] = {
