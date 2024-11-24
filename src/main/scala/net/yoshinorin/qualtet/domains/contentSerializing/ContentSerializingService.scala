@@ -23,7 +23,7 @@ class ContentSerializingService[F[_]: Monad](
       data match {
         case Some(d) => {
           val w = ContentSerializingWriteModel(seriesId = d.seriesId, contentId = d.contentId)
-          contentSerializingRepository.upsert(w)
+          contentSerializingRepository.bulkUpsert(List(w))
         }
         case None => contentSerializingRepository.fakeRequestInt
       }

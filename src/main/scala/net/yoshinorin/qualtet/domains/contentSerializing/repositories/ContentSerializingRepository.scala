@@ -4,7 +4,6 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.series.SeriesId
 
 trait ContentSerializingRepository[F[_]] {
-  def upsert(data: ContentSerializingWriteModel): F[Int]
   def bulkUpsert(data: List[ContentSerializingWriteModel]): F[Int]
   def findBySeriesId(id: SeriesId): F[Seq[ContentSerializingReadModel]]
   def deleteBySeriesId(id: SeriesId): F[Unit]
@@ -31,10 +30,6 @@ object ContentSerializingRepository {
 
       given contentSerializingWrite: Write[ContentSerializingWriteModel] =
         Write[(String, String)].contramap(s => (s.seriesId.value, s.contentId.value))
-
-      override def upsert(data: ContentSerializingWriteModel): ConnectionIO[Int] = {
-        ContentSerializingQuery.bulkUpsert.run(data)
-      }
 
       override def bulkUpsert(data: List[ContentSerializingWriteModel]): ConnectionIO[Int] = {
         ContentSerializingQuery.bulkUpsert.updateMany(data)
