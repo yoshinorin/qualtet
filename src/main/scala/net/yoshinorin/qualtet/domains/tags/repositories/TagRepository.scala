@@ -24,9 +24,6 @@ object TagRepository {
       given tagWithCountRead: Read[TagWithCountReadModel] =
         Read[(String, String, Int)].map { case (id, name, count) => TagWithCountReadModel(TagId(id), TagName(name), count) }
 
-      given tagWithCountReadOrOption: Read[Option[TagWithCountReadModel]] =
-        Read[(String, String, Int)].map { case (id, name, count) => Some(TagWithCountReadModel(TagId(id), TagName(name), count)) }
-
       given tagRead: Read[TagReadModel] =
         Read[(String, String)].map { case (id, name) => TagReadModel(TagId(id), TagName(name)) }
 
