@@ -2,10 +2,10 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.31.1"
+  val jsoniterVersion = "2.31.3"
   val doobieVersion = "1.0.0-RC6"
   val jwtScalaVersion = "10.0.1"
-  val flywayVersion = "10.20.1"
+  val flywayVersion = "11.0.0"
   val http4sVersion = "1.0.0-M43"
   val log4catsVersion = "2.7.0"
 
@@ -22,18 +22,18 @@ object Dependencies {
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "test-internal",
-    "org.mariadb.jdbc" % "mariadb-java-client" % "3.5.0",
+    "org.mariadb.jdbc" % "mariadb-java-client" % "3.5.1",
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "24.10.0",
+    "org.wvlet.airframe" %% "airframe-ulid" % "24.11.0",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.1.8",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
     "ch.qos.logback" % "logback-classic" % "1.5.12",
     "net.logstash.logback" % "logstash-logback-encoder" % "8.0",
     "org.codehaus.janino" % "janino" % "3.1.12",
-    "org.springframework.security" % "spring-security-core" % "6.3.4",
+    "org.springframework.security" % "spring-security-core" % "6.4.1",
     "org.slf4j" % "slf4j-api" % "2.0.16",
     "org.scalatest" %% "scalatest" % "3.2.19" % "test",
     "org.mockito" % "mockito-core" % "5.14.2" % "test"
