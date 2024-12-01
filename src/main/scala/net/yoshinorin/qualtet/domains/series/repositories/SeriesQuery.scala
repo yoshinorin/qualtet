@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.series
 
-import doobie.{Read, Write}
+import doobie.Read
 import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
 import doobie.util.update.Update
