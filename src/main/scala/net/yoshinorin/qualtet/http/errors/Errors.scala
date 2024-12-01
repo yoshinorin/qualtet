@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http
+package net.yoshinorin.qualtet.http.errors
 
 import net.yoshinorin.qualtet.domains.errors.*
 

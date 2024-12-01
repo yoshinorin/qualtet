@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.errors
 
-import net.yoshinorin.qualtet.http.ProblemDetailsError
+import net.yoshinorin.qualtet.http.errors.ProblemDetailsError
 
 sealed trait DomainError extends Exception
 

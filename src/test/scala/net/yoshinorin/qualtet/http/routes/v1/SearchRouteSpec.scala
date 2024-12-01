@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contents.RequestContent
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.search.ResponseSearchWithCount
-import net.yoshinorin.qualtet.http.ResponseProblemDetails
+import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll

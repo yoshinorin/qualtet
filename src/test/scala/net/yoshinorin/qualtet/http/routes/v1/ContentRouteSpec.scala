@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, RequestContent, ResponseContent}
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.http.ResponseProblemDetails
+import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.{router => fixtureRouter}
 import org.scalatest.wordspec.AnyWordSpec

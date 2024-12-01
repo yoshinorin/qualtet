@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http
+package net.yoshinorin.qualtet.http.errors
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*

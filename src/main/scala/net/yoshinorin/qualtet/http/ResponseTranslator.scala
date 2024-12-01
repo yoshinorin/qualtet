@@ -8,7 +8,9 @@ import org.http4s.Challenge
 import org.http4s.headers.{`Content-Type`, `WWW-Authenticate`}
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.errors.DomainError
-import net.yoshinorin.qualtet.http.HttpError.*
+import net.yoshinorin.qualtet.http.errors.*
+import net.yoshinorin.qualtet.http.errors.HttpError.*
+import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.syntax.*
 
 object ResponseTranslator {
@@ -17,22 +19,22 @@ object ResponseTranslator {
   private def failToResponse(f: DomainError)(using req: Request[IO]): IO[Response[IO]] = {
     fromDomainError(f) match {
       case e: NotFound =>
-        NotFound(
+        org.http4s.dsl.io.NotFound(
           ResponseProblemDetails(
             title = e.title,
-            status = NotFound.code,
+            status = org.http4s.dsl.io.NotFound.code,
             detail = e.detail,
             instance = req.uri.toString()
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )
       case e: Unauthorized =>
-        Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
+        org.http4s.dsl.io.Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
       case e: UnprocessableEntity =>
-        UnprocessableEntity(
+        org.http4s.dsl.io.UnprocessableEntity(
           ResponseProblemDetails(
             title = e.title,
-            status = UnprocessableEntity.code,
+            status = org.http4s.dsl.io.UnprocessableEntity.code,
             detail = e.detail,
             instance = req.uri.toString(),
             errors = e.errors
@@ -40,30 +42,30 @@ object ResponseTranslator {
           `Content-Type`(MediaType.application.`problem+json`)
         )
       case e: BadRequest =>
-        BadRequest(
+        org.http4s.dsl.io.BadRequest(
           ResponseProblemDetails(
             title = e.title,
-            status = BadRequest.code,
+            status = org.http4s.dsl.io.BadRequest.code,
             detail = e.detail,
             instance = req.uri.toString()
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )
       case e: Forbidden =>
-        Forbidden(
+        org.http4s.dsl.io.Forbidden(
           ResponseProblemDetails(
             title = e.title,
-            status = Forbidden.code,
+            status = org.http4s.dsl.io.Forbidden.code,
             detail = e.detail,
             instance = req.uri.toString()
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )
       case e: InternalServerError =>
-        InternalServerError(
+        org.http4s.dsl.io.InternalServerError(
           ResponseProblemDetails(
             title = e.title,
-            status = InternalServerError.code,
+            status = org.http4s.dsl.io.InternalServerError.code,
             detail = e.detail,
             instance = req.uri.toString()
           ).asJson,
@@ -75,7 +77,7 @@ object ResponseTranslator {
   def toResponse(e: Throwable): Request[IO] ?=> IO[Response[IO]] = {
     e match {
       case f: DomainError => this.failToResponse(f)
-      case _ => InternalServerError("Internal Server Error")
+      case _ => org.http4s.dsl.io.InternalServerError("Internal Server Error")
     }
   }
 
@@ -86,10 +88,10 @@ object ResponseTranslator {
       case Some(x) =>
         Ok(x.asJson, `Content-Type`(MediaType.application.json))
       case None =>
-        NotFound(
+        org.http4s.dsl.io.NotFound(
           ResponseProblemDetails(
             title = "Not Found",
-            status = NotFound.code,
+            status = org.http4s.dsl.io.NotFound.code,
             detail = "Not Found",
             instance = req.uri.toString()
           ).asJson,

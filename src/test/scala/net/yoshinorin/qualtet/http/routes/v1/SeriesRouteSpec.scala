@@ -10,7 +10,7 @@ import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.domains.series.{RequestSeries, Series, SeriesName}
-import net.yoshinorin.qualtet.http.ResponseProblemDetails
+import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.{authProvider => fixtureAuthProvider}
 import org.scalatest.wordspec.AnyWordSpec
