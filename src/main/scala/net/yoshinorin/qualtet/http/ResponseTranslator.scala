@@ -7,14 +7,14 @@ import org.http4s.{Request, Response}
 import org.http4s.Challenge
 import org.http4s.headers.{`Content-Type`, `WWW-Authenticate`}
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.errors.Error
+import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.http.HttpError.*
 import net.yoshinorin.qualtet.syntax.*
 
 object ResponseTranslator {
 
   // NOTE: can't use `ContextFunctions`.
-  private def failToResponse(f: Error)(using req: Request[IO]): IO[Response[IO]] = {
+  private def failToResponse(f: DomainError)(using req: Request[IO]): IO[Response[IO]] = {
     fromDomainError(f) match {
       case e: NotFound =>
         NotFound(
@@ -74,7 +74,7 @@ object ResponseTranslator {
 
   def toResponse(e: Throwable): Request[IO] ?=> IO[Response[IO]] = {
     e match {
-      case f: Error => this.failToResponse(f)
+      case f: DomainError => this.failToResponse(f)
       case _ => InternalServerError("Internal Server Error")
     }
   }

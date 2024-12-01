@@ -40,7 +40,7 @@ final case class InternalServerError(
 ) extends HttpError
 
 object HttpError {
-  def fromDomainError(e: Error): HttpError = {
+  def fromDomainError(e: DomainError): HttpError = {
     e match {
       case e: AuthorNotFound => NotFound(detail = e.detail, errors = e.errors)
       case e: ArticleNotFound => NotFound(detail = e.detail, errors = e.errors)
