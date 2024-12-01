@@ -7,7 +7,7 @@ import cats.implicits.*
 import net.yoshinorin.qualtet.config.SearchConfig
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.errors.InvalidSearchConditions
-import net.yoshinorin.qualtet.http.errors.ProblemDetailsError
+import net.yoshinorin.qualtet.domains.errors.ProblemDetailsError
 import net.yoshinorin.qualtet.types.Points
 import net.yoshinorin.qualtet.syntax.*
 

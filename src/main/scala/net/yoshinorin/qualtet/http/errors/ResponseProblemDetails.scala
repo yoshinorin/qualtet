@@ -1,5 +1,7 @@
 package net.yoshinorin.qualtet.http.errors
 
+import net.yoshinorin.qualtet.domains.errors.ProblemDetailsError
+
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 
@@ -15,14 +17,4 @@ final case class ResponseProblemDetails(
 
 object ResponseProblemDetails {
   given codecResponseProblemDetails: JsonValueCodec[ResponseProblemDetails] = JsonCodecMaker.make
-}
-
-final case class ProblemDetailsError(
-  code: String,
-  message: String
-)
-
-object ProblemDetailsError {
-  given codecProblemDetailsError: JsonValueCodec[ProblemDetailsError] = JsonCodecMaker.make
-  given codecProblemDetailsErrors: JsonValueCodec[Option[Seq[ProblemDetailsError]]] = JsonCodecMaker.make
 }

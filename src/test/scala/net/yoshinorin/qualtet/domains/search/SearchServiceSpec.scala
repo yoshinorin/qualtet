@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contents.RequestContent
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.http.errors.ProblemDetailsError
+import net.yoshinorin.qualtet.domains.errors.ProblemDetailsError
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.domains.errors.InvalidSearchConditions
