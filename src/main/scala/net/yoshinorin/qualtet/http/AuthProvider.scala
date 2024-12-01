@@ -9,7 +9,7 @@ import org.http4s.headers.Authorization
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
 import net.yoshinorin.qualtet.auth.AuthService
-import net.yoshinorin.qualtet.domains.errors.{Error, NotFound, Unauthorized}
+import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Error, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
 
 class AuthProvider[F[_]: Monad](
@@ -26,7 +26,7 @@ class AuthProvider[F[_]: Monad](
           val renderString = auth.credentials.renderString.replace("Bearer ", "").replace("bearer ", "")
           for {
             maybeAuthor <- authService.findAuthorFromJwtString(renderString)
-            author <- IO(maybeAuthor.asEither[Error](NotFound(detail = "author not found")))
+            author <- IO(maybeAuthor.asEither[Error](AuthorNotFound(detail = "author not found")))
             payload <- request.as[String]
           } yield {
             author match {

@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.authors
 
 import net.yoshinorin.qualtet.domains.authors.{AuthorDisplayName, AuthorId, AuthorName, BCryptPassword}
-import net.yoshinorin.qualtet.domains.errors.{Unauthorized, UnprocessableEntity}
+import net.yoshinorin.qualtet.domains.errors.{InvalidAuthorDisplayName, InvalidAuthorName, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -27,10 +27,10 @@ class AuthorSpec extends AnyWordSpec {
       assert(AuthorName("123AbcDef_-").value === "123abcdef_-")
     }
     "invalid value" in {
-      assertThrows[UnprocessableEntity] {
+      assertThrows[InvalidAuthorName] {
         AuthorName("123AbcDef_-.")
       }
-      assertThrows[UnprocessableEntity] {
+      assertThrows[InvalidAuthorName] {
         AuthorName("123AbcDef_-!")
       }
     }
@@ -41,10 +41,10 @@ class AuthorSpec extends AnyWordSpec {
       assert(AuthorDisplayName("123AbcDef_-").value === "123AbcDef_-")
     }
     "invalid value" in {
-      assertThrows[UnprocessableEntity] {
+      assertThrows[InvalidAuthorDisplayName] {
         AuthorDisplayName("123AbcDef_-.")
       }
-      assertThrows[UnprocessableEntity] {
+      assertThrows[InvalidAuthorDisplayName] {
         AuthorDisplayName("123AbcDef_-!")
       }
     }

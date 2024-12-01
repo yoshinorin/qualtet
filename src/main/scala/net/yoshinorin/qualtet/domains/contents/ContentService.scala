@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
-import net.yoshinorin.qualtet.domains.errors.{InternalServerError, NotFound, UnprocessableEntity}
+import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries, UnexpectedException}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagService}
@@ -145,8 +145,8 @@ class ContentService[F[_]: Monad](
     }
 
     for {
-      a <- authorService.findByName(authorName).throwIfNone(UnprocessableEntity(detail = s"user not found: ${request.contentType}"))
-      c <- contentTypeService.findByName(request.contentType).throwIfNone(UnprocessableEntity(detail = s"content-type not found: ${request.contentType}"))
+      a <- authorService.findByName(authorName).throwIfNone(InvalidAuthor(detail = s"user not found: ${request.contentType}"))
+      c <- contentTypeService.findByName(request.contentType).throwIfNone(InvalidContentType(detail = s"content-type not found: ${request.contentType}"))
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
         case None => ContentId.apply()
@@ -158,7 +158,7 @@ class ContentService[F[_]: Monad](
         case None => IO(None)
         case Some(seriesName) =>
           seriesService.findByName(seriesName).flatMap {
-            case None => IO.raiseError(UnprocessableEntity(detail = s"series not found: ${seriesName}"))
+            case None => IO.raiseError(InvalidSeries(detail = s"series not found: ${seriesName}"))
             case Some(s) => IO(Option(ContentSerializing(s.id, contentId)))
           }
       }
@@ -224,7 +224,7 @@ class ContentService[F[_]: Monad](
 
     for {
       _ <- executer.transact8[Int, Seq[Tag], Unit, Int, Int, Int, Int, Int](queries)
-      c <- this.findByPath(data.path).throwIfNone(InternalServerError("content not found")) // NOTE: 404 is better?
+      c <- this.findByPath(data.path).throwIfNone(UnexpectedException("content not found")) // NOTE: 404 is better?
       // TODO: Should return `ResponseContent` instead of `Content`.
     } yield c
   }
@@ -250,7 +250,7 @@ class ContentService[F[_]: Monad](
     )
 
     for {
-      _ <- this.findById(id).throwIfNone(NotFound(detail = s"content not found: ${id}"))
+      _ <- this.findById(id).throwIfNone(ContentNotFound(detail = s"content not found: ${id}"))
       _ <- executer.transact4[Unit, Unit, Unit, Unit](queries)
     } yield ()
   }

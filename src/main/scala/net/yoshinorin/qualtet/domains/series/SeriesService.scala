@@ -6,7 +6,7 @@ import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.domains.errors.NotFound
+import net.yoshinorin.qualtet.domains.errors.SeriesNotFound
 import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID
 
@@ -56,7 +56,7 @@ class SeriesService[F[_]: Monad](
         case None => executer.transact(upsertCont(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.title, data.description)))
       }
       .flatMap { s =>
-        this.findByName(data.name).throwIfNone(NotFound(detail = "series not found"))
+        this.findByName(data.name).throwIfNone(SeriesNotFound(detail = "series not found"))
       }
   }
 
@@ -72,7 +72,7 @@ class SeriesService[F[_]: Monad](
 
   def get(name: SeriesName): IO[ResponseSeries] = {
     for {
-      series <- executer.transact(findByNameCont(name)).throwIfNone(NotFound(detail = s"series not found: ${name.value}"))
+      series <- executer.transact(findByNameCont(name)).throwIfNone(SeriesNotFound(detail = s"series not found: ${name.value}"))
       seriesWithArticles <- articleService.getBySeriesName(series.name)
     } yield {
       ResponseSeries(series.id, series.name, series.title, series.description, seriesWithArticles.articles)

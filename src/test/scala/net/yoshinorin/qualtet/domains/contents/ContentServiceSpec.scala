@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.contents
 
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.authors.AuthorName
-import net.yoshinorin.qualtet.domains.errors.{NotFound, UnprocessableEntity}
+import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries}
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -207,26 +207,26 @@ class ContentServiceSpec extends AnyWordSpec {
       // assert(afterDeleteOps._4.get.path === willNotDeleteContent.path)
     }
 
-    "throw Content NotFound Exception when not exists content to delete" in {
-      assertThrows[NotFound] {
+    "throw Content ContentNotFound Exception when not exists content to delete" in {
+      assertThrows[ContentNotFound] {
         contentService.delete(ContentId(generateUlid())).unsafeRunSync()
       }
     }
 
-    "throw Author UnprocessableEntity Exception" in {
-      assertThrows[UnprocessableEntity] {
+    "throw Author InvalidAuthor Exception" in {
+      assertThrows[InvalidAuthor] {
         contentService.createContentFromRequest(AuthorName("not_exists_user"), requestContent1).unsafeRunSync()
       }
     }
 
-    "throw Content-Type UnprocessableEntity Exception" in {
-      assertThrows[UnprocessableEntity] {
+    "throw Content-Type InvalidContentType Exception" in {
+      assertThrows[InvalidContentType] {
         contentService.createContentFromRequest(AuthorName(author.name.value), requestContent1.copy(contentType = "not_exists_content-type")).unsafeRunSync()
       }
     }
 
     "throw Series UnprocessableEntity Exception" in {
-      assertThrows[UnprocessableEntity] {
+      assertThrows[InvalidSeries] {
         contentService
           .createContentFromRequest(AuthorName(author.name.value), requestContent1.copy(series = Some(SeriesName("not_exists_series_name"))))
           .unsafeRunSync()

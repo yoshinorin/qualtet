@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.http
 
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.Request
-import net.yoshinorin.qualtet.domains.errors.{BadRequest, Error, InternalServerError}
+import net.yoshinorin.qualtet.domains.errors.{Error, UnexpectedException, UnexpectedJsonFormat}
 import net.yoshinorin.qualtet.syntax.*
 import org.slf4j.LoggerFactory
 
@@ -22,8 +22,8 @@ trait RequestDecoder {
           case t: Error => Left(t)
           case t: JsonReaderException =>
             // TODO: consider error message
-            Left(BadRequest(detail = "Wrong JSON format or missing required field. Please see API document."))
-          case _ => Left(InternalServerError())
+            Left(UnexpectedJsonFormat(detail = "Wrong JSON format or missing required field. Please see API document."))
+          case _ => Left(UnexpectedException())
         }
     }
   }

@@ -4,7 +4,7 @@ import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
-import net.yoshinorin.qualtet.domains.errors.InternalServerError
+import net.yoshinorin.qualtet.domains.errors.UnexpectedException
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
@@ -99,7 +99,7 @@ class AuthorService[F[_]: Monad](
   def create(data: Author): IO[ResponseAuthor] = {
     for {
       _ <- executer.transact(upsertCont(data))
-      a <- this.findByName(data.name).throwIfNone(InternalServerError("user not found"))
+      a <- this.findByName(data.name).throwIfNone(UnexpectedException("user not found"))
     } yield a
   }
 

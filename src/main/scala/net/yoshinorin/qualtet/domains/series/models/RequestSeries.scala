@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.series
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.Request
-import net.yoshinorin.qualtet.domains.errors.BadRequest
+import net.yoshinorin.qualtet.domains.errors.{SeriesNameRequired, SeriesTitleRequired}
 import net.yoshinorin.qualtet.syntax.*
 
 final case class RequestSeries(
@@ -13,10 +13,10 @@ final case class RequestSeries(
 ) extends Request[RequestSeries] {
   def postDecode: RequestSeries = {
     // TODO: improve
-    name.value.trimOrThrow(BadRequest(detail = "name is required"))
+    name.value.trimOrThrow(SeriesNameRequired(detail = "name is required"))
     new RequestSeries(
       name = name,
-      title = title.trimOrThrow(BadRequest(detail = "title is required")),
+      title = title.trimOrThrow(SeriesTitleRequired(detail = "title is required")),
       description = description
     )
   }
@@ -28,10 +28,10 @@ object RequestSeries {
 
   def apply(name: SeriesName, title: String, description: Option[String]): RequestSeries = {
     // TODO: improve
-    name.value.trimOrThrow(BadRequest(detail = "name is required"))
+    name.value.trimOrThrow(SeriesNameRequired(detail = "name is required"))
     new RequestSeries(
       name = name,
-      title = title.trimOrThrow(BadRequest(detail = "title is required")),
+      title = title.trimOrThrow(SeriesTitleRequired(detail = "title is required")),
       description = description
     )
   }

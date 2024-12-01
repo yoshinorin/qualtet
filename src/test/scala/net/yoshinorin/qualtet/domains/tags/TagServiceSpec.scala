@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.tags
 
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.errors.NotFound
+import net.yoshinorin.qualtet.domains.errors.TagNotFound
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import org.scalatest.wordspec.AnyWordSpec
@@ -66,8 +66,8 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       // assert(ct.isEmpty)
     }
 
-    "throw NotFound exception when delete" in {
-      assertThrows[NotFound] {
+    "throw TagNotFound exception when delete" in {
+      assertThrows[TagNotFound] {
         tagService.delete(TagId(generateUlid())).unsafeRunSync()
       }
     }

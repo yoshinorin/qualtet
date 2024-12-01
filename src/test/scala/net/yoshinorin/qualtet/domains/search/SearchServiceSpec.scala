@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.http.ProblemDetailsError
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
-import net.yoshinorin.qualtet.domains.errors.UnprocessableEntity
+import net.yoshinorin.qualtet.domains.errors.InvalidSearchConditions
 
 import cats.effect.unsafe.implicits.global
 
@@ -160,32 +160,32 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       assert(s.contents.size === 1)
     }
 
-    "throw UnprocessableEntity Exception if query string is empty" in {
-      assertThrows[UnprocessableEntity] {
+    "throw InvalidSearchConditions Exception if query string is empty" in {
+      assertThrows[InvalidSearchConditions] {
         searchService.search(Map()).unsafeRunSync()
       }
     }
 
-    "throw UnprocessableEntity Exception if query value is empty" in {
-      assertThrows[UnprocessableEntity] {
+    "throw InvalidSearchConditions Exception if query value is empty" in {
+      assertThrows[InvalidSearchConditions] {
         searchService.search(Map(("q", List()))).unsafeRunSync()
       }
     }
 
-    "throw UnprocessableEntity Exception if many query requested" in {
-      assertThrows[UnprocessableEntity] {
+    "throw InvalidSearchConditions Exception if many query requested" in {
+      assertThrows[InvalidSearchConditions] {
         searchService.search(Map(("q", List("abcde", "abcde", "abcde", "abcde")))).unsafeRunSync()
       }
     }
 
-    "throw UnprocessableEntity Exception if query contains too short value" in {
-      assertThrows[UnprocessableEntity] {
+    "throw InvalidSearchConditions Exception if query contains too short value" in {
+      assertThrows[InvalidSearchConditions] {
         searchService.search(Map(("q", List("abcd", "abc", "abcd")))).unsafeRunSync()
       }
     }
 
-    "throw UnprocessableEntity Exception if query contains invalid char" in {
-      assertThrows[UnprocessableEntity] {
+    "throw InvalidSearchConditions Exception if query contains invalid char" in {
+      assertThrows[InvalidSearchConditions] {
         searchService.search(Map(("q", List("abcd", "ab(d", "abcd")))).unsafeRunSync()
       }
     }

@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
-import net.yoshinorin.qualtet.domains.errors.UnprocessableEntity
+import net.yoshinorin.qualtet.domains.errors.InvalidExternalResourceKind
 import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -49,7 +49,7 @@ class ExternalResourcesSpec extends AnyWordSpec {
     }
 
     "can not create instance with invalid value" in {
-      assertThrows[UnprocessableEntity] {
+      assertThrows[InvalidExternalResourceKind] {
         ExternalResourceKind("invalid-value")
       }
     }

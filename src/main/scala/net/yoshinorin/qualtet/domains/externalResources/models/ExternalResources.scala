@@ -4,7 +4,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.ValueExtender
 import net.yoshinorin.qualtet.domains.contents.ContentId
-import net.yoshinorin.qualtet.domains.errors.UnprocessableEntity
+import net.yoshinorin.qualtet.domains.errors.InvalidExternalResourceKind
 
 opaque type ExternalResourceKind = String
 object ExternalResourceKind extends ValueExtender[ExternalResourceKind] {
@@ -13,7 +13,7 @@ object ExternalResourceKind extends ValueExtender[ExternalResourceKind] {
   val allowedKinds: List[String] = List("js", "css")
   def apply(value: String): ExternalResourceKind = {
     if (!allowedKinds.contains(value)) {
-      throw UnprocessableEntity(detail = "The field externalResource.kind allowed only js or css.")
+      throw InvalidExternalResourceKind(detail = "The field externalResource.kind allowed only js or css.")
     }
     value
   }

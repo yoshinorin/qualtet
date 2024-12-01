@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.domains.errors.{Error, UnprocessableEntity}
+import net.yoshinorin.qualtet.domains.errors.{Error, UnexpectedException}
 
 // testOnly net.yoshinorin.qualtet.syntax.OptionSpec
 class OptionSpec extends AnyWordSpec {
@@ -11,12 +11,12 @@ class OptionSpec extends AnyWordSpec {
     "orThrow" should {
 
       "not be throw if not None" in {
-        assert(Some("some values").orThrow(UnprocessableEntity(detail = "unprocessable!!")) === "some values")
+        assert(Some("some values").orThrow(UnexpectedException(detail = "unprocessable!!")) === "some values")
       }
 
       "thrown if None" in {
-        assertThrows[UnprocessableEntity] {
-          assert(None.orThrow(UnprocessableEntity(detail = "unprocessable!!")))
+        assertThrows[UnexpectedException] {
+          assert(None.orThrow(UnexpectedException(detail = "unprocessable!!")))
         }
       }
 
@@ -25,15 +25,15 @@ class OptionSpec extends AnyWordSpec {
     "asEither" should {
 
       "return Right if not None" in {
-        val result = Some("some values").asEither[Error](UnprocessableEntity(detail = "unprocessable!!"))
+        val result = Some("some values").asEither[Error](UnexpectedException(detail = "unprocessable!!"))
         assert(result.isRight)
         assert(result.toOption.get === "some values")
       }
 
       "return Left if None" in {
-        val result = None.asEither[Error](UnprocessableEntity(detail = "unprocessable!!"))
+        val result = None.asEither[Error](UnexpectedException(detail = "unprocessable!!"))
         assert(result.isLeft)
-        assert(result.swap.getOrElse("").isInstanceOf[UnprocessableEntity])
+        assert(result.swap.getOrElse("").isInstanceOf[UnexpectedException])
       }
 
     }

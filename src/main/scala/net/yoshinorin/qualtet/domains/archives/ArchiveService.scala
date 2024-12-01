@@ -5,7 +5,7 @@ import cats.data.ContT
 import cats.implicits.*
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.domains.errors.NotFound
+import net.yoshinorin.qualtet.domains.errors.ContentTypeNotFound
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.syntax.*
@@ -25,7 +25,7 @@ class ArchiveService[F[_]: Monad](
 
   def get: IO[Seq[ResponseArchive]] = {
     for {
-      c <- contentTypeService.findByName("article").throwIfNone(NotFound(detail = "content-type not found: article"))
+      c <- contentTypeService.findByName("article").throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
       articles <- executer.transact(cont(c.id))
     } yield articles
   }

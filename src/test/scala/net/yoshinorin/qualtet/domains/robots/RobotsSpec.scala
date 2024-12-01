@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.robots
 
-import net.yoshinorin.qualtet.domains.errors.UnprocessableEntity
+import net.yoshinorin.qualtet.domains.errors.InvalidAttributes
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.{contentId, fullRobotsAttributes}
@@ -62,25 +62,25 @@ class RobotsSpec extends AnyWordSpec {
     }
 
     "can not create instance with invalid attribute" in {
-      assertThrows[UnprocessableEntity] {
+      assertThrows[InvalidAttributes] {
         Attributes("invalid-attribute")
       }
     }
 
     "can not create instance with includes invalid attribute" in {
-      assertThrows[UnprocessableEntity] {
+      assertThrows[InvalidAttributes] {
         Attributes("all, noindex, nofollow, invalid, none, noarchive, notranslate")
       }
     }
 
     "can not create instance with includes empty attribute start of string" in {
-      assertThrows[UnprocessableEntity] {
+      assertThrows[InvalidAttributes] {
         Attributes(",all, noindex, nofollow, none, noarchive")
       }
     }
 
     "can not create instance with includes empty attribute end of string" in {
-      assertThrows[UnprocessableEntity] {
+      assertThrows[InvalidAttributes] {
         Attributes("all, noindex, nofollow, none, noarchive,")
       }
     }

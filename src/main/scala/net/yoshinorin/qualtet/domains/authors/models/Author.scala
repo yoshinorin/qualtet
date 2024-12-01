@@ -4,7 +4,7 @@ import java.time.ZonedDateTime
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
-import net.yoshinorin.qualtet.domains.errors.{Unauthorized, UnprocessableEntity}
+import net.yoshinorin.qualtet.domains.errors.{InvalidAuthorDisplayName, InvalidAuthorName, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
 
 import scala.util.matching.Regex
@@ -21,7 +21,7 @@ object AuthorName extends ValueExtender[AuthorName] {
 
   def apply(value: String): AuthorName = {
     if (!authorNamePattern.matches(value)) {
-      throw UnprocessableEntity(detail = "authorName must be number, alphabet and underscore.")
+      throw InvalidAuthorName(detail = "authorName must be number, alphabet and underscore.")
     }
     value.toLower
   }
@@ -34,7 +34,7 @@ object AuthorDisplayName extends ValueExtender[AuthorDisplayName] {
 
   def apply(value: String): AuthorDisplayName = {
     if (!authorDisplayNamePattern.matches(value)) {
-      throw UnprocessableEntity(detail = "authorDisplayName must be number, alphabet or underscore.")
+      throw InvalidAuthorDisplayName(detail = "authorDisplayName must be number, alphabet or underscore.")
     }
     value
   }

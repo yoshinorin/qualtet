@@ -5,7 +5,7 @@ import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.domains.errors.InternalServerError
+import net.yoshinorin.qualtet.domains.errors.UnexpectedException
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
@@ -43,7 +43,7 @@ class ContentTypeService[F[_]: Monad](
       case None =>
         for {
           _ <- executer.transact(upsertCont(data))
-          c <- this.findByName(data.name).throwIfNone(InternalServerError("contentType not found"))
+          c <- this.findByName(data.name).throwIfNone(UnexpectedException("contentType not found"))
         } yield c
     }
 

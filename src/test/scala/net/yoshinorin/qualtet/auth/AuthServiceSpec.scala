@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.errors.{NotFound, Unauthorized}
+import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Unauthorized}
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -47,7 +47,7 @@ class AuthServiceSpec extends AnyWordSpec {
     }
 
     "throw exception caused by authorName not found" in {
-      assertThrows[NotFound] {
+      assertThrows[AuthorNotFound] {
         authService.generateToken(RequestToken(authorId2, "password")).unsafeRunSync()
       }
     }

@@ -6,7 +6,7 @@ import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.errors.NotFound
+import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound}
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
@@ -65,13 +65,13 @@ class ArticleService[F[_]: Monad](
     queryParam: ArticlesQueryParameter
   )(f: (ContentTypeId, A, ArticlesQueryParameter) => ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
     for {
-      c <- contentTypeService.findByName("article").throwIfNone(NotFound(detail = "content-type not found: article"))
+      c <- contentTypeService.findByName("article").throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
       articlesWithCount <- executer.transact(f(c.id, data, queryParam))
     } yield
       if (articlesWithCount.nonEmpty) {
         ResponseArticleWithCount(articlesWithCount.map(_._1).headOption.getOrElse(0), articlesWithCount.map(_._2))
       } else {
-        throw NotFound(detail = "articles not found")
+        throw ArticleNotFound(detail = "articles not found")
       }
   }
 

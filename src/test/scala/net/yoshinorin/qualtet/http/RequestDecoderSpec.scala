@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.http
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.RequestContent
-import net.yoshinorin.qualtet.domains.errors.BadRequest
+import net.yoshinorin.qualtet.domains.errors.UnexpectedJsonFormat
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -124,7 +124,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
       assert(result.isLeft)
       result match {
         case Right(_) => // Nothig to do
-        case Left(l) => assert(l.isInstanceOf[BadRequest])
+        case Left(l) => assert(l.isInstanceOf[UnexpectedJsonFormat])
       }
     }
 
@@ -162,7 +162,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
       assert(result.isLeft)
       result match {
         case Right(_) => // Nothig to do
-        case Left(l) => assert(l.isInstanceOf[BadRequest])
+        case Left(l) => assert(l.isInstanceOf[UnexpectedJsonFormat])
       }
     }
   }

@@ -7,23 +7,16 @@ import org.http4s.{Request, Response}
 import org.http4s.Challenge
 import org.http4s.headers.{`Content-Type`, `WWW-Authenticate`}
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.errors.{
-  BadRequest => DomainBadRequest,
-  Error,
-  Forbidden => DomainForbidden,
-  InternalServerError => DomainInternalServerError,
-  NotFound => DomainNotFound,
-  Unauthorized => DomainUnauthorized,
-  UnprocessableEntity => DomainUnprocessableEntity
-}
+import net.yoshinorin.qualtet.domains.errors.Error
+import net.yoshinorin.qualtet.http.HttpError.*
 import net.yoshinorin.qualtet.syntax.*
 
 object ResponseTranslator {
 
   // NOTE: can't use `ContextFunctions`.
   private def failToResponse(f: Error)(using req: Request[IO]): IO[Response[IO]] = {
-    f match {
-      case e: DomainNotFound =>
+    fromDomainError(f) match {
+      case e: NotFound =>
         NotFound(
           ResponseProblemDetails(
             title = e.title,
@@ -33,9 +26,9 @@ object ResponseTranslator {
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )
-      case e: DomainUnauthorized =>
+      case e: Unauthorized =>
         Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
-      case e: DomainUnprocessableEntity =>
+      case e: UnprocessableEntity =>
         UnprocessableEntity(
           ResponseProblemDetails(
             title = e.title,
@@ -46,7 +39,7 @@ object ResponseTranslator {
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )
-      case e: DomainBadRequest =>
+      case e: BadRequest =>
         BadRequest(
           ResponseProblemDetails(
             title = e.title,
@@ -56,7 +49,7 @@ object ResponseTranslator {
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )
-      case e: DomainForbidden =>
+      case e: Forbidden =>
         Forbidden(
           ResponseProblemDetails(
             title = e.title,
@@ -66,7 +59,7 @@ object ResponseTranslator {
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )
-      case e: DomainInternalServerError =>
+      case e: InternalServerError =>
         InternalServerError(
           ResponseProblemDetails(
             title = e.title,

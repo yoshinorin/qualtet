@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.SeriesName
-import net.yoshinorin.qualtet.domains.errors.BadRequest
+import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, RawContentRequired}
 import net.yoshinorin.qualtet.syntax.*
 
 final case class RequestContent(
@@ -33,9 +33,9 @@ final case class RequestContent(
       tags = tags,
       series = series,
       path = path,
-      title = title.trimOrThrow(BadRequest(detail = "title required.")),
-      rawContent = rawContent.trimOrThrow(BadRequest(detail = "rawContent required.")),
-      htmlContent = htmlContent.trimOrThrow(BadRequest(detail = "htmlContent required.")),
+      title = title.trimOrThrow(ContentTitleRequired(detail = "title required.")),
+      rawContent = rawContent.trimOrThrow(RawContentRequired(detail = "rawContent required.")),
+      htmlContent = htmlContent.trimOrThrow(HtmlContentRequired(detail = "htmlContent required.")),
       publishedAt = publishedAt,
       updatedAt = updatedAt
     )
@@ -66,9 +66,9 @@ object RequestContent {
       tags = tags,
       series = series,
       path = path,
-      title = title.trimOrThrow(BadRequest(detail = "title required.")),
-      rawContent = rawContent.trimOrThrow(BadRequest(detail = "rawContent required.")),
-      htmlContent = htmlContent.trimOrThrow(BadRequest(detail = "htmlContent required.")),
+      title = title.trimOrThrow(ContentTitleRequired(detail = "title required.")),
+      rawContent = rawContent.trimOrThrow(RawContentRequired(detail = "rawContent required.")),
+      htmlContent = htmlContent.trimOrThrow(HtmlContentRequired(detail = "htmlContent required.")),
       publishedAt = publishedAt,
       updatedAt = updatedAt
     )

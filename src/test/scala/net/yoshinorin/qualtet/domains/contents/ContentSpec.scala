@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName}
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.domains.errors.BadRequest
+import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, RawContentRequired}
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
@@ -60,8 +60,8 @@ class ContentSpec extends AnyWordSpec {
   }
 
   "RequestContent" should {
-    "thrown BadRequest if title is empty" in {
-      assertThrows[BadRequest] {
+    "thrown ContentTitleRequired if title is empty" in {
+      assertThrows[ContentTitleRequired] {
         RequestContent(
           contentType = "article",
           path = Path("/articles/contentSpec/1"),
@@ -75,8 +75,8 @@ class ContentSpec extends AnyWordSpec {
       }
     }
 
-    "thrown BadRequest if rawContent is empty" in {
-      assertThrows[BadRequest] {
+    "thrown RawContentRequired if rawContent is empty" in {
+      assertThrows[RawContentRequired] {
         RequestContent(
           contentType = "article",
           path = Path("/articles/contentSpec/2"),
@@ -90,8 +90,8 @@ class ContentSpec extends AnyWordSpec {
       }
     }
 
-    "thrown BadRequest if htmlContent is empty" in {
-      assertThrows[BadRequest] {
+    "thrown HtmlContentRequired if htmlContent is empty" in {
+      assertThrows[HtmlContentRequired] {
         RequestContent(
           contentType = "article",
           path = Path("/articles/contentSpec/3"),

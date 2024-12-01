@@ -6,7 +6,7 @@ import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.config.SearchConfig
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.domains.errors.UnprocessableEntity
+import net.yoshinorin.qualtet.domains.errors.InvalidSearchConditions
 import net.yoshinorin.qualtet.http.ProblemDetailsError
 import net.yoshinorin.qualtet.types.Points
 import net.yoshinorin.qualtet.syntax.*
@@ -117,7 +117,7 @@ class SearchService[F[_]: Monad](
     for {
       accErrors <- IO(accumurateQueryStringsErrors(queryStrings))
       _ <- IO(if (accErrors.nonEmpty) {
-        throw new UnprocessableEntity(detail = "Invalid search conditions. Please see error details.", errors = Some(accErrors))
+        throw new InvalidSearchConditions(detail = "Invalid search conditions. Please see error details.", errors = Some(accErrors))
       })
       searchResult <- executer.transact(cont(queryStrings))
     } yield
