@@ -6,10 +6,10 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
-import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
+import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.RequestContent
+import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.{author, contentService, router, unsafeDecode}
@@ -20,11 +20,11 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.v1.ArticleRouteSpec
 class ArticleRouteV1Spec extends AnyWordSpec {
 
-  val requestContents: List[RequestContent] = {
+  val requestContents: List[ContentRequestModel] = {
     (0 until 20).toList
       .map(_.toString())
       .map(i =>
-        RequestContent(
+        ContentRequestModel(
           contentType = "article",
           path = Path(s"/articles/route/article-${i}"),
           title = s"this is a articleRoute title ${i}",
@@ -51,7 +51,7 @@ class ArticleRouteV1Spec extends AnyWordSpec {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
 
-            val maybeArticles = unsafeDecode[ResponseArticleWithCount](response)
+            val maybeArticles = unsafeDecode[ArticleWithCountResponseModel](response)
             assert(maybeArticles.count >= 20) // FIXME: get number of all articles and assert it.
             assert(maybeArticles.articles.size === 10)
           }
@@ -67,7 +67,7 @@ class ArticleRouteV1Spec extends AnyWordSpec {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
 
-            val maybeArticles = unsafeDecode[ResponseArticleWithCount](response)
+            val maybeArticles = unsafeDecode[ArticleWithCountResponseModel](response)
             assert(maybeArticles.count >= 20) // FIXME: get number of all articles and assert it.
             assert(maybeArticles.articles.size === 5)
           }
@@ -83,7 +83,7 @@ class ArticleRouteV1Spec extends AnyWordSpec {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
 
-            val maybeArticles = unsafeDecode[ResponseArticleWithCount](response)
+            val maybeArticles = unsafeDecode[ArticleWithCountResponseModel](response)
             assert(maybeArticles.count >= 20) // FIXME: get number of all articles and assert it.
             assert(maybeArticles.articles.size === 10)
           }

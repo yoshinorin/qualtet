@@ -5,19 +5,19 @@ import cats.Monad
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.http.ArticlesQueryParameter
-import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
+import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.Cacheable
 
 class FeedService[F[_]: Monad](
-  cache: CacheModule[String, ResponseArticleWithCount],
+  cache: CacheModule[String, ArticleWithCountResponseModel],
   articleService: ArticleService[F]
 ) extends Cacheable {
 
   private val cacheKey = "feed-full-cache"
 
-  def get(queryParam: ArticlesQueryParameter): IO[Seq[ResponseFeed]] = {
+  def get(queryParam: ArticlesQueryParameter): IO[Seq[FeedResponseModel]] = {
 
-    def fromDb(): IO[ResponseArticleWithCount] = {
+    def fromDb(): IO[ArticleWithCountResponseModel] = {
       for {
         x <- articleService.getWithCount(queryParam)
       } yield {
@@ -26,10 +26,10 @@ class FeedService[F[_]: Monad](
       }
     }
 
-    def toFeed(ra: ResponseArticleWithCount): Seq[ResponseFeed] = {
+    def toFeed(ra: ArticleWithCountResponseModel): Seq[FeedResponseModel] = {
       ra.articles
         .map(a => {
-          ResponseFeed(
+          FeedResponseModel(
             title = a.title,
             link = a.path,
             id = a.path,
@@ -40,7 +40,7 @@ class FeedService[F[_]: Monad](
     }
 
     cache.get(cacheKey) match {
-      case Some(x: ResponseArticleWithCount) => IO(toFeed(x))
+      case Some(x: ArticleWithCountResponseModel) => IO(toFeed(x))
       case _ =>
         for {
           articles <- fromDb()

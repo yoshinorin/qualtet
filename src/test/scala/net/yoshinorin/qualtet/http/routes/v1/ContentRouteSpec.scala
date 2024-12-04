@@ -8,9 +8,9 @@ import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, RequestContent, ResponseContent}
+import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, ContentRequestModel, ContentResponseModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -24,7 +24,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.v1.ContentRouteSpec
 class ContentRouteV1Spec extends AnyWordSpec {
 
-  val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
+  val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
   val client: Client[IO] = Client.fromHttpApp(fixtureRouter.routes.orNotFound)
 
@@ -429,7 +429,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
       contentService
         .createContentFromRequest(
           validAuthor.name,
-          RequestContent(
+          ContentRequestModel(
             contentType = "article",
             path = Path("/test/content/route/spec/2"),
             title = "this is a ContentRouteSpec2 title",
@@ -455,7 +455,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
 
-            val maybeContent = unsafeDecode[ResponseContent](response)
+            val maybeContent = unsafeDecode[ContentResponseModel](response)
             assert(maybeContent.authorName === validAuthor.displayName.toString().toLowerCase())
             assert(maybeContent.content === "<p>this is a html ContentRouteSpec2<p>")
             assert(maybeContent.description === "this is a html ContentRouteSpec2")

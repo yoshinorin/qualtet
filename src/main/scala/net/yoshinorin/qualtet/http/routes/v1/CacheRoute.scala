@@ -6,7 +6,7 @@ import org.http4s.headers.Allow
 import org.http4s.{AuthedRoutes, HttpRoutes, Response}
 import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.http.AuthProvider
 
@@ -25,7 +25,7 @@ class CacheRoute[F[_]: Monad](
   })
 
   // caches
-  private[http] def delete(author: ResponseAuthor): IO[Response[IO]] = {
+  private[http] def delete(author: AuthorResponseModel): IO[Response[IO]] = {
     for {
       _ <- cacheService.invalidateAll()
       response <- NoContent()

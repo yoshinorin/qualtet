@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.search
 
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.RequestContent
+import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.domains.errors.ProblemDetailsError
@@ -16,11 +16,11 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    val requestContents: List[RequestContent] = {
+    val requestContents: List[ContentRequestModel] = {
       (0 until 49).toList
         .map(_.toString())
         .map(i =>
-          RequestContent(
+          ContentRequestModel(
             contentType = "article",
             path = Path(s"/test/searchService-${i}"),
             title = s"this is a searchService title ${i}",
@@ -30,7 +30,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
             tags = List(s"searchService${i}"),
             externalResources = List()
           )
-        ) :+ RequestContent(
+        ) :+ ContentRequestModel(
         contentType = "article",
         path = Path(s"/test/searchServiceLast"),
         title = s"this is a searchService titleLast",
@@ -39,7 +39,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = List(s"searchServiceLast"),
         externalResources = List()
-      ) :+ RequestContent(
+      ) :+ ContentRequestModel(
         contentType = "article",
         path = Path(s"/test/searchServiceIncludesUrl1"),
         title = s"this is a searchService IncludesUrl1",
@@ -48,7 +48,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = List(s"IncludesUrl1"),
         externalResources = List()
-      ) :+ RequestContent(
+      ) :+ ContentRequestModel(
         contentType = "article",
         path = Path(s"/test/searchServiceIncludesUrl2"),
         title = s"this is a searchService IncludesUrl2",
@@ -57,7 +57,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = List(s"IncludesUrl2"),
         externalResources = List()
-      ) :+ RequestContent(
+      ) :+ ContentRequestModel(
         contentType = "article",
         path = Path(s"/test/searchServiceIncludesWrongUrl"),
         title = s"this is a searchService IncludesWrongUrl1",
@@ -66,7 +66,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = List(s"IncludesWrongUrl1"),
         externalResources = List()
-      ) :+ RequestContent(
+      ) :+ ContentRequestModel(
         contentType = "article",
         path = Path(s"/test/searchServiceIncludesHttpString"),
         title = s"this is a searchService IncludesHttpString",

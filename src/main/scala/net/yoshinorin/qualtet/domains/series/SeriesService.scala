@@ -48,7 +48,7 @@ class SeriesService[F[_]: Monad](
    * @param data Series
    * @return created Series
    */
-  def create(data: RequestSeries): IO[Series] = {
+  def create(data: SeriesRequestModel): IO[Series] = {
     this
       .findByName(data.name)
       .flatMap {
@@ -70,12 +70,12 @@ class SeriesService[F[_]: Monad](
     executer.transact(findByNameCont(name))
   }
 
-  def get(name: SeriesName): IO[ResponseSeries] = {
+  def get(name: SeriesName): IO[SeriesResponseModel] = {
     for {
       series <- executer.transact(findByNameCont(name)).throwIfNone(SeriesNotFound(detail = s"series not found: ${name.value}"))
       seriesWithArticles <- articleService.getBySeriesName(series.name)
     } yield {
-      ResponseSeries(series.id, series.name, series.title, series.description, seriesWithArticles.articles)
+      SeriesResponseModel(series.id, series.name, series.title, series.description, seriesWithArticles.articles)
     }
   }
 

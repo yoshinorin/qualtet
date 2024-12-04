@@ -7,8 +7,8 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.series.{RequestSeries, Series, SeriesName, SeriesService}
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesRequestModel, SeriesService}
 import net.yoshinorin.qualtet.http.{AuthProvider, RequestDecoder}
 import net.yoshinorin.qualtet.syntax.*
 
@@ -31,7 +31,7 @@ class SeriesRoute[F[_]: Monad](
       this.get(name).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
-  private[http] def seriesWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of { ctxRequest =>
+  private[http] def seriesWithAuthed: AuthedRoutes[(AuthorResponseModel, String), IO] = AuthedRoutes.of { ctxRequest =>
     implicit val x = ctxRequest.req
     (ctxRequest match {
       case ContextRequest(_, r) =>
@@ -42,9 +42,9 @@ class SeriesRoute[F[_]: Monad](
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
-  private[http] def post(payload: (ResponseAuthor, String)): IO[Response[IO]] = {
+  private[http] def post(payload: (AuthorResponseModel, String)): IO[Response[IO]] = {
     val maybeSeries = for {
-      maybeSeries <- IO(decode[RequestSeries](payload._2))
+      maybeSeries <- IO(decode[SeriesRequestModel](payload._2))
     } yield maybeSeries
 
     maybeSeries.flatMap { s =>

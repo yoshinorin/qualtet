@@ -25,11 +25,11 @@ class AuthorService[F[_]: Monad](
     }
   }
 
-  def fetchCont: ContT[F, Seq[ResponseAuthor], Seq[ResponseAuthor]] = {
-    ContT.apply[F, Seq[ResponseAuthor], Seq[ResponseAuthor]] { next =>
+  def fetchCont: ContT[F, Seq[AuthorResponseModel], Seq[AuthorResponseModel]] = {
+    ContT.apply[F, Seq[AuthorResponseModel], Seq[AuthorResponseModel]] { next =>
       authorRepository.getAll().map { authors =>
         authors.map { author =>
-          ResponseAuthor(
+          AuthorResponseModel(
             id = author.id,
             name = author.name,
             displayName = author.displayName,
@@ -40,11 +40,11 @@ class AuthorService[F[_]: Monad](
     }
   }
 
-  def findByIdCont(id: AuthorId): ContT[F, Option[ResponseAuthor], Option[ResponseAuthor]] = {
-    ContT.apply[F, Option[ResponseAuthor], Option[ResponseAuthor]] { next =>
+  def findByIdCont(id: AuthorId): ContT[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] = {
+    ContT.apply[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] { next =>
       authorRepository.findById(id).map { author =>
         author.map { a =>
-          ResponseAuthor(
+          AuthorResponseModel(
             id = a.id,
             name = a.name,
             displayName = a.displayName,
@@ -75,11 +75,11 @@ class AuthorService[F[_]: Monad](
     }
   }
 
-  def findByNameCont(name: AuthorName): ContT[F, Option[ResponseAuthor], Option[ResponseAuthor]] = {
-    ContT.apply[F, Option[ResponseAuthor], Option[ResponseAuthor]] { next =>
+  def findByNameCont(name: AuthorName): ContT[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] = {
+    ContT.apply[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] { next =>
       authorRepository.findByName(name).map { author =>
         author.map { a =>
-          ResponseAuthor(
+          AuthorResponseModel(
             id = a.id,
             name = a.name,
             displayName = a.displayName,
@@ -96,7 +96,7 @@ class AuthorService[F[_]: Monad](
    * @param data Instance of Author
    * @return Instance of created Author with IO
    */
-  def create(data: Author): IO[ResponseAuthor] = {
+  def create(data: Author): IO[AuthorResponseModel] = {
     for {
       _ <- executer.transact(upsertCont(data))
       a <- this.findByName(data.name).throwIfNone(UnexpectedException("user not found"))
@@ -108,7 +108,7 @@ class AuthorService[F[_]: Monad](
    *
    * @return Authors
    */
-  def getAll: IO[Seq[ResponseAuthor]] = {
+  def getAll: IO[Seq[AuthorResponseModel]] = {
     executer.transact(fetchCont)
   }
 
@@ -118,7 +118,7 @@ class AuthorService[F[_]: Monad](
    * @param id authorName's id
    * @return Author
    */
-  def findById(id: AuthorId): IO[Option[ResponseAuthor]] = {
+  def findById(id: AuthorId): IO[Option[AuthorResponseModel]] = {
     executer.transact(findByIdCont(id))
   }
 
@@ -138,7 +138,7 @@ class AuthorService[F[_]: Monad](
    * @param name authorName's name
    * @return Author
    */
-  def findByName(name: AuthorName): IO[Option[ResponseAuthor]] = {
+  def findByName(name: AuthorName): IO[Option[AuthorResponseModel]] = {
     executer.transact(findByNameCont(name))
   }
 

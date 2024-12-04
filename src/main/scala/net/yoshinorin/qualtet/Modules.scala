@@ -28,7 +28,7 @@ import net.yoshinorin.qualtet.domains.tags.{TagRepository, TagService}
 import net.yoshinorin.qualtet.auth.Signature
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.cache.CacheService
-import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
+import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
@@ -134,9 +134,9 @@ class Modules(tx: Transactor[IO]) {
   val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService = new SitemapService(sitemapRepository, sitemapCache)
 
-  val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
-    Caffeine.newBuilder().expireAfterAccess(config.cache.feed, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
-  val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
+  val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
+    Caffeine.newBuilder().expireAfterAccess(config.cache.feed, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
+  val feedCache: CacheModule[String, ArticleWithCountResponseModel] = new CacheModule[String, ArticleWithCountResponseModel](feedCaffeinCache)
   val feedService = new FeedService(feedCache, articleService)
 
   val cacheService = new CacheService(

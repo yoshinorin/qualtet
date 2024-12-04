@@ -22,11 +22,11 @@ class ArticleService[F[_]: Monad](
     contentTypeId: ContentTypeId,
     none: Unit = (),
     queryParams: ArticlesQueryParameter
-  ): ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] = {
-    ContT.apply[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] { next =>
+  ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
+    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
       articleRepository.getWithCount(contentTypeId, queryParams).map { article =>
         article.map { case (count, article) =>
-          (count, ResponseArticle(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
+          (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
         }
       }
     }
@@ -36,11 +36,11 @@ class ArticleService[F[_]: Monad](
     contentTypeId: ContentTypeId,
     tagName: TagName,
     queryParams: ArticlesQueryParameter
-  ): ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] = {
-    ContT.apply[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] { next =>
+  ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
+    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
       articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams).map { article =>
         article.map { case (count, article) =>
-          (count, ResponseArticle(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
+          (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
         }
       }
     }
@@ -50,11 +50,11 @@ class ArticleService[F[_]: Monad](
     contentTypeId: ContentTypeId,
     seriesName: SeriesName,
     queryParams: ArticlesQueryParameter // TODO: `Optional`
-  ): ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] = {
-    ContT.apply[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]] { next =>
+  ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
+    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
       articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName).map { article =>
         article.map { case (count, article) =>
-          (count, ResponseArticle(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
+          (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
         }
       }
     }
@@ -63,27 +63,29 @@ class ArticleService[F[_]: Monad](
   def get[A](
     data: A = (),
     queryParam: ArticlesQueryParameter
-  )(f: (ContentTypeId, A, ArticlesQueryParameter) => ContT[F, Seq[(Int, ResponseArticle)], Seq[(Int, ResponseArticle)]]): IO[ResponseArticleWithCount] = {
+  )(
+    f: (ContentTypeId, A, ArticlesQueryParameter) => ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]]
+  ): IO[ArticleWithCountResponseModel] = {
     for {
       c <- contentTypeService.findByName("article").throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
       articlesWithCount <- executer.transact(f(c.id, data, queryParam))
     } yield
       if (articlesWithCount.nonEmpty) {
-        ResponseArticleWithCount(articlesWithCount.map(_._1).headOption.getOrElse(0), articlesWithCount.map(_._2))
+        ArticleWithCountResponseModel(articlesWithCount.map(_._1).headOption.getOrElse(0), articlesWithCount.map(_._2))
       } else {
         throw ArticleNotFound(detail = "articles not found")
       }
   }
 
-  def getWithCount(queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
+  def getWithCount(queryParam: ArticlesQueryParameter): IO[ArticleWithCountResponseModel] = {
     this.get(queryParam = queryParam)(cont)
   }
 
-  def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesQueryParameter): IO[ResponseArticleWithCount] = {
+  def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesQueryParameter): IO[ArticleWithCountResponseModel] = {
     this.get(tagName, queryParam)(tagCont)
   }
 
-  def getBySeriesName(seriesName: SeriesName): IO[ResponseArticleWithCount] = {
+  def getBySeriesName(seriesName: SeriesName): IO[ArticleWithCountResponseModel] = {
     this.get(seriesName, ArticlesQueryParameter(0, 100))(seriesCont)
   }
 

@@ -62,7 +62,7 @@ class ContentSpec extends AnyWordSpec {
   "RequestContent" should {
     "thrown ContentTitleRequired if title is empty" in {
       assertThrows[ContentTitleRequired] {
-        RequestContent(
+        ContentRequestModel(
           contentType = "article",
           path = Path("/articles/contentSpec/1"),
           title = "",
@@ -77,7 +77,7 @@ class ContentSpec extends AnyWordSpec {
 
     "thrown RawContentRequired if rawContent is empty" in {
       assertThrows[RawContentRequired] {
-        RequestContent(
+        ContentRequestModel(
           contentType = "article",
           path = Path("/articles/contentSpec/2"),
           title = "this is a articleRoute title",
@@ -92,7 +92,7 @@ class ContentSpec extends AnyWordSpec {
 
     "thrown HtmlContentRequired if htmlContent is empty" in {
       assertThrows[HtmlContentRequired] {
-        RequestContent(
+        ContentRequestModel(
           contentType = "article",
           path = Path("/articles/contentSpec/3"),
           title = "this is a articleRoute title",
@@ -126,7 +126,7 @@ class ContentSpec extends AnyWordSpec {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       val json =
-        ResponseContent(
+        ContentResponseModel(
           id = ContentId("01h08dm4th59wsk81d4h96cf6b"),
           title = "title",
           robotsAttributes = Attributes("noarchive, noimageindex"),
@@ -195,7 +195,7 @@ class ContentSpec extends AnyWordSpec {
 
       val json =
         Seq(
-          ResponseContent(
+          ContentResponseModel(
             id = ContentId("01h08dm4th59wsk81d4h96cf6b"),
             title = "title1",
             robotsAttributes = Attributes("noarchive, noimageindex"),
@@ -220,7 +220,7 @@ class ContentSpec extends AnyWordSpec {
             publishedAt = 1567814290,
             updatedAt = 1567814299
           ),
-          ResponseContent(
+          ContentResponseModel(
             id = ContentId("01h08dm4th59wsk81d4h96cf6c"),
             title = "title2",
             robotsAttributes = Attributes("all"),

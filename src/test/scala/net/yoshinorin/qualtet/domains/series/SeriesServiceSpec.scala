@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.tags
 
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.series.{RequestSeries, SeriesName}
+import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesRequestModel}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -12,13 +12,13 @@ import cats.effect.unsafe.implicits.global
 class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
-    val requestSeries: List[RequestSeries] = List(
-      RequestSeries(
+    val requestSeries: List[SeriesRequestModel] = List(
+      SeriesRequestModel(
         title = "Series Service Spec",
         name = SeriesName("seriesservice-series"),
         None
       ),
-      RequestSeries(
+      SeriesRequestModel(
         title = "Series Service Spec2",
         name = SeriesName("seriesservice-series2"),
         None
@@ -58,7 +58,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "upsert" in {
       seriesService
         .create(
-          RequestSeries(
+          SeriesRequestModel(
             title = "Series Service Spec Created",
             name = SeriesName("seriesservice-series-created"),
             description = Some("series description")
@@ -68,7 +68,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       val resultAfterCreated = seriesService.findByName(SeriesName("seriesservice-series-created")).unsafeRunSync().get
       seriesService
         .create(
-          RequestSeries(
+          SeriesRequestModel(
             title = "Series Service Spec Updated",
             name = SeriesName("seriesservice-series-created"),
             description = Some("series description")

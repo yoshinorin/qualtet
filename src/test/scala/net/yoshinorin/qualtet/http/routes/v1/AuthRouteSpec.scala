@@ -6,7 +6,7 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.auth.ResponseToken
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.{author, authorService, router, unsafeDecode}
@@ -16,7 +16,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.v1.AuthRouteSpec
 class AuthRouteV1Spec extends AnyWordSpec {
 
-  val a: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
+  val a: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "AuthRoute" should {

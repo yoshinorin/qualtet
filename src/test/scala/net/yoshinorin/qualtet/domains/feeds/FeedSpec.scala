@@ -7,7 +7,7 @@ import org.scalatest.wordspec.AnyWordSpec
 // testOnly net.yoshinorin.qualtet.domains.feeds.FeedSpec
 class FeedSpec extends AnyWordSpec {
 
-  val feed1: ResponseFeed = ResponseFeed(
+  val feed1: FeedResponseModel = FeedResponseModel(
     title = "feedTitle1",
     link = Path("/feed1"),
     id = Path("/feed1"),
@@ -15,7 +15,7 @@ class FeedSpec extends AnyWordSpec {
     updated = 0
   )
 
-  val feed2: ResponseFeed = ResponseFeed(
+  val feed2: FeedResponseModel = FeedResponseModel(
     title = "feedTitle2",
     link = Path("/feed2"),
     id = Path("/feed2"),

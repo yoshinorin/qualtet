@@ -6,7 +6,7 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
-import net.yoshinorin.qualtet.domains.authors.{AuthorName, ResponseAuthor}
+import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorResponseModel}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, authorService, router, unsafeDecode}
 import org.scalatest.wordspec.AnyWordSpec
@@ -17,8 +17,8 @@ class AuthorRouteV1Spec extends AnyWordSpec {
 
   val authorRoute = new AuthorRoute(authorService)
 
-  val a: ResponseAuthor = authorService.findByName(AuthorName(author.name.value)).unsafeRunSync().get
-  val a2: ResponseAuthor = authorService.findByName(AuthorName(author2.name.value)).unsafeRunSync().get
+  val a: AuthorResponseModel = authorService.findByName(AuthorName(author.name.value)).unsafeRunSync().get
+  val a2: AuthorResponseModel = authorService.findByName(AuthorName(author2.name.value)).unsafeRunSync().get
 
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 

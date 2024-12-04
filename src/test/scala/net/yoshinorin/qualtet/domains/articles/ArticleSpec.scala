@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.domains.Path
 // testOnly net.yoshinorin.qualtet.domains.articles.ArticleSpec
 class ArticleSpec extends AnyWordSpec {
 
-  val responseArticle1: ResponseArticle = ResponseArticle(
+  val responseArticle1: ArticleResponseModel = ArticleResponseModel(
     id = ContentId(generateUlid()),
     path = Path("/test"),
     title = "title",
@@ -18,7 +18,7 @@ class ArticleSpec extends AnyWordSpec {
     updatedAt = 0
   )
 
-  val responseArticle2: ResponseArticle = ResponseArticle(
+  val responseArticle2: ArticleResponseModel = ArticleResponseModel(
     id = ContentId(generateUlid()),
     path = Path("/test/path2"),
     title = "title2",
@@ -27,7 +27,7 @@ class ArticleSpec extends AnyWordSpec {
     updatedAt = 2
   )
 
-  val responseArticleWithLongLengthContent: ResponseArticle = ResponseArticle(
+  val responseArticleWithLongLengthContent: ArticleResponseModel = ArticleResponseModel(
     id = ContentId(generateUlid()),
     path = Path("/test"),
     title = "title",

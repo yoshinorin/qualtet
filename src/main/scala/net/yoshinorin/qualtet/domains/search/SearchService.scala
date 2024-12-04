@@ -18,11 +18,11 @@ class SearchService[F[_]: Monad](
   searchRepository: SearchRepository[F]
 )(using executer: Executer[F, IO]) {
 
-  def cont(query: List[String]): ContT[F, Seq[(Int, ResponseSearch)], Seq[(Int, ResponseSearch)]] = {
-    ContT.apply[F, Seq[(Int, ResponseSearch)], Seq[(Int, ResponseSearch)]] { next =>
+  def cont(query: List[String]): ContT[F, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] = {
+    ContT.apply[F, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] { next =>
       searchRepository.search(query).map { x =>
         x.map { case (count, search) =>
-          (count, ResponseSearch(search.path, search.title, search.content, search.publishedAt, search.updatedAt))
+          (count, SearchResponseModel(search.path, search.title, search.content, search.publishedAt, search.updatedAt))
         }
       }
     }
@@ -112,7 +112,7 @@ class SearchService[F[_]: Monad](
     }
   }
 
-  def search(query: Map[String, List[String]]): IO[ResponseSearchWithCount] = {
+  def search(query: Map[String, List[String]]): IO[SearchWithCountResponseModel] = {
     val queryStrings = extractQueryStringsFromQuery(query)
     for {
       accErrors <- IO(accumurateQueryStringsErrors(queryStrings))
@@ -126,9 +126,9 @@ class SearchService[F[_]: Monad](
           val stripedContent = x._2.content.stripHtmlTags.filterIgnoreChars.toLower
           x._2.copy(content = substrRecursively(stripedContent, calcSubStrRanges(positions(queryStrings, stripedContent))))
         }
-        ResponseSearchWithCount(searchResult.map(_._1).headOption.getOrElse(0), r)
+        SearchWithCountResponseModel(searchResult.map(_._1).headOption.getOrElse(0), r)
       } else {
-        ResponseSearchWithCount(0, Seq())
+        SearchWithCountResponseModel(0, Seq())
       }
   }
 

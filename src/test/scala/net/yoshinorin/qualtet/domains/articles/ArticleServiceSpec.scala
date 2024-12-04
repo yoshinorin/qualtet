@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.articles
 
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.RequestContent
+import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -18,11 +18,11 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     val requestContents = makeRequestContents(30, "articles")
     createContents(requestContents)
 
-    val sameTagNameRequestContents: List[RequestContent] = {
+    val sameTagNameRequestContents: List[ContentRequestModel] = {
       (1 until 15).toList
         .map(_.toString())
         .map(i =>
-          RequestContent(
+          ContentRequestModel(
             contentType = "article",
             path = Path(s"/test/same/tags/${i}"),
             title = s"this is a same tag title ${i}",

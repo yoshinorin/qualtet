@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, RawContentRequired}
 import net.yoshinorin.qualtet.syntax.*
 
-final case class RequestContent(
+final case class ContentRequestModel(
   contentType: String,
   robotsAttributes: Attributes, // TODO: Consider to use `Option[Attributes]`
   externalResources: List[ExternalResources] = List(),
@@ -23,10 +23,10 @@ final case class RequestContent(
   htmlContent: String,
   publishedAt: Long = ZonedDateTime.now.toEpochSecond,
   updatedAt: Long = ZonedDateTime.now.toEpochSecond
-) extends Request[RequestContent] {
+) extends Request[ContentRequestModel] {
   // NOTE: see `net.yoshinorin.qualtet.domains.Request` comment.
-  def postDecode: RequestContent = {
-    new RequestContent(
+  def postDecode: ContentRequestModel = {
+    new ContentRequestModel(
       contentType = contentType,
       robotsAttributes = this.robotsAttributes.sort,
       externalResources = externalResources,
@@ -42,9 +42,9 @@ final case class RequestContent(
   }
 }
 
-object RequestContent {
-  given codecRequestContent: JsonValueCodec[RequestContent] = JsonCodecMaker.make
-  given codecRequestContents: JsonValueCodec[List[RequestContent]] = JsonCodecMaker.make
+object ContentRequestModel {
+  given codecRequestContent: JsonValueCodec[ContentRequestModel] = JsonCodecMaker.make
+  given codecRequestContents: JsonValueCodec[List[ContentRequestModel]] = JsonCodecMaker.make
 
   def apply(
     contentType: String,
@@ -58,8 +58,8 @@ object RequestContent {
     htmlContent: String,
     publishedAt: Long = ZonedDateTime.now.toEpochSecond,
     updatedAt: Long = ZonedDateTime.now.toEpochSecond
-  ): RequestContent = {
-    new RequestContent(
+  ): ContentRequestModel = {
+    new ContentRequestModel(
       contentType = contentType,
       robotsAttributes = robotsAttributes,
       externalResources = externalResources,

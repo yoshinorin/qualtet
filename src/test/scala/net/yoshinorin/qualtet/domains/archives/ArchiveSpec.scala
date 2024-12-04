@@ -18,7 +18,7 @@ class ArchiveSpec extends AnyWordSpec {
           |}
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
-      val json = ResponseArchive(
+      val json = ArchiveResponseModel(
         path = Path("/test"),
         title = "title",
         publishedAt = 1567814290
@@ -46,12 +46,12 @@ class ArchiveSpec extends AnyWordSpec {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       val json = Seq(
-        ResponseArchive(
+        ArchiveResponseModel(
           path = Path("/test/path1"),
           title = "title1",
           publishedAt = 1567814290
         ),
-        ResponseArchive(
+        ArchiveResponseModel(
           path = Path("/test/path2"),
           title = "title2",
           publishedAt = 1567814391

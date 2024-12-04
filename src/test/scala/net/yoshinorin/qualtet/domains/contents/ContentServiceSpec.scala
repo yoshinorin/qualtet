@@ -15,7 +15,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.domains.ContentServiceSpec
 class ContentServiceSpec extends AnyWordSpec {
 
-  val requestContent1: RequestContent = RequestContent(
+  val requestContent1: ContentRequestModel = ContentRequestModel(
     contentType = "article",
     path = Path("/test/path"),
     title = "this is a title",
@@ -31,7 +31,7 @@ class ContentServiceSpec extends AnyWordSpec {
     )
   )
 
-  val requestContentNoMetas: RequestContent = RequestContent(
+  val requestContentNoMetas: ContentRequestModel = ContentRequestModel(
     contentType = "article",
     path = Path("/test/no-metas"),
     title = "this is a title",
@@ -69,7 +69,7 @@ class ContentServiceSpec extends AnyWordSpec {
 
     "upsert" in {
 
-      val requestContent: RequestContent = RequestContent(
+      val requestContent: ContentRequestModel = ContentRequestModel(
         contentType = "article",
         path = Path("/test/path/ContentServiceSpec/upsert"),
         title = "this is a title",
@@ -151,7 +151,7 @@ class ContentServiceSpec extends AnyWordSpec {
 
     "delete" in {
       // create test data for delete
-      val willBeDeleteContent: RequestContent = RequestContent(
+      val willBeDeleteContent: ContentRequestModel = ContentRequestModel(
         contentType = "article",
         path = Path("/test/willbe/delete"),
         title = "this is a title",
@@ -167,7 +167,7 @@ class ContentServiceSpec extends AnyWordSpec {
         )
       )
 
-      val willNotDeleteContent: RequestContent = RequestContent(
+      val willNotDeleteContent: ContentRequestModel = ContentRequestModel(
         contentType = "article",
         path = Path("/test/willnot/delete"),
         title = "this is a title",

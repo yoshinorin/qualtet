@@ -9,9 +9,9 @@ import org.http4s.dsl.io.*
 import org.http4s.{ContextRequest, Request}
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService}
-import net.yoshinorin.qualtet.domains.contents.RequestContent
+import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.http.{AuthProvider, RequestDecoder}
 import net.yoshinorin.qualtet.syntax.*
 
@@ -41,7 +41,7 @@ class ContentRoute[F[_]: Monad](
         .handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
-  private[http] def contentWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of { ctxRequest =>
+  private[http] def contentWithAuthed: AuthedRoutes[(AuthorResponseModel, String), IO] = AuthedRoutes.of { ctxRequest =>
     implicit val x = ctxRequest.req
     (ctxRequest match {
       case ContextRequest(_, r) =>
@@ -53,9 +53,9 @@ class ContentRoute[F[_]: Monad](
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
-  private[http] def post(payload: (ResponseAuthor, String)): IO[Response[IO]] = {
+  private[http] def post(payload: (AuthorResponseModel, String)): IO[Response[IO]] = {
     val maybeContent = for {
-      maybeContent <- IO(decode[RequestContent](payload._2))
+      maybeContent <- IO(decode[ContentRequestModel](payload._2))
     } yield maybeContent
 
     maybeContent.flatMap { c =>

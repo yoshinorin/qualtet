@@ -114,7 +114,7 @@ class AuthorSpec extends AnyWordSpec {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       val json =
-        ResponseAuthor(
+        AuthorResponseModel(
           id = authorId,
           name = AuthorName("JhonDue"),
           displayName = AuthorDisplayName("JD"),
@@ -146,13 +146,13 @@ class AuthorSpec extends AnyWordSpec {
 
       val json =
         Seq(
-          ResponseAuthor(
+          AuthorResponseModel(
             id = authorId,
             name = AuthorName("JhonDue"),
             displayName = AuthorDisplayName("JD"),
             createdAt = 1567814290
           ),
-          ResponseAuthor(
+          AuthorResponseModel(
             id = authorId2,
             name = AuthorName("JhonDue2"),
             displayName = AuthorDisplayName("JD2"),

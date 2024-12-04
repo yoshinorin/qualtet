@@ -8,9 +8,9 @@ import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
-import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.tags.{ResponseTag, TagId}
+import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
+import net.yoshinorin.qualtet.domains.tags.{TagId, TagResponseModel}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.{authProvider => fixtureAuthProvider}
@@ -33,14 +33,14 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
   }
    */
 
-  val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
+  val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
   val tagRouteV1 = new TagRoute(fixtureAuthProvider, tagService, articleService)
   val client: Client[IO] = Client.fromHttpApp(makeRouter(tagRouteV1 = tagRouteV1).routes.orNotFound)
 
   "TagRoute" should {
 
-    val t: Seq[ResponseTag] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.startsWith("tagRouteTag"))
+    val t: Seq[TagResponseModel] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.startsWith("tagRouteTag"))
 
     "return tags" in {
       val expectJson =
@@ -77,7 +77,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
 
-            val maybeArticles = unsafeDecode[ResponseArticleWithCount](response)
+            val maybeArticles = unsafeDecode[ArticleWithCountResponseModel](response)
             assert(maybeArticles.count === 1)
             assert(maybeArticles.articles.head.path.toString().startsWith("/test/tagRoute-0"))
           }
@@ -91,7 +91,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
 
-            val maybeArticles = unsafeDecode[ResponseArticleWithCount](response)
+            val maybeArticles = unsafeDecode[ArticleWithCountResponseModel](response)
             assert(maybeArticles.count === 1)
             assert(maybeArticles.articles.head.path.toString().startsWith("/test/tagRoute-1"))
           }

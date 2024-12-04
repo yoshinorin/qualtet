@@ -9,7 +9,7 @@ import org.http4s.dsl.io.*
 import org.slf4j.LoggerFactory
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
 import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, AuthProvider}
 import net.yoshinorin.qualtet.syntax.*
@@ -38,7 +38,7 @@ class TagRoute[F[_]: Monad](
       this.get(nameOrId, q.page, q.limit).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
-  private[http] def tagsWithAuthed: AuthedRoutes[(ResponseAuthor, String), IO] = AuthedRoutes.of { ctxRequest =>
+  private[http] def tagsWithAuthed: AuthedRoutes[(AuthorResponseModel, String), IO] = AuthedRoutes.of { ctxRequest =>
     implicit val x = ctxRequest.req
     (ctxRequest match {
       case ContextRequest(_, r) =>

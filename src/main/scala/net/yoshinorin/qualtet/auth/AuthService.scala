@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
 import cats.Monad
-import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorService, BCryptPassword, ResponseAuthor}
+import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorResponseModel, AuthorService, BCryptPassword}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
@@ -35,7 +35,7 @@ class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt) {
 
   }
 
-  def findAuthorFromJwtString(jwtString: String): IO[Option[ResponseAuthor]] = {
+  def findAuthorFromJwtString(jwtString: String): IO[Option[AuthorResponseModel]] = {
     jwt.decode[IO](jwtString).flatMap {
       case Right(jwtClaim: JwtClaim) =>
         authorService.findById(AuthorId(jwtClaim.sub))

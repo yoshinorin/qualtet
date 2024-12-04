@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorDisplayName, AuthorName, BC
 import net.yoshinorin.qualtet.domains.authors.Author
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 
 import cats.effect.unsafe.implicits.global
 

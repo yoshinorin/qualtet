@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Unauthorized}
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -12,8 +12,8 @@ import cats.effect.unsafe.implicits.global
 class AuthServiceSpec extends AnyWordSpec {
 
   val mod = Modules(fixtureTx)
-  val a: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
-  val a2: ResponseAuthor = authorService.findByName(author2.name).unsafeRunSync().get
+  val a: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
+  val a2: AuthorResponseModel = authorService.findByName(author2.name).unsafeRunSync().get
 
   "AuthService" should {
 

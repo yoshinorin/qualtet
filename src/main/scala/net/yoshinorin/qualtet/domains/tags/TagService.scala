@@ -27,10 +27,10 @@ class TagService[F[_]: Monad](
     }
   }
 
-  def getAllCont: ContT[F, Seq[ResponseTag], Seq[ResponseTag]] = {
-    ContT.apply[F, Seq[ResponseTag], Seq[ResponseTag]] { next =>
+  def getAllCont: ContT[F, Seq[TagResponseModel], Seq[TagResponseModel]] = {
+    ContT.apply[F, Seq[TagResponseModel], Seq[TagResponseModel]] { next =>
       tagRepository.getAll().map { x =>
-        x.map { case (cnt, tag) => ResponseTag(count = cnt, id = tag.id, name = tag.name) }
+        x.map { case (cnt, tag) => TagResponseModel(count = cnt, id = tag.id, name = tag.name) }
       }
     }
   }
@@ -76,7 +76,7 @@ class TagService[F[_]: Monad](
    *
    * @return tags
    */
-  def getAll: IO[Seq[ResponseTag]] = {
+  def getAll: IO[Seq[TagResponseModel]] = {
     executer.transact(getAllCont)
   }
 

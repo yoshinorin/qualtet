@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.RequestContent
+import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
@@ -17,11 +17,11 @@ class ContentTaggingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    val requestContents: List[RequestContent] = {
+    val requestContents: List[ContentRequestModel] = {
       List(1, 2)
         .map(_.toString())
         .map(i =>
-          RequestContent(
+          ContentRequestModel(
             contentType = "article",
             path = Path(s"/test/ContentTaggingServiceSpec-${i}"),
             title = s"this is a ContentTaggingServiceSpec title ${i}",

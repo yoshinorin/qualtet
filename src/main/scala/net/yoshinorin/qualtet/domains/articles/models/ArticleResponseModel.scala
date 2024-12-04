@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.util.Random
 
-final case class ResponseArticle(
+final case class ArticleResponseModel(
   id: ContentId,
   path: Path,
   title: String,
@@ -17,14 +17,14 @@ final case class ResponseArticle(
   updatedAt: Long
 )
 
-object ResponseArticle {
-  given codecResponseArticle: JsonValueCodec[ResponseArticle] = JsonCodecMaker.make
-  given codecResponseArticles: JsonValueCodec[Seq[ResponseArticle]] = JsonCodecMaker.make
+object ArticleResponseModel {
+  given codecResponseArticle: JsonValueCodec[ArticleResponseModel] = JsonCodecMaker.make
+  given codecResponseArticles: JsonValueCodec[Seq[ArticleResponseModel]] = JsonCodecMaker.make
 
-  def apply(id: ContentId, path: Path, title: String, content: String, publishedAt: Long, updatedAt: Long): ResponseArticle = {
+  def apply(id: ContentId, path: Path, title: String, content: String, publishedAt: Long, updatedAt: Long): ArticleResponseModel = {
     val stripedContent = content.stripHtmlTags
     val stripedContentLen = if (stripedContent.length > 100) 100 else stripedContent.length
-    new ResponseArticle(
+    new ArticleResponseModel(
       id,
       path,
       title,
@@ -35,12 +35,12 @@ object ResponseArticle {
   }
 }
 
-final case class ResponseArticleWithCount(
+final case class ArticleWithCountResponseModel(
   count: Int,
-  articles: Seq[ResponseArticle]
+  articles: Seq[ArticleResponseModel]
 )
 
-object ResponseArticleWithCount {
-  given codecResponseArticleWithCount: JsonValueCodec[ResponseArticleWithCount] = JsonCodecMaker.make
-  given codecResponseArticlesWithCount: JsonValueCodec[Seq[ResponseArticleWithCount]] = JsonCodecMaker.make
+object ArticleWithCountResponseModel {
+  given codecResponseArticleWithCount: JsonValueCodec[ArticleWithCountResponseModel] = JsonCodecMaker.make
+  given codecResponseArticlesWithCount: JsonValueCodec[Seq[ArticleWithCountResponseModel]] = JsonCodecMaker.make
 }

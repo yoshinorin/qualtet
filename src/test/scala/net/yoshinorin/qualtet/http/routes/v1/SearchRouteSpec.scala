@@ -7,9 +7,9 @@ import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.RequestContent
+import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.domains.search.ResponseSearchWithCount
+import net.yoshinorin.qualtet.domains.search.SearchWithCountResponseModel
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -22,11 +22,11 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    val requestContents: List[RequestContent] = {
+    val requestContents: List[ContentRequestModel] = {
       (0 until 49).toList
         .map(_.toString())
         .map(i =>
-          RequestContent(
+          ContentRequestModel(
             contentType = "article",
             path = Path(s"/test/searchRoute-${i}"),
             title = s"this is a searchRoute title ${i}",
@@ -36,7 +36,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             tags = List(s"searchRoute${i}"),
             externalResources = List()
           )
-        ) :+ RequestContent(
+        ) :+ ContentRequestModel(
         contentType = "article",
         path = Path(s"/test/searchServiceLast"),
         title = s"this is a searchService titleLast",
@@ -65,7 +65,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("contents"))
             assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("searchRoute"))
 
-            val maybeSearchResult = unsafeDecode[ResponseSearchWithCount](response)
+            val maybeSearchResult = unsafeDecode[SearchWithCountResponseModel](response)
             assert(maybeSearchResult.count >= 49) // FIXME: Get number of articles for search result with service class and use it for assertion.
             assert(maybeSearchResult.contents.size === 30)
             assert(maybeSearchResult.contents.head.path.toString().startsWith("/test/searchRoute-"))

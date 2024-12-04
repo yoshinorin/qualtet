@@ -135,7 +135,7 @@ class ContentService[F[_]: Monad](
    * @param request RequestContent
    * @return created Content with IO
    */
-  def createContentFromRequest(authorName: AuthorName, request: RequestContent): IO[Content] = {
+  def createContentFromRequest(authorName: AuthorName, request: ContentRequestModel): IO[Content] = {
 
     def createContentTagging(contentId: ContentId, tags: Option[List[Tag]]): IO[Option[List[ContentTagging]]] = {
       tags match {
@@ -271,7 +271,7 @@ class ContentService[F[_]: Monad](
    * @param path a content path
    * @return ResponseContent instance
    */
-  def findByPathWithMeta(path: Path): IO[Option[ResponseContent]] = {
+  def findByPathWithMeta(path: Path): IO[Option[ContentResponseModel]] = {
     this.findBy(path)(findByPathWithMetaCont)
   }
 
@@ -285,7 +285,7 @@ class ContentService[F[_]: Monad](
     executer.transact(findByIdCont(id))
   }
 
-  def findBy[A](data: A)(f: A => ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]]): IO[Option[ResponseContent]] = {
+  def findBy[A](data: A)(f: A => ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]]): IO[Option[ContentResponseModel]] = {
     executer.transact(f(data)).flatMap {
       case None => IO(None)
       case Some(x) =>
@@ -295,7 +295,7 @@ class ContentService[F[_]: Monad](
 
         IO(
           Some(
-            ResponseContent(
+            ContentResponseModel(
               id = x.id,
               title = x.title,
               robotsAttributes = x.robotsAttributes,

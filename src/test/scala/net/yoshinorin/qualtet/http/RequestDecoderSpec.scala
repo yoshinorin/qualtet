@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.http
 
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorId
-import net.yoshinorin.qualtet.domains.contents.RequestContent
+import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.errors.UnexpectedJsonFormat
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import org.scalatest.wordspec.AnyWordSpec
@@ -26,12 +26,12 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |}
         """.stripMargin
 
-      val result = decode[RequestContent](json)
+      val result = decode[ContentRequestModel](json)
       assert(result.isRight)
       result match {
         case Left(_) => // Nothing to do
         case Right(r) => {
-          assert(r.isInstanceOf[RequestContent])
+          assert(r.isInstanceOf[ContentRequestModel])
           assert(r.contentType === "article")
           assert(r.path.value === "/test/path")
           assert(r.title === "this is a title")
@@ -59,12 +59,12 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |}
         """.stripMargin
 
-      val result = decode[RequestContent](json)
+      val result = decode[ContentRequestModel](json)
       assert(result.isRight)
       result match {
         case Left(_) => // Nothing to do
         case Right(r) => {
-          assert(r.isInstanceOf[RequestContent])
+          assert(r.isInstanceOf[ContentRequestModel])
           assert(r.contentType === "article")
           assert(r.path.value === "/test/path")
           assert(r.title === "this is a title")
@@ -92,12 +92,12 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |}
         """.stripMargin
 
-      val result = decode[RequestContent](json)
+      val result = decode[ContentRequestModel](json)
       assert(result.isRight)
       result match {
         case Left(_) => // Nothing to do
         case Right(r) => {
-          assert(r.isInstanceOf[RequestContent])
+          assert(r.isInstanceOf[ContentRequestModel])
           assert(r.contentType === "article")
           assert(r.path.value === "/test/path")
           assert(r.title === "this is a title")
@@ -120,7 +120,7 @@ class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
           |}
         """.stripMargin
 
-      val result = decode[RequestContent](json)
+      val result = decode[ContentRequestModel](json)
       assert(result.isLeft)
       result match {
         case Right(_) => // Nothig to do

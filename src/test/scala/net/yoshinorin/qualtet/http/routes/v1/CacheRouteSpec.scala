@@ -7,7 +7,7 @@ import org.http4s.dsl.io.*
 import org.http4s.implicits.*
 import org.typelevel.ci.*
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.fixture.Fixture.{authService, author, authorService, expiredToken, nonExistsUserToken, router}
 import net.yoshinorin.qualtet.auth.RequestToken
 
@@ -16,7 +16,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.v1.CacheRouteSpec
 class CacheRouteSpec extends AnyWordSpec {
 
-  val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
+  val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 

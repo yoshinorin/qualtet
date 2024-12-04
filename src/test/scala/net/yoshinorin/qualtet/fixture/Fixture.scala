@@ -41,12 +41,12 @@ import net.yoshinorin.qualtet.http.routes.v1.{
 import java.util.concurrent.TimeUnit
 import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.domains.feeds.FeedService
-import net.yoshinorin.qualtet.domains.articles.ResponseArticleWithCount
+import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import cats.effect.unsafe.implicits.global
-import net.yoshinorin.qualtet.domains.series.{RequestSeries, SeriesName}
+import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesRequestModel}
 
 // Just test data
 object Fixture {
@@ -95,9 +95,9 @@ object Fixture {
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService = new SitemapService(sitemapRepository, sitemapCache)
 
-  val feedCaffeinCache: CaffeineCache[String, ResponseArticleWithCount] =
-    Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ResponseArticleWithCount]
-  val feedCache: CacheModule[String, ResponseArticleWithCount] = new CacheModule[String, ResponseArticleWithCount](feedCaffeinCache)
+  val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
+    Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
+  val feedCache: CacheModule[String, ArticleWithCountResponseModel] = new CacheModule[String, ArticleWithCountResponseModel](feedCaffeinCache)
   val feedService = new FeedService(feedCache, modules.articleService)
 
   val authProvider = new AuthProvider(modules.authService)
@@ -204,11 +204,11 @@ object Fixture {
     numberOfCreateContents: Int,
     specName: String,
     series: Option[SeriesName] = None
-  ): List[RequestContent] = {
+  ): List[ContentRequestModel] = {
     (0 until numberOfCreateContents).toList
       .map(_.toString())
       .map(i =>
-        RequestContent(
+        ContentRequestModel(
           contentType = "article",
           path = Path(s"/test/${specName}-${i}"),
           title = s"this is a ${specName} title ${i}",
@@ -222,13 +222,13 @@ object Fixture {
       )
   }
 
-  def createContents(requestContents: List[RequestContent]) = {
+  def createContents(requestContents: List[ContentRequestModel]) = {
     requestContents.foreach { rc =>
       modules.contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync()
     }
   }
 
-  def createSeries(requestSeries: List[RequestSeries]) = {
+  def createSeries(requestSeries: List[SeriesRequestModel]) = {
     requestSeries.foreach { rs =>
       modules.seriesService.create(rs).unsafeRunSync()
     }

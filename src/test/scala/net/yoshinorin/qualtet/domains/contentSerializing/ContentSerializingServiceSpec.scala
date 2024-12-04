@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.RequestContent
+import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -16,18 +16,18 @@ class ContentSerializingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    val requestSeries: RequestSeries = RequestSeries(
+    val requestSeries: SeriesRequestModel = SeriesRequestModel(
       title = "Content Serializing Service Spec",
       name = SeriesName("content-serializing-service-spec"),
       None
     )
     createSeries(List(requestSeries))
 
-    val requestContents: List[RequestContent] = {
+    val requestContents: List[ContentRequestModel] = {
       List(1, 5)
         .map(_.toString())
         .map(i =>
-          RequestContent(
+          ContentRequestModel(
             contentType = "article",
             path = Path(s"/test/ContentSerializingServiceSpec-${i}"),
             title = s"this is a ContentSerializingServiceSpec title ${i}",

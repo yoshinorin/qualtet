@@ -8,8 +8,8 @@ import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
-import net.yoshinorin.qualtet.domains.authors.ResponseAuthor
-import net.yoshinorin.qualtet.domains.series.{RequestSeries, Series, SeriesName}
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesRequestModel}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.{authProvider => fixtureAuthProvider}
@@ -21,13 +21,13 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.v1.SeriesRouteSpec
 class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestSeries: List[RequestSeries] = List(
-    RequestSeries(
+  val requestSeries: List[SeriesRequestModel] = List(
+    SeriesRequestModel(
       title = "Series Route Spec",
       name = SeriesName("seriesroute-series"),
       description = Some("Series Route Spec Description1")
     ),
-    RequestSeries(
+    SeriesRequestModel(
       title = "Series Route Spec2",
       name = SeriesName("seriesroute-series2"),
       description = Some("Series Route Spec Description2")
@@ -46,7 +46,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
   }
    */
 
-  val validAuthor: ResponseAuthor = authorService.findByName(author.name).unsafeRunSync().get
+  val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
   val seriesRouteV1 = new SeriesRoute(fixtureAuthProvider, seriesService)
   val client: Client[IO] = Client.fromHttpApp(makeRouter(seriesRouteV1 = seriesRouteV1).routes.orNotFound)
