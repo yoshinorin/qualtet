@@ -8,7 +8,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../../components/schemas/response/content.yml'
+            $ref: '../../../components/schemas/response/contentDetail.yml'
     404:
       description: Content not found
       content:

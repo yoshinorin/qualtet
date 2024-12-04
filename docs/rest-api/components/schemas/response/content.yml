@@ -12,34 +12,18 @@ properties:
     type: string
     format: ulid
     example: "01fgvhjxftxfjvxg3xbvv78kr1"
+  path:
+    type: string
+    example: "/2020/01/01/new-year"
   title:
     type: string
     example: "Post Title"
-  robotsAttributes:
-    type: string
-    description: "Comma separated values."
-    example: "noarchive, noimageindex"
-  externalResources:
-    type: array
-    items:
-      $ref: '../common/externalResource.yml'
-  tags:
-    type: array
-    items:
-      $ref: '../common/tag.yml'
-  description:
+  rawContent:
     type: string
     example: "Post description... not HTML strings"
-  content:
+  htmlContent:
     type: string
     example: "Post Content.... HTML strings"
-  length:
-    type: integer
-    example: 1252
-  authorName:
-    type: string
-    description: "This field return from `authors.display_name` column value."
-    example: "Jhon Due"
   publishedAt:
     type: long
     description: Unix time
@@ -52,13 +36,9 @@ required:
   - id
   - authorId
   - contentTypeId
+  - path
   - title
-  - robotsAttributes
-  - externalResources
-  - tags
-  - description
-  - content
-  - length
-  - authorName
+  - rawContent
+  - htmlContent
   - publishedAt
   - updatedAt

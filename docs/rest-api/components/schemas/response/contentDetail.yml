@@ -1,0 +1,54 @@
+type: object
+properties:
+  id:
+    type: string
+    format: ulid
+    example: "01fgvhme5b7cj0m5agr9f4g2ca"
+  title:
+    type: string
+    example: "Post Title"
+  robotsAttributes:
+    type: string
+    description: "Comma separated values."
+    example: "noarchive, noimageindex"
+  externalResources:
+    type: array
+    items:
+      $ref: '../common/externalResource.yml'
+  tags:
+    type: array
+    items:
+      $ref: '../common/tag.yml'
+  description:
+    type: string
+    example: "Post description... not HTML strings"
+  content:
+    type: string
+    example: "Post Content.... HTML strings"
+  length:
+    type: integer
+    example: 1252
+  authorName:
+    type: string
+    description: "This field return from `authors.display_name` column value."
+    example: "Jhon Due"
+  publishedAt:
+    type: long
+    description: Unix time
+    example: 1625065509
+  updatedAt:
+    type: long
+    description: Unix time
+    example: 1627095819
+required:
+  - id
+  - title
+  - robotsAttributes
+  - externalResources
+  - tags
+  - description
+  - content
+  - length
+  - authorName
+  - publishedAt
+  - updatedAt
