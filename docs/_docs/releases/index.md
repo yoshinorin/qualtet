@@ -5,7 +5,8 @@ title: Releases
 
 | Version | Code name | Released at |
 | --- | --- | --- |
-| [v2.14.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.14.0)                      | Scarlet Orgasta          |                        |
+| [v2.15.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.15.0)                      | Scarlet Penerapi         |                        |
+| [v2.14.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.14.0)                      | Scarlet Orgasta          | 2024-07-21T04:53:47Z   |
 | [v2.13.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.13.0)                      | Scarlet Nanayaku         | 2024-06-19T14:48:54Z   |
 | [v2.12.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.12.0)                      | Scarlet Magata           | 2024-03-08T14:02:09Z   |
 | [v2.11.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.11.0)                      | Scarlet Linda            | 2023-11-03T06:07:42Z   |
