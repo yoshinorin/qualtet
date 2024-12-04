@@ -271,7 +271,7 @@ class ContentService[F[_]: Monad](
    * @param path a content path
    * @return ResponseContent instance
    */
-  def findByPathWithMeta(path: Path): IO[Option[ContentResponseModel]] = {
+  def findByPathWithMeta(path: Path): IO[Option[ContentDetailResponseModel]] = {
     this.findBy(path)(findByPathWithMetaCont)
   }
 
@@ -285,7 +285,7 @@ class ContentService[F[_]: Monad](
     executer.transact(findByIdCont(id))
   }
 
-  def findBy[A](data: A)(f: A => ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]]): IO[Option[ContentResponseModel]] = {
+  def findBy[A](data: A)(f: A => ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]]): IO[Option[ContentDetailResponseModel]] = {
     executer.transact(f(data)).flatMap {
       case None => IO(None)
       case Some(x) =>
@@ -295,7 +295,7 @@ class ContentService[F[_]: Monad](
 
         IO(
           Some(
-            ContentResponseModel(
+            ContentDetailResponseModel(
               id = x.id,
               title = x.title,
               robotsAttributes = x.robotsAttributes,

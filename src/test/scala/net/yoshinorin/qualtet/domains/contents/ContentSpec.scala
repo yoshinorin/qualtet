@@ -126,7 +126,7 @@ class ContentSpec extends AnyWordSpec {
       """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
 
       val json =
-        ContentResponseModel(
+        ContentDetailResponseModel(
           id = ContentId("01h08dm4th59wsk81d4h96cf6b"),
           title = "title",
           robotsAttributes = Attributes("noarchive, noimageindex"),
@@ -195,7 +195,7 @@ class ContentSpec extends AnyWordSpec {
 
       val json =
         Seq(
-          ContentResponseModel(
+          ContentDetailResponseModel(
             id = ContentId("01h08dm4th59wsk81d4h96cf6b"),
             title = "title1",
             robotsAttributes = Attributes("noarchive, noimageindex"),
@@ -220,7 +220,7 @@ class ContentSpec extends AnyWordSpec {
             publishedAt = 1567814290,
             updatedAt = 1567814299
           ),
-          ContentResponseModel(
+          ContentDetailResponseModel(
             id = ContentId("01h08dm4th59wsk81d4h96cf6c"),
             title = "title2",
             robotsAttributes = Attributes("all"),

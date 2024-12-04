@@ -10,7 +10,7 @@ import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.{Content, ContentId, ContentRequestModel, ContentResponseModel}
+import net.yoshinorin.qualtet.domains.contents.{Content, ContentDetailResponseModel, ContentId, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -455,7 +455,7 @@ class ContentRouteV1Spec extends AnyWordSpec {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
 
-            val maybeContent = unsafeDecode[ContentResponseModel](response)
+            val maybeContent = unsafeDecode[ContentDetailResponseModel](response)
             assert(maybeContent.authorName === validAuthor.displayName.toString().toLowerCase())
             assert(maybeContent.content === "<p>this is a html ContentRouteSpec2<p>")
             assert(maybeContent.description === "this is a html ContentRouteSpec2")

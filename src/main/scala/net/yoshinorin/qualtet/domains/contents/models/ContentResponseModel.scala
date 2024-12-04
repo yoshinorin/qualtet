@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.Tag
 
-final case class ContentResponseModel(
+final case class ContentDetailResponseModel(
   id: ContentId,
   title: String,
   robotsAttributes: Attributes,
@@ -21,8 +21,8 @@ final case class ContentResponseModel(
   updatedAt: Long
 )
 
-object ContentResponseModel {
-  given codecResponseContent: JsonValueCodec[ContentResponseModel] = JsonCodecMaker.make(
+object ContentDetailResponseModel {
+  given codecResponseContent: JsonValueCodec[ContentDetailResponseModel] = JsonCodecMaker.make(
     CodecMakerConfig
       .withRequireCollectionFields(true)
       .withTransientEmpty(false)
@@ -31,5 +31,5 @@ object ContentResponseModel {
       .withTransientEmpty(false)
       .withTransientDefault(false)
   )
-  given codecResponseContents: JsonValueCodec[Seq[ContentResponseModel]] = JsonCodecMaker.make
+  given codecResponseContents: JsonValueCodec[Seq[ContentDetailResponseModel]] = JsonCodecMaker.make
 }
