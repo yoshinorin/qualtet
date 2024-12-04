@@ -12,7 +12,7 @@
   "author": "yoshinorin",
   "engines": {
     "npm": ">=10",
-    "node": ">=20"
+    "node": ">=22"
   },
   "dependencies": {
     "@redocly/cli": "1.25.5"
