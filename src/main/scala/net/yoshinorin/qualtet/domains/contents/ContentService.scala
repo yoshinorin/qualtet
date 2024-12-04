@@ -135,7 +135,7 @@ class ContentService[F[_]: Monad](
    * @param request RequestContent
    * @return created Content with IO
    */
-  def createContentFromRequest(authorName: AuthorName, request: ContentRequestModel): IO[Content] = {
+  def createContentFromRequest(authorName: AuthorName, request: ContentRequestModel): IO[ContentResponseModel] = {
 
     def createContentTagging(contentId: ContentId, tags: Option[List[Tag]]): IO[Option[List[ContentTagging]]] = {
       tags match {
@@ -180,7 +180,17 @@ class ContentService[F[_]: Monad](
         maybeContentSerializing,
         request.externalResources
       )
-    } yield createdContent
+    } yield ContentResponseModel(
+      id = createdContent.id,
+      authorId = a.id,
+      contentTypeId = c.id,
+      path = createdContent.path,
+      title = createdContent.title,
+      rawContent = createdContent.rawContent,
+      htmlContent = createdContent.htmlContent,
+      publishedAt = createdContent.publishedAt,
+      updatedAt = createdContent.updatedAt
+    )
   }
 
   /**

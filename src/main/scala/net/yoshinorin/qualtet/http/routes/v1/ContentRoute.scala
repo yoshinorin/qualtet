@@ -10,8 +10,7 @@ import org.http4s.{ContextRequest, Request}
 import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentService}
-import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
+import net.yoshinorin.qualtet.domains.contents.{ContentDetailResponseModel, ContentId, ContentRequestModel, ContentResponseModel, ContentService}
 import net.yoshinorin.qualtet.http.{AuthProvider, RequestDecoder}
 import net.yoshinorin.qualtet.syntax.*
 

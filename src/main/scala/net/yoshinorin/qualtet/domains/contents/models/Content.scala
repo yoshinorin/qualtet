@@ -25,11 +25,6 @@ final case class Content(
   updatedAt: Long = ZonedDateTime.now.toEpochSecond
 )
 
-object Content {
-  given codecContent: JsonValueCodec[Content] = JsonCodecMaker.make
-  given codecContents: JsonValueCodec[List[Content]] = JsonCodecMaker.make
-}
-
 final case class ContentWithMeta(
   id: ContentId,
   title: String,
