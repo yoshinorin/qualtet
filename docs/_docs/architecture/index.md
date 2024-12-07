@@ -5,8 +5,8 @@ title: Architecture
 
 ## Example Architecture
 
-Qualtet no needs to depend on any Static Site Generator, cms ...etc.
+Qualtet does not need to depend on any Static Site Generator, CMS, etc.
 
-Below is my website architecture.
+Below is the architecture of my website.
 
 ![](./assets/arch.svg)

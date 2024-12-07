@@ -22,17 +22,17 @@ info:
     ## Request Header
     | name | required | format | Explain |
     | --- | --- | --- | --- |
-    | X-Request-Id | false | UUID4 | Logging for server side. If client does not set this header, Quartet generates it randomly. If client set this when request a server, Qualtet will return it value with response header. |
+    | X-Request-Id | false | UUID4 | Logging for server side. If the client does not set this header, Qualtet generates it randomly. If the client sets this when requesting the server, Qualtet will return its value in the response header. |
 
     ## Response Header
     | name | format | Explain |
     | --- | --- | --- |
-    | X-Request-Id | UUID4 | Always set by Qualtet. If client set this when request a server, Qualtet will return it value with response header. |
-    | X-Response-Time | number | Always set by Qualtet. Response time (ms) |
+    | X-Request-Id | UUID4 | Always set by Qualtet. If the client sets this when requesting the server, Qualtet will return its value in the response header. |
+    | X-Response-Time | number | Always set by Qualtet. Indicates the response time in milliseconds (ms). |
 
     # Error Resonses
 
-    Error responses are in accordance with [RFC7807: Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc7807). An example is provided below.
+    Error responses follow [RFC7807: Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc7807). An example is provided below.
 
     ```json
     {

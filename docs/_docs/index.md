@@ -9,7 +9,7 @@ Qualtet is an API-based blogging system (server-side).
 
 ## Architecture (Example)
 
-An example of architecture.
+An example architecture.
 
 ![](./assets/arch.svg)
 
@@ -19,15 +19,15 @@ An example of architecture.
 * Scala 3.5.x
 * Java 21.x, 17.x (Perhaps works with 11.x)
 * MariaDB 11.4.x
-* docker & docker-compose 3.x (for test)
+* Docker & Docker Compose 3.x (for testing)
 
 ## Documentation
 
-Please see left side-bar.
+Please see the left sidebar.
 
 ## Branches
 
-The current master branch is for `v2.x`. `v1.x` branch is [here](https://github.com/yoshinorin/qualtet/tree/v1.x). But it will be not updated.
+The current master branch is for `v2.x`. The `v1.x` branch is [here](https://github.com/yoshinorin/qualtet/tree/v1.x), but it will not be updated.
 
 ## License
 

@@ -16,9 +16,9 @@ properties:
   robotsAttributes:
     type: string
     description: |
-      Comma separated values. Currently, this field is requred. Plan to change it to an optional.
+      Comma-separated values. Currently, this field is required. There are plans to change it to optional.
 
-      refs:
+      References:
       - [MDN: The metadata element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta)
       - [Google Search Console: Robots meta tag, data-nosnippet, and X-Robots-Tag specifications](https://developers.google.com/search/docs/advanced/robots/robots_meta_tag)
     example: "noarchive, noimageindex"

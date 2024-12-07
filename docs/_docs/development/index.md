@@ -5,7 +5,7 @@ title: Development
 
 ## Initialize local DB (with Docker)
 
-1. run local db with docker
+1. Run the local database with Docker
 
 ```sh
 $ cd docker
@@ -19,18 +19,13 @@ $ sbt
 $ sbt:qualtet> createOrUpdateAuthor <name> <displayName> <password>
 ```
 
-3. shut down docker once that runs seq `1.`
+3. Shut down Docker once step `1.` is complete
 
 ```sh
 $ docker compose down
 ```
 
-4. run local server with sbt command
-
-```sh
-$ sbt
-$ sbt:qualtet> runs
-```
+4. Run the local server with the sbt command
 
 ## Run local server
 

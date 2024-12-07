@@ -5,7 +5,7 @@ title: Docker integration
 
 ## Docker Image
 
-Qualtet provides docker image.
+Qualtet provides a Docker image.
 
 * On [GitHub Container Repository](https://github.com/yoshinorin/qualtet/pkgs/container/docker-qualtet)
 
@@ -15,7 +15,7 @@ Please see [docker-compose.yml](https://github.com/yoshinorin/qualtet/blob/maste
 
 ## Environment variables
 
-As representative environment variables, following values are exists.
+The following are representative environment variables.
 
 | Key | Value (Example) |
 | --- | --- |

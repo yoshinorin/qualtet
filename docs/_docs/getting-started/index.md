@@ -5,7 +5,7 @@ title: Getting Started
 
 ## Create database
 
-Create a database schema before install an application. Also, schema name is anything will be fine.
+Create a database schema before installing the application. Any schema name will be fine.
 
 ```sql
 CREATE DATABASE qualtet;
@@ -13,17 +13,17 @@ CREATE DATABASE qualtet;
 
 ## Configuration
 
-Qualtet reads all settings from the system environment variable. You have to set the following system environment variables.
+Qualtet reads all settings from system environment variables. You have to set the following system environment variables.
 
 ### Database
 
 |Property|Description|Type|Default|Example|
 |---|---|---|---|---|
-|`QUALTET_DB_DATASOURCE_URL`|Data source url for JDBC connection.|`string`|-|`jdbc:mariadb://127.0.0.1/cahsper?useUnicode=true&characterEncoding=utf8mb4`|
+|`QUALTET_DB_DATASOURCE_URL`|Data source URL for JDBC connection.|`string`|-|`jdbc:mariadb://127.0.0.1/cahsper?useUnicode=true&characterEncoding=utf8mb4`|
 |`QUALTET_DB_USER`|Database user name.|`string`|-|`root`|
 |`QUALTET_DB_PASSWORD`|Database user password.|`string`|-|`pass`|
 |`QUALTET_DB_CONNECTION_POOL_MAX_LIFETIME`|Maximum lifetime of a connection in the pool.|`int`|`1800000`|`1800000`|
-|`QUALTET_DB_CONNECTION_POOL_MAX_POOLSIZE`|Maximum size that the pool.|`int`|`10`|`10`|
+|`QUALTET_DB_CONNECTION_POOL_MAX_POOLSIZE`|Maximum size of the pool.|`int`|`10`|`10`|
 
 Please see the [HikariCP doc](https://github.com/brettwooldridge/HikariCP) for details of the connection pool settings.
 
@@ -31,8 +31,8 @@ Please see the [HikariCP doc](https://github.com/brettwooldridge/HikariCP) for d
 
 |Property|Description|Type|Default|Example|
 |---|---|---|---|---|
-|`QUALTET_HTTP_BIND_ADDRESS`|Http server bind address.|`string`|`127.0.0.1`|`0.0.0.0`|
-|`QUALTET_HTTP_PORT`|Http server port.|`int`|`9001`|`9001`|
+|`QUALTET_HTTP_BIND_ADDRESS`|HTTP server bind address.|`string`|`127.0.0.1`|`0.0.0.0`|
+|`QUALTET_HTTP_PORT`|HTTP server port.|`int`|`9001`|`9001`|
 
 ### Endpoints
 

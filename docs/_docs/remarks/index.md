@@ -5,7 +5,7 @@ title: Remarks
 
 ## Private Key for JWT
 
-Qualtet has a private-key with an in-memory for generating/validating JWT. It's generated when booting the http-server (qualtet). It means JWT will be invalid if the http-server reboot.
+Qualtet has an in-memory private key for generating/validating JWT. It's generated when booting the HTTP server (Qualtet). This means JWT will be invalid if the HTTP server reboots.
 
 ## Need Entropy
 
@@ -15,8 +15,8 @@ Qualtet require entropy to create a private-key. For more details, please see be
 
 ## Markdown Parsing
 
-Qualtet **does not parse markdown to HTML**. Please parse it and set to `htmlContent` field by yourself when you `POST` a content.
+Qualtet **does not parse markdown to HTML**. Please parse it and set it to the `htmlContent` field yourself when you `POST` content.
 
 ## Escape HTML
 
-Qualtet **does not escape HTML**. Please escape it and set to `htmlContent` field by yourself when you `POST` a content if you need.
+Qualtet **does not escape HTML**. Please escape it and set it to the `htmlContent` field yourself when you `POST` content if needed.

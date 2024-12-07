@@ -16,15 +16,15 @@
 | Project | Description |
 |---|---|
 |[Qualtet](https://github.com/yoshinorin/qualtet)|API-based blogging system (server-side).|
-|[Qualtet-mock](https://github.com/yoshinorin/qualtet-mock)| Mock server of [Qualtet](https://github.com/yoshinorin/qualtet). Create for [Quintet](https://github.com/yoshinorin/quintet)'s E2E test.|
+|[Qualtet-mock](https://github.com/yoshinorin/qualtet-mock)| Mock server of [Qualtet](https://github.com/yoshinorin/qualtet). Created for [Quintet](https://github.com/yoshinorin/quintet)'s E2E tests.|
 |[Qualtet-CLI](https://github.com/yoshinorin/qualtet-cli)|A set of wrappers that call the APIs of [Hexo](https://github.com/hexojs/hexo) and [Qualtet](https://github.com/yoshinorin/qualtet).|
 |[Quintet](https://github.com/yoshinorin/quintet)|The front end for Qualtet.|
 
-<sub>About [Hexo](https://github.com/hexojs). Hexo is a SSG, but I'm using it only for local content management. (such as markdown, images, etc...) The contents of my website depend on Hexo locally. But basically, Qualtet doesn't necessarily need to depend on Hexo or any other SSG or CMS ...etc.</sub>
+<sub>About [Hexo](https://github.com/hexojs). Hexo is an SSG, but I'm using it only for local content management (such as markdown, images, etc.). The content of my website depends on Hexo locally. However, Qualtet doesn't necessarily need to depend on Hexo or any other SSG or CMS, etc.</sub>
 
 ## Architecture (Example)
 
-An example of architecture.
+An example architecture.
 
 ![](./docs/_assets/assets/arch.svg)
 

@@ -2,7 +2,7 @@ get:
   summary:
     Get an articles url & updated date for sitemaps.xml
   description: |
-    NOTE: When `noindex` is included in the `robotsAttributes` of the content, that content will be excluded from the results of the response.
+    NOTE: When `noindex` is included in the `robotsAttributes` of the content, that content will be excluded from the response results.
   tags:
     - sitemaps
   responses:
