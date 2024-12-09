@@ -123,8 +123,8 @@ class SearchService[F[_]: Monad](
     } yield
       if (searchResult.nonEmpty) {
         val r = searchResult.map { x =>
-          val stripedContent = x._2.content.stripHtmlTags.filterIgnoreChars.toLower
-          x._2.copy(content = substrRecursively(stripedContent, calcSubStrRanges(positions(queryStrings, stripedContent))))
+          val strippedContent = x._2.content.stripHtmlTags.filterIgnoreChars.toLower
+          x._2.copy(content = substrRecursively(strippedContent, calcSubStrRanges(positions(queryStrings, strippedContent))))
         }
         SearchWithCountResponseModel(searchResult.map(_._1).headOption.getOrElse(0), r)
       } else {

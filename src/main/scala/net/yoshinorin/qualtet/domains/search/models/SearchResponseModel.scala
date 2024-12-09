@@ -18,11 +18,11 @@ object SearchResponseModel {
   given codecResponseSearchs: JsonValueCodec[Seq[SearchResponseModel]] = JsonCodecMaker.make
 
   def apply(path: Path, title: String, content: String, publishedAt: Long, updatedAt: Long): SearchResponseModel = {
-    val stripedContent = content.stripHtmlTags
+    val strippedContent = content.stripHtmlTags
     new SearchResponseModel(
       path,
       title,
-      stripedContent,
+      strippedContent,
       publishedAt,
       updatedAt
     )

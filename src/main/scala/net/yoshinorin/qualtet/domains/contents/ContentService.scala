@@ -299,9 +299,9 @@ class ContentService[F[_]: Monad](
     executer.transact(f(data)).flatMap {
       case None => IO(None)
       case Some(x) =>
-        val stripedContent = x.content.stripHtmlTags.replaceAll("\n", "")
+        val strippedContent = x.content.stripHtmlTags.replaceAll("\n", "")
         // TODO: Configurable
-        val descriptionLength = if (stripedContent.length > 50) 50 else stripedContent.length
+        val descriptionLength = if (strippedContent.length > 50) 50 else strippedContent.length
 
         IO(
           Some(
@@ -313,9 +313,9 @@ class ContentService[F[_]: Monad](
                 .zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2).distinct))
                 .getOrElse(List()),
               tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(TagId(x), TagName(y))).map(x => x.distinct).getOrElse(List()),
-              description = stripedContent.substring(0, descriptionLength),
+              description = strippedContent.substring(0, descriptionLength),
               content = x.content,
-              length = stripedContent.replaceAll(" ", "").length,
+              length = strippedContent.replaceAll(" ", "").length,
               authorName = x.authorName,
               publishedAt = x.publishedAt,
               updatedAt = x.updatedAt

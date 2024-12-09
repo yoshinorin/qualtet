@@ -22,13 +22,13 @@ object ArticleResponseModel {
   given codecResponseArticles: JsonValueCodec[Seq[ArticleResponseModel]] = JsonCodecMaker.make
 
   def apply(id: ContentId, path: Path, title: String, content: String, publishedAt: Long, updatedAt: Long): ArticleResponseModel = {
-    val stripedContent = content.stripHtmlTags
-    val stripedContentLen = if (stripedContent.length > 100) 100 else stripedContent.length
+    val strippedContent = content.stripHtmlTags
+    val strippedContentLen = if (strippedContent.length > 100) 100 else strippedContent.length
     new ArticleResponseModel(
       id,
       path,
       title,
-      stripedContent.substring(0, Random.between((stripedContentLen - stripedContentLen / 3), stripedContentLen)),
+      strippedContent.substring(0, Random.between((strippedContentLen - strippedContentLen / 3), strippedContentLen)),
       publishedAt,
       updatedAt
     )
