@@ -1,14 +1,13 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import java.time.ZonedDateTime
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 
 final case class AuthorResponseModel(
-  id: AuthorId = AuthorId.apply(),
+  id: AuthorId,
   name: AuthorName,
   displayName: AuthorDisplayName,
-  createdAt: Long = ZonedDateTime.now.toEpochSecond
+  createdAt: Long
 )
 
 object AuthorResponseModel {
