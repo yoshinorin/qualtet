@@ -2,8 +2,6 @@ package net.yoshinorin.qualtet.auth
 
 import cats.Monad
 import cats.implicits.catsSyntaxEq
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.config.JwtConfig
 import net.yoshinorin.qualtet.domains.authors.Author
 import net.yoshinorin.qualtet.domains.errors.Unauthorized
@@ -15,19 +13,6 @@ import wvlet.airframe.ulid.ULID
 
 import java.time.Instant
 import scala.util.Try
-
-final case class JwtClaim(
-  iss: String,
-  aud: String,
-  sub: String,
-  jti: String,
-  exp: Long,
-  iat: Long
-)
-
-object JwtClaim {
-  given codecJwtClaim: JsonValueCodec[JwtClaim] = JsonCodecMaker.make
-}
 
 class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signature) {
 
