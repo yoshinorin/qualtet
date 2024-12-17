@@ -92,6 +92,8 @@ Qualtet using `full-text-search`. So, please specify `--innodb-ft-min-token-size
 
 Qualtet does not support the signup endpoint. Need to create an author with `sbt task`, like below.
 
+### with sbt
+
 ```scala
 $ sbt
 
@@ -103,10 +105,16 @@ $ sbt:qualtet> createOrUpdateAuthor <name> <displayName> <password>
 $ sbt:qualtet> createOrUpdateAuthor jhonDue JD pass
 
 // result
-2021-08-03 21:54:03 +0900 [INFO] from net.yoshinorin.qualtet.tasks.createOrUpdateAuthor$ - author created: {
+2021-08-03 21:54:03 +0900 [INFO] from net.yoshinorin.qualtet.tasks.CreateOrUpdateAuthor$ - author created: {
   "id" : "01fgvhkzpyghp23wvp4p87nx29",
   "name" : "jhonDue",
   "displayName" : "JD",
   "createdAt" : 1627995242
 }
+```
+
+### with java
+
+```sh
+$ java -cp qualtet-assembly.jar net.yoshinorin.qualtet.tasks.CreateOrUpdateAuthor <name> <displayName> <password>
 ```
