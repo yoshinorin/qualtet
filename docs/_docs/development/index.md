@@ -12,6 +12,13 @@ $ cd docker
 $ docker compose -f ./docker-compose.local.yml up
 ```
 
+or
+
+```sh
+$ sbt
+$ sbt:qualtet> localDbUp
+```
+
 2. create author
 
 ```sh
@@ -23,6 +30,13 @@ $ sbt:qualtet> createOrUpdateAuthor <name> <displayName> <password>
 
 ```sh
 $ docker compose down
+```
+
+or
+
+```sh
+$ sbt
+$ sbt:qualtet> localDbDown
 ```
 
 4. Run the local server with the sbt command
