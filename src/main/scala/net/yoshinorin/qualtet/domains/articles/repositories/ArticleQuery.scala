@@ -7,10 +7,22 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
+import net.yoshinorin.qualtet.http.Order
+import doobie.util.fragment.Fragment
 
 object ArticleQuery {
 
+  // NOTE: can not build collect query if I use `fr"published_at ${sqlParams.order.value}"`.
+  private def generageOrderByFragments(order: Order): Fragment = {
+    order match {
+      case Order.ASC => fr"published_at ASC"
+      case _ => fr"published_at DESC"
+    }
+  }
+
   def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
+    val orderFrgments = generageOrderByFragments(sqlParams.order)
+
     sql"""
       SELECT
         count(1) OVER () AS count,
@@ -25,7 +37,7 @@ object ArticleQuery {
       WHERE
         content_type_id = ${contentTypeId.value}
       ORDER BY
-        published_at DESC
+        ${orderFrgments}
       LIMIT
         ${sqlParams.limit}
       OFFSET
@@ -39,6 +51,7 @@ object ArticleQuery {
     tagName: TagName,
     sqlParams: SqlParams
   ): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
+    val orderFrgments = generageOrderByFragments(sqlParams.order)
     sql"""
       SELECT
         count(1) OVER () AS count,
@@ -59,7 +72,7 @@ object ArticleQuery {
       AND
         tags.name = ${tagName.value}
       ORDER BY
-        published_at DESC
+        ${orderFrgments}
       LIMIT
         ${sqlParams.limit}
       OFFSET

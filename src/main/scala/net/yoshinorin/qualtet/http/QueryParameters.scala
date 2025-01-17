@@ -22,26 +22,35 @@ object PageQueryParam extends OptionalQueryParamDecoderMatcher[Int]("page")
 object LimitQueryParam extends OptionalQueryParamDecoderMatcher[Int]("limit")
  */
 
+enum Order(val value: String) {
+  case ASC extends Order("ASC")
+  case DESC extends Order("DESC")
+}
+
 final case class ArticlesQueryParameter(
   page: Int = 1,
   limit: Int = 10,
-  offset: Int = 0
+  offset: Int = 0,
+  order: Order = Order.DESC
 )
 
 final case class RequestQueryParamater(
   page: Option[Int],
-  limit: Option[Int]
+  limit: Option[Int],
+  order: Option[Order]
 )
 
 object ArticlesQueryParameter {
   def apply(
     page: Option[Int],
-    limit: Option[Int]
+    limit: Option[Int],
+    order: Option[Order]
   ): ArticlesQueryParameter = {
     new ArticlesQueryParameter(
       page.getOrElse(1) - 1,
       if (limit.getOrElse(10) > 10) 10 else limit.getOrElse(10),
-      if (page.getOrElse(1) === 1) 0 else (page.getOrElse(1) - 1) * 10
+      if (page.getOrElse(1) === 1) 0 else (page.getOrElse(1) - 1) * 10,
+      order.getOrElse(Order.DESC)
     )
   }
 

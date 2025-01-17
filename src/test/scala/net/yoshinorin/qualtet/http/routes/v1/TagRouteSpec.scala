@@ -7,6 +7,7 @@ import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import org.typelevel.ci.*
+import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
@@ -133,6 +134,80 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           }
         }
         .unsafeRunSync()
+    }
+
+    "return articles sort by desc by default" in {
+      for {
+        articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/tags/tagRoute-1"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+      } yield {
+        val page1LatestArticle = ULID.fromString(articles.articles.head.id.toString())
+        val page1OldestArticle = ULID.fromString(articles.articles.last.id.toString())
+        assert(page1LatestArticle.epochMillis > page1OldestArticle.epochMillis)
+      }
+    }
+
+    "return articles sort by desc with query params" in {
+      for {
+        page1Articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/tags/tagRoute-1?page=1&limit=5&order=desc"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+        page2Articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/tags/tagRoute-1?page=2&limit=5&order=desc"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+      } yield {
+        val page1LatestArticle = ULID.fromString(page1Articles.articles.head.id.toString())
+        val page1OldestArticle = ULID.fromString(page1Articles.articles.last.id.toString())
+        assert(page1LatestArticle.epochMillis > page1OldestArticle.epochMillis)
+
+        val page2LatestArticle = ULID.fromString(page2Articles.articles.head.id.toString())
+        val page2OldestArticle = ULID.fromString(page2Articles.articles.last.id.toString())
+        assert(page2LatestArticle.epochMillis > page2OldestArticle.epochMillis)
+
+        assert(page1OldestArticle.epochMillis > page2LatestArticle.epochMillis)
+      }
+    }
+
+    "return articles sort by asc with query params" in {
+      for {
+        page1Articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/tags/tagRoute-1?page=1&limit=5&order=asc"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+        page2Articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/tags/tagRoute-1?page=2&limit=5&order=asc"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+      } yield {
+        val page1LatestArticle = ULID.fromString(page1Articles.articles.head.id.toString())
+        val page1OldestArticle = ULID.fromString(page1Articles.articles.last.id.toString())
+        assert(page1OldestArticle.epochMillis > page1LatestArticle.epochMillis)
+
+        val page2LatestArticle = ULID.fromString(page2Articles.articles.head.id.toString())
+        val page2OldestArticle = ULID.fromString(page2Articles.articles.last.id.toString())
+        assert(page2OldestArticle.epochMillis > page2LatestArticle.epochMillis)
+
+        assert(page2LatestArticle.epochMillis > page1OldestArticle.epochMillis)
+      }
     }
 
     "return 404" in {

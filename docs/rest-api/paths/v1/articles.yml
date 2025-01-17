@@ -13,6 +13,12 @@ get:
       schema:
         type: integer
       description: The number of items to return. Max is 10.
+    - in: query
+      name: order
+      schema:
+        type: string
+        enum: [asc, desc]
+      description: The order in which articles are returned.
   responses:
     200:
       description: Response when Success

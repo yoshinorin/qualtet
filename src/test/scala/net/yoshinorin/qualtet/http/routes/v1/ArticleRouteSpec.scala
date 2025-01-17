@@ -6,6 +6,7 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
+import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.Path
@@ -54,6 +55,32 @@ class ArticleRouteV1Spec extends AnyWordSpec {
             val maybeArticles = unsafeDecode[ArticleWithCountResponseModel](response)
             assert(maybeArticles.count >= 20) // FIXME: get number of all articles and assert it.
             assert(maybeArticles.articles.size === 10)
+
+            // NOTE: default order is DESC
+            val newArticle = ULID.fromString(maybeArticles.articles.head.id.toString())
+            val oldArticle = ULID.fromString(maybeArticles.articles(1).id.toString())
+            assert(newArticle.epochMillis > oldArticle.epochMillis)
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "return articles with invalid query params" in {
+      client
+        .run(Request(method = Method.GET, uri = uri"/v1/articles?page=invalid&limit=invalid&order=invalid"))
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+
+            val maybeArticles = unsafeDecode[ArticleWithCountResponseModel](response)
+            assert(maybeArticles.count >= 20) // FIXME: get number of all articles and assert it.
+            assert(maybeArticles.articles.size === 10)
+
+            // NOTE: default order is DESC
+            val newArticle = ULID.fromString(maybeArticles.articles.head.id.toString())
+            val oldArticle = ULID.fromString(maybeArticles.articles(1).id.toString())
+            assert(newArticle.epochMillis > oldArticle.epochMillis)
           }
         }
         .unsafeRunSync()
@@ -70,6 +97,81 @@ class ArticleRouteV1Spec extends AnyWordSpec {
             val maybeArticles = unsafeDecode[ArticleWithCountResponseModel](response)
             assert(maybeArticles.count >= 20) // FIXME: get number of all articles and assert it.
             assert(maybeArticles.articles.size === 5)
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "return articles sort by desc with query params" in {
+      for {
+        page1Articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/articles/?page=1&limit=5&order=desc"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+        page2Articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/articles/?page=2&limit=5&order=desc"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+      } yield {
+        val page1LatestArticle = ULID.fromString(page1Articles.articles.head.id.toString())
+        val page1OldestArticle = ULID.fromString(page1Articles.articles.last.id.toString())
+        assert(page1LatestArticle.epochMillis > page1OldestArticle.epochMillis)
+
+        val page2LatestArticle = ULID.fromString(page2Articles.articles.head.id.toString())
+        val page2OldestArticle = ULID.fromString(page2Articles.articles.last.id.toString())
+        assert(page2LatestArticle.epochMillis > page2OldestArticle.epochMillis)
+
+        assert(page1OldestArticle.epochMillis > page2LatestArticle.epochMillis)
+      }
+    }
+
+    "return articles sort by asc with query params" in {
+      for {
+        page1Articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/articles/?page=1&limit=5&order=asc"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+        page2Articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/articles/?page=2&limit=5&order=asc"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+      } yield {
+        val page1LatestArticle = ULID.fromString(page1Articles.articles.head.id.toString())
+        val page1OldestArticle = ULID.fromString(page1Articles.articles.last.id.toString())
+        assert(page1OldestArticle.epochMillis > page1LatestArticle.epochMillis)
+
+        val page2LatestArticle = ULID.fromString(page2Articles.articles.head.id.toString())
+        val page2OldestArticle = ULID.fromString(page2Articles.articles.last.id.toString())
+        assert(page2OldestArticle.epochMillis > page2LatestArticle.epochMillis)
+
+        assert(page2LatestArticle.epochMillis > page1OldestArticle.epochMillis)
+      }
+    }
+
+    "return articles sort by asc with uppercase query params" in {
+      client
+        .run(Request(method = Method.GET, uri = uri"/v1/articles/?order=ASC"))
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+
+            val maybeArticles = unsafeDecode[ArticleWithCountResponseModel](response)
+            val newArticle = ULID.fromString(maybeArticles.articles.head.id.toString())
+            val oldArticle = ULID.fromString(maybeArticles.articles(1).id.toString())
+            assert(oldArticle.epochMillis > newArticle.epochMillis)
           }
         }
         .unsafeRunSync()
