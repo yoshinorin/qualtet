@@ -147,6 +147,8 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           }
       } yield {
         val page1LatestArticle = ULID.fromString(articles.articles.head.id.toString())
+        // FIXME: It only fails in the CI.
+        // val oldArticle = ULID.fromString(maybeArticles.articles(1).id.toString())
         val page1OldestArticle = ULID.fromString(articles.articles.last.id.toString())
         assert(page1LatestArticle.epochMillis > page1OldestArticle.epochMillis)
       }
