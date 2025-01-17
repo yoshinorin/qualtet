@@ -28,12 +28,30 @@ scalacOptions ++= Seq(
 dependencyAllowPreRelease := true
 
 val createOrUpdateAuthor = inputKey[Unit]("create an author. args must be three. They are 'name', 'displayName' and 'password'")
+val dbMigration = inputKey[Unit]("Migrate database.")
+val dbDestroy = inputKey[Unit]("Drop all database objects.")
+val dbRecreation = inputKey[Unit]("Drop and recreate all database objects.")
 lazy val root = (project in file("."))
   .settings(
     createOrUpdateAuthor := Def.inputTaskDyn {
       import sbt.Def.spaceDelimited
       val args = spaceDelimited("<args>").parsed
       val task = (Compile / runMain).toTask(s" net.yoshinorin.qualtet.tasks.CreateOrUpdateAuthor ${args.mkString(" ")}")
+      task
+    }.evaluated,
+    dbMigration := Def.inputTaskDyn {
+      import sbt.Def.spaceDelimited
+      val task = (Compile / runMain).toTask(s" net.yoshinorin.qualtet.tasks.db.Migrate")
+      task
+    }.evaluated,
+    dbDestroy := Def.inputTaskDyn {
+      import sbt.Def.spaceDelimited
+      val task = (Compile / runMain).toTask(s" net.yoshinorin.qualtet.tasks.db.Destroy")
+      task
+    }.evaluated,
+    dbRecreation := Def.inputTaskDyn {
+      import sbt.Def.spaceDelimited
+      val task = (Compile / runMain).toTask(s" net.yoshinorin.qualtet.tasks.db.Recreate")
       task
     }.evaluated
   )

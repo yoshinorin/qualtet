@@ -11,6 +11,13 @@ Create a database schema before installing the application. Any schema name will
 CREATE DATABASE qualtet;
 ```
 
+or
+
+```sh
+$ sbt
+$ sbt:qualtet> dbMigration
+```
+
 ## Configuration
 
 Qualtet reads all settings from system environment variables. You have to set the following system environment variables.

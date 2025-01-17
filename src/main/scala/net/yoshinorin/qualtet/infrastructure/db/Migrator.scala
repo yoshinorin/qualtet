@@ -9,7 +9,7 @@ import org.flywaydb.core.api.configuration.FluentConfiguration
 
 class Migrator(config: DBConfig) {
 
-  private val flywayConfig: FluentConfiguration = Flyway.configure().dataSource(config.url, config.user, config.password)
+  private val flywayConfig: FluentConfiguration = Flyway.configure().dataSource(config.url, config.user, config.password).cleanDisabled(false)
   private val flyway: Flyway = new Flyway(flywayConfig)
 
   /**
