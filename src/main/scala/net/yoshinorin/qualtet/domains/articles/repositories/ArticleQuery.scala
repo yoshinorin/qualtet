@@ -39,7 +39,7 @@ object ArticleQuery {
       ORDER BY
         ${orderFrgments}
       LIMIT
-        ${sqlParams.limit}
+        ${sqlParams.limit.toInt}
       OFFSET
         ${sqlParams.offset}
     """
@@ -74,7 +74,7 @@ object ArticleQuery {
       ORDER BY
         ${orderFrgments}
       LIMIT
-        ${sqlParams.limit}
+        ${sqlParams.limit.toInt}
       OFFSET
         ${sqlParams.offset}
     """

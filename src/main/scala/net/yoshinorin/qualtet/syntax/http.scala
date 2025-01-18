@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.syntax
 import cats.effect.IO
 import org.http4s.{Request, Response}
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
-import net.yoshinorin.qualtet.http.{Order, RequestQueryParamater, ResponseTranslator}
+import net.yoshinorin.qualtet.http.{Limit, Order, Page, RequestQueryParamater, ResponseTranslator}
 
 import scala.util.Try
 
@@ -33,7 +33,7 @@ trait http {
       val b = Try(q.getOrElse("limit", 10).toString.trim.toInt)
       val o = Try(Order.valueOf(q.getOrElse("order", "desc").toUpperCase()))
 
-      RequestQueryParamater(Some(a.getOrElse(1)), Some(b.getOrElse(10)), Some(o.getOrElse(Order.DESC)))
+      RequestQueryParamater(Some(Page(a.getOrElse(1))), Some(Limit(b.getOrElse(10))), Some(o.getOrElse(Order.DESC)))
     }
   }
 

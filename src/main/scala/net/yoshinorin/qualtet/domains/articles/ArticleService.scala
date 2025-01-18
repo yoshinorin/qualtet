@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound}
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
-import net.yoshinorin.qualtet.http.ArticlesQueryParameter
+import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, Limit, Page}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
@@ -86,7 +86,7 @@ class ArticleService[F[_]: Monad](
   }
 
   def getBySeriesName(seriesName: SeriesName): IO[ArticleWithCountResponseModel] = {
-    this.get(seriesName, ArticlesQueryParameter(0, 100))(seriesCont)
+    this.get(seriesName, ArticlesQueryParameter(Page(0), Limit(100)))(seriesCont)
   }
 
 }

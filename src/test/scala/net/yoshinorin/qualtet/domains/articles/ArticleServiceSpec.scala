@@ -5,7 +5,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.http.ArticlesQueryParameter
+import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, Limit, Page}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import cats.effect.unsafe.implicits.global
@@ -40,19 +40,19 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
   "ArticleService" should {
 
     "getWithCount return ResponseArticleWithCount instances" in {
-      val result = articleService.getWithCount(ArticlesQueryParameter(1, 5)).unsafeRunSync()
+      val result = articleService.getWithCount(ArticlesQueryParameter(Page(1), Limit(5))).unsafeRunSync()
       assert(result.count > result.articles.size)
       assert(result.articles.size === 5)
       assert(result.articles === result.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
 
-      val result2 = articleService.getWithCount(ArticlesQueryParameter(1, 3)).unsafeRunSync()
+      val result2 = articleService.getWithCount(ArticlesQueryParameter(Page(1), Limit(3))).unsafeRunSync()
       assert(result.count > result.articles.size)
       assert(result2.articles.size === 3)
       assert(result2.articles === result2.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
     }
 
     "getByTagNameWithCount return ResponseArticleWithCount instances" in {
-      val result = articleService.getByTagNameWithCount(TagName("SameTag"), ArticlesQueryParameter(1, 5)).unsafeRunSync()
+      val result = articleService.getByTagNameWithCount(TagName("SameTag"), ArticlesQueryParameter(Page(1), Limit(5))).unsafeRunSync()
       assert(result.count > result.articles.size)
       assert(result.articles.size === 5)
       assert(result.articles === result.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))

@@ -11,7 +11,7 @@ import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, AuthProvider, Order}
+import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, AuthProvider, Limit, Order, Page}
 import net.yoshinorin.qualtet.syntax.*
 
 class TagRoute[F[_]: Monad](
@@ -66,7 +66,7 @@ class TagRoute[F[_]: Monad](
 
       But, it can not. So, I have to find the tagging contents with tagName.
    */
-  private[http] def get(nameOrId: String, page: Option[Int], limit: Option[Int], order: Option[Order]): IO[Response[IO]] = {
+  private[http] def get(nameOrId: String, page: Option[Page], limit: Option[Limit], order: Option[Order]): IO[Response[IO]] = {
     (for {
       articles <- articleService.getByTagNameWithCount(TagName(nameOrId), ArticlesQueryParameter(page, limit, order))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
