@@ -54,4 +54,22 @@ class ParamSpec extends AnyWordSpec {
      */
   }
 
+  "PaginationHelper" should {
+    "calculate default page if None" in {
+      assert(PaginationHelper.calcPage(None).toInt === 0)
+    }
+    "calculate valid page if Some" in {
+      assert(PaginationHelper.calcPage(Some(Page(5))).toInt === 4)
+    }
+    "calculate limit capped at 10" in {
+      assert(PaginationHelper.calcLimit(Some(Limit(15))).toInt === 10)
+    }
+    "calculate offset when page is 1" in {
+      assert(PaginationHelper.calcOffset(Some(Page(1))) === 0)
+    }
+    "calculate offset when page > 1" in {
+      assert(PaginationHelper.calcOffset(Some(Page(3))) === 20)
+    }
+  }
+
 }

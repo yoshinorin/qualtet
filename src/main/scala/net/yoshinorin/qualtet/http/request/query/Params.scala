@@ -48,16 +48,35 @@ final case class Pagination(
   order: Option[Order]
 )
 
+object PaginationHelper {
+
+  def calcPage(p: Option[Page]): Page = {
+    p.getOrElse(Page(1)) - Page(1)
+  }
+
+  def calcLimit(l: Option[Limit]): Limit = {
+    if (l.getOrElse(Limit(10)).toInt > 10) Limit(10) else l.getOrElse(Limit(10))
+  }
+
+  def calcOffset(p: Option[Page]): Int = {
+    if (p.getOrElse(Page(1)).toInt === Page(1).toInt) 0 else (p.getOrElse(Page(1)).toInt - 1) * 10
+  }
+
+}
+
 object ArticlesPagination {
+
+  import PaginationHelper._
+
   def apply(
     page: Option[Page],
     limit: Option[Limit],
     order: Option[Order]
   ): ArticlesPagination = {
     new ArticlesPagination(
-      page.getOrElse(Page(1)) - Page(1),
-      if (limit.getOrElse(Limit(10)).toInt > 10) Limit(10) else limit.getOrElse(Limit(10)),
-      if (page.getOrElse(Page(1)).toInt === Page(1).toInt) 0 else (page.getOrElse(Page(1)).toInt - 1) * 10,
+      page = calcPage(page),
+      limit = calcLimit(limit),
+      offset = calcOffset(page),
       order.getOrElse(Order.DESC)
     )
   }
