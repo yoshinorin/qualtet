@@ -28,16 +28,16 @@ class TagRoute[F[_]: Monad](
     tagsWithoutAuth <+>
       authProvider.authenticate(tagsWithAuthed)
 
-  private[http] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case request @ GET -> Root =>
-      implicit val r = request
-      this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
-    case request @ OPTIONS -> Root =>
-      NoContent()
-    case request @ GET -> Root / nameOrId =>
-      implicit val r = request
-      val p = request.uri.query.params.asPagination
-      this.get(nameOrId, p).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+  private[http] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
+    r match {
+      case request @ GET -> Root =>
+        this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
+      case request @ OPTIONS -> Root =>
+        NoContent()
+      case request @ GET -> Root / nameOrId =>
+        val p = request.uri.query.params.asPagination
+        this.get(nameOrId, p).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }
   }
 
   private[http] def tagsWithAuthed: AuthedRoutes[(AuthorResponseModel, String), IO] = AuthedRoutes.of { ctxRequest =>
