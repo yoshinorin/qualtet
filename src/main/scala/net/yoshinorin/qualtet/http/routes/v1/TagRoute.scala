@@ -11,7 +11,8 @@ import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, AuthProvider, Limit, Order, Page}
+import net.yoshinorin.qualtet.http.AuthProvider
+import net.yoshinorin.qualtet.http.request.query.{ArticlesQueryParameter, Limit, Order, Page}
 import net.yoshinorin.qualtet.syntax.*
 
 class TagRoute[F[_]: Monad](

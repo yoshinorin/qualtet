@@ -6,8 +6,8 @@ import doobie.util.query.Query0
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
-import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
-import net.yoshinorin.qualtet.http.Order
+import net.yoshinorin.qualtet.http.request.query.QueryParametersAliases.SqlParams
+import net.yoshinorin.qualtet.http.request.query.Order
 import doobie.util.fragment.Fragment
 
 object ArticleQuery {

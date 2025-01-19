@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.http.{Limit, Order, Page, RequestQueryParamater}
+import net.yoshinorin.qualtet.http.request.query.{Limit, Order, Page, RequestQueryParamater}
 
 // testOnly net.yoshinorin.qualtet.syntax.HttpSpec
 class HttpSpec extends AnyWordSpec {

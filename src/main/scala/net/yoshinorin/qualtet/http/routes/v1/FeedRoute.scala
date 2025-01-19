@@ -5,7 +5,7 @@ import cats.Monad
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, Limit, Page}
+import net.yoshinorin.qualtet.http.request.query.{ArticlesQueryParameter, Limit, Page}
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.syntax.*
 

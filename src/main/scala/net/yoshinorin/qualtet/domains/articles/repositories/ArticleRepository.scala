@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.tags.TagName
-import net.yoshinorin.qualtet.http.QueryParametersAliases.SqlParams
+import net.yoshinorin.qualtet.http.request.query.QueryParametersAliases.SqlParams
 
 trait ArticleRepository[F[_]] {
   def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams): F[Seq[(Int, ArticleReadModel)]]

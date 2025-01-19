@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound}
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, Limit, Page}
+import net.yoshinorin.qualtet.http.request.query.{ArticlesQueryParameter, Limit, Page}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 

@@ -5,7 +5,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.http.{ArticlesQueryParameter, Limit, Page}
+import net.yoshinorin.qualtet.http.request.query.{ArticlesQueryParameter, Limit, Page}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import cats.effect.unsafe.implicits.global

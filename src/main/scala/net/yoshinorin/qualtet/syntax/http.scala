@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.syntax
 import cats.effect.IO
 import org.http4s.{Request, Response}
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
-import net.yoshinorin.qualtet.http.{Limit, Order, Page, RequestQueryParamater}
+import net.yoshinorin.qualtet.http.request.query.{Limit, Order, Page, RequestQueryParamater}
 import net.yoshinorin.qualtet.http.response.Translator
 
 import scala.util.Try

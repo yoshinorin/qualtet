@@ -4,7 +4,7 @@ import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.http.ArticlesQueryParameter
+import net.yoshinorin.qualtet.http.request.query.ArticlesQueryParameter
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.Cacheable
 

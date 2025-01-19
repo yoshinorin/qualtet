@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http
+package net.yoshinorin.qualtet.http.request.query
 
 import cats.implicits.catsSyntaxEq
 // import org.http4s.dsl.io.OptionalQueryParamDecoderMatcher
