@@ -123,7 +123,7 @@ class ContentSpec extends AnyWordSpec {
           |  "publishedAt" : 1567814290,
           |  "updatedAt" : 1567814291
           |}
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       val json =
         ContentDetailResponseModel(
@@ -136,7 +136,7 @@ class ContentSpec extends AnyWordSpec {
           authorName = author.name,
           publishedAt = 1567814290,
           updatedAt = 1567814291
-        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
+        ).asJson.replaceNewlineAndSpace
 
       // NOTE: failed equally compare
       assert(json.contains(expectJson))
@@ -191,7 +191,7 @@ class ContentSpec extends AnyWordSpec {
           |    "updatedAt" : 1567814391
           |  }
           |]
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       val json =
         Seq(
@@ -232,7 +232,7 @@ class ContentSpec extends AnyWordSpec {
             publishedAt = 1567814291,
             updatedAt = 1567814391
           )
-        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
+        ).asJson.replaceNewlineAndSpace
 
       // NOTE: failed equally compare
       assert(json.contains(expectJson))

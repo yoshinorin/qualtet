@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.robots
 import net.yoshinorin.qualtet.domains.errors.InvalidAttributes
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.fixture.Fixture.{contentId, fullRobotsAttributes}
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.robots.RobotsSpec
@@ -23,13 +23,13 @@ class RobotsSpec extends AnyWordSpec {
           |  "contentId" : "01febb1333pd3431q1a1e00fbt",
           |  "attributes" : "all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate"
           |}
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       val json =
         Robots(
           contentId,
           Attributes("all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate")
-        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
+        ).asJson.replaceNewlineAndSpace
 
       // NOTE: failed equally compare
       assert(json.contains(expectJson))

@@ -92,7 +92,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           |  "title" : "${s1.title}",
           |  "description" : "${s1.description.get}"
           |}
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       val expectPartialJson2 =
         s"""
@@ -102,7 +102,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           |  "title" : "${s2.title}",
           |  "description" : "${s2.description.get}"
           |}
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       client
         .run(Request(method = Method.GET, uri = uri"/v1/series/"))
@@ -110,8 +110,8 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectPartialJson))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectPartialJson2))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains(expectPartialJson))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains(expectPartialJson2))
           }
         }
         .unsafeRunSync()
@@ -124,7 +124,7 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("seriesroute-series"))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains("seriesroute-series"))
 
             val maybeSeries = unsafeDecode[Series](response)
             assert(maybeSeries.name === "seriesroute-series")

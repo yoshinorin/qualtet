@@ -32,7 +32,7 @@ class SitemapRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("loc"))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains("loc"))
 
             val maybeSitemap = unsafeDecode[Seq[Url]](response)
             assert(maybeSitemap.size >= 2) // FIXME

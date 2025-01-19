@@ -62,8 +62,8 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             // TODO: assert json
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("contents"))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("searchRoute"))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains("contents"))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains("searchRoute"))
 
             val maybeSearchResult = unsafeDecode[SearchWithCountResponseModel](response)
             assert(maybeSearchResult.count >= 49) // FIXME: Get number of articles for search result with service class and use it for assertion.

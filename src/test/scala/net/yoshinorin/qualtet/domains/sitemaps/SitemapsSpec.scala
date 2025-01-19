@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.sitemaps
 
 import net.yoshinorin.qualtet.domains.sitemaps.{LastMod, Loc}
 import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.sitemaps.SitemapsSpec
@@ -47,13 +48,13 @@ class SitemapsSpec extends AnyWordSpec {
           |    "lastMod" : "2021-05-13"
           |  }
           |]
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       val urls =
         Seq(
           Url(Loc("https://example.com/aaa/bbb"), LastMod("1620738897")),
           Url(Loc("https://example.com/ccc/ddd"), LastMod("1620938897"))
-        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
+        ).asJson.replaceNewlineAndSpace
 
       assert(expectJson === urls)
     }

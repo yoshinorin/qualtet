@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.externalResources
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
 import net.yoshinorin.qualtet.domains.errors.InvalidExternalResourceKind
 import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.externalResources.ExternalResourcesSpec
@@ -25,13 +26,13 @@ class ExternalResourcesSpec extends AnyWordSpec {
           |  "kind" : "js",
           |  "values" : ["test", "foo", "bar"]
           |}
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       val json =
         ExternalResources(
           ExternalResourceKind("js"),
           values = List("test", "foo", "bar")
-        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
+        ).asJson.replaceNewlineAndSpace
 
       assert(json.contains(expectJson))
     }

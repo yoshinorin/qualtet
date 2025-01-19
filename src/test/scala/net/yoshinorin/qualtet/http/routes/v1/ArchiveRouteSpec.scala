@@ -9,7 +9,7 @@ import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.archives.{ArchiveResponseModel, ArchiveService}
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.fixture.Fixture
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.wordspec.AnyWordSpec
@@ -22,7 +22,7 @@ class ArchiveRouteV1Spec extends AnyWordSpec {
   val mockArchiveService = Mockito.mock(classOf[ArchiveService[ConnectionIO]])
   val archiveRouteV1 = new ArchiveRoute(mockArchiveService)
 
-  val router = Fixture.makeRouter(archiveRouteV1 = archiveRouteV1)
+  val router = makeRouter(archiveRouteV1 = archiveRouteV1)
 
   val request: Request[IO] = Request(method = Method.GET, uri = uri"/v1/archives")
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
@@ -60,7 +60,7 @@ class ArchiveRouteV1Spec extends AnyWordSpec {
           |    "publishedAt" : 1567814391
           |  }
           |]
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       client
         .run(request)
@@ -68,7 +68,7 @@ class ArchiveRouteV1Spec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "") === expectJson)
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace === expectJson)
           }
         }
         .unsafeRunSync()

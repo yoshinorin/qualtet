@@ -6,6 +6,7 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorResponseModel}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, authorService, router, unsafeDecode}
@@ -38,7 +39,7 @@ class AuthorRouteV1Spec extends AnyWordSpec {
           |  "displayName": "${a2.displayName.value}",
           |  "createdAt": ${a2.createdAt}
           |}
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       client
         .run(Request(method = Method.GET, uri = uri"/v1/authors/"))
@@ -46,7 +47,7 @@ class AuthorRouteV1Spec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains(expectJson))
           }
         }
         .unsafeRunSync()
@@ -61,7 +62,7 @@ class AuthorRouteV1Spec extends AnyWordSpec {
           |  "displayName": "${a.displayName.value}",
           |  "createdAt": ${a.createdAt}
           |}
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       client
         .run(Request(method = Method.GET, uri = uri"/v1/authors/jhondue"))
@@ -69,7 +70,7 @@ class AuthorRouteV1Spec extends AnyWordSpec {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains(expectJson))
           }
         }
         .unsafeRunSync()

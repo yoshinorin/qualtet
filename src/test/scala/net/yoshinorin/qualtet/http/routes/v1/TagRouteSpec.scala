@@ -56,7 +56,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           |  "name" : "${t(1).name.value}",
           |  "count" : 1
           |}
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       client
         .run(Request(method = Method.GET, uri = uri"/v1/tags/"))
@@ -64,7 +64,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains(expectJson))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains(expectJson))
           }
         }
         .unsafeRunSync()
@@ -112,7 +112,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("/test/tagRoute-0"))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains("/test/tagRoute-0"))
           }
         }
         .unsafeRunSync()
@@ -130,7 +130,7 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceAll("\n", "").replaceAll(" ", "").contains("/test/tagRoute-1"))
+            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains("/test/tagRoute-1"))
           }
         }
         .unsafeRunSync()

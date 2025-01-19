@@ -237,4 +237,8 @@ object Fixture {
   def unsafeDecode[T](response: Response[IO]): JsonValueCodec[T] ?=> T = {
     response.as[String].unsafeRunSync().decode
   }
+
+  extension (s: String) {
+    def replaceNewlineAndSpace: String = s.replaceAll("\n", "").replaceAll(" ", "")
+  }
 }

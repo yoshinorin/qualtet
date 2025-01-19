@@ -111,7 +111,7 @@ class AuthorSpec extends AnyWordSpec {
           |  "displayName": "JD",
           |  "createdAt" : 1567814290
           |}
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       val json =
         AuthorResponseModel(
@@ -119,7 +119,7 @@ class AuthorSpec extends AnyWordSpec {
           name = AuthorName("JhonDue"),
           displayName = AuthorDisplayName("JD"),
           createdAt = 1567814290
-        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
+        ).asJson.replaceNewlineAndSpace
 
       // NOTE: failed equally compare
       assert(json.contains(expectJson))
@@ -142,7 +142,7 @@ class AuthorSpec extends AnyWordSpec {
           |    "createdAt" : 1567814291
           |  }
           |]
-      """.stripMargin.replaceAll("\n", "").replaceAll(" ", "")
+      """.stripMargin.replaceNewlineAndSpace
 
       val json =
         Seq(
@@ -158,7 +158,7 @@ class AuthorSpec extends AnyWordSpec {
             displayName = AuthorDisplayName("JD2"),
             createdAt = 1567814291
           )
-        ).asJson.replaceAll("\n", "").replaceAll(" ", "")
+        ).asJson.replaceNewlineAndSpace
 
       // NOTE: failed equally compare
       assert(json.contains(expectJson))
