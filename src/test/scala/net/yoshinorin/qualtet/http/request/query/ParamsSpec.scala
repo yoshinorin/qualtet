@@ -14,30 +14,6 @@ class ParamSpec extends AnyWordSpec {
       assert(pagination.offset === 0)
     }
 
-    "Page" should {
-      "Computable" in {
-        val a = Page(3)
-        val b = Page(3)
-
-        assert(a + b === 6)
-        assert(a - b === 0)
-        assert(a * b === 9)
-        assert(a / b === 1)
-      }
-    }
-
-    "Limit" should {
-      "Computable" in {
-        val a = Limit(3)
-        val b = Limit(3)
-
-        assert(a + b === 6)
-        assert(a - b === 0)
-        assert(a * b === 9)
-        assert(a / b === 1)
-      }
-    }
-
     /* TODO:
     "limit is bigger than 10" in {
       val pagination = ArticlesPagination(page = 1, limit = 11)
@@ -69,6 +45,30 @@ class ParamSpec extends AnyWordSpec {
     }
     "calculate offset when page > 1" in {
       assert(PaginationHelper.calcOffset(Some(Page(3))) === 20)
+    }
+  }
+
+  "Page" should {
+    "Computable" in {
+      val a = Page(3)
+      val b = Page(3)
+
+      assert(a + b === 6)
+      assert(a - b === 0)
+      assert(a * b === 9)
+      assert(a / b === 1)
+    }
+  }
+
+  "Limit" should {
+    "Computable" in {
+      val a = Limit(3)
+      val b = Limit(3)
+
+      assert(a + b === 6)
+      assert(a - b === 0)
+      assert(a * b === 9)
+      assert(a / b === 1)
     }
   }
 
