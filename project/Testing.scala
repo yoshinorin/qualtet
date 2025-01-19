@@ -19,6 +19,7 @@ class Testing extends Docker {
       """
         |;scalafmt
         |;Test / scalafmt
+        |;Test / compile
         |;runTestDbContainer
         |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
         |;testOnly net.yoshinorin.qualtet.tasks.CreateOrUpdateAuthorSpec
