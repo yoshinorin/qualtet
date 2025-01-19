@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
 import net.yoshinorin.qualtet.http.AuthProvider
-import net.yoshinorin.qualtet.http.request.query.{ArticlesQueryParameter, Limit, Order, Page}
+import net.yoshinorin.qualtet.http.request.query.{ArticlesPagination, Limit, Order, Page}
 import net.yoshinorin.qualtet.syntax.*
 
 class TagRoute[F[_]: Monad](
@@ -35,7 +35,7 @@ class TagRoute[F[_]: Monad](
       NoContent()
     case request @ GET -> Root / nameOrId =>
       implicit val r = request
-      val q = request.uri.query.params.asRequestQueryParamater
+      val q = request.uri.query.params.asPagination
       this.get(nameOrId, q.page, q.limit, q.order).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
@@ -69,7 +69,7 @@ class TagRoute[F[_]: Monad](
    */
   private[http] def get(nameOrId: String, page: Option[Page], limit: Option[Limit], order: Option[Order]): IO[Response[IO]] = {
     (for {
-      articles <- articleService.getByTagNameWithCount(TagName(nameOrId), ArticlesQueryParameter(page, limit, order))
+      articles <- articleService.getByTagNameWithCount(TagName(nameOrId), ArticlesPagination(page, limit, order))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }

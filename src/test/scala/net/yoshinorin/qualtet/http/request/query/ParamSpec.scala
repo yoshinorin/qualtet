@@ -2,16 +2,16 @@ package net.yoshinorin.qualtet.http.request.query
 
 import org.scalatest.wordspec.AnyWordSpec
 
-// testOnly net.yoshinorin.qualtet.http.QueryParameterSpec
-class QueryParameterSpec extends AnyWordSpec {
+// testOnly net.yoshinorin.qualtet.http.ParamSpec
+class ParamSpec extends AnyWordSpec {
 
-  "QueryParameter" should {
+  "ArticlesPagination" should {
     "default instance" in {
-      val queryParameter = ArticlesQueryParameter()
+      val pagination = ArticlesPagination()
 
-      assert(queryParameter.page === 1)
-      assert(queryParameter.limit === 10)
-      assert(queryParameter.offset === 0)
+      assert(pagination.page === 1)
+      assert(pagination.limit === 10)
+      assert(pagination.offset === 0)
     }
 
     "Page" should {
@@ -40,16 +40,16 @@ class QueryParameterSpec extends AnyWordSpec {
 
     /* TODO:
     "limit is bigger than 10" in {
-      val queryParameter = ArticlesQueryParameter(page = 1, limit = 11)
+      val pagination = ArticlesPagination(page = 1, limit = 11)
 
-      assert(queryParameter.limit === 10)
+      assert(pagination.limit === 10)
     }
 
     "page is bigger than 1" in {
-      val queryParameter = ArticlesQueryParameter(page = 5)
+      val pagination = ArticlesPagination(page = 5)
 
-      assert(queryParameter.page === 5)
-      assert(queryParameter.offset === 50)
+      assert(pagination.page === 5)
+      assert(pagination.offset === 50)
     }
      */
   }
