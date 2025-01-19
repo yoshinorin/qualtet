@@ -81,6 +81,7 @@ object ArticlesPagination {
     )
   }
 
+  def from(p: Pagination): ArticlesPagination = this.apply(p.page, p.limit, p.order)
 }
 
 object QueryParametersAliases {

@@ -6,8 +6,9 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.http.request.query.{ArticlesPagination, Limit, Order, Page}
+import net.yoshinorin.qualtet.http.request.query.ArticlesPagination
 import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.http.request.query.Pagination
 
 class ArticleRoute[F[_]: Monad](
   articleService: ArticleService[F]
@@ -16,8 +17,8 @@ class ArticleRoute[F[_]: Monad](
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ GET -> Root =>
-        val q = request.uri.query.params.asPagination
-        this.get(q.page, q.limit, q.order)
+        val p = request.uri.query.params.asPagination
+        this.get(p)
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ =>
         MethodNotAllowed(Allow(Set(GET)))
@@ -25,9 +26,9 @@ class ArticleRoute[F[_]: Monad](
   }
 
   // articles?page=n&limit=m
-  private[http] def get(page: Option[Page], limit: Option[Limit], order: Option[Order]): IO[Response[IO]] = {
+  private[http] def get(p: Pagination): IO[Response[IO]] = {
     (for {
-      articles <- articleService.getWithCount(ArticlesPagination(page, limit, order))
+      articles <- articleService.getWithCount(ArticlesPagination.from(p))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }
