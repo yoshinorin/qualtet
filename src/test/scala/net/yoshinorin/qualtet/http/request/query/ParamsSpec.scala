@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.http.request.query
 
 import org.scalatest.wordspec.AnyWordSpec
 
-// testOnly net.yoshinorin.qualtet.http.ParamSpec
+// testOnly net.yoshinorin.qualtet.http.request.query.ParamSpec
 class ParamSpec extends AnyWordSpec {
 
   "ArticlesPagination" should {
