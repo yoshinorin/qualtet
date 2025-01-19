@@ -9,13 +9,14 @@ import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesRequestModel, SeriesService}
-import net.yoshinorin.qualtet.http.{AuthProvider, RequestDecoder}
+import net.yoshinorin.qualtet.http.AuthProvider
+import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
 
 class SeriesRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   seriesService: SeriesService[F]
-) extends RequestDecoder {
+) extends Decoder {
 
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def index: HttpRoutes[IO] =

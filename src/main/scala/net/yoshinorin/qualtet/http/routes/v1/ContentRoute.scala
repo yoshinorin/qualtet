@@ -11,13 +11,14 @@ import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.contents.{ContentDetailResponseModel, ContentId, ContentRequestModel, ContentResponseModel, ContentService}
-import net.yoshinorin.qualtet.http.{AuthProvider, RequestDecoder}
+import net.yoshinorin.qualtet.http.AuthProvider
+import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
 
 class ContentRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   contentService: ContentService[F]
-) extends RequestDecoder {
+) extends Decoder {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 

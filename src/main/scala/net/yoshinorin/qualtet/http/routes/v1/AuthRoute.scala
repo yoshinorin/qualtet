@@ -6,10 +6,10 @@ import org.http4s.headers.{Allow, `Content-Type`, `WWW-Authenticate`}
 import org.http4s.{Challenge, HttpRoutes, MediaType, Request, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken}
-import net.yoshinorin.qualtet.http.RequestDecoder
+import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
 
-class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends RequestDecoder {
+class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends Decoder {
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {

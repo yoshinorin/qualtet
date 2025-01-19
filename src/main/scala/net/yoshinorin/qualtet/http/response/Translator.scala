@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http
+package net.yoshinorin.qualtet.http.response
 
 import cats.effect.IO
 import org.http4s.dsl.io.*
@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.http.errors.HttpError.*
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.syntax.*
 
-object ResponseTranslator {
+object Translator {
 
   // NOTE: can't use `ContextFunctions`.
   private def failToResponse(f: DomainError)(using req: Request[IO]): IO[Response[IO]] = {

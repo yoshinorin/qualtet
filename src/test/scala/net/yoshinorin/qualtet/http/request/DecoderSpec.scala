@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http
+package net.yoshinorin.qualtet.http.request
 
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorId
@@ -10,9 +10,9 @@ import org.scalatest.wordspec.AnyWordSpec
 import java.time.ZonedDateTime
 
 // testOnly net.yoshinorin.qualtet.http.RequestDecoderSpec
-class RequestDecoderSpec extends AnyWordSpec with RequestDecoder {
+class RequestDecoderSpec extends AnyWordSpec with Decoder {
 
-  "RequestDecoder" should {
+  "Decoder" should {
     "Request content JSON can decode without has initial value field" in {
       val json =
         """

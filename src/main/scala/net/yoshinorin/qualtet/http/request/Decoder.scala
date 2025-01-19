@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.http
+package net.yoshinorin.qualtet.http.request
 
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.Request
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 
 import scala.util.control.NonFatal
 
-trait RequestDecoder {
+trait Decoder {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 

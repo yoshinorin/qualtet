@@ -3,7 +3,8 @@ package net.yoshinorin.qualtet.syntax
 import cats.effect.IO
 import org.http4s.{Request, Response}
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
-import net.yoshinorin.qualtet.http.{Limit, Order, Page, RequestQueryParamater, ResponseTranslator}
+import net.yoshinorin.qualtet.http.{Limit, Order, Page, RequestQueryParamater}
+import net.yoshinorin.qualtet.http.response.Translator
 
 import scala.util.Try
 
@@ -11,7 +12,7 @@ trait http {
 
   extension (e: Throwable) {
     def asResponse: Request[IO] ?=> IO[Response[IO]] = {
-      ResponseTranslator.toResponse(e)
+      Translator.toResponse(e)
     }
   }
 
@@ -23,7 +24,7 @@ trait http {
 
   extension [T](a: Option[T]) {
     def asResponse: (JsonValueCodec[T], Request[IO]) ?=> IO[Response[IO]] = {
-      ResponseTranslator.toResponse[T](a)
+      Translator.toResponse[T](a)
     }
   }
 
