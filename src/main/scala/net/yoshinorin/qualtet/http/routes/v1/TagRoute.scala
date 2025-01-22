@@ -11,10 +11,9 @@ import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, Pagination, PaginationOps, PaginationRequestModel}
 import net.yoshinorin.qualtet.http.AuthProvider
-import net.yoshinorin.qualtet.http.request.query.ArticlesPagination
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.http.request.query.Pagination
 
 class TagRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
@@ -68,9 +67,10 @@ class TagRoute[F[_]: Monad](
 
       But, it can not. So, I have to find the tagging contents with tagName.
    */
-  private[http] def get(nameOrId: String, p: Pagination): IO[Response[IO]] = {
+  private[http] def get(nameOrId: String, p: PaginationRequestModel): IO[Response[IO]] = {
     (for {
-      articles <- articleService.getByTagNameWithCount(TagName(nameOrId), ArticlesPagination.from(p))
+      pagination <- IO(summon[PaginationOps[ArticlesPagination]])
+      articles <- articleService.getByTagNameWithCount(TagName(nameOrId), pagination.make(p))
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }

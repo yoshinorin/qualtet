@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound}
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
-import net.yoshinorin.qualtet.http.request.query.{ArticlesPagination, Limit, Page}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, Pagination, PaginationOps}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
@@ -21,7 +21,7 @@ class ArticleService[F[_]: Monad](
   def cont(
     contentTypeId: ContentTypeId,
     none: Unit = (),
-    queryParams: ArticlesPagination
+    queryParams: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
       articleRepository.getWithCount(contentTypeId, queryParams).map { article =>
@@ -35,7 +35,7 @@ class ArticleService[F[_]: Monad](
   def tagCont(
     contentTypeId: ContentTypeId,
     tagName: TagName,
-    queryParams: ArticlesPagination
+    queryParams: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
       articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams).map { article =>
@@ -49,7 +49,7 @@ class ArticleService[F[_]: Monad](
   def seriesCont(
     contentTypeId: ContentTypeId,
     seriesName: SeriesName,
-    queryParams: ArticlesPagination // TODO: `Optional`
+    queryParams: Pagination // TODO: `Optional`
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
       articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName).map { article =>
@@ -62,9 +62,9 @@ class ArticleService[F[_]: Monad](
 
   def get[A](
     data: A = (),
-    queryParam: ArticlesPagination
+    queryParam: Pagination
   )(
-    f: (ContentTypeId, A, ArticlesPagination) => ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]]
+    f: (ContentTypeId, A, Pagination) => ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]]
   ): IO[ArticleWithCountResponseModel] = {
     for {
       c <- contentTypeService.findByName("article").throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
@@ -77,16 +77,17 @@ class ArticleService[F[_]: Monad](
       }
   }
 
-  def getWithCount(queryParam: ArticlesPagination): IO[ArticleWithCountResponseModel] = {
+  def getWithCount(queryParam: Pagination): IO[ArticleWithCountResponseModel] = {
     this.get(queryParam = queryParam)(cont)
   }
 
-  def getByTagNameWithCount(tagName: TagName, queryParam: ArticlesPagination): IO[ArticleWithCountResponseModel] = {
+  def getByTagNameWithCount(tagName: TagName, queryParam: Pagination): IO[ArticleWithCountResponseModel] = {
     this.get(tagName, queryParam)(tagCont)
   }
 
   def getBySeriesName(seriesName: SeriesName): IO[ArticleWithCountResponseModel] = {
-    this.get(seriesName, ArticlesPagination(Page(0), Limit(100)))(seriesCont)
+    val pagination = summon[PaginationOps[ArticlesPagination]]
+    this.get(seriesName, pagination.make(Option(Page(0)), Option(Limit(100)), None))(seriesCont)
   }
 
 }

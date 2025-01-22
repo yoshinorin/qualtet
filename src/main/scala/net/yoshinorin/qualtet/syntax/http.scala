@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.syntax
 import cats.effect.IO
 import org.http4s.{Request, Response}
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
-import net.yoshinorin.qualtet.http.request.query.{Limit, Order, Page, Pagination}
+import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationRequestModel}
 import net.yoshinorin.qualtet.http.response.Translator
 
 import scala.util.Try
@@ -29,12 +29,12 @@ trait http {
   }
 
   extension (q: Map[String, String]) {
-    def asPagination: Pagination = {
+    def asPagination: PaginationRequestModel = {
       val a = Try(q.getOrElse("page", 1).toString.trim.toInt)
       val b = Try(q.getOrElse("limit", 10).toString.trim.toInt)
       val o = Try(Order.valueOf(q.getOrElse("order", "desc").toUpperCase()))
 
-      Pagination(Some(Page(a.getOrElse(1))), Some(Limit(b.getOrElse(10))), Some(o.getOrElse(Order.DESC)))
+      PaginationRequestModel(Some(Page(a.getOrElse(1))), Some(Limit(b.getOrElse(10))), Some(o.getOrElse(Order.DESC)))
     }
   }
 

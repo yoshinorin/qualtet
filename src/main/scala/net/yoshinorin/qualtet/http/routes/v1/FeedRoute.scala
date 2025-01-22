@@ -5,7 +5,7 @@ import cats.Monad
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
-import net.yoshinorin.qualtet.http.request.query.{ArticlesPagination, Limit, Page}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, Pagination, PaginationOps}
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.syntax.*
 
@@ -23,7 +23,8 @@ class FeedRoute[F[_]: Monad](
 
   private[http] def get(name: String): IO[Response[IO]] = {
     for {
-      feeds <- feedService.get(ArticlesPagination(Page(1), Limit(5)))
+      pagination <- IO(summon[PaginationOps[ArticlesPagination]])
+      feeds <- feedService.get(pagination.make(Option(Page(1)), Option(Limit(5)), None))
       response <- Ok(feeds.asJson, `Content-Type`(MediaType.application.json))
     } yield response
   }

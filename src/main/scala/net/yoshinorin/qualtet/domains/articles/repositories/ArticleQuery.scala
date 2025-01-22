@@ -6,13 +6,12 @@ import doobie.util.query.Query0
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
-import net.yoshinorin.qualtet.http.request.query.QueryParametersAliases.SqlParams
-import net.yoshinorin.qualtet.http.request.query.Order
+import net.yoshinorin.qualtet.domains.{Order, Pagination}
 import doobie.util.fragment.Fragment
 
 object ArticleQuery {
 
-  // NOTE: can not build collect query if I use `fr"published_at ${sqlParams.order.value}"`.
+  // NOTE: can not build collect query if I use `fr"published_at ${pagination.order.value}"`.
   private def generageOrderByFragments(order: Order): Fragment = {
     order match {
       case Order.ASC => fr"published_at ASC"
@@ -20,8 +19,8 @@ object ArticleQuery {
     }
   }
 
-  def getWithCount(contentTypeId: ContentTypeId, sqlParams: SqlParams): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
-    val orderFrgments = generageOrderByFragments(sqlParams.order)
+  def getWithCount(contentTypeId: ContentTypeId, pagination: Pagination): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
+    val orderFrgments = generageOrderByFragments(pagination.order)
 
     sql"""
       SELECT
@@ -39,9 +38,9 @@ object ArticleQuery {
       ORDER BY
         ${orderFrgments}
       LIMIT
-        ${sqlParams.limit.toInt}
+        ${pagination.limit.toInt}
       OFFSET
-        ${sqlParams.offset}
+        ${pagination.offset}
     """
       .query[(Int, ArticleReadModel)]
   }
@@ -49,9 +48,9 @@ object ArticleQuery {
   def findByTagNameWithCount(
     contentTypeId: ContentTypeId,
     tagName: TagName,
-    sqlParams: SqlParams
+    pagination: Pagination
   ): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
-    val orderFrgments = generageOrderByFragments(sqlParams.order)
+    val orderFrgments = generageOrderByFragments(pagination.order)
     sql"""
       SELECT
         count(1) OVER () AS count,
@@ -74,9 +73,9 @@ object ArticleQuery {
       ORDER BY
         ${orderFrgments}
       LIMIT
-        ${sqlParams.limit.toInt}
+        ${pagination.limit.toInt}
       OFFSET
-        ${sqlParams.offset}
+        ${pagination.offset}
     """
       .query[(Int, ArticleReadModel)]
   }
