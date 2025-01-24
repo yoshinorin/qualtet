@@ -4,7 +4,7 @@ import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.domains.Pagination
+import net.yoshinorin.qualtet.domains.PaginationRequestModel
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.Cacheable
 
@@ -15,11 +15,11 @@ class FeedService[F[_]: Monad](
 
   private val cacheKey = "feed-full-cache"
 
-  def get(queryParam: Pagination): IO[Seq[FeedResponseModel]] = {
+  def get(p: PaginationRequestModel): IO[Seq[FeedResponseModel]] = {
 
     def fromDb(): IO[ArticleWithCountResponseModel] = {
       for {
-        x <- articleService.getWithCount(queryParam)
+        x <- articleService.getWithCount(p)
       } yield {
         cache.put(cacheKey, x)
         x

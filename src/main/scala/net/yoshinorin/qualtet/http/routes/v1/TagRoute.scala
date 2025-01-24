@@ -11,7 +11,7 @@ import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, Pagination, PaginationOps, PaginationRequestModel}
+import net.yoshinorin.qualtet.domains.PaginationRequestModel
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.syntax.*
 
@@ -69,8 +69,7 @@ class TagRoute[F[_]: Monad](
    */
   private[http] def get(nameOrId: String, p: PaginationRequestModel): IO[Response[IO]] = {
     (for {
-      pagination <- IO(summon[PaginationOps[ArticlesPagination]])
-      articles <- articleService.getByTagNameWithCount(TagName(nameOrId), pagination.make(p))
+      articles <- articleService.getByTagNameWithCount(TagName(nameOrId), p)
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }

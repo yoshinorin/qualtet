@@ -6,7 +6,7 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, Pagination, PaginationOps, PaginationRequestModel}
+import net.yoshinorin.qualtet.domains.PaginationRequestModel
 import net.yoshinorin.qualtet.syntax.*
 
 class ArticleRoute[F[_]: Monad](
@@ -27,8 +27,7 @@ class ArticleRoute[F[_]: Monad](
   // articles?page=n&limit=m
   private[http] def get(p: PaginationRequestModel): IO[Response[IO]] = {
     (for {
-      pagination <- IO(summon[PaginationOps[ArticlesPagination]])
-      articles <- articleService.getWithCount(pagination.make(p))
+      articles <- articleService.getWithCount(p)
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }

@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound}
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, Pagination, PaginationOps}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, Pagination, PaginationOps, PaginationRequestModel}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
@@ -77,12 +77,14 @@ class ArticleService[F[_]: Monad](
       }
   }
 
-  def getWithCount(queryParam: Pagination): IO[ArticleWithCountResponseModel] = {
-    this.get(queryParam = queryParam)(cont)
+  def getWithCount(p: PaginationRequestModel): IO[ArticleWithCountResponseModel] = {
+    val pagination = summon[PaginationOps[ArticlesPagination]]
+    this.get(queryParam = pagination.make(p))(cont)
   }
 
-  def getByTagNameWithCount(tagName: TagName, queryParam: Pagination): IO[ArticleWithCountResponseModel] = {
-    this.get(tagName, queryParam)(tagCont)
+  def getByTagNameWithCount(tagName: TagName, p: PaginationRequestModel): IO[ArticleWithCountResponseModel] = {
+    val pagination = summon[PaginationOps[ArticlesPagination]]
+    this.get(tagName, pagination.make(p))(tagCont)
   }
 
   def getBySeriesName(seriesName: SeriesName): IO[ArticleWithCountResponseModel] = {

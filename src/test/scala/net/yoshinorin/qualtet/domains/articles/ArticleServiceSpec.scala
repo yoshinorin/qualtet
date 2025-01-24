@@ -5,7 +5,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, Pagination, PaginationOps}
+import net.yoshinorin.qualtet.domains.{Limit, Page, PaginationRequestModel}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import cats.effect.unsafe.implicits.global
@@ -40,21 +40,22 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
   "ArticleService" should {
 
     "getWithCount return ResponseArticleWithCount instances" in {
-      val pagination = summon[PaginationOps[ArticlesPagination]]
-
-      val result = articleService.getWithCount(pagination.make(Option(Page(1)), Option(Limit(5)), None)).unsafeRunSync()
+      val pagination1 = PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)
+      val result = articleService.getWithCount(pagination1).unsafeRunSync()
       assert(result.count > result.articles.size)
       assert(result.articles.size === 5)
       assert(result.articles === result.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
 
-      val result2 = articleService.getWithCount(pagination.make(Option(Page(1)), Option(Limit(3)), None)).unsafeRunSync()
+      val pagination2 = PaginationRequestModel(Option(Page(1)), Option(Limit(3)), None)
+      val result2 = articleService.getWithCount(pagination2).unsafeRunSync()
       assert(result.count > result.articles.size)
       assert(result2.articles.size === 3)
       assert(result2.articles === result2.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
     }
 
     "getByTagNameWithCount return ResponseArticleWithCount instances" in {
-      val result = articleService.getByTagNameWithCount(TagName("SameTag"), ArticlesPagination(Page(1), Limit(5))).unsafeRunSync()
+      val pagination = PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)
+      val result = articleService.getByTagNameWithCount(TagName("SameTag"), pagination).unsafeRunSync()
       assert(result.count > result.articles.size)
       assert(result.articles.size === 5)
       assert(result.articles === result.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
