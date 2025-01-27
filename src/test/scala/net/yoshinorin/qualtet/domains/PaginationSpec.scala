@@ -55,7 +55,6 @@ class PaginationSpec extends AnyWordSpec {
       assert(pagination.calcLimit(Some(Limit(15))).toInt === 10)
     }
     "calculate offset when page is 1" in {
-      val pagination = summon[PaginationOps[ArticlesPagination]]
       assert(pagination.calcOffset(Some(Page(1))) === 0)
     }
     "calculate offset when page > 1" in {
@@ -128,7 +127,6 @@ class PaginationSpec extends AnyWordSpec {
       assert(pagination.calcLimit(Some(Limit(15))).toInt === 10)
     }
     "calculate offset when page is 1" in {
-      val pagination = summon[PaginationOps[ArticlesPagination]]
       assert(pagination.calcOffset(Some(Page(1))) === 0)
     }
     "calculate offset when page > 1" in {
@@ -189,7 +187,6 @@ class PaginationSpec extends AnyWordSpec {
       assert(pagination.calcLimit(Some(Limit(15))).toInt === 10)
     }
     "calculate offset when page is 1" in {
-      val pagination = summon[PaginationOps[ArticlesPagination]]
       assert(pagination.calcOffset(Some(Page(1))) === 0)
     }
     "calculate offset when page > 1" in {
