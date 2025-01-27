@@ -9,13 +9,14 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound}
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.SeriesName
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, Pagination, PaginationOps, PaginationRequestModel}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, Pagination, PaginationOps, PaginationRequestModel, TagsPagination}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
 class ArticleService[F[_]: Monad](
   articleRepository: ArticleRepository[F],
   articlesPagination: PaginationOps[ArticlesPagination],
+  tagsPagination: PaginationOps[TagsPagination],
   contentTypeService: ContentTypeService[F]
 )(using executer: Executer[F, IO]) {
 
@@ -82,8 +83,12 @@ class ArticleService[F[_]: Monad](
     this.get(queryParam = articlesPagination.make(p))(cont)
   }
 
+  def getWithCount(p: Pagination): IO[ArticleWithCountResponseModel] = {
+    this.get(queryParam = p)(cont)
+  }
+
   def getByTagNameWithCount(tagName: TagName, p: PaginationRequestModel): IO[ArticleWithCountResponseModel] = {
-    this.get(tagName, articlesPagination.make(p))(tagCont)
+    this.get(tagName, tagsPagination.make(p))(tagCont)
   }
 
   def getBySeriesName(seriesName: SeriesName): IO[ArticleWithCountResponseModel] = {

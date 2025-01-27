@@ -98,7 +98,7 @@ object Fixture {
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
   val feedCache: CacheModule[String, ArticleWithCountResponseModel] = new CacheModule[String, ArticleWithCountResponseModel](feedCaffeinCache)
-  val feedService = new FeedService(feedCache, modules.articleService)
+  val feedService = new FeedService(modules.feedsPagination, feedCache, modules.articleService)
 
   val authProvider = new AuthProvider(modules.authService)
   val corsProvider = new CorsProvider(modules.config.cors)

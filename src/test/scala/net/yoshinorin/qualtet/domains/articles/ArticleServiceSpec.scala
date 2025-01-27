@@ -5,7 +5,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.domains.{Limit, Page, PaginationRequestModel}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, PaginationOps, PaginationRequestModel}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import cats.effect.unsafe.implicits.global
@@ -48,6 +48,21 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       val pagination2 = PaginationRequestModel(Option(Page(1)), Option(Limit(3)), None)
       val result2 = articleService.getWithCount(pagination2).unsafeRunSync()
+      assert(result.count > result.articles.size)
+      assert(result2.articles.size === 3)
+      assert(result2.articles === result2.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
+    }
+
+    "getWithCount with pagination instance returns ResponseArticleWithCount instances" in {
+      val articlePagination = summon[PaginationOps[ArticlesPagination]]
+      val pagination1 = PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)
+      val result = articleService.getWithCount(articlePagination.make(pagination1)).unsafeRunSync()
+      assert(result.count > result.articles.size)
+      assert(result.articles.size === 5)
+      assert(result.articles === result.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))
+
+      val pagination2 = PaginationRequestModel(Option(Page(1)), Option(Limit(3)), None)
+      val result2 = articleService.getWithCount(articlePagination.make(pagination2)).unsafeRunSync()
       assert(result.count > result.articles.size)
       assert(result2.articles.size === 3)
       assert(result2.articles === result2.articles.sortWith((x, y) => x.publishedAt > y.publishedAt))

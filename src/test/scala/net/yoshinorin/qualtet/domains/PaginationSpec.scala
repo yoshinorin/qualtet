@@ -78,6 +78,125 @@ class PaginationSpec extends AnyWordSpec {
      */
   }
 
+  "TagsPagination" should {
+
+    val pagination = summon[PaginationOps[TagsPagination]]
+
+    "default instance" in {
+      val pagination = TagsPagination()
+
+      assert(pagination.page === 1)
+      assert(pagination.limit === 10)
+      assert(pagination.offset === 0)
+    }
+
+    "instance makeable with PaginationRequestModel" in {
+      val requestModel = PaginationRequestModel(Option(Page(10)), Option(Limit(10)), Option(Order.DESC))
+      val instance = pagination.make(requestModel)
+
+      assert(instance.page.toInt === 9)
+      assert(instance.limit.toInt === 10)
+      assert(instance.offset.toInt === 90)
+      assert(instance.order === Order.DESC)
+    }
+
+    "instance makeable with args" in {
+      val instance = pagination.make(Option(Page(10)), Option(Limit(10)), Option(Order.ASC))
+
+      assert(instance.page.toInt === 9)
+      assert(instance.limit.toInt === 10)
+      assert(instance.offset.toInt === 90)
+      assert(instance.order === Order.ASC)
+    }
+
+    "instance makeable with default args" in {
+      val instance = pagination.make(Option(Page(10)), Option(Limit(10)), None)
+
+      assert(instance.page.toInt === 9)
+      assert(instance.limit.toInt === 10)
+      assert(instance.offset.toInt === 90)
+      assert(instance.order === Order.DESC)
+    }
+
+    "calculate default page if None" in {
+      assert(pagination.calcPage(None).toInt === 0)
+    }
+    "calculate valid page if Some" in {
+      assert(pagination.calcPage(Some(Page(5))).toInt === 4)
+    }
+    "calculate limit capped at 10" in {
+      assert(pagination.calcLimit(Some(Limit(15))).toInt === 10)
+    }
+    "calculate offset when page is 1" in {
+      val pagination = summon[PaginationOps[ArticlesPagination]]
+      assert(pagination.calcOffset(Some(Page(1))) === 0)
+    }
+    "calculate offset when page > 1" in {
+      assert(pagination.calcOffset(Some(Page(3))) === 20)
+    }
+  }
+
+  "FeedsPagination" should {
+
+    val pagination = summon[PaginationOps[FeedsPagination]]
+
+    "default instance" in {
+      val pagination = FeedsPagination()
+
+      assert(pagination.page === 1)
+      assert(pagination.limit === 5)
+      assert(pagination.offset === 0)
+    }
+
+    "instance makeable with PaginationRequestModel" in {
+      val requestModel = PaginationRequestModel(Option(Page(10)), Option(Limit(10)), Option(Order.DESC))
+      val instance = pagination.make(requestModel)
+
+      // NOTE: FeedsPagination overwrites any value passed during instance creation with its default value.
+      assert(instance.page.toInt === 1)
+      assert(instance.limit.toInt === 5)
+      assert(instance.offset.toInt === 0)
+      assert(instance.order === Order.DESC)
+    }
+
+    "instance makeable with args" in {
+      val instance = pagination.make(Option(Page(10)), Option(Limit(10)), Option(Order.ASC))
+
+      // NOTE: FeedsPagination overwrites any value passed during instance creation with its default value.
+      assert(instance.page.toInt === 1)
+      assert(instance.limit.toInt === 5)
+      assert(instance.offset.toInt === 0)
+      assert(instance.order === Order.DESC)
+    }
+
+    "instance makeable with default args" in {
+      val instance = pagination.make(Option(Page(10)), Option(Limit(10)), None)
+
+      // NOTE: FeedsPagination overwrites any value passed during instance creation with its default value.
+      assert(instance.page.toInt === 1)
+      assert(instance.limit.toInt === 5)
+      assert(instance.offset.toInt === 0)
+      assert(instance.order === Order.DESC)
+    }
+
+    "calculate default page if None" in {
+      assert(pagination.calcPage(None).toInt === 0)
+    }
+    "calculate valid page if Some" in {
+      assert(pagination.calcPage(Some(Page(5))).toInt === 4)
+    }
+    "calculate limit capped at 10" in {
+      assert(pagination.calcLimit(Some(Limit(15))).toInt === 10)
+    }
+    "calculate offset when page is 1" in {
+      val pagination = summon[PaginationOps[ArticlesPagination]]
+      assert(pagination.calcOffset(Some(Page(1))) === 0)
+    }
+    "calculate offset when page > 1" in {
+      assert(pagination.calcOffset(Some(Page(3))) === 20)
+    }
+  }
+
   "Page" should {
     "Computable" in {
       val a = Page(3)

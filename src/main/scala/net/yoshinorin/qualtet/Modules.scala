@@ -10,7 +10,7 @@ import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.ApplicationConfig
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, PaginationOps}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, FeedsPagination, PaginationOps, TagsPagination}
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorService}
@@ -105,7 +105,8 @@ class Modules(tx: Transactor[IO]) {
 
   val articleRepository: ArticleRepository[ConnectionIO] = summon[ArticleRepository[ConnectionIO]]
   val articlesPagination = summon[PaginationOps[ArticlesPagination]]
-  val articleService = new ArticleService(articleRepository, articlesPagination, contentTypeService)
+  val tagsPagination = summon[PaginationOps[TagsPagination]]
+  val articleService = new ArticleService(articleRepository, articlesPagination, tagsPagination, contentTypeService)
 
   val seriesRepository: SeriesRepository[ConnectionIO] = summon[SeriesRepository[ConnectionIO]]
   val seriesService = new SeriesService(seriesRepository, articleService)
@@ -136,10 +137,11 @@ class Modules(tx: Transactor[IO]) {
   val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
   val sitemapService = new SitemapService(sitemapRepository, sitemapCache)
 
+  val feedsPagination = summon[PaginationOps[FeedsPagination]]
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.feed, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
   val feedCache: CacheModule[String, ArticleWithCountResponseModel] = new CacheModule[String, ArticleWithCountResponseModel](feedCaffeinCache)
-  val feedService = new FeedService(feedCache, articleService)
+  val feedService = new FeedService(feedsPagination, feedCache, articleService)
 
   val cacheService = new CacheService(
     sitemapService,

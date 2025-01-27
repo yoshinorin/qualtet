@@ -73,9 +73,23 @@ final case class ArticlesPagination(
   order: Order = Order.DESC
 ) extends Pagination
 
+final case class TagsPagination(
+  page: Page = Page(1),
+  limit: Limit = Limit(10),
+  offset: Int = 0,
+  order: Order = Order.DESC
+) extends Pagination
+
+final case class FeedsPagination(
+  page: Page = Page(1),
+  limit: Limit = Limit(5),
+  offset: Int = 0,
+  order: Order = Order.DESC
+) extends Pagination
+
 object Pagination {
 
-  given Pagination: PaginationOps[ArticlesPagination] = {
+  given ArticlesPagination: PaginationOps[ArticlesPagination] = {
     new PaginationOps[ArticlesPagination] {
       override def make(p: PaginationRequestModel): ArticlesPagination = {
         new ArticlesPagination(
@@ -92,6 +106,52 @@ object Pagination {
           limit = calcLimit(limit),
           offset = calcOffset(page),
           order = order.getOrElse(Order.DESC)
+        )
+      }
+    }
+  }
+
+  given TagsPagination: PaginationOps[TagsPagination] = {
+    new PaginationOps[TagsPagination] {
+      override def make(p: PaginationRequestModel): TagsPagination = {
+        new TagsPagination(
+          page = calcPage(p.page),
+          limit = calcLimit(p.limit),
+          offset = calcOffset(p.page),
+          order = p.order.getOrElse(Order.DESC)
+        )
+      }
+
+      override def make(page: Option[Page], limit: Option[Limit], order: Option[Order] = None): TagsPagination = {
+        new TagsPagination(
+          page = calcPage(page),
+          limit = calcLimit(limit),
+          offset = calcOffset(page),
+          order = order.getOrElse(Order.DESC)
+        )
+      }
+    }
+  }
+
+  given FeedsPagination: PaginationOps[FeedsPagination] = {
+    new PaginationOps[FeedsPagination] {
+      override def make(p: PaginationRequestModel): FeedsPagination = {
+        // TODO: Throw an exception instead of using a fixed value.
+        new FeedsPagination(
+          page = Page(1),
+          limit = Limit(5),
+          offset = 0,
+          order = Order.DESC
+        )
+      }
+
+      override def make(page: Option[Page], limit: Option[Limit], order: Option[Order] = None): FeedsPagination = {
+        // TODO: Throw an exception instead of using a fixed value.
+        new FeedsPagination(
+          page = Page(1),
+          limit = Limit(5),
+          offset = 0,
+          order = Order.DESC
         )
       }
     }

@@ -4,11 +4,12 @@ import cats.effect.IO
 import cats.Monad
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.domains.PaginationRequestModel
+import net.yoshinorin.qualtet.domains.{FeedsPagination, PaginationOps, PaginationRequestModel}
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.Cacheable
 
 class FeedService[F[_]: Monad](
+  feedsPagination: PaginationOps[FeedsPagination],
   cache: CacheModule[String, ArticleWithCountResponseModel],
   articleService: ArticleService[F]
 ) extends Cacheable {
@@ -19,7 +20,7 @@ class FeedService[F[_]: Monad](
 
     def fromDb(): IO[ArticleWithCountResponseModel] = {
       for {
-        x <- articleService.getWithCount(p)
+        x <- articleService.getWithCount(feedsPagination.make(p))
       } yield {
         cache.put(cacheKey, x)
         x
