@@ -5,7 +5,7 @@ object Dependencies {
   val jsoniterVersion = "2.33.0"
   val doobieVersion = "1.0.0-RC6"
   val jwtScalaVersion = "10.0.1"
-  val flywayVersion = "11.1.1"
+  val flywayVersion = "11.2.0"
   val http4sVersion = "1.0.0-M44"
   val log4catsVersion = "2.7.0"
 
@@ -26,8 +26,8 @@ object Dependencies {
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "24.12.2",
-    "com.github.ben-manes.caffeine" % "caffeine" % "3.1.8",
+    "org.wvlet.airframe" %% "airframe-ulid" % "2025.1.0",
+    "com.github.ben-manes.caffeine" % "caffeine" % "3.2.0",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
     "ch.qos.logback" % "logback-classic" % "1.5.16",
