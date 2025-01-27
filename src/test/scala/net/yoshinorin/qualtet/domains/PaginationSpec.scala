@@ -27,8 +27,17 @@ class PaginationSpec extends AnyWordSpec {
       assert(instance.order === Order.DESC)
     }
 
-    "instance makeable with args" in {
+    "instance makeable with Option args" in {
       val instance = pagination.make(Option(Page(10)), Option(Limit(10)), Option(Order.ASC))
+
+      assert(instance.page.toInt === 9)
+      assert(instance.limit.toInt === 10)
+      assert(instance.offset.toInt === 90)
+      assert(instance.order === Order.ASC)
+    }
+
+    "instance makeable with args" in {
+      val instance = pagination.make(Page(10), Limit(10), Order.ASC)
 
       assert(instance.page.toInt === 9)
       assert(instance.limit.toInt === 10)
@@ -99,8 +108,17 @@ class PaginationSpec extends AnyWordSpec {
       assert(instance.order === Order.DESC)
     }
 
-    "instance makeable with args" in {
+    "instance makeable with Option args" in {
       val instance = pagination.make(Option(Page(10)), Option(Limit(10)), Option(Order.ASC))
+
+      assert(instance.page.toInt === 9)
+      assert(instance.limit.toInt === 10)
+      assert(instance.offset.toInt === 90)
+      assert(instance.order === Order.ASC)
+    }
+
+    "instance makeable with args" in {
+      val instance = pagination.make(Page(10), Limit(10), Order.ASC)
 
       assert(instance.page.toInt === 9)
       assert(instance.limit.toInt === 10)
@@ -157,8 +175,18 @@ class PaginationSpec extends AnyWordSpec {
       assert(instance.order === Order.DESC)
     }
 
-    "instance makeable with args" in {
+    "instance makeable with Option args" in {
       val instance = pagination.make(Option(Page(10)), Option(Limit(10)), Option(Order.ASC))
+
+      // NOTE: FeedsPagination overwrites any value passed during instance creation with its default value.
+      assert(instance.page.toInt === 1)
+      assert(instance.limit.toInt === 5)
+      assert(instance.offset.toInt === 0)
+      assert(instance.order === Order.DESC)
+    }
+
+    "instance makeable with args" in {
+      val instance = pagination.make(Page(10), Limit(10), Order.ASC)
 
       // NOTE: FeedsPagination overwrites any value passed during instance creation with its default value.
       assert(instance.page.toInt === 1)

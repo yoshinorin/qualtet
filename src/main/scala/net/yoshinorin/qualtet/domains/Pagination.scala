@@ -40,6 +40,8 @@ trait PaginationOps[T] {
 
   def make(page: Option[Page], limit: Option[Limit], order: Option[Order]): T
 
+  def make(page: Page, limit: Limit, order: Order): T = this.make(Option(page), Option(limit), Option(order))
+
   def calcPage(p: Option[Page]): Page = {
     p.getOrElse(Page(1)) - Page(1)
   }
@@ -108,6 +110,8 @@ object Pagination {
           order = order.getOrElse(Order.DESC)
         )
       }
+
+      override def make(page: Page, limit: Limit, order: Order): ArticlesPagination = this.make(Option(page), Option(limit), Option(order))
     }
   }
 
@@ -130,6 +134,8 @@ object Pagination {
           order = order.getOrElse(Order.DESC)
         )
       }
+
+      override def make(page: Page, limit: Limit, order: Order): TagsPagination = this.make(Option(page), Option(limit), Option(order))
     }
   }
 
@@ -154,6 +160,8 @@ object Pagination {
           order = Order.DESC
         )
       }
+
+      override def make(page: Page, limit: Limit, order: Order): FeedsPagination = this.make(Option(page), Option(limit), Option(order))
     }
   }
 
