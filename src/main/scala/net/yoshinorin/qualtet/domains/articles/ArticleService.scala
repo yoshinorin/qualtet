@@ -15,6 +15,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 class ArticleService[F[_]: Monad](
   articleRepository: ArticleRepository[F],
+  articlesPagination: PaginationOps[ArticlesPagination],
   contentTypeService: ContentTypeService[F]
 )(using executer: Executer[F, IO]) {
 
@@ -78,18 +79,15 @@ class ArticleService[F[_]: Monad](
   }
 
   def getWithCount(p: PaginationRequestModel): IO[ArticleWithCountResponseModel] = {
-    val pagination = summon[PaginationOps[ArticlesPagination]]
-    this.get(queryParam = pagination.make(p))(cont)
+    this.get(queryParam = articlesPagination.make(p))(cont)
   }
 
   def getByTagNameWithCount(tagName: TagName, p: PaginationRequestModel): IO[ArticleWithCountResponseModel] = {
-    val pagination = summon[PaginationOps[ArticlesPagination]]
-    this.get(tagName, pagination.make(p))(tagCont)
+    this.get(tagName, articlesPagination.make(p))(tagCont)
   }
 
   def getBySeriesName(seriesName: SeriesName): IO[ArticleWithCountResponseModel] = {
-    val pagination = summon[PaginationOps[ArticlesPagination]]
-    this.get(seriesName, pagination.make(Option(Page(0)), Option(Limit(100)), None))(seriesCont)
+    this.get(seriesName, articlesPagination.make(Option(Page(0)), Option(Limit(100)), None))(seriesCont)
   }
 
 }

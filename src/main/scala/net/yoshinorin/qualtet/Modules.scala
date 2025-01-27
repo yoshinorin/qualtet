@@ -10,6 +10,7 @@ import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.ApplicationConfig
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, PaginationOps}
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorService}
@@ -103,7 +104,8 @@ class Modules(tx: Transactor[IO]) {
   val searchService = new SearchService(config.search, searchRepository)
 
   val articleRepository: ArticleRepository[ConnectionIO] = summon[ArticleRepository[ConnectionIO]]
-  val articleService = new ArticleService(articleRepository, contentTypeService)
+  val articlesPagination = summon[PaginationOps[ArticlesPagination]]
+  val articleService = new ArticleService(articleRepository, articlesPagination, contentTypeService)
 
   val seriesRepository: SeriesRepository[ConnectionIO] = summon[SeriesRepository[ConnectionIO]]
   val seriesService = new SeriesService(seriesRepository, articleService)
