@@ -7,7 +7,7 @@ get:
       name: page
       schema:
         type: integer
-      description: The number of pages for pagination.
+      description: The number of pages for pagination. When random is specified in the order query parameter, this field becomes meaningless.
     - in: query
       name: limit
       schema:
@@ -17,7 +17,7 @@ get:
       name: order
       schema:
         type: string
-        enum: [asc, desc]
+        enum: [asc, desc, random]
       description: The order in which articles are returned.
   responses:
     200:

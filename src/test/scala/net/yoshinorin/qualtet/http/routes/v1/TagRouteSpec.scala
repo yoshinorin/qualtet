@@ -212,6 +212,41 @@ class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
       }
     }
 
+    "return articles sort by random with query params" in {
+      for {
+        desc1Articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/tags/tagRoute-1?page=1&limit=5&order=desc"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+        randomArticles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/atags/tagRoute-1?page=1&limit=5&order=random"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+        desc2Articles <- client
+          .run(Request(method = Method.GET, uri = uri"/v1/tags/tagRoute-1?page=1&limit=5&order=desc"))
+          .use { response =>
+            IO {
+              unsafeDecode[ArticleWithCountResponseModel](response)
+            }
+          }
+      } yield {
+
+        val desc1 = desc1Articles.articles.map(a => a.title)
+        val desc2 = desc2Articles.articles.map(a => a.title)
+        val rand = randomArticles.articles.map(a => a.title)
+
+        assert(desc1.sameElements(desc2))
+        // TODO: Write more effective tests.
+        assert(!desc1.sameElements(rand))
+      }
+    }
+
     "return 404" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/tags/not-exists"))

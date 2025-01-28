@@ -5,6 +5,7 @@ import cats.implicits.catsSyntaxEq
 enum Order(val value: String) {
   case ASC extends Order("ASC")
   case DESC extends Order("DESC")
+  case RANDOM extends Order("RANDOM")
 }
 
 opaque type Page = Int

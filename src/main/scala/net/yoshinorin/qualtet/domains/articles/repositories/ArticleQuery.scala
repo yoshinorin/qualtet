@@ -15,6 +15,8 @@ object ArticleQuery {
   private def generageOrderByFragments(order: Order): Fragment = {
     order match {
       case Order.ASC => fr"published_at ASC"
+      // NOTE: This implementation will suffer from performance degradation as the number of records increases.
+      case Order.RANDOM => fr"rand()"
       case _ => fr"published_at DESC"
     }
   }
