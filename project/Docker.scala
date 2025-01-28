@@ -9,17 +9,17 @@ trait Docker {
   def up_(dockerComposeFilePath: File) ={
     Console_.info("db container starting")
     val dockerCommand = Process(s"docker compose -f ${dockerComposeFilePath.getAbsolutePath} up -d")
-    dockerCommand.run
+    dockerCommand.!
 
-    // workaround
-    Thread.sleep(20000)
+    // NOTE: workaround for starting up db container (Sometimes migrations fail due to connection errors when running tests on CI.)
+    Thread.sleep(5000)
     Console_.info("db container started")
   }
 
   def down_(dockerComposeFilePath: File) = {
     Console_.info("db container stopping")
     val dockerDownCommand = Process(s"docker compose -f ${dockerComposeFilePath.getAbsolutePath} down")
-    dockerDownCommand.run
+    dockerDownCommand.!
     Console_.info("db container stopped")
   }
 }
