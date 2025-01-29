@@ -7,7 +7,7 @@ get:
       name: page
       schema:
         type: integer
-      description: The number of pages for pagination. When random is specified in the order query parameter, this field becomes meaningless.
+      description: The number of pages for pagination. When `random` is specified in the order query parameter, this field becomes meaningless.
     - in: query
       name: limit
       schema:
