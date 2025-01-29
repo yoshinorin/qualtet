@@ -16,7 +16,7 @@ An example architecture.
 ## Requirements
 
 * sbt 1.10.x
-* Scala 3.5.x
+* Scala 3.6.x
 * Java 21.x, 17.x (Perhaps works with 11.x)
 * MariaDB 11.4.x
 * Docker & Docker Compose 3.x (for testing)
