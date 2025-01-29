@@ -148,6 +148,7 @@ class Modules(tx: Transactor[IO]) {
 
   val cacheService = new CacheService(
     sitemapService,
+    tagService,
     contentTypeService,
     feedService
   )
