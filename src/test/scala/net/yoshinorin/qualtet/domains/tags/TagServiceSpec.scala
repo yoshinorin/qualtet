@@ -18,6 +18,8 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     // NOTE: create content and related data for test
     val requestContents = makeRequestContents(10, "tagService")
     createContents(requestContents)
+
+    tagService.invalidate().unsafeRunSync()
   }
 
   "TagService" should {
@@ -69,6 +71,12 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "throw TagNotFound exception when delete" in {
       assertThrows[TagNotFound] {
         tagService.delete(TagId(generateUlid())).unsafeRunSync()
+      }
+    }
+
+    "invalidate" should {
+      "callable" in {
+        assert(tagService.invalidate().unsafeRunSync() === ())
       }
     }
   }

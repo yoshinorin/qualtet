@@ -25,7 +25,7 @@ import net.yoshinorin.qualtet.domains.robots.{RobotsRepository, RobotsService}
 import net.yoshinorin.qualtet.domains.search.{SearchRepository, SearchService}
 import net.yoshinorin.qualtet.domains.series.{SeriesRepository, SeriesService}
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, SitemapsRepository, Url}
-import net.yoshinorin.qualtet.domains.tags.{TagRepository, TagService}
+import net.yoshinorin.qualtet.domains.tags.{TagRepository, TagResponseModel, TagService}
 import net.yoshinorin.qualtet.auth.Signature
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.cache.CacheService
@@ -98,7 +98,10 @@ class Modules(tx: Transactor[IO]) {
   val contentTaggingService = new ContentTaggingService(contentTaggingRepository)
 
   val tagRepository: TagRepository[ConnectionIO] = summon[TagRepository[ConnectionIO]]
-  val tagService = new TagService(tagRepository, contentTaggingService)
+  val tagsCaffeinCache: CaffeineCache[String, Seq[TagResponseModel]] =
+    Caffeine.newBuilder().expireAfterAccess(config.cache.tags, TimeUnit.SECONDS).build[String, Seq[TagResponseModel]]
+  val tagsCache: CacheModule[String, Seq[TagResponseModel]] = new CacheModule[String, Seq[TagResponseModel]](tagsCaffeinCache)
+  val tagService = new TagService(tagRepository, tagsCache, contentTaggingService)
 
   val searchRepository: SearchRepository[ConnectionIO] = summon[SearchRepository[ConnectionIO]]
   val searchService = new SearchService(config.search, searchRepository)

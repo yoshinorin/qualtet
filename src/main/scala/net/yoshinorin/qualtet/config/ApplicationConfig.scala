@@ -13,7 +13,7 @@ final case class HttpSystemEndpointMetadata(enabled: Boolean)
 final case class HttpSystemEndpointConfig(metadata: HttpSystemEndpointMetadata)
 final case class CorsConfig(allowOrigins: List[String])
 final case class JwtConfig(iss: String, aud: String, expiration: Long)
-final case class CacheConfig(contentType: Long, sitemap: Long, feed: Long)
+final case class CacheConfig(contentType: Long, sitemap: Long, feed: Long, tags: Long)
 final case class SearchConfig(maxWords: Int, minWordLength: Int, maxWordLength: Int)
 final case class ApplicationConfig(
   db: DBConfig,
@@ -48,6 +48,7 @@ object ApplicationConfig {
   private val cacheContentType: Long = config.getLong("cache.content-type")
   private val cacheSitemap: Long = config.getLong("cache.sitemap")
   private val cacheFeed: Long = config.getLong("cache.feed")
+  private val cacheTags: Long = config.getLong("cache.tags")
 
   private val searchMaxWords: Int = config.getInt("search.max-words")
   private val searchMinWordLength: Int = config.getInt("search.min-word-length")
@@ -58,7 +59,7 @@ object ApplicationConfig {
     http = HttpConfig(httpHost, httpPort, httpEndpoints),
     cors = CorsConfig(corsAllowOrigins),
     jwt = JwtConfig(jwtIss, jwtAud, jwtExpiration),
-    cache = CacheConfig(cacheContentType, cacheSitemap, cacheFeed),
+    cache = CacheConfig(cacheContentType, cacheSitemap, cacheFeed, cacheTags),
     search = SearchConfig(searchMaxWords, searchMinWordLength, searchMaxWordLength)
   )
 

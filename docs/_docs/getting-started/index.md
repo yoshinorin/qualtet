@@ -77,6 +77,7 @@ Some of endpoint has in-memory cache.
 |`QUALTET_CACHE_CONTENT_TYPE `|content type cache (sec)|`int`|`604800`|-|
 |`QUALTET_CACHE_SITEMAP `|sitemap cache (sec)|`int`|`3600`|-|
 |`QUALTET_CACHE_FEED `|feed cache (sec)|`int`|`7200`|-|
+|`QUALTET_CACHE_TAGS `|tags cache (sec)|`int`|`7200`|-|
 
 ### Search
 

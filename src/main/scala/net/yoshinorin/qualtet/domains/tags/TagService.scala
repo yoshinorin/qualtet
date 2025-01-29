@@ -4,16 +4,22 @@ import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
+import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.errors.TagNotFound
 import net.yoshinorin.qualtet.domains.contents.ContentId
+import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.syntax.*
 
 class TagService[F[_]: Monad](
   tagRepository: TagRepository[F],
+  cache: CacheModule[String, Seq[TagResponseModel]],
   contentTaggingService: ContentTaggingService[F]
-)(using executer: Executer[F, IO]) {
+)(using executer: Executer[F, IO])
+    extends Cacheable {
+
+  private val cacheKey = "tags-full-cache"
 
   def bulkUpsertCont(data: Option[List[Tag]]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
@@ -77,7 +83,20 @@ class TagService[F[_]: Monad](
    * @return tags
    */
   def getAll: IO[Seq[TagResponseModel]] = {
-    executer.transact(getAllCont)
+
+    def fromDB(): IO[Seq[TagResponseModel]] = {
+      for {
+        x <- executer.transact(getAllCont)
+      } yield {
+        cache.put(cacheKey, x)
+        x
+      }
+    }
+
+    cache.get(cacheKey) match {
+      case Some(tags: Seq[TagResponseModel]) => IO(tags)
+      case _ => fromDB()
+    }
   }
 
   /**
@@ -141,5 +160,9 @@ class TagService[F[_]: Monad](
       _ <- this.findById(id).throwIfNone(TagNotFound(detail = s"tag not found: ${id}"))
       _ <- executer.transact2(queries)
     } yield ()
+  }
+
+  def invalidate(): IO[Unit] = {
+    IO(cache.invalidate())
   }
 }

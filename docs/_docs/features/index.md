@@ -22,6 +22,8 @@ title: Features
     - [x] Configurable
 - [x] ContentTypes Caching
     - [x] Configurable
+- [x] Tags Caching
+    - [x] Configurable
 - Maybe I need others...
 
 ## Contents

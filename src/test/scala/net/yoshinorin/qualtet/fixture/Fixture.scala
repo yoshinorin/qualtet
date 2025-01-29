@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit
 import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
+import net.yoshinorin.qualtet.domains.tags.{TagResponseModel, TagService}
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
@@ -79,7 +80,6 @@ object Fixture {
   val cacheService = modules.cacheService
   val contentService = modules.contentService
   val contentTaggingService = modules.contentTaggingService
-  val tagService = modules.tagService
   val seriesService = modules.seriesService
   val searchService = modules.searchService
 
@@ -100,6 +100,11 @@ object Fixture {
   val feedCache: CacheModule[String, ArticleWithCountResponseModel] = new CacheModule[String, ArticleWithCountResponseModel](feedCaffeinCache)
   val feedService = new FeedService(modules.feedsPagination, feedCache, modules.articleService)
 
+  val tagsCaffeinCache: CaffeineCache[String, Seq[TagResponseModel]] =
+    Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[TagResponseModel]]
+  val tagsCache: CacheModule[String, Seq[TagResponseModel]] = new CacheModule[String, Seq[TagResponseModel]](tagsCaffeinCache)
+  val tagService = new TagService(modules.tagRepository, tagsCache, modules.contentTaggingService)
+
   val authProvider = new AuthProvider(modules.authService)
   val corsProvider = new CorsProvider(modules.config.cors)
 
@@ -116,7 +121,7 @@ object Fixture {
   val seriesRouteV1 = new SeriesRouteV1(authProvider, modules.seriesService)
   val sitemapRouteV1 = new SitemapRouteV1(modules.sitemapService)
   val systemRouteV1 = new SystemRouteV1(modules.config.http.endpoints.system)
-  val tagRouteV1 = new TagRouteV1(authProvider, modules.tagService, modules.articleService)
+  val tagRouteV1 = new TagRouteV1(authProvider, tagService, modules.articleService)
 
   val router = new net.yoshinorin.qualtet.http.Router(
     corsProvider,
