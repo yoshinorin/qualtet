@@ -37,6 +37,7 @@ class ConfigSpec extends AnyWordSpec {
       assert(config.cache.contentType === 604800)
       assert(config.cache.sitemap === 3601)
       assert(config.cache.feed === 7200)
+      assert(config.cache.tags === 7200)
     }
 
     "search configuration gettable from application.conf" in {
