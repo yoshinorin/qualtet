@@ -77,7 +77,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         externalResources = List()
       )
     }
-    createContents(requestContents)
+    requestContents.unsafeCreateConternt()
   }
 
   "SearchService" should {

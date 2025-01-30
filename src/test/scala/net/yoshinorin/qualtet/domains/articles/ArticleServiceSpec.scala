@@ -15,8 +15,7 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    val requestContents = makeRequestContents(30, "articles")
-    createContents(requestContents)
+    createContentRequestModels(30, "articles").unsafeCreateConternt()
 
     val sameTagNameRequestContents: List[ContentRequestModel] = {
       (1 until 15).toList
@@ -34,7 +33,7 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           )
         )
     }
-    createContents(sameTagNameRequestContents)
+    sameTagNameRequestContents.unsafeCreateConternt()
   }
 
   "ArticleService" should {

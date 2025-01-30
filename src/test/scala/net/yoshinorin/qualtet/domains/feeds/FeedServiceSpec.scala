@@ -12,8 +12,7 @@ class FeedServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    val requestContents = makeRequestContents(30, "feeds")
-    createContents(requestContents)
+    createContentRequestModels(30, "feeds").unsafeCreateConternt()
   }
 
   "getFeeds return ResponseFeed instances" in {

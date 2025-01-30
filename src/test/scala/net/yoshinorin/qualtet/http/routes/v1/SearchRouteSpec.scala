@@ -48,7 +48,7 @@ class SearchRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
       )
     }
 
-    createContents(requestContents)
+    requestContents.unsafeCreateConternt()
   }
 
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)

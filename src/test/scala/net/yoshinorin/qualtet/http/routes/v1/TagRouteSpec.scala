@@ -23,14 +23,13 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.v1.TagRouteSpec
 class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
-  val requestContents = makeRequestContents(10, "tagRoute")
   // NOTE: create content and related data for test
-  createContents(requestContents)
+  createContentRequestModels(10, "tagRoute").unsafeCreateConternt()
 
   /* TODO: `BeforeAndAfterAll` seems doesn't work on CI this test class.
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    createContents(requestContents)
+    requestContents.unsafeCreateConternt()
   }
    */
 

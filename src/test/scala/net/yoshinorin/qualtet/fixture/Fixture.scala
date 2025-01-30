@@ -205,7 +205,7 @@ object Fixture {
   val articleContentType: ContentType = ContentType(contentTypeId, "articles")
   val fullRobotsAttributes: Attributes = Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex")
 
-  def makeRequestContents(
+  def createContentRequestModels(
     numberOfCreateContents: Int,
     specName: String,
     series: Option[SeriesName] = None
@@ -227,15 +227,19 @@ object Fixture {
       )
   }
 
-  def createContents(requestContents: List[ContentRequestModel]) = {
-    requestContents.foreach { rc =>
-      modules.contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync()
+  extension (requestContents: List[ContentRequestModel]) {
+    def unsafeCreateConternt() = {
+      requestContents.foreach { rc =>
+        modules.contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync()
+      }
     }
   }
 
-  def createSeries(requestSeries: List[SeriesRequestModel]) = {
-    requestSeries.foreach { rs =>
-      modules.seriesService.create(rs).unsafeRunSync()
+  extension (requestSeries: List[SeriesRequestModel]) {
+    def unsafeCreateSeries() = {
+      requestSeries.foreach { rs =>
+        modules.seriesService.create(rs).unsafeRunSync()
+      }
     }
   }
 

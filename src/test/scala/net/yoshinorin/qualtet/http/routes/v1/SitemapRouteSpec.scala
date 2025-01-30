@@ -18,8 +18,7 @@ class SitemapRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    val requestContents = makeRequestContents(2, "sitemapRoute")
-    createContents(requestContents)
+    createContentRequestModels(2, "sitemapRoute").unsafeCreateConternt()
   }
 
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)

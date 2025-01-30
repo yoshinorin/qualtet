@@ -21,7 +21,7 @@ class ContentSerializingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       name = SeriesName("content-serializing-service-spec"),
       None
     )
-    createSeries(List(requestSeries))
+    List(requestSeries).unsafeCreateSeries()
 
     val requestContents: List[ContentRequestModel] = {
       List(1, 5)
@@ -40,7 +40,7 @@ class ContentSerializingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           )
         )
     }
-    createContents(requestContents)
+    requestContents.unsafeCreateConternt()
   }
 
   "ContentSerializingService" should {

@@ -10,8 +10,7 @@ class ArchiveServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    val requestContents = makeRequestContents(40, "archives")
-    createContents(requestContents)
+    createContentRequestModels(40, "archives").unsafeCreateConternt()
   }
 
   "ArchiveService" should {

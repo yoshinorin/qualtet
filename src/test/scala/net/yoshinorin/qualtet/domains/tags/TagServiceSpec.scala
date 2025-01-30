@@ -16,9 +16,7 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    val requestContents = makeRequestContents(10, "tagService")
-    createContents(requestContents)
-
+    createContentRequestModels(10, "tagService").unsafeCreateConternt()
     tagService.invalidate().unsafeRunSync()
   }
 

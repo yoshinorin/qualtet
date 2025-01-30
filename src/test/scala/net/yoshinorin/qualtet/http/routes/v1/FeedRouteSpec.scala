@@ -18,8 +18,7 @@ class FeedRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
-    val requestContents = makeRequestContents(2, "feedsRoute")
-    createContents(requestContents)
+    createContentRequestModels(2, "feedsRoute").unsafeCreateConternt()
   }
 
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)

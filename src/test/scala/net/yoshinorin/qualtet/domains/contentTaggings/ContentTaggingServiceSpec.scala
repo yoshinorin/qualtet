@@ -33,7 +33,7 @@ class ContentTaggingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           )
         )
     }
-    createContents(requestContents)
+    requestContents.unsafeCreateConternt()
   }
 
   "ContentTaggingService" should {

@@ -24,10 +24,9 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         None
       )
     )
-    createSeries(requestSeries)
 
-    val requestContents = makeRequestContents(5, "SeriesService", Some(requestSeries.head.name))
-    createContents(requestContents)
+    requestSeries.unsafeCreateSeries()
+    createContentRequestModels(5, "SeriesService", Some(requestSeries.head.name)).unsafeCreateConternt()
   }
 
   "SeriesService" should {
