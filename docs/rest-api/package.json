@@ -16,5 +16,8 @@
   },
   "dependencies": {
     "@redocly/cli": "1.27.2"
+  },
+  "overrides": {
+    "readable-stream": "4.7.0"
   }
 }
