@@ -85,17 +85,18 @@ class TagService[F[_]: Monad](
   def getAll: IO[Seq[TagResponseModel]] = {
 
     def fromDB(): IO[Seq[TagResponseModel]] = {
-      for {
-        x <- executer.transact(getAllCont)
-      } yield {
-        cache.put(cacheKey, x)
-        x
-      }
+      executer.transact(getAllCont)
     }
 
     cache.get(cacheKey) match {
       case Some(tags: Seq[TagResponseModel]) => IO(tags)
-      case _ => fromDB()
+      case _ =>
+        for {
+          tags <- fromDB()
+        } yield {
+          cache.put(cacheKey, tags)
+          tags
+        }
     }
   }
 

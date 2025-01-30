@@ -27,12 +27,20 @@ class SitemapService[F[_]: Monad](
   }
 
   def get(): IO[Seq[Url]] = {
+
+    def fromDB(): IO[Seq[Url]] = {
+      executer.transact(getCont)
+    }
+
     cache.get(cacheKey) match {
       case Some(x: Seq[Url]) => IO(x)
       case _ =>
         for {
-          x <- executer.transact(getCont)
-        } yield (x, cache.put(cacheKey, x))._1
+          urls <- fromDB()
+        } yield {
+          cache.put(cacheKey, urls)
+          urls
+        }
     }
   }
 

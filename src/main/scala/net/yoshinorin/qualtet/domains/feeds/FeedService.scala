@@ -19,12 +19,7 @@ class FeedService[F[_]: Monad](
   def get(p: PaginationRequestModel): IO[Seq[FeedResponseModel]] = {
 
     def fromDb(): IO[ArticleWithCountResponseModel] = {
-      for {
-        x <- articleService.getWithCount(feedsPagination.make(p))
-      } yield {
-        cache.put(cacheKey, x)
-        x
-      }
+      articleService.getWithCount(feedsPagination.make(p))
     }
 
     def toFeed(ra: ArticleWithCountResponseModel): Seq[FeedResponseModel] = {
@@ -45,7 +40,10 @@ class FeedService[F[_]: Monad](
       case _ =>
         for {
           articles <- fromDb()
-        } yield toFeed(articles)
+        } yield {
+          cache.put(cacheKey, articles)
+          toFeed(articles)
+        }
     }
   }
 

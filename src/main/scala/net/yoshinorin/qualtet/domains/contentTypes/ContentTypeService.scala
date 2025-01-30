@@ -67,15 +67,19 @@ class ContentTypeService[F[_]: Monad](
     }
 
     def fromDB(name: String): IO[Option[ContentType]] = {
-      for {
-        x <- executer.transact(cont(name))
-      } yield (x, cache.put(name, x))._1
+      executer.transact(cont(name))
     }
 
     val maybeContentType = cache.get(name)
     maybeContentType match {
       case Some(_: ContentType) => IO(maybeContentType)
-      case _ => fromDB(name)
+      case _ =>
+        for {
+          contentType <- fromDB(name)
+        } yield {
+          cache.put(name, contentType)
+          contentType
+        }
     }
   }
 
