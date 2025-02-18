@@ -3,7 +3,7 @@ import sbt.*
 object Dependencies {
 
   val jsoniterVersion = "2.33.0"
-  val doobieVersion = "1.0.0-RC6"
+  val doobieVersion = "1.0.0-RC7"
   val jwtScalaVersion = "10.0.1"
   val flywayVersion = "11.2.0"
   val http4sVersion = "1.0.0-M44"

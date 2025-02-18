@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
 import doobie.{Read, Write}
-import doobie.implicits.toSqlInterpolator
+import doobie.syntax.all.toSqlInterpolator
 import doobie.util.query.Query0
 import doobie.util.update.Update
 

@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.contentTaggings
 
 import cats.data.NonEmptyList
 import doobie.{Read, Write}
-import doobie.implicits.toSqlInterpolator
+import doobie.syntax.all.toSqlInterpolator
 import doobie.util.update.{Update, Update0}
 import doobie.util.{fragments, query}
 import net.yoshinorin.qualtet.domains.tags.TagId

@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
 import doobie.Write
-import doobie.implicits.toSqlInterpolator
+import doobie.syntax.all.toSqlInterpolator
 import doobie.util.update.{Update, Update0}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 

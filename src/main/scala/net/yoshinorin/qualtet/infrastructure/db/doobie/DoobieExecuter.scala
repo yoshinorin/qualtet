@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.infrastructure.db.doobie
 import cats.data.ContT
 import cats.implicits.catsSyntaxApplicativeId
 import doobie.*
-import doobie.implicits.*
+import doobie.syntax.all.*
 import cats.effect.*
 import cats.effect.IO
 import net.yoshinorin.qualtet.infrastructure.db.Executer

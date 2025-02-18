@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.search
 
 import doobie.Read
-import doobie.implicits.*
+import doobie.syntax.all.*
 import doobie.util.query.Query0
 
 object SearchQuery {
