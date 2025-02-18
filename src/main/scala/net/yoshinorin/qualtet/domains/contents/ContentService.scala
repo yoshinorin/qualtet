@@ -216,8 +216,8 @@ class ContentService[F[_]: Monad](
       currentTags <- executer.perform(tagService.findByContentIdCont(data.id))
       tagsDiffDelete <- executer.perform(contentTaggingService.bulkDeleteCont(data.id, currentTags.map(_.id).diff(tags.getOrElse(List()).map(t => t.id))))
       tagsBulkUpsert <- executer.perform(tagService.bulkUpsertCont(tags))
-      // TODO: check diff and clean up contentTagging before upsert
       contentTaggingBulkUpsert <- executer.perform(contentTaggingService.bulkUpsertCont(contentTagging))
+      // TODO: check diff and clean up content_serializing before upsert
       contentSerializingUpsert <- executer.perform(contentSerializingService.upsertCont(contentSerializing))
       // TODO: check diff and clean up external_resources before upsert
       externalResourceBulkUpsert <- executer.perform(externalResourceService.bulkUpsertCont(maybeExternalResources))
@@ -235,7 +235,6 @@ class ContentService[F[_]: Monad](
     for {
       _ <- executer.transact8[Int, Seq[Tag], Unit, Int, Int, Int, Int, Int](queries)
       c <- this.findByPath(data.path).throwIfNone(UnexpectedException("content not found")) // NOTE: 404 is better?
-      // TODO: Should return `ResponseContent` instead of `Content`.
     } yield c
   }
 
@@ -252,6 +251,7 @@ class ContentService[F[_]: Monad](
       contentTaggingDelete <- executer.perform(contentTaggingService.deleteByContentIdCont(id))
       robotsDelete <- executer.perform(robotsService.deleteCont(id))
       contentDelete <- executer.perform(deleteCont(id))
+      // TODO: delete series
     } yield (
       externalResourcesDelete,
       contentTaggingDelete,
