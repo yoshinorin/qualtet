@@ -135,7 +135,7 @@ class ContentService[F[_]: Monad](
    * @param request RequestContent
    * @return created Content with IO
    */
-  def createContentFromRequest(authorName: AuthorName, request: ContentRequestModel): IO[ContentResponseModel] = {
+  def create(authorName: AuthorName, request: ContentRequestModel): IO[ContentResponseModel] = {
 
     def createContentTagging(contentId: ContentId, tags: Option[List[Tag]]): IO[Option[List[ContentTagging]]] = {
       tags match {
@@ -199,7 +199,7 @@ class ContentService[F[_]: Monad](
    * @param data Instance of Content
    * @return Instance of created Content with IO
    */
-  def create(
+  private def create(
     data: Content,
     robotsAttributes: Attributes,
     tags: Option[List[Tag]],

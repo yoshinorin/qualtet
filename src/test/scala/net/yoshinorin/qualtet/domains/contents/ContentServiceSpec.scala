@@ -46,7 +46,7 @@ class ContentServiceSpec extends AnyWordSpec {
 
     "create content and related data" in {
 
-      val result = contentService.createContentFromRequest(AuthorName(author.name.value), requestContent1).unsafeRunSync()
+      val result = contentService.create(AuthorName(author.name.value), requestContent1).unsafeRunSync()
       assert(result.id.isInstanceOf[ContentId])
       // TODO: check authorId, ContentTypeId
       assert(result.path.value === requestContent1.path.value)
@@ -85,14 +85,14 @@ class ContentServiceSpec extends AnyWordSpec {
         )
       )
 
-      contentService.createContentFromRequest(AuthorName(author.name.value), requestContent).unsafeRunSync()
+      contentService.create(AuthorName(author.name.value), requestContent).unsafeRunSync()
       val currentContent = contentService.findByPathWithMeta(requestContent.path).unsafeRunSync().get
       val updatedRequestContent = requestContent.copy(
         title = "updated title",
         tags = List("Scala", "Scala3"),
         robotsAttributes = Attributes("noarchive")
       )
-      contentService.createContentFromRequest(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
+      contentService.create(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
       val updatedContent = contentService.findByPathWithMeta(requestContent.path).unsafeRunSync().get
 
       // TODO: add id to response field
@@ -108,7 +108,7 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(updatedTagNames.contains("Scala3"))
       assert(!updatedTagNames.contains("http4s"))
 
-      contentService.createContentFromRequest(AuthorName(author.name.value), requestContent.copy(tags = List())).unsafeRunSync()
+      contentService.create(AuthorName(author.name.value), requestContent.copy(tags = List())).unsafeRunSync()
 
       for {
         r <- contentService.findByPathWithMeta(requestContent.path)
@@ -120,7 +120,7 @@ class ContentServiceSpec extends AnyWordSpec {
     }
 
     "create with none meta values" in {
-      contentService.createContentFromRequest(AuthorName(author.name.value), requestContentNoMetas).unsafeRunSync()
+      contentService.create(AuthorName(author.name.value), requestContentNoMetas).unsafeRunSync()
       val createdContent = contentService.findByPathWithMeta(requestContentNoMetas.path).unsafeRunSync().get
       assert(createdContent.externalResources.isEmpty)
       assert(createdContent.tags.isEmpty)
@@ -133,7 +133,7 @@ class ContentServiceSpec extends AnyWordSpec {
       )
 
       val result = (for {
-        createdContent <- contentService.createContentFromRequest(AuthorName(author.name.value), createRequestContent)
+        createdContent <- contentService.create(AuthorName(author.name.value), createRequestContent)
         maybeContent <- contentService.findById(createdContent.id)
       } yield maybeContent).unsafeRunSync()
 
@@ -144,7 +144,7 @@ class ContentServiceSpec extends AnyWordSpec {
       val updatedRequestContent = requestContent1.copy(
         htmlContent = "<h1>this is a html content<h1>"
       )
-      contentService.createContentFromRequest(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
+      contentService.create(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
       val updatedContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync().get
       assert(updatedContent.content === updatedRequestContent.htmlContent)
     }
@@ -185,8 +185,8 @@ class ContentServiceSpec extends AnyWordSpec {
 
       // Create test data
       val x = (for {
-        x <- contentService.createContentFromRequest(AuthorName(author.name.value), willBeDeleteContent)
-        _ <- contentService.createContentFromRequest(AuthorName(author.name.value), willNotDeleteContent)
+        x <- contentService.create(AuthorName(author.name.value), willBeDeleteContent)
+        _ <- contentService.create(AuthorName(author.name.value), willNotDeleteContent)
       } yield x).unsafeRunSync()
 
       val willBeDeleteContentResult = contentService.findByPath(x.path).unsafeRunSync().get
@@ -215,20 +215,20 @@ class ContentServiceSpec extends AnyWordSpec {
 
     "throw Author InvalidAuthor Exception" in {
       assertThrows[InvalidAuthor] {
-        contentService.createContentFromRequest(AuthorName("not_exists_user"), requestContent1).unsafeRunSync()
+        contentService.create(AuthorName("not_exists_user"), requestContent1).unsafeRunSync()
       }
     }
 
     "throw Content-Type InvalidContentType Exception" in {
       assertThrows[InvalidContentType] {
-        contentService.createContentFromRequest(AuthorName(author.name.value), requestContent1.copy(contentType = "not_exists_content-type")).unsafeRunSync()
+        contentService.create(AuthorName(author.name.value), requestContent1.copy(contentType = "not_exists_content-type")).unsafeRunSync()
       }
     }
 
     "throw Series UnprocessableEntity Exception" in {
       assertThrows[InvalidSeries] {
         contentService
-          .createContentFromRequest(AuthorName(author.name.value), requestContent1.copy(series = Some(SeriesName("not_exists_series_name"))))
+          .create(AuthorName(author.name.value), requestContent1.copy(series = Some(SeriesName("not_exists_series_name"))))
           .unsafeRunSync()
       }
     }

@@ -230,7 +230,7 @@ object Fixture {
   extension (requestContents: List[ContentRequestModel]) {
     def unsafeCreateConternt() = {
       requestContents.foreach { rc =>
-        modules.contentService.createContentFromRequest(AuthorName(author.name.value), rc).unsafeRunSync()
+        modules.contentService.create(AuthorName(author.name.value), rc).unsafeRunSync()
       }
     }
   }
