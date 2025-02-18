@@ -48,6 +48,7 @@ import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import cats.effect.unsafe.implicits.global
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesRequestModel}
+import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 
 // Just test data
 object Fixture {
@@ -80,6 +81,7 @@ object Fixture {
   val cacheService = modules.cacheService
   val contentService = modules.contentService
   val contentTaggingService = modules.contentTaggingService
+  val externalResourceService = modules.externalResourceService
   val seriesService = modules.seriesService
   val searchService = modules.searchService
 
@@ -208,7 +210,8 @@ object Fixture {
   def createContentRequestModels(
     numberOfCreateContents: Int,
     specName: String,
-    series: Option[SeriesName] = None
+    series: Option[SeriesName] = None,
+    externalResources: List[ExternalResources] = List()
   ): List[ContentRequestModel] = {
     (0 until numberOfCreateContents).toList
       .map(_.toString())
@@ -222,7 +225,7 @@ object Fixture {
           robotsAttributes = Attributes("noarchive, noimageindex"),
           tags = List(s"${specName}Tag${i}"),
           series = series,
-          externalResources = List()
+          externalResources = externalResources
         )
       )
   }

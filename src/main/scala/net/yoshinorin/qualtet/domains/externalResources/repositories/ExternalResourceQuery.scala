@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
-import doobie.Write
+import doobie.{Read, Write}
 import doobie.syntax.all.toSqlInterpolator
+import doobie.util.query.Query0
 import doobie.util.update.{Update, Update0}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
@@ -17,6 +18,14 @@ object ExternalResourceQuery {
             name = VALUES(name)
         """
     Update[ExternalResourceWriteModel](q)
+  }
+
+  def findByContentId(id: ContentId): Read[ExternalResourcesReadModel] ?=> Query0[ExternalResourcesReadModel] = {
+    sql"""
+      SELECT external_resources.*
+      FROM external_resources
+      WHERE content_id = ${id.value}
+    """.query[ExternalResourcesReadModel]
   }
 
   def delete(id: ContentId): Update0 = {

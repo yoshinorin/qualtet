@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
 import cats.data.ContT
+import cats.implicits.*
 import cats.Monad
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
@@ -14,6 +15,16 @@ class ExternalResourceService[F[_]: Monad](
         ExternalResourceWriteModel(contentId = d.contentId, kind = d.kind, name = d.name)
       }
       externalResourceRepository.bulkUpsert(ws)
+    }
+  }
+
+  def findByContentIdCont(contenId: ContentId): ContT[F, Seq[ExternalResource], Seq[ExternalResource]] = {
+    ContT.apply[F, Seq[ExternalResource], Seq[ExternalResource]] { next =>
+      externalResourceRepository.findByContentId(contenId).map { x =>
+        x.map { e =>
+          ExternalResource(e.contentId, e.kind, e.name)
+        }
+      }
     }
   }
 

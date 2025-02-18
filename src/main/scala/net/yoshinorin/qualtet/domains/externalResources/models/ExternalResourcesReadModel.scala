@@ -1,0 +1,9 @@
+package net.yoshinorin.qualtet.domains.externalResources
+
+import net.yoshinorin.qualtet.domains.contents.ContentId
+
+final case class ExternalResourcesReadModel(
+  contentId: ContentId,
+  kind: ExternalResourceKind,
+  name: String
+)
