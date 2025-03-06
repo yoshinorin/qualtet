@@ -12,7 +12,7 @@ import doobie.util.fragment.Fragment
 object ArticleQuery {
 
   // NOTE: can not build collect query if I use `fr"published_at ${pagination.order.value}"`.
-  private def generageOrderByFragments(order: Order): Fragment = {
+  private def generateOrderByFragments(order: Order): Fragment = {
     order match {
       case Order.ASC => fr"published_at ASC"
       // NOTE: This implementation will suffer from performance degradation as the number of records increases.
@@ -22,7 +22,7 @@ object ArticleQuery {
   }
 
   def getWithCount(contentTypeId: ContentTypeId, pagination: Pagination): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
-    val orderFrgments = generageOrderByFragments(pagination.order)
+    val orderFrgments = generateOrderByFragments(pagination.order)
 
     sql"""
       SELECT
@@ -52,7 +52,7 @@ object ArticleQuery {
     tagName: TagName,
     pagination: Pagination
   ): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
-    val orderFrgments = generageOrderByFragments(pagination.order)
+    val orderFrgments = generateOrderByFragments(pagination.order)
     sql"""
       SELECT
         count(1) OVER () AS count,
