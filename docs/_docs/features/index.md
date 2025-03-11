@@ -36,12 +36,12 @@ title: Features
 - [x] Update
     - [ ] Check diff and update them
         - [x] Tags
-        - [ ] externalResources
+        - [x] externalResources
         - [x] Robots
 - [x] Delete
     - [ ] Check diff and delete unrelated them
         - [x] Tags
-        - [ ] externalResources
+        - [x] externalResources
         - [x] Robots
 
 ## Tags

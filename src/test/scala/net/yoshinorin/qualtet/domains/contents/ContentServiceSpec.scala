@@ -90,7 +90,13 @@ class ContentServiceSpec extends AnyWordSpec {
       val updatedRequestContent = requestContent.copy(
         title = "updated title",
         tags = List("Scala", "Scala3"),
-        robotsAttributes = Attributes("noarchive")
+        robotsAttributes = Attributes("noarchive"),
+        externalResources = List(
+          ExternalResources(
+            ExternalResourceKind("js"),
+            values = List("foo", "bar", "baz")
+          )
+        )
       )
       contentService.create(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
       val updatedContent = contentService.findByPathWithMeta(requestContent.path).unsafeRunSync().get
@@ -108,6 +114,14 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(updatedTagNames.contains("Scala3"))
       assert(!updatedTagNames.contains("http4s"))
 
+      val updatedExternalResources = updatedContent.externalResources.head
+      assert(updatedExternalResources.kind === updatedRequestContent.externalResources.head.kind)
+      assert(updatedExternalResources.values.sorted === updatedRequestContent.externalResources.head.values.sorted)
+      assert(!updatedExternalResources.values.contains("test"))
+      assert(updatedExternalResources.values.contains("foo"))
+      assert(updatedExternalResources.values.contains("bar"))
+      assert(updatedExternalResources.values.contains("baz"))
+
       contentService.create(AuthorName(author.name.value), requestContent.copy(tags = List())).unsafeRunSync()
 
       for {
@@ -115,8 +129,6 @@ class ContentServiceSpec extends AnyWordSpec {
       } yield {
         assert(r.get.tags.isEmpty)
       }
-      // TODO: check clean up externalResources
-
     }
 
     "create with none meta values" in {

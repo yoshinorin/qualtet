@@ -9,7 +9,13 @@ import net.yoshinorin.qualtet.domains.authors.AuthorService
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceKind, ExternalResourceService, ExternalResources}
+import net.yoshinorin.qualtet.domains.externalResources.{
+  ExternalResource,
+  ExternalResourceDeleteModel,
+  ExternalResourceKind,
+  ExternalResourceService,
+  ExternalResources
+}
 import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries, UnexpectedException}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingService}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsService}
@@ -219,7 +225,12 @@ class ContentService[F[_]: Monad](
       contentTaggingBulkUpsert <- executer.perform(contentTaggingService.bulkUpsertCont(contentTagging))
       // TODO: check diff and clean up content_serializing before upsert
       contentSerializingUpsert <- executer.perform(contentSerializingService.upsertCont(contentSerializing))
-      // TODO: check diff and clean up external_resources before upsert
+      currentExternalResources <- executer.perform(externalResourceService.findByContentIdCont(data.id))
+      externalResourcesDiffDelete <- executer.perform(
+        externalResourceService.bulkDeleteCont(
+          currentExternalResources.diff(maybeExternalResources).map(e => ExternalResourceDeleteModel(e.contentId, e.kind, e.name)).toList
+        )
+      )
       externalResourceBulkUpsert <- executer.perform(externalResourceService.bulkUpsertCont(maybeExternalResources))
     } yield (
       contentUpsert,
@@ -229,11 +240,12 @@ class ContentService[F[_]: Monad](
       tagsBulkUpsert,
       contentTaggingBulkUpsert,
       contentSerializingUpsert,
+      externalResourcesDiffDelete,
       externalResourceBulkUpsert
     )
 
     for {
-      _ <- executer.transact8[Int, Seq[Tag], Unit, Int, Int, Int, Int, Int](queries)
+      _ <- executer.transact9[Int, Seq[Tag], Unit, Int, Int, Int, Int, Unit, Int](queries)
       c <- this.findByPath(data.path).throwIfNone(UnexpectedException("content not found")) // NOTE: 404 is better?
     } yield c
   }
