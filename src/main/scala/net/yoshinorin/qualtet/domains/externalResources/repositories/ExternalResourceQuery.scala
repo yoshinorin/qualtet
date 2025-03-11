@@ -32,4 +32,19 @@ object ExternalResourceQuery {
     sql"DELETE FROM external_resources WHERE content_id = ${id.value}".update
   }
 
+  def bulkDelete(data: List[ExternalResourceDeleteModel]): Update0 = {
+    val orClauseFragment =
+      data.map(d => fr"(content_id = ${d.contentId.value} AND kind = ${d.kind.value} AND name = ${d.name})").reduce((a, b) => a ++ fr" OR " ++ b)
+
+    /**
+     * SQL example
+     *
+     * DELETE FROM external_resources
+     * WHERE (content_id = "a" AND kind = "b1" AND name = "c1")
+     * OR (content_id = "a" AND kind = "b1" AND name = "c2")
+     * OR (content_id = "a" AND kind = "b2" AND name = "c1");
+     */
+    sql"DELETE FROM external_resources WHERE ${orClauseFragment}".update
+  }
+
 }
