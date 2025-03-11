@@ -37,7 +37,6 @@ class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
   requestSeries.unsafeCreateSeries()
   createContentRequestModels(5, "SeriesRoute", Some(requestSeries.head.name)).unsafeCreateConternt()
 
-
   /* TODO: `BeforeAndAfterAll` seems doesn't work on CI this test class.
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test

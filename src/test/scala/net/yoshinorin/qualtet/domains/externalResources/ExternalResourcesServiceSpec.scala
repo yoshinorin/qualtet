@@ -9,7 +9,7 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.domains.ExternalResourcesServiceSpec copy
+// testOnly net.yoshinorin.qualtet.domains.ExternalResourcesServiceSpec
 class ExternalResourcesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
