@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.externalResources
 
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.errors.TagNotFound
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import org.scalatest.wordspec.AnyWordSpec
