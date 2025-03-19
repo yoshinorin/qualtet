@@ -56,3 +56,4 @@ null/
 # Copilot
 .github/copilot-instructions.md
 .github/copilot/*.md
+.github/copilot/**/*.md
