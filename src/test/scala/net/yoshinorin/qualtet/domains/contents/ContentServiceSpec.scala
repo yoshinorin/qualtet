@@ -30,6 +30,16 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         title = "Content Service Spec Series2",
         name = SeriesName("contentservice-series2"),
         None
+      ),
+      SeriesRequestModel(
+        title = "Content Service Spec will be delete",
+        name = SeriesName("contentservice-willBeDelete"),
+        None
+      ),
+      SeriesRequestModel(
+        title = "Content Service Spec will not delete",
+        name = SeriesName("contentservice-willNotDelete"),
+        None
       )
     )).unsafeCreateSeries()
   }
@@ -205,6 +215,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         htmlContent = "this is a html content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = List("WillBeDelete", "WillBeDelete2"),
+        series = Some(SeriesName("contentservice-willBeDelete")),
         externalResources = List(
           ExternalResources(
             ExternalResourceKind("js"),
@@ -221,6 +232,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         htmlContent = "this is a html content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = List("WillNotDelete", "WillNotDelete2"),
+        series = Some(SeriesName("contentservice-willNotDelete")),
         externalResources = List(
           ExternalResources(
             ExternalResourceKind("js"),
@@ -232,10 +244,11 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       // Create test data
       val x = (for {
         x <- contentService.create(AuthorName(author.name.value), willBeDeleteContent)
-        _ <- contentService.create(AuthorName(author.name.value), willNotDeleteContent)
-      } yield x).unsafeRunSync()
+        y <- contentService.create(AuthorName(author.name.value), willNotDeleteContent)
+      } yield (x, y)).unsafeRunSync()
 
-      val willBeDeleteContentResult = contentService.findByPath(x.path).unsafeRunSync().get
+      val willBeDeleteContentResult = contentService.findByPath(x._1.path).unsafeRunSync().get
+      val willNotDeleteContentResult = contentService.findByPath(x._2.path).unsafeRunSync().get
       contentService.delete(willBeDeleteContentResult.id).unsafeRunSync()
 
       val afterDeleteOps = (for {
@@ -244,10 +257,14 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         // maybeNoneTag1 <- tagService.findByName(TagName(willBeDeleteContent.tags.get(0)))
         // maybeNoneTag2 <- tagService.findByName(TagName(willBeDeleteContent.tags.get(1)))
         anotherContent <- contentService.findByPath(willNotDeleteContent.path)
-      } yield (maybeNoneContent, anotherContent)).unsafeRunSync()
+        deletedSeries <- seriesService.findByContentId(willBeDeleteContentResult.id)
+        notDeletedSeries <- seriesService.findByContentId(willNotDeleteContentResult.id)
+      } yield (maybeNoneContent, anotherContent, deletedSeries, notDeletedSeries)).unsafeRunSync()
 
       assert(afterDeleteOps._1.isEmpty)
       assert(afterDeleteOps._2.get.path === willNotDeleteContent.path)
+      assert(afterDeleteOps._3.isEmpty)
+      assert(afterDeleteOps._4.isDefined)
       // assert(afterDeleteOps._2.isEmpty)
       // assert(afterDeleteOps._3.isEmpty)
       // assert(afterDeleteOps._4.get.path === willNotDeleteContent.path)

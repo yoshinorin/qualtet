@@ -268,19 +268,20 @@ class ContentService[F[_]: Monad](
       externalResourcesDelete <- executer.perform(externalResourceService.deleteCont(id))
       // TODO: Tags should be deleted automatically after delete a content which are not refer from other contents.
       contentTaggingDelete <- executer.perform(contentTaggingService.deleteByContentIdCont(id))
+      contentSerializingDelete <- executer.perform(contentSerializingService.deleteByContentIdCont(id))
       robotsDelete <- executer.perform(robotsService.deleteCont(id))
       contentDelete <- executer.perform(deleteCont(id))
-      // TODO: delete series
     } yield (
       externalResourcesDelete,
       contentTaggingDelete,
+      contentSerializingDelete,
       robotsDelete,
       contentDelete
     )
 
     for {
       _ <- this.findById(id).throwIfNone(ContentNotFound(detail = s"content not found: ${id}"))
-      _ <- executer.transact4[Unit, Unit, Unit, Unit](queries)
+      _ <- executer.transact5[Unit, Unit, Unit, Unit, Unit](queries)
     } yield ()
   }
 

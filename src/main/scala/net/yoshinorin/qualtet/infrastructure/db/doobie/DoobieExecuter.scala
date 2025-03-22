@@ -25,10 +25,10 @@ class DoobieExecuter(tx: Transactor[IO]) extends Executer[ConnectionIO, IO] {
     } yield r._2
   }
 
-  override def transact4[T1, T2, T3, T4](ts: (ConnectionIO[(T1, T2, T3, T4)])): IO[T4] = {
+  override def transact5[T1, T2, T3, T4, T5](ts: (ConnectionIO[(T1, T2, T3, T4, T5)])): IO[T5] = {
     for {
       r <- ts.transact(tx)
-    } yield r._4
+    } yield r._5
   }
 
   override def transact11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11](

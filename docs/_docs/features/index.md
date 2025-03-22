@@ -40,10 +40,11 @@ title: Features
         - [x] Robots
         - [x] Series
 - [x] Delete
-    - [ ] Check diff and delete unrelated them
+    - [x] Check diff and delete unrelated them
         - [x] Tags
         - [x] externalResources
         - [x] Robots
+        - [x] Series
 
 ## Tags
 
