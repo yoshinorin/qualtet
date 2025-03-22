@@ -1,6 +1,6 @@
 services:
   qualtet_local_db:
-    image: ghcr.io/yoshinorin/docker-mariadb:v11.4.4
+    image: ghcr.io/yoshinorin/docker-mariadb:v11.4.5
     environment:
       MARIADB_ROOT_PASSWORD: pass
       MARIADB_USER: root
