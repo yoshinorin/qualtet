@@ -5,7 +5,6 @@ import cats.implicits.catsSyntaxApplicativeId
 import doobie.*
 import doobie.syntax.all.*
 import cats.effect.*
-import cats.effect.IO
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import doobie.free.connection.ConnectionIO
 

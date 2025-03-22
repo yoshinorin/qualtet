@@ -10,7 +10,6 @@ import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.http.errors.*
 import net.yoshinorin.qualtet.http.errors.HttpError.*
-import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.syntax.*
 
 object Translator {

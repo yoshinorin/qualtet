@@ -41,7 +41,6 @@ import net.yoshinorin.qualtet.http.routes.v1.{
 import java.util.concurrent.TimeUnit
 import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.domains.feeds.FeedService
-import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.tags.{TagResponseModel, TagService}
 import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax.*
