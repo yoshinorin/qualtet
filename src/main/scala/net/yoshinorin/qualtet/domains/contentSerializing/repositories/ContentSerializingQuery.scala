@@ -11,7 +11,12 @@ import net.yoshinorin.qualtet.domains.series.SeriesId
 object ContentSerializingQuery {
 
   def findBySeriesId(id: SeriesId): Read[ContentSerializingReadModel] ?=> query.Query0[ContentSerializingReadModel] = {
-    sql"SELECT * FROM contents_serializing FROM series_id = ${id.value}"
+    sql"SELECT * FROM contents_serializing WHERE series_id = ${id.value}"
+      .query[ContentSerializingReadModel]
+  }
+
+  def findByContentId(id: ContentId): Read[ContentSerializingReadModel] ?=> query.Query0[ContentSerializingReadModel] = {
+    sql"SELECT * FROM contents_serializing WHERE content_id = ${id.value}"
       .query[ContentSerializingReadModel]
   }
 

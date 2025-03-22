@@ -6,6 +6,7 @@ import net.yoshinorin.qualtet.domains.series.SeriesId
 trait ContentSerializingRepository[F[_]] {
   def bulkUpsert(data: List[ContentSerializingWriteModel]): F[Int]
   def findBySeriesId(id: SeriesId): F[Seq[ContentSerializingReadModel]]
+  def findByContentId(id: ContentId): F[Option[ContentSerializingReadModel]]
   def deleteBySeriesId(id: SeriesId): F[Unit]
   def deleteByContentId(id: ContentId): F[Unit]
   def delete(seriesId: SeriesId, contentIds: Seq[ContentId]): F[Unit]
@@ -37,6 +38,10 @@ object ContentSerializingRepository {
 
       override def findBySeriesId(id: SeriesId): ConnectionIO[Seq[ContentSerializingReadModel]] = {
         ContentSerializingQuery.findBySeriesId(id).to[Seq]
+      }
+
+      override def findByContentId(id: ContentId): ConnectionIO[Option[ContentSerializingReadModel]] = {
+        ContentSerializingQuery.findByContentId(id).option
       }
 
       override def deleteBySeriesId(id: SeriesId): ConnectionIO[Unit] = {

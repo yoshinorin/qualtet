@@ -5,6 +5,7 @@ import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.domains.articles.ArticleService
+import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.errors.SeriesNotFound
 import net.yoshinorin.qualtet.syntax.*
@@ -29,6 +30,22 @@ class SeriesService[F[_]: Monad](
           Series(s.id, s.name, s.title, s.description)
         }
       }
+    }
+  }
+
+  def findByContentIdCont(id: ContentId): ContT[F, Option[Series], Option[Series]] = {
+    ContT.apply[F, Option[Series], Option[Series]] { next =>
+      seriesRepository.findByContentId(id).map { x =>
+        x.map { s =>
+          Series(s.id, s.name, s.title, s.description)
+        }
+      }
+    }
+  }
+
+  def deleteByContentIdCont(id: ContentId): ContT[F, Unit, Unit] = {
+    ContT.apply[F, Unit, Unit] { next =>
+      seriesRepository.deleteByContentId(id)
     }
   }
 
@@ -68,6 +85,10 @@ class SeriesService[F[_]: Monad](
    */
   def findByName(name: SeriesName): IO[Option[Series]] = {
     executer.transact(findByNameCont(name))
+  }
+
+  def findByContentId(id: ContentId): IO[Option[Series]] = {
+    executer.transact(findByContentIdCont(id))
   }
 
   def get(name: SeriesName): IO[SeriesResponseModel] = {

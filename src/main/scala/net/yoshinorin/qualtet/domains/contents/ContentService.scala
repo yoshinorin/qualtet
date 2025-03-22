@@ -223,7 +223,12 @@ class ContentService[F[_]: Monad](
       tagsDiffDelete <- executer.perform(contentTaggingService.bulkDeleteCont(data.id, currentTags.map(_.id).diff(tags.getOrElse(List()).map(t => t.id))))
       tagsBulkUpsert <- executer.perform(tagService.bulkUpsertCont(tags))
       contentTaggingBulkUpsert <- executer.perform(contentTaggingService.bulkUpsertCont(contentTagging))
-      // TODO: check diff and clean up content_serializing before upsert
+      currentContentSeries <- executer.perform(seriesService.findByContentIdCont(data.id))
+      contentSerializingDiffDelete <- currentContentSeries match {
+        case Some(cc) if contentSerializing.isEmpty => executer.perform(contentSerializingService.deleteByContentIdCont(data.id))
+        case Some(cc) if contentSerializing.map(_.seriesId) != cc.id => executer.perform(contentSerializingService.deleteByContentIdCont(data.id))
+        case _ => Monad[F].pure(())
+      }
       contentSerializingUpsert <- executer.perform(contentSerializingService.upsertCont(contentSerializing))
       currentExternalResources <- executer.perform(externalResourceService.findByContentIdCont(data.id))
       externalResourcesDiffDelete <- executer.perform(
@@ -239,13 +244,15 @@ class ContentService[F[_]: Monad](
       robotsUpsert,
       tagsBulkUpsert,
       contentTaggingBulkUpsert,
+      currentContentSeries,
+      contentSerializingDiffDelete,
       contentSerializingUpsert,
       externalResourcesDiffDelete,
       externalResourceBulkUpsert
     )
 
     for {
-      _ <- executer.transact9[Int, Seq[Tag], Unit, Int, Int, Int, Int, Unit, Int](queries)
+      _ <- executer.transact11[Int, Seq[Tag], Unit, Int, Int, Int, Option[Series], Unit, Int, Unit, Int](queries)
       c <- this.findByPath(data.path).throwIfNone(UnexpectedException("content not found")) // NOTE: 404 is better?
     } yield c
   }

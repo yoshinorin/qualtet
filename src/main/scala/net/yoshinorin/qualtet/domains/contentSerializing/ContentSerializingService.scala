@@ -18,6 +18,18 @@ class ContentSerializingService[F[_]: Monad](
     }
   }
 
+  def findByContentIdCont(id: ContentId): ContT[F, Option[ContentSerializing], Option[ContentSerializing]] = {
+    ContT.apply[F, Option[ContentSerializing], Option[ContentSerializing]] { next =>
+      contentSerializingRepository.findByContentId(id).map { cs =>
+        cs match {
+          case Some(c) =>
+            Some(ContentSerializing(c.seriesId, c.contentId))
+          case None => None
+        }
+      }
+    }
+  }
+
   def upsertCont(data: Option[ContentSerializing]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       data match {

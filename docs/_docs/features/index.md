@@ -34,10 +34,11 @@ title: Features
 - [x] Select
     - [ ] Return id
 - [x] Update
-    - [ ] Check diff and update them
+    - [x] Check diff and update them
         - [x] Tags
         - [x] externalResources
         - [x] Robots
+        - [x] Series
 - [x] Delete
     - [ ] Check diff and delete unrelated them
         - [x] Tags

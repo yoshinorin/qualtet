@@ -3,17 +3,36 @@ package net.yoshinorin.qualtet.domains.contents
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries}
-import net.yoshinorin.qualtet.domains.series.SeriesName
+import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.fixture.Fixture.*
-import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
+import net.yoshinorin.qualtet.fixture.Fixture.*
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.ContentServiceSpec
-class ContentServiceSpec extends AnyWordSpec {
+class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
+
+  given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
+
+  override protected def beforeAll(): Unit = {
+    (List(
+      SeriesRequestModel(
+        title = "Content Service Spec Series",
+        name = SeriesName("contentservice-series"),
+        None
+      ),
+      SeriesRequestModel(
+        title = "Content Service Spec Series2",
+        name = SeriesName("contentservice-series2"),
+        None
+      )
+    )).unsafeCreateSeries()
+  }
 
   val requestContent1: ContentRequestModel = ContentRequestModel(
     contentType = "article",
@@ -77,6 +96,7 @@ class ContentServiceSpec extends AnyWordSpec {
         htmlContent = "this is a html content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = List("Scala", "http4s"),
+        series = Some(SeriesName("contentservice-series")),
         externalResources = List(
           ExternalResources(
             ExternalResourceKind("js"),
@@ -90,6 +110,7 @@ class ContentServiceSpec extends AnyWordSpec {
       val updatedRequestContent = requestContent.copy(
         title = "updated title",
         tags = List("Scala", "Scala3"),
+        series = Some(SeriesName("contentservice-series2")),
         robotsAttributes = Attributes("noarchive"),
         externalResources = List(
           ExternalResources(
@@ -122,13 +143,26 @@ class ContentServiceSpec extends AnyWordSpec {
       assert(updatedExternalResources.values.contains("bar"))
       assert(updatedExternalResources.values.contains("baz"))
 
-      contentService.create(AuthorName(author.name.value), requestContent.copy(tags = List())).unsafeRunSync()
+      contentService.create(AuthorName(author.name.value), updatedRequestContent.copy(tags = List())).unsafeRunSync()
 
       for {
         r <- contentService.findByPathWithMeta(requestContent.path)
       } yield {
         assert(r.get.tags.isEmpty)
       }
+
+      (for {
+        updatedSeries <- seriesService.findByContentId(updatedContent.id)
+      } yield {
+        assert(updatedSeries.get.name === "contentservice-series2")
+      }).unsafeRunSync()
+
+      (for {
+        deletedSeries <- contentService.create(AuthorName(author.name.value), updatedRequestContent.copy(series = None))
+        oldSeries <- seriesService.findByContentId(updatedContent.id)
+      } yield {
+        assert(oldSeries.isEmpty)
+      }).unsafeRunSync()
     }
 
     "create with none meta values" in {
