@@ -13,7 +13,8 @@ services:
       - "33066"
     ports:
       - "33066:3306"
+    # https://mariadb.com/kb/en/about-mariadb-connector-j/#error-could-not-read-resultset-unexpected-end-of-stream-read-0-bytes-from-4
     command: >
-        mariadbd --character-set-server=utf8mb4 --general_log=1 --general_log_file=/var/log/mysql/general.log &&
+        mariadbd --character-set-server=utf8mb4 --general_log=1 --general_log_file=/var/log/mysql/general.log --net-write-timeout=600 &&
         mariadb-upgrade
     restart: unless-stopped
