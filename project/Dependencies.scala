@@ -2,10 +2,10 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.33.2"
+  val jsoniterVersion = "2.33.3"
   val doobieVersion = "1.0.0-RC8"
   val jwtScalaVersion = "10.0.4"
-  val flywayVersion = "11.3.2"
+  val flywayVersion = "11.4.1"
   val http4sVersion = "1.0.0-M44"
   val log4catsVersion = "2.7.0"
 
@@ -30,12 +30,12 @@ object Dependencies {
     "com.github.ben-manes.caffeine" % "caffeine" % "3.2.0",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
-    "ch.qos.logback" % "logback-classic" % "1.5.17",
+    "ch.qos.logback" % "logback-classic" % "1.5.18",
     "net.logstash.logback" % "logstash-logback-encoder" % "8.0",
     "org.codehaus.janino" % "janino" % "3.1.12",
-    "org.springframework.security" % "spring-security-core" % "6.4.3",
+    "org.springframework.security" % "spring-security-core" % "6.4.4",
     "org.slf4j" % "slf4j-api" % "2.0.17",
     "org.scalatest" %% "scalatest" % "3.2.19" % "test",
-    "org.mockito" % "mockito-core" % "5.16.0" % "test"
+    "org.mockito" % "mockito-core" % "5.16.1" % "test"
   )
 }
