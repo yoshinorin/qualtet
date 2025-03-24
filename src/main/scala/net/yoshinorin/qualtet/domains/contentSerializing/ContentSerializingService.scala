@@ -37,7 +37,7 @@ class ContentSerializingService[F[_]: Monad](
           val w = ContentSerializingWriteModel(seriesId = d.seriesId, contentId = d.contentId)
           contentSerializingRepository.bulkUpsert(List(w))
         }
-        case None => contentSerializingRepository.fakeRequestInt
+        case None => Monad[F].pure(0)
       }
     }
   }
@@ -49,7 +49,7 @@ class ContentSerializingService[F[_]: Monad](
           val ws = d.map(w => ContentSerializingWriteModel(seriesId = w.seriesId, contentId = w.contentId))
           contentSerializingRepository.bulkUpsert(ws)
         }
-        case None => contentSerializingRepository.fakeRequestInt
+        case None => Monad[F].pure(0)
       }
     }
   }
@@ -74,7 +74,7 @@ class ContentSerializingService[F[_]: Monad](
 
   def bulkDeleteCont(data: (SeriesId, Seq[ContentId])): ContT[F, Unit, Unit] = {
     data._2.size match {
-      case 0 => ContT.apply[F, Unit, Unit] { next => contentSerializingRepository.fakeRequestUnit }
+      case 0 => ContT.apply[F, Unit, Unit] { _ => Monad[F].pure(()) }
       case _ => this.deleteCont(data._1, data._2)
     }
   }

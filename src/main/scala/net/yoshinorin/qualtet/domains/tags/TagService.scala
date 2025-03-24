@@ -28,7 +28,7 @@ class TagService[F[_]: Monad](
           val ws = d.map { t => TagWriteModel(id = t.id, name = t.name) }
           tagRepository.bulkUpsert(ws)
         }
-        case None => tagRepository.fakeRequest()
+        case None => Monad[F].pure(0)
       }
     }
   }

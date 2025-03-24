@@ -10,14 +10,10 @@ trait ContentSerializingRepository[F[_]] {
   def deleteBySeriesId(id: SeriesId): F[Unit]
   def deleteByContentId(id: ContentId): F[Unit]
   def delete(seriesId: SeriesId, contentIds: Seq[ContentId]): F[Unit]
-  // TODO: generics
-  def fakeRequestInt: F[Int]
-  def fakeRequestUnit: F[Unit]
 }
 
 object ContentSerializingRepository {
 
-  import cats.implicits.catsSyntaxApplicativeId
   import doobie.{Read, Write}
   import doobie.ConnectionIO
 
@@ -55,8 +51,6 @@ object ContentSerializingRepository {
       override def delete(seriesId: SeriesId, contentIds: Seq[ContentId]): ConnectionIO[Unit] = {
         ContentSerializingQuery.delete(seriesId, contentIds).run.map(_ => ())
       }
-      override def fakeRequestInt: ConnectionIO[Int] = 0.pure[ConnectionIO]
-      override def fakeRequestUnit: ConnectionIO[Unit] = ().pure[ConnectionIO]
     }
   }
 

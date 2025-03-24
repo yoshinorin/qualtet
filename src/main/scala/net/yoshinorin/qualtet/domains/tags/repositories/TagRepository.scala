@@ -9,12 +9,10 @@ trait TagRepository[F[_]] {
   def findByName(id: TagName): F[Option[TagReadModel]]
   def findByContentId(conetntId: ContentId): F[Seq[TagReadModel]]
   def delete(id: TagId): F[Unit]
-  def fakeRequest(): F[Int]
 }
 
 object TagRepository {
 
-  import cats.implicits.catsSyntaxApplicativeId
   import doobie.{Read, Write}
   import doobie.ConnectionIO
 
@@ -51,8 +49,6 @@ object TagRepository {
       override def delete(id: TagId): ConnectionIO[Unit] = {
         TagQuery.delete(id).run.map(_ => ())
       }
-      override def fakeRequest(): ConnectionIO[Int] = 0.pure[ConnectionIO]
-
     }
   }
 

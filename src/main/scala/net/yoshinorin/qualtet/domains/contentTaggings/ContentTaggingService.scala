@@ -27,7 +27,7 @@ class ContentTaggingService[F[_]: Monad](
           val ws = d.map(c => ContentTaggingWriteModel(c.contentId, c.tagId))
           contentTaggingRepository.bulkUpsert(ws)
         }
-        case None => contentTaggingRepository.fakeRequestInt
+        case None => Monad[F].pure(0)
       }
     }
   }
@@ -52,7 +52,7 @@ class ContentTaggingService[F[_]: Monad](
 
   def bulkDeleteCont(data: (ContentId, Seq[TagId])): ContT[F, Unit, Unit] = {
     data._2.size match {
-      case 0 => ContT.apply[F, Unit, Unit] { next => contentTaggingRepository.fakeRequestUnit }
+      case 0 => ContT.apply[F, Unit, Unit] { _ => Monad[F].pure(()) }
       case _ => this.deleteCont(data._1, data._2)
     }
   }

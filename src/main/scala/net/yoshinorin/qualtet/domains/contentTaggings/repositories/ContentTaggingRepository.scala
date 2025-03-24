@@ -9,14 +9,10 @@ trait ContentTaggingRepository[F[_]] {
   def deleteByContentId(id: ContentId): F[Unit]
   def deleteByTagId(id: TagId): F[Unit]
   def delete(contentId: ContentId, tagIds: Seq[TagId]): F[Unit]
-  // TODO: generics
-  def fakeRequestInt: F[Int]
-  def fakeRequestUnit: F[Unit]
 }
 
 object ContentTaggingRepository {
 
-  import cats.implicits.catsSyntaxApplicativeId
   import doobie.{Read, Write}
   import doobie.ConnectionIO
 
@@ -47,8 +43,6 @@ object ContentTaggingRepository {
       override def delete(contentId: ContentId, tagIds: Seq[TagId]): ConnectionIO[Unit] = {
         ContentTaggingQuery.delete(contentId, tagIds).run.map(_ => ())
       }
-      override def fakeRequestInt: ConnectionIO[Int] = 0.pure[ConnectionIO]
-      override def fakeRequestUnit: ConnectionIO[Unit] = ().pure[ConnectionIO]
     }
   }
 

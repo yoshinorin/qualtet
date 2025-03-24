@@ -36,7 +36,7 @@ class ExternalResourceService[F[_]: Monad](
 
   def bulkDeleteCont(data: List[ExternalResourceDeleteModel]): ContT[F, Unit, Unit] = {
     data.size match {
-      case 0 => ContT.apply[F, Unit, Unit] { next => externalResourceRepository.fakeRequestUnit }
+      case 0 => ContT.apply[F, Unit, Unit] { _ => Monad[F].pure(()) }
       case _ => ContT.apply[F, Unit, Unit] { next => externalResourceRepository.bulkDelete(data) }
     }
   }
