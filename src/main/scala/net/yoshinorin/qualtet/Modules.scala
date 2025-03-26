@@ -11,21 +11,21 @@ import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.domains.{ArticlesPagination, FeedsPagination, PaginationOps, TagsPagination}
-import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveService}
-import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleService}
-import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorService}
+import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveRepositoryAdapter, ArchiveService}
+import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleRepositoryAdapter, ArticleService}
+import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorRepositoryAdapter, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.contentTypes.ContentType
-import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepository, ContentTaggingService}
-import net.yoshinorin.qualtet.domains.contents.{ContentRepository, ContentService}
-import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializingRepository, ContentSerializingService}
-import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeRepository
-import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceRepository, ExternalResourceService}
-import net.yoshinorin.qualtet.domains.robots.{RobotsRepository, RobotsService}
+import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepository, ContentTaggingRepositoryAdapter, ContentTaggingService}
+import net.yoshinorin.qualtet.domains.contents.{ContentRepository, ContentRepositoryAdapter, ContentService}
+import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializingRepository, ContentSerializingRepositoryAdapter}
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeRepository, ContentTypeRepositoryAdapter}
+import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceRepository, ExternalResourceRepositoryAdapter}
+import net.yoshinorin.qualtet.domains.robots.{RobotsRepository, RobotsRepositoryAdapter}
 import net.yoshinorin.qualtet.domains.search.{SearchRepository, SearchService}
-import net.yoshinorin.qualtet.domains.series.{SeriesRepository, SeriesService}
-import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, SitemapsRepository, Url}
-import net.yoshinorin.qualtet.domains.tags.{TagRepository, TagResponseModel, TagService}
+import net.yoshinorin.qualtet.domains.series.{SeriesRepository, SeriesRepositoryAdapter, SeriesService}
+import net.yoshinorin.qualtet.domains.sitemaps.{SitemapRepositoryAdapter, SitemapService, SitemapsRepository, Url}
+import net.yoshinorin.qualtet.domains.tags.{TagRepository, TagRepositoryAdapter, TagResponseModel, TagService}
 import net.yoshinorin.qualtet.auth.Signature
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.cache.CacheService
@@ -78,67 +78,80 @@ class Modules(tx: Transactor[IO]) {
   val jwtInstance: Jwt = new Jwt(config.jwt, JwtAlgorithm.RS256, keyPair, signature)
 
   val authorRepository: AuthorRepository[ConnectionIO] = summon[AuthorRepository[ConnectionIO]]
-  val authorService = new AuthorService(authorRepository)
+  val authorRepositoryAdapter: AuthorRepositoryAdapter[ConnectionIO] = new AuthorRepositoryAdapter[ConnectionIO](authorRepository)
+  val authorService = new AuthorService(authorRepositoryAdapter)
 
   val authService = new AuthService(authorService, jwtInstance)
 
   val contentTypeRepository: ContentTypeRepository[ConnectionIO] = summon[ContentTypeRepository[ConnectionIO]]
+  val contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[ConnectionIO] = new ContentTypeRepositoryAdapter(contentTypeRepository)
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.contentType, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache: CacheModule[String, ContentType] = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService = new ContentTypeService(contentTypeRepository, contentTypeCache)
+  val contentTypeService = new ContentTypeService(contentTypeRepositoryAdapter, contentTypeCache)
 
   val robotsRepository: RobotsRepository[ConnectionIO] = summon[RobotsRepository[ConnectionIO]]
-  val robotsService = new RobotsService(robotsRepository)
+  val robotsRepositoryAdapter = new RobotsRepositoryAdapter(robotsRepository)
 
   val externalResourceRepository: ExternalResourceRepository[ConnectionIO] = summon[ExternalResourceRepository[ConnectionIO]]
-  val externalResourceService = new ExternalResourceService(externalResourceRepository)
+  val externalResourceRepositoryAdapter = new ExternalResourceRepositoryAdapter(externalResourceRepository)
 
   val contentTaggingRepository: ContentTaggingRepository[ConnectionIO] = summon[ContentTaggingRepository[ConnectionIO]]
-  val contentTaggingService = new ContentTaggingService(contentTaggingRepository)
+  val contentTaggingRepositoryAdapter = new ContentTaggingRepositoryAdapter[ConnectionIO](contentTaggingRepository)
+  val contentTaggingService = new ContentTaggingService(contentTaggingRepositoryAdapter)
 
   val tagRepository: TagRepository[ConnectionIO] = summon[TagRepository[ConnectionIO]]
   val tagsCaffeinCache: CaffeineCache[String, Seq[TagResponseModel]] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.tags, TimeUnit.SECONDS).build[String, Seq[TagResponseModel]]
   val tagsCache: CacheModule[String, Seq[TagResponseModel]] = new CacheModule[String, Seq[TagResponseModel]](tagsCaffeinCache)
-  val tagService = new TagService(tagRepository, tagsCache, contentTaggingService)
+  val tagRepositoryAdapter: TagRepositoryAdapter[ConnectionIO] = new TagRepositoryAdapter[ConnectionIO](tagRepository)
+  val tagService = new TagService(tagRepositoryAdapter, tagsCache, contentTaggingRepositoryAdapter)
 
   val searchRepository: SearchRepository[ConnectionIO] = summon[SearchRepository[ConnectionIO]]
   val searchService = new SearchService(config.search, searchRepository)
 
   val articleRepository: ArticleRepository[ConnectionIO] = summon[ArticleRepository[ConnectionIO]]
+  val articleRepositoryAdapter: ArticleRepositoryAdapter[ConnectionIO] = new ArticleRepositoryAdapter[ConnectionIO](articleRepository)
   val articlesPagination = summon[PaginationOps[ArticlesPagination]]
   val tagsPagination = summon[PaginationOps[TagsPagination]]
-  val articleService = new ArticleService(articleRepository, articlesPagination, tagsPagination, contentTypeService)
+  val articleService = new ArticleService(articleRepositoryAdapter, articlesPagination, tagsPagination, contentTypeService)
 
   val seriesRepository: SeriesRepository[ConnectionIO] = summon[SeriesRepository[ConnectionIO]]
-  val seriesService = new SeriesService(seriesRepository, articleService)
+  val seriesRepositoryAdapter: SeriesRepositoryAdapter[ConnectionIO] = new SeriesRepositoryAdapter[ConnectionIO](seriesRepository)
+  val seriesService = new SeriesService(seriesRepositoryAdapter, articleService)
 
   val contentSerializingRepository: ContentSerializingRepository[ConnectionIO] = summon[ContentSerializingRepository[ConnectionIO]]
-  val contentSerializingService = new ContentSerializingService(contentSerializingRepository)
+  val contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[ConnectionIO] = new ContentSerializingRepositoryAdapter(
+    contentSerializingRepository
+  )
 
   val contentRepository: ContentRepository[ConnectionIO] = summon[ContentRepository[ConnectionIO]]
+  val contentRepositoryAdapter: ContentRepositoryAdapter[ConnectionIO] = new ContentRepositoryAdapter[ConnectionIO](contentRepository)
   val contentService =
     new ContentService(
-      contentRepository,
+      contentRepositoryAdapter,
+      tagRepositoryAdapter,
       tagService,
-      contentTaggingService,
-      robotsService,
-      externalResourceService,
+      contentTaggingRepositoryAdapter,
+      robotsRepositoryAdapter,
+      externalResourceRepositoryAdapter,
       authorService,
       contentTypeService,
+      seriesRepositoryAdapter,
       seriesService,
-      contentSerializingService
+      contentSerializingRepositoryAdapter
     )
 
   val archiveRepository: ArchiveRepository[ConnectionIO] = summon[ArchiveRepository[ConnectionIO]]
-  val archiveService = new ArchiveService(archiveRepository, contentTypeService)
+  val archiveRepositoryAdapter: ArchiveRepositoryAdapter[ConnectionIO] = new ArchiveRepositoryAdapter[ConnectionIO](archiveRepository)
+  val archiveService = new ArchiveService(archiveRepositoryAdapter, contentTypeService)
 
   val sitemapRepository: SitemapsRepository[ConnectionIO] = summon[SitemapsRepository[ConnectionIO]]
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.sitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService = new SitemapService(sitemapRepository, sitemapCache)
+  val sitemapRepositoryAdapter: SitemapRepositoryAdapter[ConnectionIO] = new SitemapRepositoryAdapter[ConnectionIO](sitemapRepository)
+  val sitemapService = new SitemapService(sitemapRepositoryAdapter, sitemapCache)
 
   val feedsPagination = summon[PaginationOps[FeedsPagination]]
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =

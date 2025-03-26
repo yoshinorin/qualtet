@@ -10,15 +10,15 @@ import org.scalatest.BeforeAndAfterAll
 
 import org.scalatest.Ignore
 
-// testOnly net.yoshinorin.qualtet.domains.contentTaggings.ContentSerializingServiceSpec
+// testOnly net.yoshinorin.qualtet.domains.contentTaggings.ContentSerializingRepositoryAdapterSpec
 @Ignore // TODO: write testcode when implement delete feature
-class ContentSerializingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
+class ContentSerializingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test
     val requestSeries: SeriesRequestModel = SeriesRequestModel(
-      title = "Content Serializing Service Spec",
-      name = SeriesName("content-serializing-service-spec"),
+      title = "Content Serializing Repository Adapter Spec",
+      name = SeriesName("content-serializing-repository-adapter-spec"),
       None
     )
     List(requestSeries).unsafeCreateSeries()
@@ -29,12 +29,16 @@ class ContentSerializingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = Path(s"/test/ContentSerializingServiceSpec-${i}"),
-            title = s"this is a ContentSerializingServiceSpec title ${i}",
-            rawContent = s"this is a ContentSerializingServiceSpec raw content ${i}",
-            htmlContent = s"this is a ContentSerializingServiceSpec html content ${i}",
+            path = Path(s"/test/ContentSerializingRepositoryAdapterSpec-${i}"),
+            title = s"this is a ContentSerializingRepositoryAdapterSpec title ${i}",
+            rawContent = s"this is a ContentSerializingRepositoryAdapterSpec raw content ${i}",
+            htmlContent = s"this is a ContentSerializingRepositoryAdapterSpec html content ${i}",
             robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = List(s"ContentSerializingServiceSpec${i}.1", s"ContentSerializingServiceSpec${i}.2", s"ContentSerializingServiceSpec${i}.3"),
+            tags = List(
+              s"ContentSerializingRepositoryAdapterSpec${i}.1",
+              s"ContentSerializingRepositoryAdapterSpec${i}.2",
+              s"ContentSerializingRepositoryAdapterSpec${i}.3"
+            ),
             series = Option(requestSeries.name),
             externalResources = List()
           )
@@ -43,7 +47,7 @@ class ContentSerializingServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     requestContents.unsafeCreateConternt()
   }
 
-  "ContentSerializingService" should {
+  "ContentSerializingRepositoryAdapterSpec" should {
     // TODO
   }
 

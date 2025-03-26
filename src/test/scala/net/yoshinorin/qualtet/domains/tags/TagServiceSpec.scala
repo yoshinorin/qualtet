@@ -41,7 +41,7 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "findByContentId" in {
       val r = (for {
         c <- contentService.findByPath(Path("/test/tagService-4"))
-        t <- doobieExecuterContext.transact(tagService.findByContentIdCont(c.get.id))
+        t <- doobieExecuterContext.transact(tagRepositoryAdapter.findByContentId(c.get.id))
       } yield t).unsafeRunSync()
       assert(r.head.name === TagName("tagServiceTag4"))
     }

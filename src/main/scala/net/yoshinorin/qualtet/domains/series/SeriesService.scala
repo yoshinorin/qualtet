@@ -1,9 +1,7 @@
 package net.yoshinorin.qualtet.domains.series
 
-import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.infrastructure.db.Executer
@@ -12,52 +10,9 @@ import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID
 
 class SeriesService[F[_]: Monad](
-  seriesRepository: SeriesRepository[F],
+  seriesRepositoryAdapter: SeriesRepositoryAdapter[F],
   articleService: ArticleService[F]
 )(using executer: Executer[F, IO]) {
-
-  def upsertCont(data: Series): ContT[F, Int, Int] = {
-    ContT.apply[F, Int, Int] { next =>
-      val w = SeriesWriteModel(id = data.id, name = data.name, title = data.title, description = data.description)
-      seriesRepository.upsert(w)
-    }
-  }
-
-  def findByNameCont(name: SeriesName): ContT[F, Option[Series], Option[Series]] = {
-    ContT.apply[F, Option[Series], Option[Series]] { next =>
-      seriesRepository.findByName(name).map { x =>
-        x.map { s =>
-          Series(s.id, s.name, s.title, s.description)
-        }
-      }
-    }
-  }
-
-  def findByContentIdCont(id: ContentId): ContT[F, Option[Series], Option[Series]] = {
-    ContT.apply[F, Option[Series], Option[Series]] { next =>
-      seriesRepository.findByContentId(id).map { x =>
-        x.map { s =>
-          Series(s.id, s.name, s.title, s.description)
-        }
-      }
-    }
-  }
-
-  def deleteByContentIdCont(id: ContentId): ContT[F, Unit, Unit] = {
-    ContT.apply[F, Unit, Unit] { next =>
-      seriesRepository.deleteByContentId(id)
-    }
-  }
-
-  def fetchCont: ContT[F, Seq[Series], Seq[Series]] = {
-    ContT.apply[F, Seq[Series], Seq[Series]] { next =>
-      seriesRepository.getAll().map { x =>
-        x.map { s =>
-          Series(s.id, s.name, s.title, s.description)
-        }
-      }
-    }
-  }
 
   /**
    * create a series
@@ -69,8 +24,8 @@ class SeriesService[F[_]: Monad](
     this
       .findByName(data.name)
       .flatMap {
-        case Some(s: Series) => executer.transact(upsertCont(Series(s.id, s.name, data.title, data.description)))
-        case None => executer.transact(upsertCont(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.title, data.description)))
+        case Some(s: Series) => executer.transact(seriesRepositoryAdapter.upsert(Series(s.id, s.name, data.title, data.description)))
+        case None => executer.transact(seriesRepositoryAdapter.upsert(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.title, data.description)))
       }
       .flatMap { s =>
         this.findByName(data.name).throwIfNone(SeriesNotFound(detail = "series not found"))
@@ -84,16 +39,16 @@ class SeriesService[F[_]: Monad](
    * @return Series Instance
    */
   def findByName(name: SeriesName): IO[Option[Series]] = {
-    executer.transact(findByNameCont(name))
+    executer.transact(seriesRepositoryAdapter.findByName(name))
   }
 
   def findByContentId(id: ContentId): IO[Option[Series]] = {
-    executer.transact(findByContentIdCont(id))
+    executer.transact(seriesRepositoryAdapter.findByContentId(id))
   }
 
   def get(name: SeriesName): IO[SeriesResponseModel] = {
     for {
-      series <- executer.transact(findByNameCont(name)).throwIfNone(SeriesNotFound(detail = s"series not found: ${name.value}"))
+      series <- executer.transact(seriesRepositoryAdapter.findByName(name)).throwIfNone(SeriesNotFound(detail = s"series not found: ${name.value}"))
       seriesWithArticles <- articleService.getBySeriesName(series.name)
     } yield {
       SeriesResponseModel(series.id, series.name, series.title, series.description, seriesWithArticles.articles)
@@ -106,7 +61,7 @@ class SeriesService[F[_]: Monad](
    * @return Series
    */
   def getAll: IO[Seq[Series]] = {
-    executer.transact(fetchCont)
+    executer.transact(seriesRepositoryAdapter.fetch)
   }
 
 }

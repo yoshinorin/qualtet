@@ -1,9 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.errors.UnexpectedException
 import net.yoshinorin.qualtet.domains.Cacheable
@@ -11,25 +9,10 @@ import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
 class ContentTypeService[F[_]: Monad](
-  contentRepository: ContentTypeRepository[F],
+  contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[F],
   cache: CacheModule[String, ContentType]
 )(using executer: Executer[F, IO])
     extends Cacheable {
-
-  def upsertCont(data: ContentType): ContT[F, Int, Int] = {
-    ContT.apply[F, Int, Int] { next =>
-      val w = ContentTypeWriteModel(id = data.id, name = data.name)
-      contentRepository.upsert(w)
-    }
-  }
-
-  def getAllCont: ContT[F, Seq[ContentType], Seq[ContentType]] = {
-    ContT.apply[F, Seq[ContentType], Seq[ContentType]] { next =>
-      contentRepository.getAll().map { cr =>
-        cr.map { c => ContentType(c.id, c.name) }
-      }
-    }
-  }
 
   /**
    * create a contentType
@@ -42,7 +25,7 @@ class ContentTypeService[F[_]: Monad](
       case Some(x: ContentType) => IO(x)
       case None =>
         for {
-          _ <- executer.transact(upsertCont(data))
+          _ <- executer.transact(contentTypeRepositoryAdapter.upsert(data))
           c <- this.findByName(data.name).throwIfNone(UnexpectedException("contentType not found"))
         } yield c
     }
@@ -57,17 +40,8 @@ class ContentTypeService[F[_]: Monad](
    */
   def findByName(name: String): IO[Option[ContentType]] = {
 
-    def cont(name: String): ContT[F, Option[ContentType], Option[ContentType]] = {
-      ContT.apply[F, Option[ContentType], Option[ContentType]] { next =>
-        contentRepository.findByName(name).map {
-          case Some(c) => Some(ContentType(c.id, c.name))
-          case None => None
-        }
-      }
-    }
-
     def fromDB(name: String): IO[Option[ContentType]] = {
-      executer.transact(cont(name))
+      executer.transact(contentTypeRepositoryAdapter.findByName(name))
     }
 
     val maybeContentType = cache.get(name)
@@ -89,7 +63,7 @@ class ContentTypeService[F[_]: Monad](
    * @return ContentTypes
    */
   def getAll: IO[Seq[ContentType]] = {
-    executer.transact(getAllCont)
+    executer.transact(contentTypeRepositoryAdapter.getAll)
   }
 
   def invalidate(): IO[Unit] = {

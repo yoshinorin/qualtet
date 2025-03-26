@@ -21,7 +21,7 @@ import net.yoshinorin.qualtet.domains.authors.*
 import net.yoshinorin.qualtet.domains.contents.*
 import net.yoshinorin.qualtet.domains.contentTypes.*
 import net.yoshinorin.qualtet.domains.robots.*
-import net.yoshinorin.qualtet.domains.sitemaps.{SitemapService, SitemapsRepository, Url}
+import net.yoshinorin.qualtet.domains.sitemaps.{SitemapRepositoryAdapter, SitemapService, SitemapsRepository, Url}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
   ArchiveRoute => ArchiveRouteV1,
@@ -79,22 +79,25 @@ object Fixture {
   val authService = modules.authService
   val cacheService = modules.cacheService
   val contentService = modules.contentService
+  val contentTaggingRepositoryAdapter = modules.contentTaggingRepositoryAdapter
   val contentTaggingService = modules.contentTaggingService
-  val externalResourceService = modules.externalResourceService
+  val externalResourceRepositoryAdapter = modules.externalResourceRepositoryAdapter
   val seriesService = modules.seriesService
   val searchService = modules.searchService
+  val tagRepositoryAdapter = modules.tagRepositoryAdapter
 
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService = new ContentTypeService(modules.contentTypeRepository, contentTypeCache)
+  val contentTypeService = new ContentTypeService(modules.contentTypeRepositoryAdapter, contentTypeCache)
 
   val sitemapRepository: SitemapsRepository[ConnectionIO] = summon[SitemapsRepository[ConnectionIO]]
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
-  val sitemapService = new SitemapService(sitemapRepository, sitemapCache)
+  val sitemapRepositoryAdapter: SitemapRepositoryAdapter[ConnectionIO] = new SitemapRepositoryAdapter[ConnectionIO](sitemapRepository)
+  val sitemapService = new SitemapService(sitemapRepositoryAdapter, sitemapCache)
 
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
@@ -104,7 +107,7 @@ object Fixture {
   val tagsCaffeinCache: CaffeineCache[String, Seq[TagResponseModel]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[TagResponseModel]]
   val tagsCache: CacheModule[String, Seq[TagResponseModel]] = new CacheModule[String, Seq[TagResponseModel]](tagsCaffeinCache)
-  val tagService = new TagService(modules.tagRepository, tagsCache, modules.contentTaggingService)
+  val tagService = new TagService(tagRepositoryAdapter, tagsCache, contentTaggingRepositoryAdapter)
 
   val authProvider = new AuthProvider(modules.authService)
   val corsProvider = new CorsProvider(modules.config.cors)

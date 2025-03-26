@@ -9,8 +9,8 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.domains.ExternalResourcesServiceSpec
-class ExternalResourcesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
+// testOnly net.yoshinorin.qualtet.domains.ExternalResourcesRepositoryAdapterSpec
+class ExternalResourcesRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
 
@@ -18,7 +18,7 @@ class ExternalResourcesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     // NOTE: create content and related data for test
     createContentRequestModels(
       1,
-      "externalResourcesService",
+      "ExternalResourcesRA",
       externalResources = List(
         ExternalResources(ExternalResourceKind("js"), values = List("a.js", "b.js", "c.js")),
         ExternalResources(ExternalResourceKind("css"), values = List("a.css", "b.css", "c.css"))
@@ -27,7 +27,7 @@ class ExternalResourcesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     createContentRequestModels(
       1,
-      "externalResourcesServiceDel",
+      "ExternalResourcesRADel",
       externalResources = List(
         ExternalResources(ExternalResourceKind("js"), values = List("d.js", "e.js", "f.js")),
         ExternalResources(ExternalResourceKind("css"), values = List("d.css", "e.css", "f.css"))
@@ -35,12 +35,12 @@ class ExternalResourcesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     ).unsafeCreateConternt()
   }
 
-  "ExternalResourcesService" should {
+  "ExternalResourcesRepositoryAdapter" should {
 
     "findByContentId" in {
       val r: Seq[ExternalResource] = (for {
-        c <- contentService.findByPath(Path("/test/externalResourcesService-0"))
-        e <- doobieExecuterContext.transact(externalResourceService.findByContentIdCont(c.get.id))
+        c <- contentService.findByPath(Path("/test/ExternalResourcesRA-0"))
+        e <- doobieExecuterContext.transact(externalResourceRepositoryAdapter.findByContentId(c.get.id))
       } yield e).unsafeRunSync()
 
       assert(r.size === 6)
@@ -56,15 +56,15 @@ class ExternalResourcesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "bulkDelete" in {
       val remainingResources: Seq[ExternalResource] = (for {
-        content <- contentService.findByPath(Path("/test/externalResourcesServiceDel-0"))
+        content <- contentService.findByPath(Path("/test/ExternalResourcesRADel-0"))
         shouldDeleteModels <- IO(
           List(
             ExternalResourceDeleteModel(content.get.id, ExternalResourceKind("js"), "d.js"),
             ExternalResourceDeleteModel(content.get.id, ExternalResourceKind("css"), "d.css")
           )
         )
-        _ <- doobieExecuterContext.transact(externalResourceService.bulkDeleteCont(shouldDeleteModels))
-        e <- doobieExecuterContext.transact(externalResourceService.findByContentIdCont(content.get.id))
+        _ <- doobieExecuterContext.transact(externalResourceRepositoryAdapter.bulkDelete(shouldDeleteModels))
+        e <- doobieExecuterContext.transact(externalResourceRepositoryAdapter.findByContentId(content.get.id))
       } yield e).unsafeRunSync()
 
       assert(remainingResources.size === 4)

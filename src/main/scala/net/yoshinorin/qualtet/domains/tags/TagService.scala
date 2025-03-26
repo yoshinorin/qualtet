@@ -1,81 +1,23 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingService
+import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepositoryAdapter
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.errors.TagNotFound
-import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.syntax.*
 
 class TagService[F[_]: Monad](
-  tagRepository: TagRepository[F],
+  tagRepositoryAdapter: TagRepositoryAdapter[F],
   cache: CacheModule[String, Seq[TagResponseModel]],
-  contentTaggingService: ContentTaggingService[F]
+  contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[F]
 )(using executer: Executer[F, IO])
     extends Cacheable {
 
   private val cacheKey = "tags-full-cache"
-
-  def bulkUpsertCont(data: Option[List[Tag]]): ContT[F, Int, Int] = {
-    ContT.apply[F, Int, Int] { next =>
-      data match {
-        case Some(d) => {
-          val ws = d.map { t => TagWriteModel(id = t.id, name = t.name) }
-          tagRepository.bulkUpsert(ws)
-        }
-        case None => Monad[F].pure(0)
-      }
-    }
-  }
-
-  def getAllCont: ContT[F, Seq[TagResponseModel], Seq[TagResponseModel]] = {
-    ContT.apply[F, Seq[TagResponseModel], Seq[TagResponseModel]] { next =>
-      tagRepository.getAll().map { x =>
-        x.map { case (cnt, tag) => TagResponseModel(count = cnt, id = tag.id, name = tag.name) }
-      }
-    }
-  }
-
-  def findByIdCont(id: TagId): ContT[F, Option[Tag], Option[Tag]] = {
-    ContT.apply[F, Option[Tag], Option[Tag]] { next =>
-      tagRepository.findById(id).map { x =>
-        x.map { t =>
-          Tag(t.id, t.name)
-        }
-      }
-    }
-  }
-
-  def findByNameCont(tagName: TagName): ContT[F, Option[Tag], Option[Tag]] = {
-    ContT.apply[F, Option[Tag], Option[Tag]] { next =>
-      tagRepository.findByName(tagName).map { x =>
-        x.map { t =>
-          Tag(t.id, t.name)
-        }
-      }
-    }
-  }
-
-  def findByContentIdCont(contenId: ContentId): ContT[F, Seq[Tag], Seq[Tag]] = {
-    ContT.apply[F, Seq[Tag], Seq[Tag]] { next =>
-      tagRepository.findByContentId(contenId).map { x =>
-        x.map { t =>
-          Tag(t.id, t.name)
-        }
-      }
-    }
-  }
-
-  def deleteCont(id: TagId): ContT[F, Unit, Unit] = {
-    ContT.apply[F, Unit, Unit] { next =>
-      tagRepository.delete(id)
-    }
-  }
 
   /**
    * get all tags
@@ -85,7 +27,7 @@ class TagService[F[_]: Monad](
   def getAll: IO[Seq[TagResponseModel]] = {
 
     def fromDB(): IO[Seq[TagResponseModel]] = {
-      executer.transact(getAllCont)
+      executer.transact(tagRepositoryAdapter.getAll)
     }
 
     cache.get(cacheKey) match {
@@ -107,7 +49,7 @@ class TagService[F[_]: Monad](
    * @return maybe Tag
    */
   def findById(id: TagId): IO[Option[Tag]] = {
-    executer.transact(findByIdCont(id))
+    executer.transact(tagRepositoryAdapter.findById(id))
   }
 
   /**
@@ -117,7 +59,7 @@ class TagService[F[_]: Monad](
    * @return maybe Tag
    */
   def findByName(tagName: TagName): IO[Option[Tag]] = {
-    executer.transact(findByNameCont(tagName))
+    executer.transact(tagRepositoryAdapter.findByName(tagName))
   }
 
   /**
@@ -153,8 +95,8 @@ class TagService[F[_]: Monad](
    */
   def delete(id: TagId): IO[Unit] = {
     val queries = for {
-      contentTaggingDelete <- executer.perform(contentTaggingService.deleteByTagIdCont(id))
-      tagDelete <- executer.perform(deleteCont(id))
+      contentTaggingDelete <- executer.perform(contentTaggingRepositoryAdapter.deleteByTagId(id))
+      tagDelete <- executer.perform(tagRepositoryAdapter.delete(id))
     } yield (contentTaggingDelete, tagDelete)
 
     for {
