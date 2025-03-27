@@ -72,6 +72,7 @@ object Fixture {
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
 
+  val jwtInstance = modules.jwtInstance
   val migrator = modules.migrator
   val articleService = modules.articleService
   val archiveService = modules.archiveService

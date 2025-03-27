@@ -3,8 +3,7 @@ package net.yoshinorin.qualtet.auth
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.errors.Unauthorized
-import net.yoshinorin.qualtet.fixture.Fixture.{fixtureTx, validBCryptPassword}
-import net.yoshinorin.qualtet.Modules
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.validator.Validator
 
@@ -19,8 +18,6 @@ import java.time.Instant
 // testOnly net.yoshinorin.qualtet.auth.JwtSpec
 class JwtSpec extends AnyWordSpec {
 
-  val mod = Modules(fixtureTx)
-  val config = mod.config
   val jc: JwtClaim = JwtClaim(
     iss = config.jwt.iss,
     aud = config.jwt.aud,
@@ -33,7 +30,7 @@ class JwtSpec extends AnyWordSpec {
   "Jwt" should {
     "encode and decode" in {
       val id = ULID.newULIDString.toLower
-      val jwtString = mod.jwtInstance.encode(
+      val jwtString = jwtInstance.encode(
         Author(
           id = AuthorId(id),
           name = AuthorName("Jhon"),
@@ -42,7 +39,7 @@ class JwtSpec extends AnyWordSpec {
         )
       )
 
-      mod.jwtInstance.decode[IO](jwtString).unsafeRunSync() match {
+      jwtInstance.decode[IO](jwtString).unsafeRunSync() match {
         case Right(j) => {
           assert(j.iss === config.jwt.iss)
           assert(j.aud === config.jwt.aud)
@@ -58,7 +55,7 @@ class JwtSpec extends AnyWordSpec {
     val ioInstance = implicitly[cats.Monad[IO]]
 
     "throw exception caused by not signed JSON" in {
-      val maybeJwtClaims = mod.jwtInstance.decode[IO](
+      val maybeJwtClaims = jwtInstance.decode[IO](
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
       )
       assert(maybeJwtClaims.unsafeRunSync().left.getOrElse("").isInstanceOf[JwtValidationException])

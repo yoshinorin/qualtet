@@ -13,15 +13,11 @@ class SignatureSpec extends AnyWordSpec {
     val signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
 
     "verify - success" in {
-
       assert(signature.verify(message))
-
     }
 
     "verify - failure" in {
-
       assert(!signature.verify("wrong".getBytes))
-
     }
 
   }
