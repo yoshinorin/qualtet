@@ -9,7 +9,7 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.domains.ExternalResourcesRepositoryAdapterSpec
+// testOnly net.yoshinorin.qualtet.domains.externalResources.ExternalResourcesRepositoryAdapterSpec
 class ExternalResourcesRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
@@ -38,38 +38,38 @@ class ExternalResourcesRepositoryAdapterSpec extends AnyWordSpec with BeforeAndA
   "ExternalResourcesRepositoryAdapter" should {
 
     "findByContentId" in {
-      val r: Seq[ExternalResource] = (for {
-        c <- contentService.findByPath(Path("/test/ExternalResourcesRA-0"))
-        e <- doobieExecuterContext.transact(externalResourceRepositoryAdapter.findByContentId(c.get.id))
-      } yield e).unsafeRunSync()
-
-      assert(r.size === 6)
-      assert(r.count(_.kind == ExternalResourceKind("js")) === 3)
-      assert(r.count(_.kind == ExternalResourceKind("css")) === 3)
-      assert(r.exists(e => e.kind == ExternalResourceKind("js") && e.name == "a.js"))
-      assert(r.exists(e => e.kind == ExternalResourceKind("js") && e.name == "b.js"))
-      assert(r.exists(e => e.kind == ExternalResourceKind("js") && e.name == "c.js"))
-      assert(r.exists(e => e.kind == ExternalResourceKind("css") && e.name == "a.css"))
-      assert(r.exists(e => e.kind == ExternalResourceKind("css") && e.name == "b.css"))
-      assert(r.exists(e => e.kind == ExternalResourceKind("css") && e.name == "c.css"))
+      (for {
+        maybeContent <- contentService.findByPath(Path("/test/ExternalResourcesRA-0"))
+        externalResources <- doobieExecuterContext.transact(externalResourceRepositoryAdapter.findByContentId(maybeContent.get.id))
+      } yield {
+        assert(externalResources.size === 6)
+        assert(externalResources.count(_.kind === ExternalResourceKind("js")) === 3)
+        assert(externalResources.count(_.kind === ExternalResourceKind("css")) === 3)
+        assert(externalResources.exists(e => e.kind === ExternalResourceKind("js") && e.name === "a.js"))
+        assert(externalResources.exists(e => e.kind === ExternalResourceKind("js") && e.name === "b.js"))
+        assert(externalResources.exists(e => e.kind === ExternalResourceKind("js") && e.name === "c.js"))
+        assert(externalResources.exists(e => e.kind === ExternalResourceKind("css") && e.name === "a.css"))
+        assert(externalResources.exists(e => e.kind === ExternalResourceKind("css") && e.name === "b.css"))
+        assert(externalResources.exists(e => e.kind === ExternalResourceKind("css") && e.name === "c.css"))
+      }).unsafeRunSync()
     }
 
     "bulkDelete" in {
-      val remainingResources: Seq[ExternalResource] = (for {
-        content <- contentService.findByPath(Path("/test/ExternalResourcesRADel-0"))
+      (for {
+        maybeContent <- contentService.findByPath(Path("/test/ExternalResourcesRADel-0"))
         shouldDeleteModels <- IO(
           List(
-            ExternalResourceDeleteModel(content.get.id, ExternalResourceKind("js"), "d.js"),
-            ExternalResourceDeleteModel(content.get.id, ExternalResourceKind("css"), "d.css")
+            ExternalResourceDeleteModel(maybeContent.get.id, ExternalResourceKind("js"), "d.js"),
+            ExternalResourceDeleteModel(maybeContent.get.id, ExternalResourceKind("css"), "d.css")
           )
         )
         _ <- doobieExecuterContext.transact(externalResourceRepositoryAdapter.bulkDelete(shouldDeleteModels))
-        e <- doobieExecuterContext.transact(externalResourceRepositoryAdapter.findByContentId(content.get.id))
-      } yield e).unsafeRunSync()
-
-      assert(remainingResources.size === 4)
-      assert(!remainingResources.exists(e => e.kind == ExternalResourceKind("js") && e.name == "d.js"))
-      assert(!remainingResources.exists(e => e.kind == ExternalResourceKind("css") && e.name == "d.css"))
+        remainingExternalResources <- doobieExecuterContext.transact(externalResourceRepositoryAdapter.findByContentId(maybeContent.get.id))
+      } yield {
+        assert(remainingExternalResources.size === 4)
+        assert(!remainingExternalResources.exists(e => e.kind == ExternalResourceKind("js") && e.name == "d.js"))
+        assert(!remainingExternalResources.exists(e => e.kind == ExternalResourceKind("css") && e.name == "d.css"))
+      }).unsafeRunSync()
     }
   }
 

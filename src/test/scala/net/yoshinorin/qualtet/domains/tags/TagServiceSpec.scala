@@ -9,7 +9,7 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.domains.TagServiceSpec
+// testOnly net.yoshinorin.qualtet.domains.tags.TagServiceSpec
 class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
@@ -23,47 +23,61 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
   "TagService" should {
 
     "get all tags" in {
-      val result = tagService.getAll.unsafeRunSync().filter(t => t.name.value.contains("tagServiceTag"))
-      assert(result.size === 10)
+      (for {
+        tags <- tagService.getAll
+      } yield {
+        val filteredTags = tags.filter(t => t.name.value.contains("tagServiceTag"))
+        assert(filteredTags.size === 10)
+      }).unsafeRunSync()
     }
 
     "findByName" in {
-      val result = tagService.findByName(TagName("tagServiceTag1")).unsafeRunSync()
-      assert(result.size === 1)
-      assert(result.get.name.value === "tagServiceTag1")
+      val tagName = TagName("tagServiceTag1")
+      (for {
+        maybeTag <- tagService.findByName(tagName)
+      } yield {
+        assert(maybeTag.size === 1)
+        assert(maybeTag.get.name.value === tagName.value)
+      }).unsafeRunSync()
     }
 
     "findById" in {
-      val result = tagService.findByName(TagName("tagServiceTag3")).unsafeRunSync()
-      assert(tagService.findById(result.get.id).unsafeRunSync().get.name.value === "tagServiceTag3")
+      val tagName = TagName("tagServiceTag3")
+      (for {
+        maybeTag <- tagService.findByName(tagName)
+        found <- tagService.findById(maybeTag.get.id)
+      } yield {
+        assert(found.get.name.value === tagName.value)
+      }).unsafeRunSync()
     }
 
     "findByContentId" in {
-      val r = (for {
-        c <- contentService.findByPath(Path("/test/tagService-4"))
-        t <- doobieExecuterContext.transact(tagRepositoryAdapter.findByContentId(c.get.id))
-      } yield t).unsafeRunSync()
-      assert(r.head.name === TagName("tagServiceTag4"))
+      (for {
+        maybeContent <- contentService.findByPath(Path("/test/tagService-4"))
+        maybeTags <- doobieExecuterContext.transact(tagRepositoryAdapter.findByContentId(maybeContent.get.id))
+      } yield {
+        assert(maybeTags.head.name === TagName("tagServiceTag4"))
+      }).unsafeRunSync()
     }
 
     "getTags" in {
-      val result = tagService.getTags(Option(List("tagServiceTag1", "tagServiceTag2"))).unsafeRunSync()
-      assert(result.get(0).name.value === "tagServiceTag1")
-      assert(result.get(1).name.value === "tagServiceTag2")
+      (for {
+        maybeTags <- tagService.getTags(Option(List("tagServiceTag1", "tagServiceTag2")))
+      } yield {
+        assert(maybeTags.get(0).name.value === "tagServiceTag1")
+        assert(maybeTags.get(1).name.value === "tagServiceTag2")
+      }).unsafeRunSync()
     }
 
     "delete" in {
-      val result = (for {
-        beforeDeleteTag <- tagService.findByName(TagName("tagServiceTag9"))
-        _ <- tagService.delete(beforeDeleteTag.get.id)
-        afterDeleteTag <- tagService.findById(beforeDeleteTag.get.id)
-      } yield (beforeDeleteTag, afterDeleteTag)).unsafeRunSync()
-
-      assert(result._1.get.name.value === "tagServiceTag9")
-      assert(result._2.isEmpty)
-      // TODO: add test
-      // val ct = ContentTaggingRepository.findByTagId(result._1.get.id).unsafeRunSync()
-      // assert(ct.isEmpty)
+      (for {
+        before <- tagService.findByName(TagName("tagServiceTag9"))
+        _ <- tagService.delete(before.get.id)
+        after <- tagService.findById(before.get.id)
+      } yield {
+        assert(before.get.name.value === "tagServiceTag9")
+        assert(after.isEmpty)
+      }).unsafeRunSync()
     }
 
     "throw TagNotFound exception when delete" in {

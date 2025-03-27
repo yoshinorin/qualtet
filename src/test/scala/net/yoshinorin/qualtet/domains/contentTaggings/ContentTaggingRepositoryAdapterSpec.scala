@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
+import cats.effect.IO
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
@@ -10,8 +11,8 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepositoryASpec
-class ContentTaggingRepositoryASpec extends AnyWordSpec with BeforeAndAfterAll {
+// testOnly net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepositoryAdapterSpec
+class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
 
@@ -39,24 +40,32 @@ class ContentTaggingRepositoryASpec extends AnyWordSpec with BeforeAndAfterAll {
   "ContentTaggingService" should {
 
     "delete bulky" in {
-      // TODO: clean up
-      val contents1 = contentService.findByPath(Path("/test/ContentTaggingRepositoryAS-1")).unsafeRunSync().get
-      val contents = contentService.findByPathWithMeta(Path("/test/ContentTaggingRepositoryAS-1")).unsafeRunSync().get
-      val shouledDeleteContentTaggings = (contents1.id, Seq(contents.tags.head.id, contents.tags.last.id))
-
-      doobieExecuterContext.transact(contentTaggingRepositoryAdapter.bulkDelete(shouledDeleteContentTaggings)).unsafeRunSync()
-      val result = contentService.findByPathWithMeta(Path("/test/ContentTaggingRepositoryAS-1")).unsafeRunSync().get
-
-      assert(result.tags.size === 1)
-      assert(result.tags.head === contents.tags(1))
+      val path: Path = Path("/test/ContentTaggingRepositoryAS-1")
+      (for {
+        // find current (before delete) content
+        maybeFound <- contentService.findByPathWithMeta(path)
+        // delete content tagging
+        shouledDeleteContentTaggingsData <- IO(maybeFound.get.id, Seq(maybeFound.get.tags.head.id, maybeFound.get.tags.last.id))
+        _ <- doobieExecuterContext.transact(contentTaggingRepositoryAdapter.bulkDelete(shouledDeleteContentTaggingsData))
+        // find updated (after delete contentTaggings) content
+        maybeContentTaggingsDeleted <- contentService.findByPathWithMeta(path)
+      } yield {
+        assert(maybeContentTaggingsDeleted.nonEmpty)
+        maybeContentTaggingsDeleted.map { contentTaggings =>
+          assert(contentTaggings.tags.size === 1)
+          assert(contentTaggings.tags.head === maybeFound.get.tags(1))
+        }
+      }).unsafeRunSync()
     }
 
     "not be delete any tag" in {
-      val beforeDelete = contentService.findByPath(Path("/test/ContentTaggingRepositoryAS-2")).unsafeRunSync().get
-      doobieExecuterContext.transact(contentTaggingRepositoryAdapter.bulkDelete(beforeDelete.id, Seq())).unsafeRunSync()
-      val afterDelete = contentService.findByPathWithMeta(Path("/test/ContentTaggingRepositoryAS-2")).unsafeRunSync().get
-
-      assert(afterDelete.tags.size === 3)
+      (for {
+        before <- contentService.findByPath(Path("/test/ContentTaggingRepositoryAS-2"))
+        _ <- doobieExecuterContext.transact(contentTaggingRepositoryAdapter.bulkDelete(before.get.id, Seq()))
+        result <- contentService.findByPathWithMeta(Path("/test/ContentTaggingRepositoryAS-2"))
+      } yield {
+        assert(result.get.tags.size === 3)
+      }).unsafeRunSync()
     }
   }
 

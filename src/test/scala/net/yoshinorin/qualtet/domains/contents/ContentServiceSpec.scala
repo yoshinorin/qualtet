@@ -14,7 +14,7 @@ import org.scalatest.BeforeAndAfterAll
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.domains.ContentServiceSpec
+// testOnly net.yoshinorin.qualtet.domains.contents.ContentServiceSpec
 class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
@@ -60,43 +60,36 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     )
   )
 
-  val requestContentNoMetas: ContentRequestModel = ContentRequestModel(
-    contentType = "article",
-    path = Path("/test/no-metas"),
-    title = "this is a title",
-    rawContent = "this is a raw content",
-    htmlContent = "this is a html content",
-    robotsAttributes = Attributes("noarchive, noimageindex"),
-    tags = List(),
-    externalResources = List()
-  )
-
   "ContentServiceSpec" should {
 
     "create content and related data" in {
+      (for {
+        craeted <- contentService.create(AuthorName(author.name.value), requestContent1)
+        maybeFound <- contentService.findByPathWithMeta(craeted.path)
+      } yield {
+        assert(craeted.id.isInstanceOf[ContentId])
+        // TODO: assert `AuthorId` and `ContentTypeId`
+        assert(craeted.path.value === requestContent1.path.value)
+        assert(craeted.title === requestContent1.title)
+        assert(craeted.rawContent === requestContent1.rawContent)
 
-      val result = contentService.create(AuthorName(author.name.value), requestContent1).unsafeRunSync()
-      assert(result.id.isInstanceOf[ContentId])
-      // TODO: check authorId, ContentTypeId
-      assert(result.path.value === requestContent1.path.value)
-      assert(result.title === requestContent1.title)
-      assert(result.rawContent === requestContent1.rawContent)
+        assert(maybeFound.nonEmpty)
+        maybeFound.map { found =>
+          val tags = found.tags.map(x => x.name.value)
+          assert(tags.contains("Scala"))
+          assert(tags.contains("http4s"))
 
-      val createdContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync()
-      val createdTagNames = createdContent.get.tags.map(x => x.name.value)
-      assert(createdTagNames.contains("Scala"))
-      assert(createdTagNames.contains("http4s"))
+          val attributes = found.robotsAttributes
+          assert(attributes.value === requestContent1.robotsAttributes.value)
 
-      val createdAttributes = createdContent.get.robotsAttributes
-      assert(createdAttributes.value === requestContent1.robotsAttributes.value)
-
-      val createdExternalResources = createdContent.get.externalResources.head
-      assert(createdExternalResources.kind === requestContent1.externalResources.head.kind)
-      assert(createdExternalResources.values.sorted === requestContent1.externalResources.head.values.sorted)
-
+          val externalResources = found.externalResources.head
+          assert(externalResources.kind === requestContent1.externalResources.head.kind)
+          assert(externalResources.values.sorted === requestContent1.externalResources.head.values.sorted)
+        }
+      }).unsafeRunSync()
     }
 
-    "upsert" in {
+    "upsert them" in {
 
       val requestContent: ContentRequestModel = ContentRequestModel(
         contentType = "article",
@@ -115,9 +108,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         )
       )
 
-      contentService.create(AuthorName(author.name.value), requestContent).unsafeRunSync()
-      val currentContent = contentService.findByPathWithMeta(requestContent.path).unsafeRunSync().get
-      val updatedRequestContent = requestContent.copy(
+      val updateRequestContent = requestContent.copy(
         title = "updated title",
         tags = List("Scala", "Scala3"),
         series = Some(SeriesName("contentservice-series2")),
@@ -129,85 +120,116 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           )
         )
       )
-      contentService.create(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
-      val updatedContent = contentService.findByPathWithMeta(requestContent.path).unsafeRunSync().get
-
-      // TODO: add id to response field
-      // assert(currentContent.id === updatedContent.id)
-      // TODO: check authorId, ContentTypeId
-
-      assert(updatedContent.title === updatedRequestContent.title)
-      assert(currentContent.publishedAt === updatedContent.publishedAt)
-      assert(updatedContent.robotsAttributes === updatedRequestContent.robotsAttributes)
-
-      val updatedTagNames = updatedContent.tags.map(x => x.name.value)
-      assert(updatedTagNames.contains("Scala"))
-      assert(updatedTagNames.contains("Scala3"))
-      assert(!updatedTagNames.contains("http4s"))
-
-      val updatedExternalResources = updatedContent.externalResources.head
-      assert(updatedExternalResources.kind === updatedRequestContent.externalResources.head.kind)
-      assert(updatedExternalResources.values.sorted === updatedRequestContent.externalResources.head.values.sorted)
-      assert(!updatedExternalResources.values.contains("test"))
-      assert(updatedExternalResources.values.contains("foo"))
-      assert(updatedExternalResources.values.contains("bar"))
-      assert(updatedExternalResources.values.contains("baz"))
-
-      contentService.create(AuthorName(author.name.value), updatedRequestContent.copy(tags = List())).unsafeRunSync()
-
-      for {
-        r <- contentService.findByPathWithMeta(requestContent.path)
-      } yield {
-        assert(r.get.tags.isEmpty)
-      }
 
       (for {
-        updatedSeries <- seriesService.findByContentId(updatedContent.id)
+        created <- contentService.create(AuthorName(author.name.value), requestContent)
+        maybeCreatedFound <- contentService.findByPathWithMeta(requestContent.path)
+
+        // first time update
+        updated <- contentService.create(AuthorName(author.name.value), updateRequestContent)
+        maybeFoundUpdated <- contentService.findByPathWithMeta(requestContent.path)
+        updatedSeries <- seriesService.findByContentId(updated.id)
+
+        // second time update (delete related tags)
+        _ <- contentService.create(AuthorName(author.name.value), updateRequestContent.copy(tags = List()))
+        deletedTags <- contentService.findByPathWithMeta(requestContent.path)
+
+        // third time update (delete related series)
+        _ <- contentService.create(AuthorName(author.name.value), updateRequestContent.copy(series = None))
+        deletedSeries <- seriesService.findByContentId(updated.id)
       } yield {
+        assert(created.id === updated.id)
+        assert(maybeCreatedFound.nonEmpty)
+        assert(maybeFoundUpdated.nonEmpty)
+
+        for {
+          foundCreated <- maybeCreatedFound
+          // first time update assetion
+          foundUpdated <- maybeFoundUpdated
+        } yield {
+          // TODO: check authorId, ContentTypeId
+          assert(foundUpdated.title === updateRequestContent.title)
+          assert(foundCreated.publishedAt === foundUpdated.publishedAt)
+          assert(foundUpdated.robotsAttributes === updateRequestContent.robotsAttributes)
+
+          val updatedTagNames = foundUpdated.tags.map(x => x.name.value)
+          assert(updatedTagNames.contains("Scala"))
+          assert(updatedTagNames.contains("Scala3"))
+          assert(!updatedTagNames.contains("http4s"))
+
+          val updatedExternalResources = foundUpdated.externalResources.head
+          assert(updatedExternalResources.kind === updateRequestContent.externalResources.head.kind)
+          assert(updatedExternalResources.values.sorted === updateRequestContent.externalResources.head.values.sorted)
+          assert(!updatedExternalResources.values.contains("test"))
+          assert(updatedExternalResources.values.contains("foo"))
+          assert(updatedExternalResources.values.contains("bar"))
+          assert(updatedExternalResources.values.contains("baz"))
+        }
+
+        // second time update assetion
+        assert(deletedTags.get.tags.isEmpty)
         assert(updatedSeries.get.name === "contentservice-series2")
-      }).unsafeRunSync()
 
-      (for {
-        deletedSeries <- contentService.create(AuthorName(author.name.value), updatedRequestContent.copy(series = None))
-        oldSeries <- seriesService.findByContentId(updatedContent.id)
-      } yield {
-        assert(oldSeries.isEmpty)
+        // third time update assertion
+        assert(deletedSeries.isEmpty)
       }).unsafeRunSync()
     }
 
     "create with none meta values" in {
-      contentService.create(AuthorName(author.name.value), requestContentNoMetas).unsafeRunSync()
-      val createdContent = contentService.findByPathWithMeta(requestContentNoMetas.path).unsafeRunSync().get
-      assert(createdContent.externalResources.isEmpty)
-      assert(createdContent.tags.isEmpty)
-      assert(createdContent.content === "this is a html content")
+
+      val requestContentNoMetas: ContentRequestModel = ContentRequestModel(
+        contentType = "article",
+        path = Path("/test/no-metas"),
+        title = "this is a title",
+        rawContent = "this is a raw content",
+        htmlContent = "this is a html content",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        tags = List(),
+        externalResources = List()
+      )
+
+      (for {
+        created <- contentService.create(AuthorName(author.name.value), requestContentNoMetas)
+        maybeFound <- contentService.findByPathWithMeta(created.path)
+      } yield {
+        assert(maybeFound.nonEmpty)
+        maybeFound.map { found =>
+          assert(found.externalResources.isEmpty)
+          assert(found.tags.isEmpty)
+          assert(found.content === "this is a html content")
+        }
+      }).unsafeRunSync()
     }
 
-    "find by id" in {
+    "findById" in {
       val createRequestContent = requestContent1.copy(
         path = Path("ContentServiceSpec-FindById")
       )
 
-      val result = (for {
+      (for {
         createdContent <- contentService.create(AuthorName(author.name.value), createRequestContent)
         maybeContent <- contentService.findById(createdContent.id)
-      } yield maybeContent).unsafeRunSync()
-
-      assert(result.get.path === createRequestContent.path)
+      } yield {
+        assert(maybeContent.get.path === createRequestContent.path)
+      }).unsafeRunSync()
     }
 
     "return htmlContent if include its field when request create" in {
       val updatedRequestContent = requestContent1.copy(
         htmlContent = "<h1>this is a html content<h1>"
       )
-      contentService.create(AuthorName(author.name.value), updatedRequestContent).unsafeRunSync()
-      val updatedContent = contentService.findByPathWithMeta(requestContent1.path).unsafeRunSync().get
-      assert(updatedContent.content === updatedRequestContent.htmlContent)
+
+      (for {
+        updated <- contentService.create(AuthorName(author.name.value), updatedRequestContent)
+        maybeFound <- contentService.findByPathWithMeta(requestContent1.path)
+      } yield {
+        assert(maybeFound.get.content === updatedRequestContent.htmlContent)
+      }).unsafeRunSync()
     }
 
     "delete" in {
       // create test data for delete
-      val willBeDeleteContent: ContentRequestModel = ContentRequestModel(
+      val shouldDeleteContent: ContentRequestModel = ContentRequestModel(
         contentType = "article",
         path = Path("/test/willbe/delete"),
         title = "this is a title",
@@ -224,13 +246,8 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         )
       )
 
-      val willNotDeleteContent: ContentRequestModel = ContentRequestModel(
-        contentType = "article",
+      val shouldNotDeleteContent: ContentRequestModel = shouldDeleteContent.copy(
         path = Path("/test/willnot/delete"),
-        title = "this is a title",
-        rawContent = "this is a raw content",
-        htmlContent = "this is a html content",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = List("WillNotDelete", "WillNotDelete2"),
         series = Some(SeriesName("contentservice-willNotDelete")),
         externalResources = List(
@@ -241,33 +258,25 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         )
       )
 
-      // Create test data
-      val x = (for {
-        x <- contentService.create(AuthorName(author.name.value), willBeDeleteContent)
-        y <- contentService.create(AuthorName(author.name.value), willNotDeleteContent)
-      } yield (x, y)).unsafeRunSync()
+      (for {
+        // create test data
+        shouldeDelete <- contentService.create(AuthorName(author.name.value), shouldDeleteContent)
+        shouldNotDelete <- contentService.create(AuthorName(author.name.value), shouldNotDeleteContent)
 
-      val willBeDeleteContentResult = contentService.findByPath(x._1.path).unsafeRunSync().get
-      val willNotDeleteContentResult = contentService.findByPath(x._2.path).unsafeRunSync().get
-      contentService.delete(willBeDeleteContentResult.id).unsafeRunSync()
+        // delete one content
+        _ <- contentService.delete(shouldeDelete.id)
+        maybeDeleted <- contentService.findByPath(shouldeDelete.path)
+        maybeExists <- contentService.findByPath(shouldNotDelete.path)
 
-      val afterDeleteOps = (for {
-        maybeNoneContent <- contentService.findByPath(willBeDeleteContentResult.path)
-        // TODO: Tags should be deleted automatically after delete a content which are not refer from other contents.
-        // maybeNoneTag1 <- tagService.findByName(TagName(willBeDeleteContent.tags.get(0)))
-        // maybeNoneTag2 <- tagService.findByName(TagName(willBeDeleteContent.tags.get(1)))
-        anotherContent <- contentService.findByPath(willNotDeleteContent.path)
-        deletedSeries <- seriesService.findByContentId(willBeDeleteContentResult.id)
-        notDeletedSeries <- seriesService.findByContentId(willNotDeleteContentResult.id)
-      } yield (maybeNoneContent, anotherContent, deletedSeries, notDeletedSeries)).unsafeRunSync()
-
-      assert(afterDeleteOps._1.isEmpty)
-      assert(afterDeleteOps._2.get.path === willNotDeleteContent.path)
-      assert(afterDeleteOps._3.isEmpty)
-      assert(afterDeleteOps._4.isDefined)
-      // assert(afterDeleteOps._2.isEmpty)
-      // assert(afterDeleteOps._3.isEmpty)
-      // assert(afterDeleteOps._4.get.path === willNotDeleteContent.path)
+        // find series by content
+        maybeDeletedSeries <- seriesService.findByContentId(shouldeDelete.id)
+        maybeExistsSeries <- seriesService.findByContentId(shouldNotDelete.id)
+      } yield {
+        assert(maybeDeleted.isEmpty)
+        assert(maybeExists.get.path === shouldNotDeleteContent.path)
+        assert(maybeDeletedSeries.isEmpty)
+        assert(maybeExistsSeries.nonEmpty)
+      }).unsafeRunSync()
     }
 
     "throw Content ContentNotFound Exception when not exists content to delete" in {

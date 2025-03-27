@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.domains.{Limit, Page, PaginationRequestModel}
 
 import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.domains.FeedServiceSpec
+// testOnly net.yoshinorin.qualtet.domains.feeds.FeedServiceSpec
 class FeedServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
@@ -16,14 +16,13 @@ class FeedServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
   }
 
   "getFeeds return ResponseFeed instances" in {
-
-    val result = (for {
+    (for {
       _ <- net.yoshinorin.qualtet.fixture.Fixture.feedService.invalidate()
       feed <- net.yoshinorin.qualtet.fixture.Fixture.feedService.get(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None))
-    } yield feed).unsafeRunSync()
-
-    assert(result.size === 5)
-    assert(result === result.sortWith((x, y) => x.published > y.published))
+    } yield {
+      assert(feed.size === 5)
+      assert(feed === feed.sortWith((x, y) => x.published > y.published))
+    }).unsafeRunSync()
   }
 
   "invalidate cache" in {
