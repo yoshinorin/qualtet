@@ -19,6 +19,11 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         title = "Series Service Spec",
         name = seriesName,
         None
+      ),
+      SeriesRequestModel(
+        title = "Series Service Spec2",
+        name = SeriesName("seriesservice-series2"),
+        None
       )
     )
 
