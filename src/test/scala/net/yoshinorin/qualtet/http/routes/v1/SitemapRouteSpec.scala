@@ -40,6 +40,18 @@ class SitemapRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
+    "return NoContent" in {
+      client
+        .run(Request(method = Method.OPTIONS, uri = uri"/v1/sitemaps/"))
+        .use { response =>
+          IO {
+            assert(response.status === NoContent)
+            assert(response.contentType.isEmpty)
+          }
+        }
+        .unsafeRunSync()
+    }
+
     "return Method Not Allowed" in {
       client
         .run(Request(method = Method.DELETE, uri = uri"/v1/sitemaps"))

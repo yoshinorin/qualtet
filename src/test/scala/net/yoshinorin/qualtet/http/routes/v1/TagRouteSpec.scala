@@ -346,6 +346,18 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
+    "return NoContent" in {
+      client
+        .run(Request(method = Method.OPTIONS, uri = uri"/v1/tags/"))
+        .use { response =>
+          IO {
+            assert(response.status === NoContent)
+            assert(response.contentType.isEmpty)
+          }
+        }
+        .unsafeRunSync()
+    }
+
     "return Method Not Allowed" in {
       val tag = tagService.findByName(t(2).name).unsafeRunSync().get
       client
