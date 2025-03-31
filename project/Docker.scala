@@ -12,7 +12,7 @@ trait Docker {
     dockerCommand.!
 
     // NOTE: workaround for starting up db container (Sometimes migrations fail due to connection errors when running tests on CI.)
-    Thread.sleep(5000)
+    Thread.sleep(10000)
     Console_.info("db container started")
   }
 
