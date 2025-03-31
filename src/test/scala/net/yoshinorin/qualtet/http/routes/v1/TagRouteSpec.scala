@@ -14,7 +14,6 @@ import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagResponseModel}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.fixture.Fixture.{authProvider => fixtureAuthProvider}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 
@@ -35,7 +34,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
-  val tagRouteV1 = new TagRoute(fixtureAuthProvider, tagService, articleService)
+  val tagRouteV1 = new TagRoute(authProvider, tagService, articleService)
   val client: Client[IO] = Client.fromHttpApp(makeRouter(tagRouteV1 = tagRouteV1).routes.orNotFound)
 
   "TagRoute" should {

@@ -12,7 +12,6 @@ import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesRequestModel}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.fixture.Fixture.{authProvider => fixtureAuthProvider}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 
@@ -47,7 +46,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
-  val seriesRouteV1 = new SeriesRoute(fixtureAuthProvider, seriesService)
+  val seriesRouteV1 = new SeriesRoute(authProvider, seriesService)
   val client: Client[IO] = Client.fromHttpApp(makeRouter(seriesRouteV1 = seriesRouteV1).routes.orNotFound)
 
   "SeriesRoute" should {
