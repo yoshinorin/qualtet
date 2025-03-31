@@ -15,7 +15,7 @@ import net.yoshinorin.qualtet.fixture.Fixture.{makeRouter, unsafeDecode}
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.SystemRouteSpec
-class SystemRouteV1Spec extends AnyWordSpec {
+class SystemRouteSpec extends AnyWordSpec {
 
   val systemRouteV1: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(enabled = false)))
   val router = makeRouter(systemRouteV1 = systemRouteV1)

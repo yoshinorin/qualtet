@@ -14,7 +14,7 @@ import org.scalatest.BeforeAndAfterAll
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.FeedRouteSpec
-class FeedRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
+class FeedRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
     // NOTE: create content and related data for test

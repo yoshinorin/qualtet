@@ -22,7 +22,7 @@ import java.time.Instant
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.ContentRouteSpec
-class ContentRouteV1Spec extends AnyWordSpec {
+class ContentRouteSpec extends AnyWordSpec {
 
   val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token

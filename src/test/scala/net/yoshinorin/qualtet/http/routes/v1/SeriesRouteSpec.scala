@@ -19,7 +19,7 @@ import org.scalatest.BeforeAndAfterAll
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.SeriesRouteSpec
-class SeriesRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
+class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestSeries: List[SeriesRequestModel] = List(
     SeriesRequestModel(

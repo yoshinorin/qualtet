@@ -21,7 +21,7 @@ import org.scalatest.BeforeAndAfterAll
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.TagRouteSpec
-class TagRouteV1Spec extends AnyWordSpec with BeforeAndAfterAll {
+class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   // NOTE: create content and related data for test
   createContentRequestModels(10, "tagRoute").unsafeCreateConternt()

@@ -14,7 +14,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.AuthRouteSpec
-class AuthRouteV1Spec extends AnyWordSpec {
+class AuthRouteSpec extends AnyWordSpec {
 
   val a: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)

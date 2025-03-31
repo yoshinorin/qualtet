@@ -19,7 +19,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.ArticleRouteSpec
-class ArticleRouteV1Spec extends AnyWordSpec {
+class ArticleRouteSpec extends AnyWordSpec {
 
   val requestContents: List[ContentRequestModel] = {
     (0 until 20).toList

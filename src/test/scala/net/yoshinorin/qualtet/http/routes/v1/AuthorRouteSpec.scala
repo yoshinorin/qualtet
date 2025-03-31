@@ -13,7 +13,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.AuthorRouteSpec
-class AuthorRouteV1Spec extends AnyWordSpec {
+class AuthorRouteSpec extends AnyWordSpec {
 
   val authorRoute = new AuthorRoute(authorService)
 

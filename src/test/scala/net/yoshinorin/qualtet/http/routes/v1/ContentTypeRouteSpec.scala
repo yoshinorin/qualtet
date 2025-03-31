@@ -14,7 +14,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.ContentTypeRouteSpec
-class ContentTypeRouteV1Spec extends AnyWordSpec {
+class ContentTypeRouteSpec extends AnyWordSpec {
 
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
