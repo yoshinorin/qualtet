@@ -12,7 +12,7 @@ object Dependencies {
   val dependencies = Seq(
     "com.typesafe" % "config" % "1.4.3",
     // NOTE: doobie 1.0.0-RC4 and http4s 1.0.0-M40 dependes on cats-effect 3.5.1
-    "org.typelevel" %% "cats-effect" % "3.5.7",
+    "org.typelevel" %% "cats-effect" % "3.6.0",
     "org.typelevel" %% "log4cats-core" % log4catsVersion,
     "org.typelevel" %% "log4cats-slf4j" % log4catsVersion,
     "org.http4s" %% "http4s-dsl" % http4sVersion,
