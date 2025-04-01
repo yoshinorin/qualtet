@@ -157,5 +157,7 @@ forceKillServer := Def.sequential(LocalProcesses.kill).value
 addCommandAlias("kills", LocalProcesses.Commands.kill)
 addCommandAlias("runs", LocalProcesses.Commands.startLocalServer)
 
-// TODO: maybe ignored need update
-coverageExcludedPackages := "<empty>; net.yoshinorin.qualtet.BootStrap; net.yoshinorin.qualtet.infrastructure.db.Migrator;"
+// https://github.com/scoverage/sbt-scoverage?tab=readme-ov-file#exclude-classes-and-packages-and-files
+coverageExcludedFiles := ".*net.yoshinorin.qualtet.BootStrap;.*net.yoshinorin.qualtet.tasks.db.*;"
+
+coverageExcludedPackages := "target.*;"
