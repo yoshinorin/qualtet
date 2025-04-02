@@ -28,22 +28,22 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[IO, ContentRequestModel](json).unsafeRunSync()
-      assert(result.isRight)
-      result match {
-        case Left(_) => // Nothing to do
-        case Right(r) => {
-          assert(r.isInstanceOf[ContentRequestModel])
-          assert(r.contentType === "article")
-          assert(r.path.value === "/test/path")
-          assert(r.title === "this is a title")
-          assert(r.rawContent === "this is a raw content")
-          assert(r.htmlContent === "this is a html content")
-          assert(r.externalResources.isEmpty)
-          assert(r.publishedAt <= ZonedDateTime.now.toEpochSecond)
-          assert(r.updatedAt <= ZonedDateTime.now.toEpochSecond)
+      (for {
+        decoded <- decode[IO, ContentRequestModel](json)
+      } yield {
+        assert(decoded.isRight)
+        decoded.map { c =>
+          assert(c.isInstanceOf[ContentRequestModel])
+          assert(c.contentType === "article")
+          assert(c.path.value === "/test/path")
+          assert(c.title === "this is a title")
+          assert(c.rawContent === "this is a raw content")
+          assert(c.htmlContent === "this is a html content")
+          assert(c.externalResources.isEmpty)
+          assert(c.publishedAt <= ZonedDateTime.now.toEpochSecond)
+          assert(c.updatedAt <= ZonedDateTime.now.toEpochSecond)
         }
-      }
+      }).unsafeRunSync()
     }
 
     "Request content JSON can decode with initial value field" in {
@@ -61,21 +61,21 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[IO, ContentRequestModel](json).unsafeRunSync()
-      assert(result.isRight)
-      result match {
-        case Left(_) => // Nothing to do
-        case Right(r) => {
-          assert(r.isInstanceOf[ContentRequestModel])
-          assert(r.contentType === "article")
-          assert(r.path.value === "/test/path")
-          assert(r.title === "this is a title")
-          assert(r.rawContent === "this is a raw content")
-          assert(r.htmlContent === "this is a html content")
-          assert(r.publishedAt === 1537974000)
-          assert(r.updatedAt === 1621098091)
+      (for {
+        decoded <- decode[IO, ContentRequestModel](json)
+      } yield {
+        assert(decoded.isRight)
+        decoded.map { c =>
+          assert(c.isInstanceOf[ContentRequestModel])
+          assert(c.contentType === "article")
+          assert(c.path.value === "/test/path")
+          assert(c.title === "this is a title")
+          assert(c.rawContent === "this is a raw content")
+          assert(c.htmlContent === "this is a html content")
+          assert(c.publishedAt === 1537974000)
+          assert(c.updatedAt === 1621098091)
         }
-      }
+      }).unsafeRunSync()
     }
 
     "Request content JSON can decode with htmlContent field" in {
@@ -94,22 +94,22 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[IO, ContentRequestModel](json).unsafeRunSync()
-      assert(result.isRight)
-      result match {
-        case Left(_) => // Nothing to do
-        case Right(r) => {
-          assert(r.isInstanceOf[ContentRequestModel])
-          assert(r.contentType === "article")
-          assert(r.path.value === "/test/path")
-          assert(r.title === "this is a title")
-          assert(r.rawContent === "this is a raw content")
-          assert(r.htmlContent === "this is a html content")
-          assert(r.robotsAttributes === Attributes("noarchive, nofollow, noimageindex, noindex"))
-          assert(r.publishedAt === 1537974000)
-          assert(r.updatedAt === 1621098091)
+      (for {
+        decoded <- decode[IO, ContentRequestModel](json)
+      } yield {
+        assert(decoded.isRight)
+        decoded.map { c =>
+          assert(c.isInstanceOf[ContentRequestModel])
+          assert(c.contentType === "article")
+          assert(c.path.value === "/test/path")
+          assert(c.title === "this is a title")
+          assert(c.rawContent === "this is a raw content")
+          assert(c.htmlContent === "this is a html content")
+          assert(c.robotsAttributes === Attributes("noarchive, nofollow, noimageindex, noindex"))
+          assert(c.publishedAt === 1537974000)
+          assert(c.updatedAt === 1621098091)
         }
-      }
+      }).unsafeRunSync()
     }
 
     "Request content JSON can not decode" in {
@@ -122,12 +122,14 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[IO, ContentRequestModel](json).unsafeRunSync()
-      assert(result.isLeft)
-      result match {
-        case Right(_) => // Nothig to do
-        case Left(l) => assert(l.isInstanceOf[UnexpectedJsonFormat])
-      }
+      (for {
+        decoded <- decode[IO, ContentRequestModel](json)
+      } yield {
+        assert(decoded.isLeft)
+        decoded.swap.map { c =>
+          assert(c.isInstanceOf[UnexpectedJsonFormat])
+        }
+      }).unsafeRunSync()
     }
 
     "Request token JSON can decode" in {
@@ -139,17 +141,17 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[IO, RequestToken](json).unsafeRunSync()
-      assert(result.isRight)
-      result match {
-        case Left(_) => // Nothing to do
-        case Right(r) => {
-          assert(r.isInstanceOf[RequestToken])
-          assert(r.authorId.isInstanceOf[AuthorId])
-          assert(r.authorId.value === "01febb8az5t42m2h68xj8c754a")
-          assert(r.password === "password")
+      (for {
+        decoded <- decode[IO, RequestToken](json)
+      } yield {
+        assert(decoded.isRight)
+        decoded.map { c =>
+          assert(c.isInstanceOf[RequestToken])
+          assert(c.authorId.isInstanceOf[AuthorId])
+          assert(c.authorId.value === "01febb8az5t42m2h68xj8c754a")
+          assert(c.password === "password")
         }
-      }
+      }).unsafeRunSync()
     }
 
     "Request token JSON can not decode" in {
@@ -160,12 +162,14 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[IO, RequestToken](json).unsafeRunSync()
-      assert(result.isLeft)
-      result match {
-        case Right(_) => // Nothig to do
-        case Left(l) => assert(l.isInstanceOf[UnexpectedJsonFormat])
-      }
+      (for {
+        decoded <- decode[IO, RequestToken](json)
+      } yield {
+        assert(decoded.isLeft)
+        decoded.swap.map { c =>
+          assert(c.isInstanceOf[UnexpectedJsonFormat])
+        }
+      }).unsafeRunSync()
     }
   }
 
