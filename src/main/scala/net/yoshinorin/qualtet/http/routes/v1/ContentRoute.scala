@@ -55,7 +55,7 @@ class ContentRoute[F[_]: Monad](
 
   private[http] def post(payload: (AuthorResponseModel, String)): IO[Response[IO]] = {
     (for {
-      maybeContent <- IO(decode[ContentRequestModel](payload._2))
+      maybeContent <- decode[IO, ContentRequestModel](payload._2)
     } yield maybeContent).flatMap { c =>
       c match {
         case Left(f) => throw f

@@ -23,7 +23,7 @@ class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends Decoder {
   private[http] def post(request: Request[IO]): IO[Response[IO]] = {
     (for {
       stringifyRequest <- request.as[String]
-      maybeRequestToken <- IO(decode[RequestToken](stringifyRequest))
+      maybeRequestToken <- decode[IO, RequestToken](stringifyRequest)
     } yield maybeRequestToken).flatMap { mrt =>
       mrt match {
         case Left(_) => Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))

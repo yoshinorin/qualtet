@@ -45,7 +45,7 @@ class SeriesRoute[F[_]: Monad](
 
   private[http] def post(payload: (AuthorResponseModel, String)): IO[Response[IO]] = {
     val maybeSeries = for {
-      maybeSeries <- IO(decode[SeriesRequestModel](payload._2))
+      maybeSeries <- decode[IO, SeriesRequestModel](payload._2)
     } yield maybeSeries
 
     maybeSeries.flatMap { s =>

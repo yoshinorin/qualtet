@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.request
 
+import cats.effect.IO
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
@@ -8,8 +9,9 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.ZonedDateTime
+import cats.effect.unsafe.implicits.global
 
-// testOnly net.yoshinorin.qualtet.http.RequestDecoderSpec
+// testOnly net.yoshinorin.qualtet.http.request.RequestDecoderSpec
 class RequestDecoderSpec extends AnyWordSpec with Decoder {
 
   "Decoder" should {
@@ -26,7 +28,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[ContentRequestModel](json)
+      val result = decode[IO, ContentRequestModel](json).unsafeRunSync()
       assert(result.isRight)
       result match {
         case Left(_) => // Nothing to do
@@ -59,7 +61,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[ContentRequestModel](json)
+      val result = decode[IO, ContentRequestModel](json).unsafeRunSync()
       assert(result.isRight)
       result match {
         case Left(_) => // Nothing to do
@@ -92,7 +94,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[ContentRequestModel](json)
+      val result = decode[IO, ContentRequestModel](json).unsafeRunSync()
       assert(result.isRight)
       result match {
         case Left(_) => // Nothing to do
@@ -120,7 +122,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[ContentRequestModel](json)
+      val result = decode[IO, ContentRequestModel](json).unsafeRunSync()
       assert(result.isLeft)
       result match {
         case Right(_) => // Nothig to do
@@ -137,7 +139,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[RequestToken](json)
+      val result = decode[IO, RequestToken](json).unsafeRunSync()
       assert(result.isRight)
       result match {
         case Left(_) => // Nothing to do
@@ -158,7 +160,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
           |}
         """.stripMargin
 
-      val result = decode[RequestToken](json)
+      val result = decode[IO, RequestToken](json).unsafeRunSync()
       assert(result.isLeft)
       result match {
         case Right(_) => // Nothig to do
