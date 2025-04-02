@@ -68,7 +68,7 @@ class TagService[F[_]: Monad](
    * @param tagName
    * @return Tag instance
    */
-  def findOrGetNewInstance(tagName: TagName): IO[Tag] = {
+  private def findOrCreateNewInstance(tagName: TagName): IO[Tag] = {
     this.findByName(tagName).flatMap {
       case None => IO(Tag(TagId.apply(), tagName))
       case Some(t) => IO(t)
@@ -84,7 +84,7 @@ class TagService[F[_]: Monad](
   def getTags(tagNames: Option[List[String]]): IO[Option[List[Tag]]] = {
     tagNames match {
       case None => IO(None)
-      case Some(t) => t.map { t => findOrGetNewInstance(TagName(t)) }.sequence.option
+      case Some(t) => t.map { t => findOrCreateNewInstance(TagName(t)) }.sequence.option
     }
   }
 
