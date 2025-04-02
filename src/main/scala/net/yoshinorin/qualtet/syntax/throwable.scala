@@ -8,11 +8,6 @@ trait throwable {
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   extension (e: Throwable) {
-    def withLog[F[_]: Monad]: F[Throwable] = {
-      logger.error(e.getMessage)
-      Monad[F].pure(e)
-    }
-
     def logWithStackTrace[F[_]: Monad]: F[Throwable] = {
       val stackTraceString = e.getStackTrace().map(x => x.toString).mkString
       logger.error(stackTraceString)
