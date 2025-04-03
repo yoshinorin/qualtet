@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.auth
 
 import cats.Monad
-import cats.implicits.catsSyntaxEq
+import cats.implicits.*
 import net.yoshinorin.qualtet.config.JwtConfig
 import net.yoshinorin.qualtet.domains.authors.Author
 import net.yoshinorin.qualtet.domains.errors.Unauthorized
@@ -26,17 +26,21 @@ class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair
    * @param author Author instance
    * @return String (JWT)
    */
-  def encode(author: Author): String = {
-    val claim = pdi.jwt
-      .JwtClaim(
-        issuer = Some(config.iss),
-        audience = Some(Set(config.aud)),
-        subject = Some(author.id.value),
-        jwtId = Some(ULID.newULIDString.toLower),
-        expiration = Some(Instant.now.plusSeconds(config.expiration).getEpochSecond),
-        issuedAt = Some(Instant.now.getEpochSecond)
+  def encode[F[_]: Monad](author: Author): F[String] = {
+    for {
+      claim <- Monad[F].pure(
+        pdi.jwt
+          .JwtClaim(
+            issuer = Some(config.iss),
+            audience = Some(Set(config.aud)),
+            subject = Some(author.id.value),
+            jwtId = Some(ULID.newULIDString.toLower),
+            expiration = Some(Instant.now.plusSeconds(config.expiration).getEpochSecond),
+            issuedAt = Some(Instant.now.getEpochSecond)
+          )
       )
-    pdi.jwt.Jwt.encode(claim, signature.signedPrivateKey, algorithm)
+      encoded <- Monad[F].pure(pdi.jwt.Jwt.encode(claim, signature.signedPrivateKey, algorithm))
+    } yield (encoded)
   }
 
   /**

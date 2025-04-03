@@ -29,27 +29,25 @@ class JwtSpec extends AnyWordSpec {
 
   "Jwt" should {
     "encode and decode" in {
-      val id = ULID.newULIDString.toLower
-      val jwtString = jwtInstance.encode(
-        Author(
-          id = AuthorId(id),
-          name = AuthorName("Jhon"),
-          displayName = AuthorDisplayName("JD"),
-          password = validBCryptPassword
+      (for {
+        id <- IO(ULID.newULIDString.toLower)
+        jwtString <- jwtInstance.encode[IO](
+          Author(
+            id = AuthorId(id),
+            name = AuthorName("Jhon"),
+            displayName = AuthorDisplayName("JD"),
+            password = validBCryptPassword
+          )
         )
-      )
-
-      jwtInstance.decode[IO](jwtString).unsafeRunSync() match {
-        case Right(j) => {
-          assert(j.iss === config.jwt.iss)
-          assert(j.aud === config.jwt.aud)
-          assert(j.sub === id)
-
+        decoded <- jwtInstance.decode[IO](jwtString)
+      } yield {
+        assert(decoded.isRight)
+        decoded.map { d =>
+          assert(d.iss === config.jwt.iss)
+          assert(d.aud === config.jwt.aud)
+          assert(d.sub === id)
         }
-        case Left(l) =>
-          assert(false)
-      }
-
+      }).unsafeRunSync()
     }
 
     val ioInstance = implicitly[cats.Monad[IO]]
