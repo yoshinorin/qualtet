@@ -15,6 +15,7 @@ scalacOptions ++= Seq(
   "-feature",
   "-unchecked",
   "-Xkind-projector",
+  "-Wsafe-init",
   "-Wvalue-discard",
   "-Wunused:implicits",
   "-Wunused:explicits",
