@@ -11,7 +11,7 @@ class Signature(algorithm: String, message: Array[Byte], key: KeyPair) {
   signature.initSign(key.privateKey)
   signature.update(message)
 
-  val sign: Array[Byte] = signature.sign()
+  private val sign: Array[Byte] = signature.sign()
 
   logger.info(s"signed: ${signature.getAlgorithm}")
 

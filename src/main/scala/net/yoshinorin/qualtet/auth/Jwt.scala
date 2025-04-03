@@ -44,7 +44,7 @@ class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair
    *
    * @param jwtString String of JWT
    */
-  def verify(jwtString: String): Either[Throwable, Unit] = {
+  private def verify(jwtString: String): Either[Throwable, Unit] = {
     Try {
       pdi.jwt.Jwt.validate(jwtString, keyPair.publicKey)
     }.toEither

@@ -16,7 +16,7 @@ class KeyPair(algorithm: String, length: Int, secureRandom: SecureRandom) {
 
   // require entropy
   // https://stackoverflow.com/questions/4819359/dev-random-extremely-slow
-  lazy val keyPair: security.KeyPair = keyPairGenerator.generateKeyPair()
+  private lazy val keyPair: security.KeyPair = keyPairGenerator.generateKeyPair()
   lazy val publicKey: PublicKey = keyPair.getPublic
   lazy val privateKey: PrivateKey = keyPair.getPrivate
 
