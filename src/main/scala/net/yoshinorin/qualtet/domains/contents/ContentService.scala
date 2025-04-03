@@ -48,13 +48,6 @@ class ContentService[F[_]: Monad](
    */
   def create(authorName: AuthorName, request: ContentRequestModel): IO[ContentResponseModel] = {
 
-    def createContentTagging(contentId: ContentId, tags: Option[List[Tag]]): IO[Option[List[ContentTagging]]] = {
-      tags match {
-        case None => IO(None)
-        case Some(x) => IO(Option(x.map(t => ContentTagging(contentId, t.id))))
-      }
-    }
-
     for {
       a <- authorService.findByName(authorName).throwIfNone(InvalidAuthor(detail = s"user not found: ${request.contentType}"))
       c <- contentTypeService.findByName(request.contentType).throwIfNone(InvalidContentType(detail = s"content-type not found: ${request.contentType}"))
@@ -64,7 +57,10 @@ class ContentService[F[_]: Monad](
         case Some(x) => x.id
       }
       maybeTags <- tagService.getTags(Some(request.tags))
-      maybeContentTagging <- createContentTagging(contentId, maybeTags)
+      contentTaggings <- maybeTags match {
+        case None => IO(List())
+        case Some(x) => IO(x.map(t => ContentTagging(contentId, t.id)))
+      }
       maybeContentSerializing <- request.series match {
         case None => IO(None)
         case Some(seriesName) =>
@@ -87,7 +83,7 @@ class ContentService[F[_]: Monad](
         ),
         request.robotsAttributes,
         maybeTags,
-        maybeContentTagging,
+        contentTaggings,
         maybeContentSerializing,
         request.externalResources
       )
@@ -114,7 +110,7 @@ class ContentService[F[_]: Monad](
     data: Content,
     robotsAttributes: Attributes,
     tags: Option[List[Tag]],
-    contentTagging: Option[List[ContentTagging]],
+    contentTaggings: List[ContentTagging],
     contentSerializing: Option[ContentSerializing],
     externalResources: List[ExternalResources]
   ): IO[Content] = {
@@ -127,7 +123,7 @@ class ContentService[F[_]: Monad](
       currentTags <- executer.perform(tagRepositoryAdapter.findByContentId(data.id))
       tagsDiffDelete <- executer.perform(contentTaggingRepositoryAdapter.bulkDelete(data.id, currentTags.map(_.id).diff(tags.getOrElse(List()).map(t => t.id))))
       tagsBulkUpsert <- executer.perform(tagRepositoryAdapter.bulkUpsert(tags))
-      contentTaggingBulkUpsert <- executer.perform(contentTaggingRepositoryAdapter.bulkUpsert(contentTagging))
+      contentTaggingBulkUpsert <- executer.perform(contentTaggingRepositoryAdapter.bulkUpsert(contentTaggings))
       currentContentSeries <- executer.perform(seriesRepositoryAdapter.findByContentId(data.id))
       contentSerializingDiffDelete <- currentContentSeries match {
         case Some(cc) if contentSerializing.isEmpty => executer.perform(contentSerializingRepositoryAdapter.deleteByContentId(data.id))

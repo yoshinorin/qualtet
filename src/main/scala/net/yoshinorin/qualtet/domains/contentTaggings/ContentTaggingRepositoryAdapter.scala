@@ -18,14 +18,14 @@ class ContentTaggingRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  private[domains] def bulkUpsert(data: Option[List[ContentTagging]]): ContT[F, Int, Int] = {
+  private[domains] def bulkUpsert(data: List[ContentTagging]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
-      data match {
-        case Some(d) => {
-          val ws = d.map(c => ContentTaggingWriteModel(c.contentId, c.tagId))
+      data.size match {
+        case 0 => Monad[F].pure(0)
+        case _ => {
+          val ws = data.map(c => ContentTaggingWriteModel(c.contentId, c.tagId))
           contentTaggingRepository.bulkUpsert(ws)
         }
-        case None => Monad[F].pure(0)
       }
     }
   }
