@@ -9,14 +9,14 @@ class SeriesRepositoryAdapter[F[_]: Monad](
   seriesRepository: SeriesRepository[F]
 ) {
 
-  def upsert(data: Series): ContT[F, Int, Int] = {
+  private[domains] def upsert(data: Series): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       val w = SeriesWriteModel(id = data.id, name = data.name, title = data.title, description = data.description)
       seriesRepository.upsert(w)
     }
   }
 
-  def findByName(name: SeriesName): ContT[F, Option[Series], Option[Series]] = {
+  private[domains] def findByName(name: SeriesName): ContT[F, Option[Series], Option[Series]] = {
     ContT.apply[F, Option[Series], Option[Series]] { next =>
       seriesRepository.findByName(name).map { x =>
         x.map { s =>
@@ -26,7 +26,7 @@ class SeriesRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def findByContentId(id: ContentId): ContT[F, Option[Series], Option[Series]] = {
+  private[domains] def findByContentId(id: ContentId): ContT[F, Option[Series], Option[Series]] = {
     ContT.apply[F, Option[Series], Option[Series]] { next =>
       seriesRepository.findByContentId(id).map { x =>
         x.map { s =>
@@ -36,13 +36,13 @@ class SeriesRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def deleteByContentId(id: ContentId): ContT[F, Unit, Unit] = {
+  private[domains] def deleteByContentId(id: ContentId): ContT[F, Unit, Unit] = {
     ContT.apply[F, Unit, Unit] { next =>
       seriesRepository.deleteByContentId(id)
     }
   }
 
-  def fetch: ContT[F, Seq[Series], Seq[Series]] = {
+  private[domains] def fetch: ContT[F, Seq[Series], Seq[Series]] = {
     ContT.apply[F, Seq[Series], Seq[Series]] { next =>
       seriesRepository.getAll().map { x =>
         x.map { s =>

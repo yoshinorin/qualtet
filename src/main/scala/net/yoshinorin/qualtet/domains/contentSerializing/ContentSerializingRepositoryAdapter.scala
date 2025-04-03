@@ -10,7 +10,7 @@ class ContentSerializingRepositoryAdapter[F[_]: Monad](
   contentSerializingRepository: ContentSerializingRepository[F]
 ) {
 
-  def findBySeriesId(id: SeriesId): ContT[F, Seq[ContentSerializing], Seq[ContentSerializing]] = {
+  private[domains] def findBySeriesId(id: SeriesId): ContT[F, Seq[ContentSerializing], Seq[ContentSerializing]] = {
     ContT.apply[F, Seq[ContentSerializing], Seq[ContentSerializing]] { next =>
       contentSerializingRepository.findBySeriesId(id).map { cs =>
         cs.map(c => ContentSerializing(c.seriesId, c.contentId))
@@ -18,7 +18,7 @@ class ContentSerializingRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def findByContentId(id: ContentId): ContT[F, Option[ContentSerializing], Option[ContentSerializing]] = {
+  private[domains] def findByContentId(id: ContentId): ContT[F, Option[ContentSerializing], Option[ContentSerializing]] = {
     ContT.apply[F, Option[ContentSerializing], Option[ContentSerializing]] { next =>
       contentSerializingRepository.findByContentId(id).map { cs =>
         cs match {
@@ -30,7 +30,7 @@ class ContentSerializingRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def upsert(data: Option[ContentSerializing]): ContT[F, Int, Int] = {
+  private[domains] def upsert(data: Option[ContentSerializing]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       data match {
         case Some(d) => {
@@ -42,7 +42,7 @@ class ContentSerializingRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def bulkUpsert(data: Option[List[ContentSerializing]]): ContT[F, Int, Int] = {
+  private[domains] def bulkUpsert(data: Option[List[ContentSerializing]]): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       data match {
         case Some(d) => {
@@ -54,25 +54,25 @@ class ContentSerializingRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def deleteBySeriesId(id: SeriesId): ContT[F, Unit, Unit] = {
+  private[domains] def deleteBySeriesId(id: SeriesId): ContT[F, Unit, Unit] = {
     ContT.apply[F, Unit, Unit] { next =>
       contentSerializingRepository.deleteBySeriesId(id)
     }
   }
 
-  def deleteByContentId(id: ContentId): ContT[F, Unit, Unit] = {
+  private[domains] def deleteByContentId(id: ContentId): ContT[F, Unit, Unit] = {
     ContT.apply[F, Unit, Unit] { next =>
       contentSerializingRepository.deleteByContentId(id)
     }
   }
 
-  def delete(seriesId: SeriesId, contentIds: Seq[ContentId]): ContT[F, Unit, Unit] = {
+  private[domains] def delete(seriesId: SeriesId, contentIds: Seq[ContentId]): ContT[F, Unit, Unit] = {
     ContT.apply[F, Unit, Unit] { next =>
       contentSerializingRepository.delete(seriesId, contentIds)
     }
   }
 
-  def bulkDelete(data: (SeriesId, Seq[ContentId])): ContT[F, Unit, Unit] = {
+  private[domains] def bulkDelete(data: (SeriesId, Seq[ContentId])): ContT[F, Unit, Unit] = {
     data._2.size match {
       case 0 => ContT.apply[F, Unit, Unit] { _ => Monad[F].pure(()) }
       case _ => this.delete(data._1, data._2)

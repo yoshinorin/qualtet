@@ -8,7 +8,7 @@ class SitemapRepositoryAdapter[F[_]: Monad](
   sitemapRepository: SitemapsRepository[F]
 ) {
 
-  def get: ContT[F, Seq[Url], Seq[Url]] = {
+  private[domains] def get: ContT[F, Seq[Url], Seq[Url]] = {
     ContT.apply[F, Seq[Url], Seq[Url]] { next =>
       sitemapRepository.get().map { x =>
         x.map { s =>

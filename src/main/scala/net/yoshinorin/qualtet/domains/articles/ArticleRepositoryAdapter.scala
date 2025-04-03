@@ -12,7 +12,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
   articleRepository: ArticleRepository[F]
 ) {
 
-  def getWithCount(
+  private[domains] def getWithCount(
     contentTypeId: ContentTypeId,
     none: Unit = (),
     queryParams: Pagination
@@ -26,7 +26,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def findByTagNameWithCount(
+  private[domains] def findByTagNameWithCount(
     contentTypeId: ContentTypeId,
     tagName: TagName,
     queryParams: Pagination
@@ -40,7 +40,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def findBySeriesNameWithCount(
+  private[domains] def findBySeriesNameWithCount(
     contentTypeId: ContentTypeId,
     seriesName: SeriesName,
     queryParams: Pagination // TODO: `Optional`

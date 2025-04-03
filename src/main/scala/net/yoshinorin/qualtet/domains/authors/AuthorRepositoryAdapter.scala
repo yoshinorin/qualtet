@@ -8,7 +8,7 @@ class AuthorRepositoryAdapter[F[_]: Monad](
   authorRepository: AuthorRepository[F]
 ) {
 
-  def upsert(data: Author): ContT[F, Int, Int] = {
+  private[domains] def upsert(data: Author): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
       val w = AuthorWriteModel(
         id = data.id,
@@ -21,7 +21,7 @@ class AuthorRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def fetch: ContT[F, Seq[AuthorResponseModel], Seq[AuthorResponseModel]] = {
+  private[domains] def fetch: ContT[F, Seq[AuthorResponseModel], Seq[AuthorResponseModel]] = {
     ContT.apply[F, Seq[AuthorResponseModel], Seq[AuthorResponseModel]] { next =>
       authorRepository.getAll().map { authors =>
         authors.map { author =>
@@ -36,7 +36,7 @@ class AuthorRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def findById(id: AuthorId): ContT[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] = {
+  private[domains] def findById(id: AuthorId): ContT[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] = {
     ContT.apply[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] { next =>
       authorRepository.findById(id).map { author =>
         author.map { a =>
@@ -51,7 +51,7 @@ class AuthorRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def findByIdWithPassword(id: AuthorId): ContT[F, Option[Author], Option[Author]] = {
+  private[domains] def findByIdWithPassword(id: AuthorId): ContT[F, Option[Author], Option[Author]] = {
     ContT.apply[F, Option[Author], Option[Author]] { next =>
       authorRepository.findByIdWithPassword(id).map { author =>
         author match {
@@ -71,7 +71,7 @@ class AuthorRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  def findByName(name: AuthorName): ContT[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] = {
+  private[domains] def findByName(name: AuthorName): ContT[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] = {
     ContT.apply[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] { next =>
       authorRepository.findByName(name).map { author =>
         author.map { a =>

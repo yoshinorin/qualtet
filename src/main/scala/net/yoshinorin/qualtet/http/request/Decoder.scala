@@ -13,7 +13,7 @@ trait Decoder {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
-  def decode[F[_]: Monad, T <: Request[T]](maybeJsonString: String): JsonValueCodec[T] ?=> F[Either[DomainError, T]] = {
+  private[http] def decode[F[_]: Monad, T <: Request[T]](maybeJsonString: String): JsonValueCodec[T] ?=> F[Either[DomainError, T]] = {
     Monad[F].pure {
       try {
         Right(maybeJsonString.decode.postDecode)

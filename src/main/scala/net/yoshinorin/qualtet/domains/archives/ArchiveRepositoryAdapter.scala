@@ -9,7 +9,7 @@ class ArchiveRepositoryAdapter[F[_]: Monad](
   archiveRepository: ArchiveRepository[F]
 ) {
 
-  def get(contentTypeId: ContentTypeId): ContT[F, Seq[ArchiveResponseModel], Seq[ArchiveResponseModel]] = {
+  private[domains] def get(contentTypeId: ContentTypeId): ContT[F, Seq[ArchiveResponseModel], Seq[ArchiveResponseModel]] = {
     ContT.apply[F, Seq[ArchiveResponseModel], Seq[ArchiveResponseModel]] { next =>
       archiveRepository.get(contentTypeId).map { archives =>
         archives.map(a => ArchiveResponseModel(a.path, a.title, a.publishedAt))
