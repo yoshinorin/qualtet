@@ -4,7 +4,6 @@ import cats.data.Kleisli
 import cats.effect.{ExitCode, IO, IOApp}
 import cats.effect.kernel.Resource
 import org.typelevel.log4cats.SelfAwareStructuredLogger
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
 import org.http4s.*
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Server
@@ -16,7 +15,7 @@ object BootStrap extends IOApp {
 
   import Modules.log4catsLogger
 
-  val logger: SelfAwareStructuredLogger[IO] = Log4CatsLoggerFactory[IO].getLoggerFromClass(this.getClass)
+  val logger: SelfAwareStructuredLogger[IO] = log4catsLogger.getLoggerFromClass(this.getClass)
 
   private def server(host: Ipv4Address, port: Port, httpApp: HttpApp[IO]): Resource[IO, Server] = {
     EmberServerBuilder
