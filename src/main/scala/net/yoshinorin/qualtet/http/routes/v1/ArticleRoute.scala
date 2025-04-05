@@ -8,10 +8,13 @@ import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.PaginationRequestModel
 import net.yoshinorin.qualtet.syntax.*
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class ArticleRoute[F[_]: Monad](
   articleService: ArticleService[F]
-) {
+)(using loggerFactory: Log4CatsLoggerFactory[IO]) {
+
+  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {

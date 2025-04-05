@@ -7,10 +7,13 @@ import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.archives.ArchiveService
 import net.yoshinorin.qualtet.syntax.*
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class ArchiveRoute[F[_]: Monad](
   archiveService: ArchiveService[F]
-) {
+)(using loggerFactory: Log4CatsLoggerFactory[IO]) {
+
+  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {

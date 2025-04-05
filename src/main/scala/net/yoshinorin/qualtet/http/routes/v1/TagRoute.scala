@@ -6,7 +6,6 @@ import cats.implicits.*
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
-import org.slf4j.LoggerFactory
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
@@ -14,14 +13,15 @@ import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
 import net.yoshinorin.qualtet.domains.PaginationRequestModel
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.syntax.*
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class TagRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   tagService: TagService[F],
   articleService: ArticleService[F]
-) {
+)(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 
-  private val logger = LoggerFactory.getLogger(this.getClass)
+  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   private[http] def index: HttpRoutes[IO] =
     tagsWithoutAuth <+>

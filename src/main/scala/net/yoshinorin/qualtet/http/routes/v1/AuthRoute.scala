@@ -8,8 +8,11 @@ import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken}
 import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class AuthRoute[F[_]: Monad](authService: AuthService[F]) extends Decoder {
+class AuthRoute[F[_]: Monad](authService: AuthService[F])(using loggerFactory: Log4CatsLoggerFactory[IO]) extends Decoder {
+
+  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {

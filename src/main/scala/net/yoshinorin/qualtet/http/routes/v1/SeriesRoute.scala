@@ -12,11 +12,15 @@ import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesRequestM
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class SeriesRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   seriesService: SeriesService[F]
-) extends Decoder {
+)(using loggerFactory: Log4CatsLoggerFactory[IO])
+    extends Decoder {
+
+  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def index: HttpRoutes[IO] =

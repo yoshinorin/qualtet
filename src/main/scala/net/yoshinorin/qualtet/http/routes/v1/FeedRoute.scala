@@ -8,10 +8,13 @@ import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.{Limit, Page, PaginationRequestModel}
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.syntax.*
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class FeedRoute[F[_]: Monad](
   feedService: FeedService[F]
-) {
+)(using loggerFactory: Log4CatsLoggerFactory[IO]) {
+
+  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {

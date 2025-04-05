@@ -8,8 +8,11 @@ import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.ApplicationInfo
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class SystemRoute(config: HttpSystemEndpointConfig) {
+class SystemRoute(config: HttpSystemEndpointConfig)(using loggerFactory: Log4CatsLoggerFactory[IO]) {
+
+  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {

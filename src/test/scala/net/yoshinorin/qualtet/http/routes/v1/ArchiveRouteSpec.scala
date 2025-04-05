@@ -10,6 +10,7 @@ import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.archives.{ArchiveResponseModel, ArchiveService}
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.fixture.Fixture.*
+import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.wordspec.AnyWordSpec

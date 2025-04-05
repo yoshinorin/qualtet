@@ -5,15 +5,15 @@ import cats.Monad
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
-import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.search.SearchService
 import net.yoshinorin.qualtet.syntax.*
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class SearchRoute[F[_]: Monad](
   searchService: SearchService[F]
-) {
+)(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 
-  private val logger = LoggerFactory.getLogger(this.getClass)
+  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
@@ -24,8 +24,8 @@ class SearchRoute[F[_]: Monad](
   }
 
   private[http] def search(query: Map[String, List[String]]): IO[Response[IO]] = {
-    logger.info(s"search query: ${query}")
     (for {
+      _ <- logger.info(s"search query: ${query}")
       searchResult <- searchService.search(query)
       response <- Ok(searchResult.asJson, `Content-Type`(MediaType.application.json))
     } yield response)

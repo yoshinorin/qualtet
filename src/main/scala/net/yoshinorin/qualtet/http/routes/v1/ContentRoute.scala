@@ -7,20 +7,21 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import org.http4s.{ContextRequest, Request}
-import org.slf4j.LoggerFactory
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.contents.{ContentDetailResponseModel, ContentId, ContentRequestModel, ContentResponseModel, ContentService}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class ContentRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   contentService: ContentService[F]
-) extends Decoder {
+)(using loggerFactory: Log4CatsLoggerFactory[IO])
+    extends Decoder {
 
-  private val logger = LoggerFactory.getLogger(this.getClass)
+  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def index: HttpRoutes[IO] =

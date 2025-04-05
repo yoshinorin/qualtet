@@ -7,6 +7,7 @@ import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
+import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorResponseModel}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import org.scalatest.wordspec.AnyWordSpec

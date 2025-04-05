@@ -10,7 +10,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.ApplicationInfo
 import net.yoshinorin.qualtet.buildinfo.BuildInfo
 import net.yoshinorin.qualtet.config.{HttpSystemEndpointConfig, HttpSystemEndpointMetadata}
-import net.yoshinorin.qualtet.fixture.Fixture.{makeRouter, unsafeDecode}
+import net.yoshinorin.qualtet.fixture.Fixture.{log4catsLogger, makeRouter, unsafeDecode}
 
 import cats.effect.unsafe.implicits.global
 
