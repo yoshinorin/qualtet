@@ -15,8 +15,8 @@ import net.yoshinorin.qualtet.syntax.*
 object Translator {
 
   // NOTE: can't use `ContextFunctions`.
-  private def failToResponse(f: DomainError)(using req: Request[IO]): IO[Response[IO]] = {
-    fromDomainError(f) match {
+  private[http] def failToResponse(f: HttpError)(using req: Request[IO]): IO[Response[IO]] = {
+    f match {
       case e: NotFound =>
         org.http4s.dsl.io.NotFound(
           ResponseProblemDetails(
@@ -75,7 +75,7 @@ object Translator {
 
   def toResponse(e: Throwable): Request[IO] ?=> IO[Response[IO]] = {
     e match {
-      case f: DomainError => this.failToResponse(f)
+      case f: DomainError => this.failToResponse(fromDomainError(f))
       case _ => org.http4s.dsl.io.InternalServerError("Internal Server Error")
     }
   }
