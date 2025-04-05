@@ -12,7 +12,7 @@ class SitemapService[F[_]: Monad](
 )(using executer: Executer[F, IO])
     extends Cacheable {
 
-  private val cacheKey = "sitemaps-full-cache"
+  private val CACHE_KEY = "SITEMAPS_FULL_CACHE"
 
   def get(): IO[Seq[Url]] = {
 
@@ -21,13 +21,13 @@ class SitemapService[F[_]: Monad](
     }
 
     for {
-      maybeSitemaps <- cache.get(cacheKey)
+      maybeSitemaps <- cache.get(CACHE_KEY)
       sitemaps <- maybeSitemaps match {
         case Some(urls: Seq[Url]) => IO.pure(urls)
         case _ =>
           for {
             dbSitemaps <- fromDB()
-            _ <- cache.put(cacheKey, dbSitemaps)
+            _ <- cache.put(CACHE_KEY, dbSitemaps)
           } yield dbSitemaps
       }
     } yield sitemaps

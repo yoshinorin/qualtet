@@ -17,7 +17,7 @@ class TagService[F[_]: Monad](
 )(using executer: Executer[F, IO])
     extends Cacheable {
 
-  private val cacheKey = "tags-full-cache"
+  private val CACHE_KEY = "TAGS_FULL_CACHE"
 
   /**
    * get all tags
@@ -31,13 +31,13 @@ class TagService[F[_]: Monad](
     }
 
     for {
-      maybeTags <- cache.get(cacheKey)
+      maybeTags <- cache.get(CACHE_KEY)
       tags <- maybeTags match {
         case Some(t: Seq[TagResponseModel]) => IO.pure(t)
         case _ =>
           for {
             dbTags <- fromDB()
-            _ <- cache.put(cacheKey, dbTags)
+            _ <- cache.put(CACHE_KEY, dbTags)
           } yield dbTags
       }
     } yield tags

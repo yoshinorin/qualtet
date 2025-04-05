@@ -14,7 +14,7 @@ class FeedService[F[_]: Monad](
   articleService: ArticleService[F]
 ) extends Cacheable {
 
-  private val cacheKey = "feed-full-cache"
+  private val CACHE_KEY = "FEED_FULL_CACHE"
 
   def get(p: PaginationRequestModel): IO[Seq[FeedResponseModel]] = {
 
@@ -36,13 +36,13 @@ class FeedService[F[_]: Monad](
     }
 
     for {
-      maybeArticles <- cache.get(cacheKey)
+      maybeArticles <- cache.get(CACHE_KEY)
       articles <- maybeArticles match {
         case Some(a: ArticleWithCountResponseModel) => IO.pure(a)
         case _ =>
           for {
             dbArticles <- fromDb()
-            _ <- cache.put(cacheKey, dbArticles)
+            _ <- cache.put(CACHE_KEY, dbArticles)
           } yield dbArticles
       }
     } yield toFeed(articles)
