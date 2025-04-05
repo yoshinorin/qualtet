@@ -6,11 +6,11 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorResponseModel, Au
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
-import org.slf4j.LoggerFactory
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt[IO]) {
+class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt[IO])(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 
-  private val logger = LoggerFactory.getLogger(this.getClass)
+  private val logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
   private val bcryptPasswordEncoder = new BCryptPasswordEncoder()
 
   def generateToken(tokenRequest: RequestToken): IO[ResponseToken] = {
@@ -19,8 +19,8 @@ class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt[IO]) {
       if (bcryptPasswordEncoder.matches(tokenRequest.password, password.value)) {
         IO(())
       } else {
-        logger.error(s"authorId: ${tokenRequest.authorId} - wrong password")
-        IO.raiseError(Unauthorized())
+        logger.error(s"authorId: ${tokenRequest.authorId} - wrong password") *>
+          IO.raiseError(Unauthorized())
       }
     }
 
@@ -40,8 +40,8 @@ class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt[IO]) {
       case Right(jwtClaim: JwtClaim) =>
         authorService.findById(AuthorId(jwtClaim.sub))
       case Left(t: Throwable) =>
-        logger.error(s"${t.getMessage}")
-        throw Unauthorized()
+        logger.error(s"${t.getMessage}") *>
+          IO.pure(throw Unauthorized())
     }
   }
 
