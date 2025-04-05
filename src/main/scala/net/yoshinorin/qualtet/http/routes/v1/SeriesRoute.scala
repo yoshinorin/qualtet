@@ -18,7 +18,7 @@ class SeriesRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   seriesService: SeriesService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO])
-    extends Decoder {
+    extends Decoder[IO] {
 
   given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
@@ -49,7 +49,7 @@ class SeriesRoute[F[_]: Monad](
 
   private[http] def post(payload: (AuthorResponseModel, String)): IO[Response[IO]] = {
     val maybeSeries = for {
-      maybeSeries <- decode[IO, SeriesRequestModel](payload._2)
+      maybeSeries <- decode[SeriesRequestModel](payload._2)
     } yield maybeSeries
 
     maybeSeries.flatMap { s =>

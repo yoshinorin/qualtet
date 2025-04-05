@@ -19,7 +19,7 @@ class ContentRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   contentService: ContentService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO])
-    extends Decoder {
+    extends Decoder[IO] {
 
   given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
@@ -56,7 +56,7 @@ class ContentRoute[F[_]: Monad](
 
   private[http] def post(payload: (AuthorResponseModel, String)): IO[Response[IO]] = {
     (for {
-      maybeContent <- decode[IO, ContentRequestModel](payload._2)
+      maybeContent <- decode[ContentRequestModel](payload._2)
     } yield maybeContent).flatMap { c =>
       c match {
         case Left(f) => throw f

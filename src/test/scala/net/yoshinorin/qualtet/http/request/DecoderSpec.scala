@@ -6,13 +6,14 @@ import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.errors.UnexpectedJsonFormat
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.ZonedDateTime
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.request.RequestDecoderSpec
-class RequestDecoderSpec extends AnyWordSpec with Decoder {
+class RequestDecoderSpec extends AnyWordSpec with Decoder[IO] {
 
   "Decoder" should {
     "Request content JSON can decode without has initial value field" in {
@@ -29,7 +30,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
         """.stripMargin
 
       (for {
-        decoded <- decode[IO, ContentRequestModel](json)
+        decoded <- decode[ContentRequestModel](json)
       } yield {
         assert(decoded.isRight)
         decoded.map { c =>
@@ -62,7 +63,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
         """.stripMargin
 
       (for {
-        decoded <- decode[IO, ContentRequestModel](json)
+        decoded <- decode[ContentRequestModel](json)
       } yield {
         assert(decoded.isRight)
         decoded.map { c =>
@@ -95,7 +96,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
         """.stripMargin
 
       (for {
-        decoded <- decode[IO, ContentRequestModel](json)
+        decoded <- decode[ContentRequestModel](json)
       } yield {
         assert(decoded.isRight)
         decoded.map { c =>
@@ -123,7 +124,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
         """.stripMargin
 
       (for {
-        decoded <- decode[IO, ContentRequestModel](json)
+        decoded <- decode[ContentRequestModel](json)
       } yield {
         assert(decoded.isLeft)
         decoded.swap.map { c =>
@@ -142,7 +143,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
         """.stripMargin
 
       (for {
-        decoded <- decode[IO, RequestToken](json)
+        decoded <- decode[RequestToken](json)
       } yield {
         assert(decoded.isRight)
         decoded.map { c =>
@@ -163,7 +164,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder {
         """.stripMargin
 
       (for {
-        decoded <- decode[IO, RequestToken](json)
+        decoded <- decode[RequestToken](json)
       } yield {
         assert(decoded.isLeft)
         decoded.swap.map { c =>

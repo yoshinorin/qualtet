@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class AuthRoute[F[_]: Monad](authService: AuthService[F])(using loggerFactory: Log4CatsLoggerFactory[IO]) extends Decoder {
+class AuthRoute[F[_]: Monad](authService: AuthService[F])(using loggerFactory: Log4CatsLoggerFactory[IO]) extends Decoder[IO] {
 
   given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
@@ -26,7 +26,7 @@ class AuthRoute[F[_]: Monad](authService: AuthService[F])(using loggerFactory: L
   private[http] def post(request: Request[IO]): IO[Response[IO]] = {
     (for {
       stringifyRequest <- request.as[String]
-      maybeRequestToken <- decode[IO, RequestToken](stringifyRequest)
+      maybeRequestToken <- decode[RequestToken](stringifyRequest)
     } yield maybeRequestToken).flatMap { mrt =>
       mrt match {
         case Left(_) => Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
