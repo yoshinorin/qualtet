@@ -14,6 +14,7 @@ import cats.effect.unsafe.implicits.global
 
 object CreateOrUpdateAuthor extends IOApp {
 
+  // NOTE: NO-NEED TO USE `log4cats`
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   def run(args: List[String]): IO[ExitCode] = {

@@ -5,6 +5,7 @@ import java.security.{PrivateKey, Signature => JavaSignature}
 
 class Signature(algorithm: String, message: Array[Byte], key: KeyPair) {
 
+  // NOTE: DO NOT USE `log4cats`
   private val logger = LoggerFactory.getLogger(this.getClass)
   private val signature = JavaSignature.getInstance(algorithm)
 
