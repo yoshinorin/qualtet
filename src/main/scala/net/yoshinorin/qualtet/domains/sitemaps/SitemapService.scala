@@ -10,7 +10,7 @@ class SitemapService[F[_]: Monad](
   sitemapRepositoryAdapter: SitemapRepositoryAdapter[F],
   cache: CacheModule[IO, String, Seq[Url]]
 )(using executer: Executer[F, IO])
-    extends Cacheable {
+    extends Cacheable[IO] {
 
   private val CACHE_KEY = "SITEMAPS_FULL_CACHE"
 

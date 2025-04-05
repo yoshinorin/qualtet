@@ -12,7 +12,7 @@ class FeedService[F[_]: Monad](
   feedsPagination: PaginationOps[FeedsPagination],
   cache: CacheModule[IO, String, ArticleWithCountResponseModel],
   articleService: ArticleService[F]
-) extends Cacheable {
+) extends Cacheable[IO] {
 
   private val CACHE_KEY = "FEED_FULL_CACHE"
 

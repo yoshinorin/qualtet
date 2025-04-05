@@ -15,7 +15,7 @@ class TagService[F[_]: Monad](
   cache: CacheModule[IO, String, Seq[TagResponseModel]],
   contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[F]
 )(using executer: Executer[F, IO])
-    extends Cacheable {
+    extends Cacheable[IO] {
 
   private val CACHE_KEY = "TAGS_FULL_CACHE"
 

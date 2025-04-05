@@ -1,7 +1,5 @@
 package net.yoshinorin.qualtet.domains
 
-import cats.effect.IO
-
-trait Cacheable {
-  def invalidate(): IO[Unit]
+trait Cacheable[F[_]] {
+  def invalidate(): F[Unit]
 }

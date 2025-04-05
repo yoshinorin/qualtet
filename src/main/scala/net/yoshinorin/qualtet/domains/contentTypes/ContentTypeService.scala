@@ -12,7 +12,7 @@ class ContentTypeService[F[_]: Monad](
   contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[F],
   cache: CacheModule[IO, String, ContentType]
 )(using executer: Executer[F, IO])
-    extends Cacheable {
+    extends Cacheable[IO] {
 
   /**
    * create a contentType
