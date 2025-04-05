@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.auth
 
-import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Unauthorized}
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -17,7 +16,7 @@ class AuthServiceSpec extends AnyWordSpec {
     "generate token" in {
       (for {
         response <- authService.generateToken(RequestToken(a.id, "pass"))
-        decoded <- jwtInstance.decode[IO](response.token)
+        decoded <- jwtInstance.decode(response.token)
       } yield {
         assert(decoded.isRight)
       }).unsafeRunSync()

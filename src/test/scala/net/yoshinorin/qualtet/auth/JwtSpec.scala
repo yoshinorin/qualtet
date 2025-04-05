@@ -31,7 +31,7 @@ class JwtSpec extends AnyWordSpec {
     "encode and decode" in {
       (for {
         id <- IO(ULID.newULIDString.toLower)
-        jwtString <- jwtInstance.encode[IO](
+        jwtString <- jwtInstance.encode(
           Author(
             id = AuthorId(id),
             name = AuthorName("Jhon"),
@@ -39,7 +39,7 @@ class JwtSpec extends AnyWordSpec {
             password = validBCryptPassword
           )
         )
-        decoded <- jwtInstance.decode[IO](jwtString)
+        decoded <- jwtInstance.decode(jwtString)
       } yield {
         assert(decoded.isRight)
         decoded.map { d =>
@@ -53,7 +53,7 @@ class JwtSpec extends AnyWordSpec {
     val ioInstance = implicitly[cats.Monad[IO]]
 
     "throw exception caused by not signed JSON" in {
-      val maybeJwtClaims = jwtInstance.decode[IO](
+      val maybeJwtClaims = jwtInstance.decode(
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
       )
       assert(maybeJwtClaims.unsafeRunSync().left.getOrElse("").isInstanceOf[JwtValidationException])

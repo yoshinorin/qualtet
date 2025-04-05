@@ -6,19 +6,21 @@ import net.yoshinorin.qualtet.config.JwtConfig
 import net.yoshinorin.qualtet.domains.authors.Author
 import net.yoshinorin.qualtet.domains.errors.Unauthorized
 import net.yoshinorin.qualtet.syntax.*
-import org.slf4j.LoggerFactory
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
 import pdi.jwt.JwtOptions
 import wvlet.airframe.ulid.ULID
+import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 import java.time.Instant
 import scala.util.Try
 
-class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signature) {
+class Jwt[F[_]: Monad](config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signature)(using
+  loggerFactory: Log4CatsLoggerFactory[F]
+) {
 
   import JwtClaim.codecJwtClaim
 
-  private val logger = LoggerFactory.getLogger(this.getClass)
+  given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 
   /**
    * create JWT with authorId. authorId uses claim names in JWT.
@@ -26,7 +28,7 @@ class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair
    * @param author Author instance
    * @return String (JWT)
    */
-  def encode[F[_]: Monad](author: Author): F[String] = {
+  def encode(author: Author): F[String] = {
     for {
       claim <- Monad[F].pure(
         pdi.jwt
@@ -60,15 +62,15 @@ class Jwt(config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair
    * @param jwtString String of JWT
    * @return JwtClaim
    */
-  def decode[F[_]: Monad](jwtString: String): F[Either[Throwable, JwtClaim]] = {
+  def decode(jwtString: String): F[Either[Throwable, JwtClaim]] = {
     (for {
       _ <- verify(jwtString)
       maybeJwtClaim <- pdi.jwt.Jwt.decodeRaw(jwtString, keyPair.publicKey, JwtOptions(signature = true)).toEither
       jwtClaim <- Try(maybeJwtClaim.decode).toEither
     } yield jwtClaim) match {
       case Left(t) =>
-        logger.error(t.getMessage)
-        Monad[F].pure(Left(t))
+        logger.error(t.getMessage) *>
+          Monad[F].pure(Left(t))
       case Right(jc) => {
         (for {
           _ <- jc.toEitherF(x => x.aud === config.aud)(Unauthorized())

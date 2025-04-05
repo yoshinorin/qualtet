@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
 import org.slf4j.LoggerFactory
 
-class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt) {
+class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt[IO]) {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
   private val bcryptPasswordEncoder = new BCryptPasswordEncoder()
@@ -29,14 +29,14 @@ class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt) {
         .findByIdWithPassword(tokenRequest.authorId)
         .throwIfNone(AuthorNotFound(detail = s"${tokenRequest.authorId} is not found."))
       _ <- verifyPassword(a.password)
-      jwt <- jwt.encode[IO](a)
+      jwt <- jwt.encode(a)
       responseToken <- IO(ResponseToken(jwt))
     } yield responseToken
 
   }
 
   def findAuthorFromJwtString(jwtString: String): IO[Option[AuthorResponseModel]] = {
-    jwt.decode[IO](jwtString).flatMap {
+    jwt.decode(jwtString).flatMap {
       case Right(jwtClaim: JwtClaim) =>
         authorService.findById(AuthorId(jwtClaim.sub))
       case Left(t: Throwable) =>
