@@ -386,7 +386,7 @@ class ContentRouteSpec extends AnyWordSpec {
             val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
-            assert(maybeError.detail === "Wrong JSON format or missing required field. Please see API document.")
+            assert(maybeError.detail === "Invalid JSON format or missing required field. Please see API document.")
             assert(maybeError.instance === s"/v1/contents/")
           }
         }
@@ -414,7 +414,7 @@ class ContentRouteSpec extends AnyWordSpec {
             val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Bad Request")
             assert(maybeError.status === 400)
-            assert(maybeError.detail === "Wrong JSON format or missing required field. Please see API document.")
+            assert(maybeError.detail === "Invalid JSON format or missing required field. Please see API document.")
             assert(maybeError.instance === s"/v1/contents/")
           }
         }

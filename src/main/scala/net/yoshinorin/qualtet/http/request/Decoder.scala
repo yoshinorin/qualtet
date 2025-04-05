@@ -23,9 +23,7 @@ trait Decoder[F[_]: Monad](using loggerFactory: Log4CatsLoggerFactory[F]) {
           Monad[F].pure {
             t match {
               case t: DomainError => Left(t)
-              case t: JsonReaderException =>
-                // TODO: consider error message
-                Left(UnexpectedJsonFormat(detail = "Wrong JSON format or missing required field. Please see API document."))
+              case t: JsonReaderException => Left(UnexpectedJsonFormat(detail = "Invalid JSON format or missing required field. Please see API document."))
               case _ => Left(UnexpectedException())
             }
           }
