@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 class ContentTypeService[F[_]: Monad](
   contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[F],
-  cache: CacheModule[String, ContentType]
+  cache: CacheModule[IO, String, ContentType]
 )(using executer: Executer[F, IO])
     extends Cacheable {
 
@@ -44,17 +44,20 @@ class ContentTypeService[F[_]: Monad](
       executer.transact(contentTypeRepositoryAdapter.findByName(name))
     }
 
-    val maybeContentType = cache.get(name)
-    maybeContentType match {
-      case Some(_: ContentType) => IO(maybeContentType)
-      case _ =>
-        for {
-          contentType <- fromDB(name)
-        } yield {
-          cache.put(name, contentType)
-          contentType
-        }
-    }
+    for {
+      maybeContentType <- cache.get(name)
+      contentType <- maybeContentType match {
+        case Some(c: ContentType) => IO.pure(Some(c))
+        case _ =>
+          for {
+            maybeDbContentType <- fromDB(name)
+            _ <- maybeDbContentType match {
+              case Some(dc: ContentType) => cache.put(name, dc)
+              case _ => IO.pure(None)
+            }
+          } yield maybeDbContentType
+      }
+    } yield contentType
   }
 
   /**
@@ -67,7 +70,7 @@ class ContentTypeService[F[_]: Monad](
   }
 
   def invalidate(): IO[Unit] = {
-    IO(cache.invalidate())
+    cache.invalidate()
   }
 
 }

@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.Cacheable
 
 class SitemapService[F[_]: Monad](
   sitemapRepositoryAdapter: SitemapRepositoryAdapter[F],
-  cache: CacheModule[String, Seq[Url]]
+  cache: CacheModule[IO, String, Seq[Url]]
 )(using executer: Executer[F, IO])
     extends Cacheable {
 
@@ -20,20 +20,21 @@ class SitemapService[F[_]: Monad](
       executer.transact(sitemapRepositoryAdapter.get)
     }
 
-    cache.get(cacheKey) match {
-      case Some(x: Seq[Url]) => IO(x)
-      case _ =>
-        for {
-          urls <- fromDB()
-        } yield {
-          cache.put(cacheKey, urls)
-          urls
-        }
-    }
+    for {
+      maybeSitemaps <- cache.get(cacheKey)
+      sitemaps <- maybeSitemaps match {
+        case Some(urls: Seq[Url]) => IO.pure(urls)
+        case _ =>
+          for {
+            dbSitemaps <- fromDB()
+            _ <- cache.put(cacheKey, dbSitemaps)
+          } yield dbSitemaps
+      }
+    } yield sitemaps
   }
 
   def invalidate(): IO[Unit] = {
-    IO(cache.invalidate())
+    cache.invalidate()
   }
 
 }

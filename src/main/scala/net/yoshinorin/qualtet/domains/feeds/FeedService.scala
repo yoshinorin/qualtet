@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.Cacheable
 
 class FeedService[F[_]: Monad](
   feedsPagination: PaginationOps[FeedsPagination],
-  cache: CacheModule[String, ArticleWithCountResponseModel],
+  cache: CacheModule[IO, String, ArticleWithCountResponseModel],
   articleService: ArticleService[F]
 ) extends Cacheable {
 
@@ -35,20 +35,21 @@ class FeedService[F[_]: Monad](
         })
     }
 
-    cache.get(cacheKey) match {
-      case Some(x: ArticleWithCountResponseModel) => IO(toFeed(x))
-      case _ =>
-        for {
-          articles <- fromDb()
-        } yield {
-          cache.put(cacheKey, articles)
-          toFeed(articles)
-        }
-    }
+    for {
+      maybeArticles <- cache.get(cacheKey)
+      articles <- maybeArticles match {
+        case Some(a: ArticleWithCountResponseModel) => IO.pure(a)
+        case _ =>
+          for {
+            dbArticles <- fromDb()
+            _ <- cache.put(cacheKey, dbArticles)
+          } yield dbArticles
+      }
+    } yield toFeed(articles)
   }
 
   def invalidate(): IO[Unit] = {
-    IO(cache.invalidate())
+    cache.invalidate()
   }
 
 }

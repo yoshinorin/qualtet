@@ -90,24 +90,24 @@ object Fixture {
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
-  val contentTypeCache = new CacheModule[String, ContentType](contentTypeCaffeinCache)
+  val contentTypeCache = new CacheModule[IO, String, ContentType](contentTypeCaffeinCache)
   val contentTypeService = new ContentTypeService(modules.contentTypeRepositoryAdapter, contentTypeCache)
 
   val sitemapRepository: SitemapsRepository[ConnectionIO] = summon[SitemapsRepository[ConnectionIO]]
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
-  val sitemapCache = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
+  val sitemapCache = new CacheModule[IO, String, Seq[Url]](sitemapCaffeinCache)
   val sitemapRepositoryAdapter: SitemapRepositoryAdapter[ConnectionIO] = new SitemapRepositoryAdapter[ConnectionIO](sitemapRepository)
   val sitemapService = new SitemapService(sitemapRepositoryAdapter, sitemapCache)
 
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
-  val feedCache: CacheModule[String, ArticleWithCountResponseModel] = new CacheModule[String, ArticleWithCountResponseModel](feedCaffeinCache)
+  val feedCache: CacheModule[IO, String, ArticleWithCountResponseModel] = new CacheModule[IO, String, ArticleWithCountResponseModel](feedCaffeinCache)
   val feedService = new FeedService(modules.feedsPagination, feedCache, modules.articleService)
 
   val tagsCaffeinCache: CaffeineCache[String, Seq[TagResponseModel]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[TagResponseModel]]
-  val tagsCache: CacheModule[String, Seq[TagResponseModel]] = new CacheModule[String, Seq[TagResponseModel]](tagsCaffeinCache)
+  val tagsCache: CacheModule[IO, String, Seq[TagResponseModel]] = new CacheModule[IO, String, Seq[TagResponseModel]](tagsCaffeinCache)
   val tagService = new TagService(tagRepositoryAdapter, tagsCache, contentTaggingRepositoryAdapter)
 
   val authProvider = new AuthProvider(modules.authService)

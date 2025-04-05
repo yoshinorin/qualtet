@@ -87,7 +87,7 @@ class Modules(tx: Transactor[IO]) {
   val contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[ConnectionIO] = new ContentTypeRepositoryAdapter(contentTypeRepository)
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.contentType, TimeUnit.SECONDS).build[String, ContentType]
-  val contentTypeCache: CacheModule[String, ContentType] = new CacheModule[String, ContentType](contentTypeCaffeinCache)
+  val contentTypeCache: CacheModule[IO, String, ContentType] = new CacheModule[IO, String, ContentType](contentTypeCaffeinCache)
   val contentTypeService = new ContentTypeService(contentTypeRepositoryAdapter, contentTypeCache)
 
   val robotsRepository: RobotsRepository[ConnectionIO] = summon[RobotsRepository[ConnectionIO]]
@@ -103,7 +103,7 @@ class Modules(tx: Transactor[IO]) {
   val tagRepository: TagRepository[ConnectionIO] = summon[TagRepository[ConnectionIO]]
   val tagsCaffeinCache: CaffeineCache[String, Seq[TagResponseModel]] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.tags, TimeUnit.SECONDS).build[String, Seq[TagResponseModel]]
-  val tagsCache: CacheModule[String, Seq[TagResponseModel]] = new CacheModule[String, Seq[TagResponseModel]](tagsCaffeinCache)
+  val tagsCache: CacheModule[IO, String, Seq[TagResponseModel]] = new CacheModule[IO, String, Seq[TagResponseModel]](tagsCaffeinCache)
   val tagRepositoryAdapter: TagRepositoryAdapter[ConnectionIO] = new TagRepositoryAdapter[ConnectionIO](tagRepository)
   val tagService = new TagService(tagRepositoryAdapter, tagsCache, contentTaggingRepositoryAdapter)
 
@@ -149,14 +149,14 @@ class Modules(tx: Transactor[IO]) {
   val sitemapRepository: SitemapsRepository[ConnectionIO] = summon[SitemapsRepository[ConnectionIO]]
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.sitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
-  val sitemapCache: CacheModule[String, Seq[Url]] = new CacheModule[String, Seq[Url]](sitemapCaffeinCache)
+  val sitemapCache: CacheModule[IO, String, Seq[Url]] = new CacheModule[IO, String, Seq[Url]](sitemapCaffeinCache)
   val sitemapRepositoryAdapter: SitemapRepositoryAdapter[ConnectionIO] = new SitemapRepositoryAdapter[ConnectionIO](sitemapRepository)
   val sitemapService = new SitemapService(sitemapRepositoryAdapter, sitemapCache)
 
   val feedsPagination = summon[PaginationOps[FeedsPagination]]
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.feed, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
-  val feedCache: CacheModule[String, ArticleWithCountResponseModel] = new CacheModule[String, ArticleWithCountResponseModel](feedCaffeinCache)
+  val feedCache: CacheModule[IO, String, ArticleWithCountResponseModel] = new CacheModule[IO, String, ArticleWithCountResponseModel](feedCaffeinCache)
   val feedService = new FeedService(feedsPagination, feedCache, articleService)
 
   val cacheService = new CacheService(

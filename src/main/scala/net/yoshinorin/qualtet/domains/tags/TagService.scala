@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 class TagService[F[_]: Monad](
   tagRepositoryAdapter: TagRepositoryAdapter[F],
-  cache: CacheModule[String, Seq[TagResponseModel]],
+  cache: CacheModule[IO, String, Seq[TagResponseModel]],
   contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[F]
 )(using executer: Executer[F, IO])
     extends Cacheable {
@@ -30,16 +30,17 @@ class TagService[F[_]: Monad](
       executer.transact(tagRepositoryAdapter.getAll)
     }
 
-    cache.get(cacheKey) match {
-      case Some(tags: Seq[TagResponseModel]) => IO(tags)
-      case _ =>
-        for {
-          tags <- fromDB()
-        } yield {
-          cache.put(cacheKey, tags)
-          tags
-        }
-    }
+    for {
+      maybeTags <- cache.get(cacheKey)
+      tags <- maybeTags match {
+        case Some(t: Seq[TagResponseModel]) => IO.pure(t)
+        case _ =>
+          for {
+            dbTags <- fromDB()
+            _ <- cache.put(cacheKey, dbTags)
+          } yield dbTags
+      }
+    } yield tags
   }
 
   /**
@@ -106,6 +107,6 @@ class TagService[F[_]: Monad](
   }
 
   def invalidate(): IO[Unit] = {
-    IO(cache.invalidate())
+    cache.invalidate()
   }
 }
