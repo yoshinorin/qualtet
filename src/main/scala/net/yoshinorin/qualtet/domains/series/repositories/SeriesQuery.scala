@@ -19,6 +19,11 @@ object SeriesQuery {
     Update[SeriesWriteModel](q)
   }
 
+  def findById(id: SeriesId): Read[SeriesReadModel] ?=> Query0[SeriesReadModel] = {
+    sql"SELECT * FROM series WHERE id = ${id.value}"
+      .query[SeriesReadModel]
+  }
+
   def findByName(name: SeriesName): Read[SeriesReadModel] ?=> Query0[SeriesReadModel] = {
     sql"SELECT * FROM series WHERE name = ${name.value}"
       .query[SeriesReadModel]
@@ -56,6 +61,17 @@ object SeriesQuery {
         contents.id = contents_serializing.content_id
       WHERE
         contents.id = ${id.value}
+    """.update
+  }
+
+  def deleteBySeriesId(id: SeriesId): Update0 = {
+    sql"""
+      DELETE
+        series
+      FROM
+        series
+      WHERE
+        id = ${id.value}
     """.update
   }
 

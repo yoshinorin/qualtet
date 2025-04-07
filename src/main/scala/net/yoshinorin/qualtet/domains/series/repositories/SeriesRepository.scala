@@ -4,9 +4,11 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 
 trait SeriesRepository[F[_]] {
   def upsert(data: SeriesWriteModel): F[Int]
+  def findById(id: SeriesId): F[Option[SeriesReadModel]]
   def findByName(name: SeriesName): F[Option[SeriesReadModel]]
   def findByContentId(id: ContentId): F[Option[SeriesReadModel]]
   def deleteByContentId(id: ContentId): F[Unit]
+  def deleteBySeriesId(id: SeriesId): F[Unit]
   def getAll(): F[Seq[SeriesReadModel]]
 }
 
@@ -54,12 +56,20 @@ object SeriesRepository {
         SeriesQuery.findByName(name).option
       }
 
+      override def findById(id: SeriesId): ConnectionIO[Option[SeriesReadModel]] = {
+        SeriesQuery.findById(id).option
+      }
+
       override def findByContentId(id: ContentId): ConnectionIO[Option[SeriesReadModel]] = {
         SeriesQuery.findByContentId(id).option
       }
 
       override def deleteByContentId(id: ContentId): ConnectionIO[Unit] = {
         SeriesQuery.deleteByContentId(id).run.map(_ => ())
+      }
+
+      override def deleteBySeriesId(id: SeriesId): ConnectionIO[Unit] = {
+        SeriesQuery.deleteBySeriesId(id).run.map(_ => ())
       }
 
       override def getAll(): ConnectionIO[Seq[SeriesReadModel]] = {

@@ -8,7 +8,7 @@ import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesRequestModel, SeriesService}
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesName, SeriesRequestModel, SeriesService}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
@@ -42,7 +42,8 @@ class SeriesRoute[F[_]: Monad](
       case ContextRequest(_, r) =>
         r match {
           case request @ POST -> Root => this.post(ctxRequest.context)
-          case request @ _ => MethodNotAllowed(Allow(Set(GET, POST, DELETE)))
+          case request @ DELETE -> Root / nameOrId => this.delete(nameOrId)
+          case request @ _ => MethodNotAllowed(Allow(Set(GET, POST)))
         }
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
@@ -75,6 +76,14 @@ class SeriesRoute[F[_]: Monad](
     (for {
       seriesWithArticles <- seriesService.get(SeriesName(name))
       response <- Ok(seriesWithArticles.asJson, `Content-Type`(MediaType.application.json))
+    } yield response)
+  }
+
+  private[http] def delete(nameOrId: String): IO[Response[IO]] = {
+    (for {
+      _ <- seriesService.delete(SeriesId(nameOrId))
+      _ = logger.info(s"deleted series: ${nameOrId}")
+      response <- NoContent()
     } yield response)
   }
 

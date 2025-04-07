@@ -116,14 +116,14 @@ class Modules(tx: Transactor[IO]) {
   val tagsPagination = summon[PaginationOps[TagsPagination]]
   val articleService = new ArticleService(articleRepositoryAdapter, articlesPagination, tagsPagination, contentTypeService)
 
-  val seriesRepository: SeriesRepository[ConnectionIO] = summon[SeriesRepository[ConnectionIO]]
-  val seriesRepositoryAdapter: SeriesRepositoryAdapter[ConnectionIO] = new SeriesRepositoryAdapter[ConnectionIO](seriesRepository)
-  val seriesService = new SeriesService(seriesRepositoryAdapter, articleService)
-
   val contentSerializingRepository: ContentSerializingRepository[ConnectionIO] = summon[ContentSerializingRepository[ConnectionIO]]
   val contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[ConnectionIO] = new ContentSerializingRepositoryAdapter(
     contentSerializingRepository
   )
+
+  val seriesRepository: SeriesRepository[ConnectionIO] = summon[SeriesRepository[ConnectionIO]]
+  val seriesRepositoryAdapter: SeriesRepositoryAdapter[ConnectionIO] = new SeriesRepositoryAdapter[ConnectionIO](seriesRepository)
+  val seriesService = new SeriesService(seriesRepositoryAdapter, contentSerializingRepositoryAdapter, articleService)
 
   val contentRepository: ContentRepository[ConnectionIO] = summon[ContentRepository[ConnectionIO]]
   val contentRepositoryAdapter: ContentRepositoryAdapter[ConnectionIO] = new ContentRepositoryAdapter[ConnectionIO](contentRepository)

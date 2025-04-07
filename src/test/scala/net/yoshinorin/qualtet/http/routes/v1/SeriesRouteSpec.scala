@@ -9,7 +9,7 @@ import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesRequestModel}
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesName, SeriesRequestModel}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
@@ -30,6 +30,11 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
     SeriesRequestModel(
       title = "Series Route Spec2",
       name = SeriesName("seriesroute-series2"),
+      description = Some("Series Route Spec Description2")
+    ),
+    SeriesRequestModel(
+      title = "Series Route Spec3",
+      name = SeriesName("seriesroute-series3"),
       description = Some("Series Route Spec Description2")
     )
   )
@@ -54,6 +59,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     val s1: Series = seriesService.findByName(requestSeries.head.name).unsafeRunSync().get
     val s2: Series = seriesService.findByName(requestSeries(1).name).unsafeRunSync().get
+    val s3: Series = seriesService.findByName(requestSeries(2).name).unsafeRunSync().get
 
     "create a series" in {
       val json =
@@ -130,6 +136,88 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             // assert(maybeSeries.id === "TODO")  // TODO: assert id is ULID
             assert(maybeSeries.description.get === "Series Route Spec Description1")
             assert(maybeSeries.title === "Series Route Spec")
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "delete a series" in {
+      val series = seriesService.findByName(s3.name).unsafeRunSync().get
+
+      // 204 (first time)
+      client
+        .run(
+          Request(
+            method = Method.DELETE,
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${series.id.value}")),
+            headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
+          )
+        )
+        .use { response =>
+          IO {
+            assert(response.status === NoContent)
+            assert(response.contentType.isEmpty)
+          }
+        }
+        .unsafeRunSync()
+      assert(seriesService.findByName(s3.name).unsafeRunSync().isEmpty)
+
+      // 404 (second time)
+      client
+        .run(
+          Request(
+            method = Method.DELETE,
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${series.id.value}")),
+            headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
+          )
+        )
+        .use { response =>
+          IO {
+            assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
+            assert(maybeError.title === "Not Found")
+            assert(maybeError.status === 404)
+            assert(maybeError.detail.startsWith("series not found: "))
+            assert(maybeError.instance === s"/v1/series/${series.id.value}")
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "return 404 DELETE endopoint" in {
+      val id = SeriesId(generateUlid())
+      client
+        .run(
+          Request(
+            method = Method.DELETE,
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${id.value}")),
+            headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
+          )
+        )
+        .use { response =>
+          IO {
+            assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
+            assert(maybeError.title === "Not Found")
+            assert(maybeError.status === 404)
+            assert(maybeError.detail.startsWith("series not found: "))
+            assert(maybeError.instance === s"/v1/series/${id.value}")
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "reject DELETE endpoint caused by invalid token" in {
+      client
+        .run(Request(method = Method.DELETE, uri = uri"/v1/series/reject", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + "invalid token"))))
+        .use { response =>
+          IO {
+            assert(response.status === Unauthorized)
+            assert(response.contentType.isEmpty)
           }
         }
         .unsafeRunSync()

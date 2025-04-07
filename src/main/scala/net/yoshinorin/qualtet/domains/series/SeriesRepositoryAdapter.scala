@@ -16,6 +16,16 @@ class SeriesRepositoryAdapter[F[_]: Monad](
     }
   }
 
+  private[domains] def findById(id: SeriesId): ContT[F, Option[Series], Option[Series]] = {
+    ContT.apply[F, Option[Series], Option[Series]] { next =>
+      seriesRepository.findById(id).map { x =>
+        x.map { s =>
+          Series(s.id, s.name, s.title, s.description)
+        }
+      }
+    }
+  }
+
   private[domains] def findByName(name: SeriesName): ContT[F, Option[Series], Option[Series]] = {
     ContT.apply[F, Option[Series], Option[Series]] { next =>
       seriesRepository.findByName(name).map { x =>
@@ -39,6 +49,12 @@ class SeriesRepositoryAdapter[F[_]: Monad](
   private[domains] def deleteByContentId(id: ContentId): ContT[F, Unit, Unit] = {
     ContT.apply[F, Unit, Unit] { next =>
       seriesRepository.deleteByContentId(id)
+    }
+  }
+
+  private[domains] def deleteBySeriesId(id: SeriesId): ContT[F, Unit, Unit] = {
+    ContT.apply[F, Unit, Unit] { next =>
+      seriesRepository.deleteBySeriesId(id)
     }
   }
 
