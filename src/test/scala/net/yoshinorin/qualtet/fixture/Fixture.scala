@@ -81,7 +81,6 @@ object Fixture {
   val cacheService = modules.cacheService
   val contentService = modules.contentService
   val contentTaggingRepositoryAdapter = modules.contentTaggingRepositoryAdapter
-  val contentTaggingService = modules.contentTaggingService
   val externalResourceRepositoryAdapter = modules.externalResourceRepositoryAdapter
   val seriesService = modules.seriesService
   val searchService = modules.searchService

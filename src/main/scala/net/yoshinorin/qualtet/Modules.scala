@@ -16,7 +16,7 @@ import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleReposi
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorRepositoryAdapter, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.contentTypes.ContentType
-import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepository, ContentTaggingRepositoryAdapter, ContentTaggingService}
+import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepository, ContentTaggingRepositoryAdapter}
 import net.yoshinorin.qualtet.domains.contents.{ContentRepository, ContentRepositoryAdapter, ContentService}
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializingRepository, ContentSerializingRepositoryAdapter}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeRepository, ContentTypeRepositoryAdapter}
@@ -98,7 +98,6 @@ class Modules(tx: Transactor[IO]) {
 
   val contentTaggingRepository: ContentTaggingRepository[ConnectionIO] = summon[ContentTaggingRepository[ConnectionIO]]
   val contentTaggingRepositoryAdapter = new ContentTaggingRepositoryAdapter[ConnectionIO](contentTaggingRepository)
-  val contentTaggingService = new ContentTaggingService(contentTaggingRepositoryAdapter)
 
   val tagRepository: TagRepository[ConnectionIO] = summon[TagRepository[ConnectionIO]]
   val tagsCaffeinCache: CaffeineCache[String, Seq[TagResponseModel]] =

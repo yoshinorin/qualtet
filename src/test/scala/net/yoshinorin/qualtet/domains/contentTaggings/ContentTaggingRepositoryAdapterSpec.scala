@@ -37,7 +37,7 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
     requestContents.unsafeCreateConternt()
   }
 
-  "ContentTaggingService" should {
+  "ContentTaggingRepositoryAdapter" should {
 
     "delete bulky" in {
       val path: Path = Path("/test/ContentTaggingRepositoryAS-1")
