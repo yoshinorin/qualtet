@@ -80,6 +80,11 @@ final case class InvalidExternalResourceKind(
   errors: Option[Seq[ProblemDetailsError]] = None
 ) extends DomainError
 
+final case class InvalidPath(
+  detail: String,
+  errors: Option[Seq[ProblemDetailsError]] = None
+) extends DomainError
+
 final case class InvalidSearchConditions(
   detail: String,
   errors: Option[Seq[ProblemDetailsError]] = None

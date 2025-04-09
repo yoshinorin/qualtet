@@ -47,6 +47,9 @@ class ErrorsSpec extends AnyWordSpec {
       val invalidExternalResourceKind = InvalidExternalResourceKind(detail = "Invalid external resource kind")
       assert(HttpError.fromDomainError(invalidExternalResourceKind) === UnprocessableEntity(detail = "Invalid external resource kind"))
 
+      val invalidPath = InvalidPath(detail = "Invalid path")
+      assert(HttpError.fromDomainError(invalidPath) === UnprocessableEntity(detail = "Invalid path"))
+
       val invalidSearchConditions = InvalidSearchConditions(detail = "Invalid search conditions")
       assert(HttpError.fromDomainError(invalidSearchConditions) === UnprocessableEntity(detail = "Invalid search conditions"))
 
