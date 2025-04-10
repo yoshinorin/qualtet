@@ -6,15 +6,15 @@ trait tuple2 {
 
   private def getKeyValues(kv: (Option[String], Option[String])): Option[(List[String], List[String])] = {
     kv match {
-      case (None, _) => None
-      case (_, None) => None
-      case (Some(k), Some(v)) =>
+      case (Some(k), Some(v)) => {
         val (x, y) = (k.split(",").map(_.trim).toList, v.split(",").map(_.trim).toList)
         if (x.size =!= y.size) {
           None
         } else {
           Option(x, y)
         }
+      }
+      case _ => None
     }
   }
 
