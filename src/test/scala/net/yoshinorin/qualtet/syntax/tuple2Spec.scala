@@ -4,8 +4,8 @@ import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, E
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName}
 import org.scalatest.wordspec.AnyWordSpec
 
-// testOnly net.yoshinorin.qualtet.syntax.TupleSpec
-class TupleSpec extends AnyWordSpec {
+// testOnly net.yoshinorin.qualtet.syntax.Tuple2Spec
+class Tuple2Spec extends AnyWordSpec {
 
   "zipFromStringPair" should {
     "return list of [A]" in {

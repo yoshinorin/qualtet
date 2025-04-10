@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.syntax
 
 import cats.implicits.*
 
-trait tuple {
+trait tuple2 {
 
   private def getKeyValues(kv: (Option[String], Option[String])): Option[(List[String], List[String])] = {
     kv match {
