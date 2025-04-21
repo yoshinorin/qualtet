@@ -12,6 +12,7 @@ import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contents.{ContentDetailResponseModel, ContentId, ContentRequestModel, ContentResponseModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -435,7 +436,7 @@ class ContentRouteSpec extends AnyWordSpec {
             rawContent = "this is a raw ContentRouteSpec2",
             htmlContent = "<p>this is a html ContentRouteSpec2<p>",
             robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = List("ContentRoute"),
+            tags = List(Tag(name = TagName("ContentRoute"), path = TagPath("ContentRoute-path"))),
             externalResources = List(),
             publishedAt = 1644075206
           )

@@ -14,7 +14,7 @@ object Path extends ValueExtender[Path] {
     try {
       URI(value);
     } catch {
-      case _: URISyntaxException => throw InvalidPath(detail = "Invalid character continas.")
+      case _: URISyntaxException => throw InvalidPath(detail = s"Invalid character contains: ${value}")
       case _ => throw UnexpectedException()
     }
 

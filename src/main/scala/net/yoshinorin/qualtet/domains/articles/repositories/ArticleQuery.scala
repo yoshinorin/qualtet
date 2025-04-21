@@ -57,7 +57,7 @@ object ArticleQuery {
       SELECT
         count(1) OVER () AS count,
         contents.id,
-        path,
+        contents.path,
         title,
         html_content,
         published_at,
@@ -87,7 +87,7 @@ object ArticleQuery {
         SELECT
         count(1) OVER () AS count,
         contents.id,
-        path,
+        contents.path,
         contents.title,
         html_content,
         published_at,

@@ -7,6 +7,10 @@ properties:
   name:
     type: string
     example: "diary"
+  path:
+    description: "Added in `v2.18.0`"
+    type: string
+    example: "diary-tag-path"
   count:
     description: number of related articles
     type: number
@@ -14,4 +18,5 @@ properties:
 required:
   - id
   - name
+  - path
   - count

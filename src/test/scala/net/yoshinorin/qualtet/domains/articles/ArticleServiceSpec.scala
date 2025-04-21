@@ -4,7 +4,7 @@ import cats.effect.IO
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.domains.tags.TagName
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, PaginationOps, PaginationRequestModel}
 import org.scalatest.wordspec.AnyWordSpec
@@ -29,7 +29,7 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
             rawContent = s"this is a same tag raw content ${i}",
             htmlContent = s"this is a html content ${i}",
             robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = List("SameTag"),
+            tags = List(Tag(name = TagName("SameTag"), path = TagPath("sametag-path"))),
             externalResources = List()
           )
         )

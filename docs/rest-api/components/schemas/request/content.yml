@@ -29,11 +29,18 @@ properties:
     type: string
     example: "Post Content.... HTML strings"
   tags:
-    type: array
-    example: "['diary', 'tech']"
-  series:
-    type: string
-    example: "qualtet-development-history"
+    type: object
+    description: "Since `v2.18.0`, an object is required instead of an array."
+    properties:
+      name:
+        type: string
+        example: "diary"
+      path:
+        type: string
+        example: "diary-tag-path"
+    required:
+      - name
+      - path
   publishedAt:
     type: long
     description: Unix time

@@ -94,6 +94,7 @@ class ContentRepositoryAdapter[F[_]: Monad](
                 externalResourceKindValues = c.externalResourceKindValues,
                 tagIds = c.tagIds,
                 tagNames = c.tagNames,
+                tagPaths = c.tagPaths,
                 content = c.content,
                 authorName = c.authorName,
                 publishedAt = c.publishedAt,

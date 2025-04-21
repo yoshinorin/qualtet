@@ -1,49 +1,50 @@
 package net.yoshinorin.qualtet.syntax
 
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
-import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName}
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.syntax.Tuple2Spec
 class Tuple2Spec extends AnyWordSpec {
 
+  case class TestObject(s1: String, s2: String)
+
   "zipFromStringPair" should {
     "return list of [A]" in {
-      val maybeTags = (
+      val zippedResult = (
         Option("01h08d6m9p5say793h288n0rsc, 01h08d6pazabydf3eneghthp84, 01h08d6pkag4p7y6xebzyn9bkf"),
         Option("Z, X, Y")
-      ).zip((x, y) => new Tag(TagId(x), TagName(y)))
+      ).zip((x, y) => TestObject(x, y))
 
-      assert(maybeTags.get(0).id.value === "01h08d6m9p5say793h288n0rsc")
-      assert(maybeTags.get(0).name.value === "Z")
-      assert(maybeTags.get(1).id.value === "01h08d6pazabydf3eneghthp84")
-      assert(maybeTags.get(1).name.value === "X")
-      assert(maybeTags.get(2).id.value === "01h08d6pkag4p7y6xebzyn9bkf")
-      assert(maybeTags.get(2).name.value === "Y")
+      assert(zippedResult.get(0)._1 === "01h08d6m9p5say793h288n0rsc")
+      assert(zippedResult.get(0)._2 === "Z")
+      assert(zippedResult.get(1)._1 === "01h08d6pazabydf3eneghthp84")
+      assert(zippedResult.get(1)._2 === "X")
+      assert(zippedResult.get(2)._1 === "01h08d6pkag4p7y6xebzyn9bkf")
+      assert(zippedResult.get(2)._2 === "Y")
     }
 
     "return None if first arg is None" in {
-      val maybeTags = (
+      val zippedResult = (
         None,
         Option("Z, X, Y")
-      ).zip((x, y) => new Tag(TagId(x), TagName(y)))
-      assert(maybeTags.isEmpty)
+      ).zip((x, y) => TestObject(x, y))
+      assert(zippedResult.isEmpty)
     }
 
     "return None if second arg is None" in {
-      val maybeTags = (
+      val zippedResult = (
         Option("A, B, C"),
         None
-      ).zip((x, y) => new Tag(TagId(x), TagName(y)))
-      assert(maybeTags.isEmpty)
+      ).zip((x, y) => TestObject(x, y))
+      assert(zippedResult.isEmpty)
     }
 
     "return None if two args list of string length are diff" in {
-      val maybeTags = (
+      val zippedResult = (
         Option("A, B, C, D"),
         Option("Z, X, Y")
-      ).zip((x, y) => new Tag(TagId(x), TagName(y)))
-      assert(maybeTags.isEmpty)
+      ).zip((x, y) => TestObject(x, y))
+      assert(zippedResult.isEmpty)
     }
   }
 

@@ -5,7 +5,7 @@ import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName}
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagPath}
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, RawContentRequired}
@@ -163,11 +163,13 @@ class ContentSpec extends AnyWordSpec {
           |    "tags" : [
           |      {
           |        "id": "01frdbdsdty42fv147cerqpv73",
-          |        "name": "ABC"
+          |        "name": "content-spec1",
+          |        "path": "content-spec1-path"
           |      },
           |      {
           |        "id": "01frdbe1g83533h92rkhy8ctkw",
-          |        "name": "DEF"
+          |        "name": "content-spec2",
+          |        "path": "content-spec2-path"
           |      }
           |    ],
           |    "description" : "this is a description1",
@@ -210,8 +212,8 @@ class ContentSpec extends AnyWordSpec {
               )
             ),
             tags = List(
-              Tag(TagId("01frdbdsdty42fv147cerqpv73"), TagName("ABC")),
-              Tag(TagId("01frdbe1g83533h92rkhy8ctkw"), TagName("DEF"))
+              Tag(TagId("01frdbdsdty42fv147cerqpv73"), TagName("content-spec1"), TagPath("content-spec1-path")),
+              Tag(TagId("01frdbe1g83533h92rkhy8ctkw"), TagName("content-spec2"), TagPath("content-spec2-path"))
             ),
             description = "this is a description1",
             content = "this is a content1",

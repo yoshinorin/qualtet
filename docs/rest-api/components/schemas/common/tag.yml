@@ -7,6 +7,11 @@ properties:
   name:
     type: string
     example: "diary"
+  path:
+    description: "Added in `v2.18.0`"
+    type: string
+    example: "diary-tag-path"
 required:
   - id
   - name
+  - path

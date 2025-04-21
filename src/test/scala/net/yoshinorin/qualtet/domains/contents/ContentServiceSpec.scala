@@ -5,6 +5,7 @@ import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries}
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -51,7 +52,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     rawContent = "this is a raw content",
     htmlContent = "this is a html content",
     robotsAttributes = Attributes("noarchive, noimageindex"),
-    tags = List("Scala", "http4s"),
+    tags = List(Tag(name = TagName("Scala"), path = TagPath("scala-path")), Tag(name = TagName("http4s"), path = TagPath("http4s-path"))),
     externalResources = List(
       ExternalResources(
         ExternalResourceKind("js"),
@@ -98,7 +99,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List("Scala", "http4s"),
+        tags = List(Tag(name = TagName("Scala"), path = TagPath("scala-path")), Tag(name = TagName("http4s"), path = TagPath("http4s-path"))),
         series = Some(SeriesName("contentservice-series")),
         externalResources = List(
           ExternalResources(
@@ -110,7 +111,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       val updateRequestContent = requestContent.copy(
         title = "updated title",
-        tags = List("Scala", "Scala3"),
+        tags = List(Tag(name = TagName("Scala"), path = TagPath("scala-path")), Tag(name = TagName("Scala3"), path = TagPath("scala3-path"))),
         series = Some(SeriesName("contentservice-series2")),
         robotsAttributes = Attributes("noarchive"),
         externalResources = List(
@@ -236,7 +237,10 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List("WillBeDelete", "WillBeDelete2"),
+        tags = List(
+          Tag(name = TagName("WillBeDelete"), path = TagPath("willbedelete-path")),
+          Tag(name = TagName("WillBeDelete2"), path = TagPath("willbedelete2-path"))
+        ),
         series = Some(SeriesName("contentservice-willBeDelete")),
         externalResources = List(
           ExternalResources(
@@ -248,7 +252,10 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       val shouldNotDeleteContent: ContentRequestModel = shouldDeleteContent.copy(
         path = Path("/test/willnot/delete"),
-        tags = List("WillNotDelete", "WillNotDelete2"),
+        tags = List(
+          Tag(name = TagName("WillNotDelete"), path = TagPath("willnotdelete-path")),
+          Tag(name = TagName("WillNotDelete2"), path = TagPath("willnotdelete2-path"))
+        ),
         series = Some(SeriesName("contentservice-willNotDelete")),
         externalResources = List(
           ExternalResources(

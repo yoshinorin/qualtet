@@ -19,7 +19,7 @@ import net.yoshinorin.qualtet.domains.externalResources.{
 import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries, UnexpectedException}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingRepositoryAdapter}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsRepositoryAdapter}
-import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagRepositoryAdapter, TagService}
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagPath, TagRepositoryAdapter, TagService}
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesRepositoryAdapter, SeriesService}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
@@ -234,7 +234,7 @@ class ContentService[F[_]: Monad](
               externalResources = (x.externalResourceKindKeys, x.externalResourceKindValues)
                 .zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2).distinct))
                 .getOrElse(List()),
-              tags = (x.tagIds, x.tagNames).zip((x, y) => new Tag(TagId(x), TagName(y))).map(x => x.distinct).getOrElse(List()),
+              tags = (x.tagIds, x.tagNames, x.tagPaths).zip((x, y, z) => new Tag(TagId(x), TagName(y), TagPath(z))).map(x => x.distinct).getOrElse(List()),
               description = strippedContent.substring(0, descriptionLength),
               content = x.content,
               length = strippedContent.replaceAll(" ", "").length,

@@ -47,6 +47,7 @@ object ContentQuery {
          GROUP_CONCAT(external_resources.name) AS externalResourceKindValue,
          GROUP_CONCAT(tags.id) AS tagId,
          GROUP_CONCAT(tags.name) AS tagName,
+         GROUP_CONCAT(tags.path) AS tagPath,
          html_content AS content,
          authors.display_name as authorName,
          published_at,
@@ -64,7 +65,7 @@ object ContentQuery {
        LEFT JOIN tags ON
          contents_tagging.tag_id = tags.id
        WHERE
-         path = ${path.value}
+         contents.path = ${path.value}
        HAVING
    	     COUNT(*) > 0
     """

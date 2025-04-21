@@ -22,6 +22,7 @@ import net.yoshinorin.qualtet.domains.contents.*
 import net.yoshinorin.qualtet.domains.contentTypes.*
 import net.yoshinorin.qualtet.domains.robots.*
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapRepositoryAdapter, SitemapService, SitemapsRepository, Url}
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
   ArchiveRoute => ArchiveRouteV1,
@@ -225,7 +226,7 @@ object Fixture {
           rawContent = s"this is a ${specName} raw content ${i}",
           htmlContent = s"this is a ${specName} html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(s"${specName}Tag${i}"),
+          tags = List(Tag(name = TagName(s"${specName}Tag${i}"), path = TagPath(s"${specName}Tag${i}-path"))),
           series = series,
           externalResources = externalResources
         )

@@ -63,7 +63,17 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           IO {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
-            assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains(expectJson))
+
+            val tags = unsafeDecode[Seq[TagResponseModel]](response)
+            val tag0 = tags.find(_.id.value == t(0).id.value).get
+            val tag1 = tags.find(_.id.value == t(1).id.value).get
+
+            assert(tag0.count === 1)
+            assert(tag0.name.value === t(0).name.value)
+            assert(tag0.id.value === t(0).id.value)
+            assert(tag1.count === 1)
+            assert(tag1.name.value === t(1).name.value)
+            assert(tag1.id.value === t(1).id.value)
           }
         }
         .unsafeRunSync()

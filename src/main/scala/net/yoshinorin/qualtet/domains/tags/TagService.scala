@@ -63,29 +63,21 @@ class TagService[F[_]: Monad](
     executer.transact(tagRepositoryAdapter.findByName(tagName))
   }
 
-  /**
-   * find tag from db or create new instance (just create instance, no insert to DB)
-   *
-   * @param tagName
-   * @return Tag instance
-   */
-  private def findOrCreateNewInstance(tagName: TagName): IO[Tag] = {
-    this.findByName(tagName).flatMap {
-      case None => IO(Tag(TagId.apply(), tagName))
+  private def findOrCreateNewInstance(tag: Tag): IO[Tag] = {
+    this.findByName(tag.name).flatMap {
+      case None => IO(Tag(TagId.apply(), tag.name, tag.path))
       case Some(t) => IO(t)
     }
   }
 
-  /**
-   * get tag from db or new instance
-   *
-   * @param tagNames
-   * @return
-   */
-  def getTags(tagNames: Option[List[String]]): IO[Option[List[Tag]]] = {
-    tagNames match {
+  def getTags(tags: Option[List[Tag]]): IO[Option[List[Tag]]] = {
+    tags match {
       case None => IO(None)
-      case Some(t) => t.map { t => findOrCreateNewInstance(TagName(t)) }.sequence.option
+      case Some(t) =>
+        t.map { t =>
+          findOrCreateNewInstance(t)
+        }.sequence
+          .option
     }
   }
 

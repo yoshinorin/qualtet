@@ -1,0 +1,4 @@
+ALTER TABLE tags ADD column path VARCHAR(512) NULL AFTER name;
+UPDATE tags SET path = name;
+ALTER TABLE tags MODIFY COLUMN path VARCHAR(512) NOT NULL;
+ALTER TABLE tags ADD UNIQUE (path);

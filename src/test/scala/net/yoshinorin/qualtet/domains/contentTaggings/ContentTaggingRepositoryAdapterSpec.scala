@@ -4,6 +4,7 @@ import cats.effect.IO
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import org.scalatest.wordspec.AnyWordSpec
@@ -29,7 +30,11 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
             rawContent = s"this is a ContentTaggingRepositoryAS raw content ${i}",
             htmlContent = s"this is a ContentTaggingRepositoryAS html content ${i}",
             robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = List(s"ContentTaggingRepositoryAS${i}.1", s"ContentTaggingRepositoryAS${i}.2", s"ContentTaggingRepositoryAS${i}.3"),
+            tags = List(
+              Tag(name = TagName(s"ContentTaggingRepositoryAS${i}.1"), path = TagPath(s"ContentTaggingRepositoryAdapterService-path${i}.1")),
+              Tag(name = TagName(s"ContentTaggingRepositoryAS${i}.2"), path = TagPath(s"ContentTaggingRepositoryAdapterService-path${i}.2")),
+              Tag(name = TagName(s"ContentTaggingRepositoryAS${i}.3"), path = TagPath(s"ContentTaggingRepositoryAdapterService-path${i}.3"))
+            ),
             externalResources = List()
           )
         )

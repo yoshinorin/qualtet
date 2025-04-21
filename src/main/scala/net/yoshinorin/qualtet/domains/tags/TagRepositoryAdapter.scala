@@ -13,7 +13,7 @@ class TagRepositoryAdapter[F[_]: Monad](
     ContT.apply[F, Int, Int] { next =>
       data match {
         case Some(d) => {
-          val ws = d.map { t => TagWriteModel(id = t.id, name = t.name) }
+          val ws = d.map { t => TagWriteModel(id = t.id, name = t.name, path = t.path) }
           tagRepository.bulkUpsert(ws)
         }
         case None => Monad[F].pure(0)
@@ -24,7 +24,7 @@ class TagRepositoryAdapter[F[_]: Monad](
   private[domains] def getAll: ContT[F, Seq[TagResponseModel], Seq[TagResponseModel]] = {
     ContT.apply[F, Seq[TagResponseModel], Seq[TagResponseModel]] { next =>
       tagRepository.getAll().map { x =>
-        x.map { case (cnt, tag) => TagResponseModel(count = cnt, id = tag.id, name = tag.name) }
+        x.map { case (cnt, tag) => TagResponseModel(count = cnt, id = tag.id, name = tag.name, path = tag.path) }
       }
     }
   }
@@ -33,7 +33,7 @@ class TagRepositoryAdapter[F[_]: Monad](
     ContT.apply[F, Option[Tag], Option[Tag]] { next =>
       tagRepository.findById(id).map { x =>
         x.map { t =>
-          Tag(t.id, t.name)
+          Tag(t.id, t.name, t.path)
         }
       }
     }
@@ -43,7 +43,7 @@ class TagRepositoryAdapter[F[_]: Monad](
     ContT.apply[F, Option[Tag], Option[Tag]] { next =>
       tagRepository.findByName(tagName).map { x =>
         x.map { t =>
-          Tag(t.id, t.name)
+          Tag(t.id, t.name, t.path)
         }
       }
     }
@@ -53,7 +53,7 @@ class TagRepositoryAdapter[F[_]: Monad](
     ContT.apply[F, Seq[Tag], Seq[Tag]] { next =>
       tagRepository.findByContentId(contenId).map { x =>
         x.map { t =>
-          Tag(t.id, t.name)
+          Tag(t.id, t.name, t.path)
         }
       }
     }

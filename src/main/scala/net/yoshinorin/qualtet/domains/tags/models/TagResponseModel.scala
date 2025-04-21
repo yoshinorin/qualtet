@@ -6,6 +6,7 @@ import com.github.plokhotnyuk.jsoniter_scala.core.*
 final case class TagResponseModel(
   id: TagId,
   name: TagName,
+  path: TagPath,
   count: Int
 )
 object TagResponseModel {

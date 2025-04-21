@@ -62,7 +62,14 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "getTags" in {
       (for {
-        maybeTags <- tagService.getTags(Option(List("tagServiceTag1", "tagServiceTag2")))
+        maybeTags <- tagService.getTags(
+          Option(
+            List(
+              Tag(name = TagName("tagServiceTag1"), path = TagPath("tag-service-tag-path1")),
+              Tag(name = TagName("tagServiceTag2"), path = TagPath("tag-service-tag-path2"))
+            )
+          )
+        )
         maybeNoTags <- tagService.getTags(None)
       } yield {
         assert(maybeTags.get(0).name.value === "tagServiceTag1")

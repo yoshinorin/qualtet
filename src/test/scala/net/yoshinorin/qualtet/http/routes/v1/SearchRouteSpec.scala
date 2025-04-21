@@ -10,6 +10,7 @@ import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.search.SearchWithCountResponseModel
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -33,7 +34,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             rawContent = s"this is a searchRoute raw content ${i}",
             htmlContent = s"this is a searchRoute html content ${i}",
             robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = List(s"searchRoute${i}"),
+            tags = List(Tag(name = TagName(s"searchRoute${i}"), path = TagPath(s"searchRoute${i}-path"))),
             externalResources = List()
           )
         ) :+ ContentRequestModel(
@@ -43,7 +44,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         rawContent = s"this is a searchService raw contentLast",
         htmlContent = s"this is a searchService html contentLast",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(s"searchServiceLast"),
+        tags = List(Tag(name = TagName(s"searchServiceLast"), path = TagPath(s"searchServiceLast-path"))),
         externalResources = List()
       )
     }

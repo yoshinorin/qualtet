@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.search
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.domains.errors.{InvalidSearchConditions, ProblemDetailsError}
 import org.scalatest.wordspec.AnyWordSpec
@@ -26,7 +27,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
             rawContent = s"this is a searchService raw content ${i}",
             htmlContent = s"this is a searchService html content ${i}",
             robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = List(s"searchService${i}"),
+            tags = List(Tag(name = TagName(s"searchService${i}"), path = TagPath(s"searchService${i}-path"))),
             externalResources = List()
           )
         ) :+ ContentRequestModel(
@@ -36,7 +37,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         rawContent = s"this is a searchService raw contentLast",
         htmlContent = s"this is a searchService html contentLast",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(s"searchServiceLast"),
+        tags = List(Tag(name = TagName(s"searchServiceLast"), path = TagPath(s"searchServiceLast-path"))),
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
@@ -45,7 +46,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         rawContent = s"this is a searchService raw contentIncludesUrl1 https://example.com aaabbbccc",
         htmlContent = s"this is a searchService html contentIncludesUrl1 https://example.com aaabbbccc",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(s"IncludesUrl1"),
+        tags = List(Tag(name = TagName(s"IncludesUrl1"), path = TagPath(s"IncludesUrl1-path"))),
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
@@ -54,7 +55,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         rawContent = s"this is a searchService raw contentIncludesUrl2 http://example.com aaabbbccc",
         htmlContent = s"this is a searchService html contentIncludesUrl2 http://example.com aaabbbccc",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(s"IncludesUrl2"),
+        tags = List(Tag(name = TagName(s"IncludesUrl2"), path = TagPath(s"IncludesUrl2-path"))),
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
@@ -63,7 +64,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         rawContent = s"this is a searchService raw contentIncludesWrongUrl1 htt://example.com aaabbbccc",
         htmlContent = s"this is a searchService html contentIncludesWrongUrl1 htt://example.com aaabbbccc",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(s"IncludesWrongUrl1"),
+        tags = List(Tag(name = TagName(s"IncludesWrongUrl1"), path = TagPath(s"IncludesWrongUrl1-path"))),
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
@@ -72,7 +73,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         rawContent = s"this is a searchService raw contentIncludesHttp String http://example.com aaabbbccc http",
         htmlContent = s"this is a searchService html contentIncludesHttp String http://example.com aaabbbccc http",
         robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(s"IncludesHttpString"),
+        tags = List(Tag(name = TagName(s"IncludesHttpString"), path = TagPath(s"IncludesHttpString-path"))),
         externalResources = List()
       )
     }

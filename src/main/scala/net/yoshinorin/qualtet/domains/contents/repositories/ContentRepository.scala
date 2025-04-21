@@ -56,7 +56,7 @@ object ContentRepository {
         }
 
       given contentWithMetaRead: Read[ContentWithMetaReadModel] =
-        Read[(String, String, String, Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
+        Read[(String, String, String, Option[String], Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
           case (
                 id,
                 title,
@@ -65,6 +65,7 @@ object ContentRepository {
                 externalResourceKindValues,
                 tagIds,
                 tagNames,
+                tagPaths,
                 content,
                 authorName,
                 publishedAt,
@@ -78,6 +79,7 @@ object ContentRepository {
               externalResourceKindValues,
               tagIds,
               tagNames,
+              tagPaths,
               content,
               AuthorName(authorName),
               publishedAt,

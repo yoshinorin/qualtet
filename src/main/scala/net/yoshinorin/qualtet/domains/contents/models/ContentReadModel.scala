@@ -13,6 +13,7 @@ final case class ContentWithMetaReadModel(
   externalResourceKindValues: Option[String],
   tagIds: Option[String],
   tagNames: Option[String],
+  tagPaths: Option[String],
   content: String,
   authorName: AuthorName,
   publishedAt: Long,

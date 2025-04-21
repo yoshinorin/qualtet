@@ -8,6 +8,7 @@ import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.SeriesName
+import net.yoshinorin.qualtet.domains.tags.Tag
 import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, RawContentRequired}
 import net.yoshinorin.qualtet.syntax.*
 
@@ -15,7 +16,7 @@ final case class ContentRequestModel(
   contentType: String,
   robotsAttributes: Attributes, // TODO: Consider to use `Option[Attributes]`
   externalResources: List[ExternalResources] = List(),
-  tags: List[String] = List(),
+  tags: List[Tag] = List(),
   series: Option[SeriesName] = None,
   path: Path,
   title: String,
@@ -50,7 +51,7 @@ object ContentRequestModel {
     contentType: String,
     robotsAttributes: Attributes,
     externalResources: List[ExternalResources] = List(),
-    tags: List[String] = List(),
+    tags: List[Tag] = List(),
     series: Option[SeriesName] = None,
     path: Path,
     title: String,

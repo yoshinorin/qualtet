@@ -12,6 +12,7 @@ import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.robots.Attributes
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.{author, contentService, router, unsafeDecode}
 import org.scalatest.wordspec.AnyWordSpec
@@ -32,7 +33,7 @@ class ArticleRouteSpec extends AnyWordSpec {
           rawContent = s"this is a articleRoute raw content ${i}",
           htmlContent = s"this is a articleRoute html content ${i}",
           robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(s"articleRoute-${i}"),
+          tags = List(Tag(name = TagName(s"articleRoute-${i}"), path = TagPath(s"articleRoute-${i}-path"))),
           externalResources = List()
         )
       )

@@ -33,6 +33,7 @@ final case class ContentWithMeta(
   externalResourceKindValues: Option[String],
   tagIds: Option[String],
   tagNames: Option[String],
+  tagPaths: Option[String],
   content: String,
   authorName: AuthorName,
   publishedAt: Long = ZonedDateTime.now.toEpochSecond,

@@ -2,5 +2,6 @@ package net.yoshinorin.qualtet.domains.tags
 
 final case class TagWriteModel(
   id: TagId,
-  name: TagName
+  name: TagName,
+  path: TagPath
 )

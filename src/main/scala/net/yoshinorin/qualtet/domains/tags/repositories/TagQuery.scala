@@ -13,7 +13,8 @@ object TagQuery {
       SELECT
         COUNT(*) AS count,
         tags.id,
-        tags.name
+        tags.name,
+        tags.path
       FROM tags
       INNER JOIN contents_tagging
         ON contents_tagging.tag_id = tags.id
@@ -51,8 +52,8 @@ object TagQuery {
 
   def bulkUpsert: Write[TagWriteModel] ?=> Update[TagWriteModel] = {
     val q = s"""
-          INSERT INTO tags (id, name)
-            VALUES (?, ?)
+          INSERT INTO tags (id, name, path)
+            VALUES (?, ?, ?)
           ON DUPLICATE KEY UPDATE
             name = VALUES(name)
         """
