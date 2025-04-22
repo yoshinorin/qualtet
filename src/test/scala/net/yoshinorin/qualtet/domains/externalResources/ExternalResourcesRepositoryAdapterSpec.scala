@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
 import cats.effect.IO
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import org.scalatest.wordspec.AnyWordSpec
@@ -39,7 +39,7 @@ class ExternalResourcesRepositoryAdapterSpec extends AnyWordSpec with BeforeAndA
 
     "findByContentId" in {
       (for {
-        maybeContent <- contentService.findByPath(Path("/test/ExternalResourcesRA-0"))
+        maybeContent <- contentService.findByPath(ContentPath("/test/ExternalResourcesRA-0"))
         externalResources <- doobieExecuterContext.transact(externalResourceRepositoryAdapter.findByContentId(maybeContent.get.id))
       } yield {
         assert(externalResources.size === 6)
@@ -56,7 +56,7 @@ class ExternalResourcesRepositoryAdapterSpec extends AnyWordSpec with BeforeAndA
 
     "bulkDelete" in {
       (for {
-        maybeContent <- contentService.findByPath(Path("/test/ExternalResourcesRADel-0"))
+        maybeContent <- contentService.findByPath(ContentPath("/test/ExternalResourcesRADel-0"))
         shouldDeleteModels <- IO(
           List(
             ExternalResourceDeleteModel(maybeContent.get.id, ExternalResourceKind("js"), "d.js"),

@@ -1,8 +1,7 @@
 package net.yoshinorin.qualtet.domains.articles
 
 import cats.effect.IO
-import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
+import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -24,7 +23,7 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = Path(s"/test/same/tags/${i}"),
+            path = ContentPath(s"/test/same/tags/${i}"),
             title = s"this is a same tag title ${i}",
             rawContent = s"this is a same tag raw content ${i}",
             htmlContent = s"this is a html content ${i}",

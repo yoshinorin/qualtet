@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.robots.Attributes
@@ -24,7 +24,7 @@ final case class ContentReadModel(
   id: ContentId,
   authorId: AuthorId,
   contentTypeId: ContentTypeId,
-  path: Path,
+  path: ContentPath,
   title: String,
   rawContent: String,
   htmlContent: String,

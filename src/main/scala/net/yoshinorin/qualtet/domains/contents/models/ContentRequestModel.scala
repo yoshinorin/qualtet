@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import java.time.ZonedDateTime
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
@@ -18,7 +18,7 @@ final case class ContentRequestModel(
   externalResources: List[ExternalResources] = List(),
   tags: List[Tag] = List(),
   series: Option[SeriesName] = None,
-  path: Path,
+  path: ContentPath,
   title: String,
   rawContent: String,
   htmlContent: String,
@@ -53,7 +53,7 @@ object ContentRequestModel {
     externalResources: List[ExternalResources] = List(),
     tags: List[Tag] = List(),
     series: Option[SeriesName] = None,
-    path: Path,
+    path: ContentPath,
     title: String,
     rawContent: String,
     htmlContent: String,

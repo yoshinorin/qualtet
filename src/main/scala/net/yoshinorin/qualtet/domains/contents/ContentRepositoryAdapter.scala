@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import cats.data.ContT
 import cats.Monad
 import cats.implicits.*
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 
 class ContentRepositoryAdapter[F[_]: Monad](
   contentRepository: ContentRepository[F]
@@ -56,7 +56,7 @@ class ContentRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  private[domains] def findByPath(path: Path): ContT[F, Option[Content], Option[Content]] = {
+  private[domains] def findByPath(path: ContentPath): ContT[F, Option[Content], Option[Content]] = {
     ContT.apply[F, Option[Content], Option[Content]] { next =>
       contentRepository.findByPath(path).map { content =>
         content match {
@@ -80,7 +80,7 @@ class ContentRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  private[domains] def findByPathWithMeta(path: Path): ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]] = {
+  private[domains] def findByPathWithMeta(path: ContentPath): ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]] = {
     ContT.apply[F, Option[ContentWithMeta], Option[ContentWithMeta]] { next =>
       contentRepository.findByPathWithMeta(path).map { content =>
         content match {

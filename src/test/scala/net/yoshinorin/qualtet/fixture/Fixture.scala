@@ -15,7 +15,7 @@ import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.CorsProvider
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.articles.*
 import net.yoshinorin.qualtet.domains.authors.*
 import net.yoshinorin.qualtet.domains.contents.*
@@ -221,7 +221,7 @@ object Fixture {
       .map(i =>
         ContentRequestModel(
           contentType = "article",
-          path = Path(s"/test/${specName}-${i}"),
+          path = ContentPath(s"/test/${specName}-${i}"),
           title = s"this is a ${specName} title ${i}",
           rawContent = s"this is a ${specName} raw content ${i}",
           htmlContent = s"this is a ${specName} html content ${i}",

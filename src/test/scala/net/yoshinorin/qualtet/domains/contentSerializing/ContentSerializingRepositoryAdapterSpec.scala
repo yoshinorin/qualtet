@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
-import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
+import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.*
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
@@ -30,7 +29,7 @@ class ContentSerializingRepositoryAdapterSpec extends AnyWordSpec with BeforeAnd
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = Path(s"/test/ContentSerializingRepositoryAdapterSpec-${i}"),
+            path = ContentPath(s"/test/ContentSerializingRepositoryAdapterSpec-${i}"),
             title = s"this is a ContentSerializingRepositoryAdapterSpec title ${i}",
             rawContent = s"this is a ContentSerializingRepositoryAdapterSpec raw content ${i}",
             htmlContent = s"this is a ContentSerializingRepositoryAdapterSpec html content ${i}",

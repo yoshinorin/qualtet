@@ -9,8 +9,7 @@ import org.http4s.implicits.*
 import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.authors.AuthorName
-import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
+import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
@@ -28,7 +27,7 @@ class ArticleRouteSpec extends AnyWordSpec {
       .map(i =>
         ContentRequestModel(
           contentType = "article",
-          path = Path(s"/articles/route/article-${i}"),
+          path = ContentPath(s"/articles/route/article-${i}"),
           title = s"this is a articleRoute title ${i}",
           rawContent = s"this is a articleRoute raw content ${i}",
           htmlContent = s"this is a articleRoute html content ${i}",

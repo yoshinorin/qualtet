@@ -10,13 +10,13 @@ object ArchiveRepository {
 
   import doobie.Read
   import doobie.ConnectionIO
-  import net.yoshinorin.qualtet.domains.Path
+  import net.yoshinorin.qualtet.domains.contents.ContentPath
 
   given ArchiveRepository: ArchiveRepository[ConnectionIO] = {
     new ArchiveRepository[ConnectionIO] {
       given archivesRead: Read[ArchiveReadModel] =
         Read[(String, String, Long)].map { case (path, title, publishedAt) =>
-          ArchiveReadModel(Path(path), title, publishedAt)
+          ArchiveReadModel(ContentPath(path), title, publishedAt)
         }
 
       override def get(contentTypeId: ContentTypeId): ConnectionIO[Seq[ArchiveReadModel]] = ArchiveQuery.get(contentTypeId).to[Seq]

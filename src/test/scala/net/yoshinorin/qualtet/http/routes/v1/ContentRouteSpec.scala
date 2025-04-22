@@ -9,8 +9,7 @@ import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.{ContentDetailResponseModel, ContentId, ContentRequestModel, ContentResponseModel}
+import net.yoshinorin.qualtet.domains.contents.{ContentDetailResponseModel, ContentId, ContentPath, ContentRequestModel, ContentResponseModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
@@ -94,7 +93,7 @@ class ContentRouteSpec extends AnyWordSpec {
     }
 
     "delete a content" in {
-      val content = contentService.findByPath(Path("/test/ContentRouteSpec1")).unsafeRunSync().get
+      val content = contentService.findByPath(ContentPath("/test/ContentRouteSpec1")).unsafeRunSync().get
 
       // 204 (first time)
       client
@@ -431,7 +430,7 @@ class ContentRouteSpec extends AnyWordSpec {
           validAuthor.name,
           ContentRequestModel(
             contentType = "article",
-            path = Path("/test/content/route/spec/2"),
+            path = ContentPath("/test/content/route/spec/2"),
             title = "this is a ContentRouteSpec2 title",
             rawContent = "this is a raw ContentRouteSpec2",
             htmlContent = "<p>this is a html ContentRouteSpec2<p>",

@@ -7,7 +7,7 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import org.http4s.{ContextRequest, Request}
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.contents.{ContentDetailResponseModel, ContentId, ContentRequestModel, ContentResponseModel, ContentService}
 import net.yoshinorin.qualtet.http.AuthProvider
@@ -79,7 +79,7 @@ class ContentRoute[F[_]: Monad](
   def get(path: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
       // TODO: should be configurlize for append suffix or prefix
-      maybeContent <- contentService.findByPathWithMeta(Path(s"/${path}"))
+      maybeContent <- contentService.findByPathWithMeta(ContentPath(s"/${path}"))
     } yield maybeContent)
       .flatMap(_.asResponse)
   }

@@ -1,8 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
 import cats.effect.IO
-import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
+import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -25,7 +24,7 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = Path(s"/test/ContentTaggingRepositoryAS-${i}"),
+            path = ContentPath(s"/test/ContentTaggingRepositoryAS-${i}"),
             title = s"this is a ContentTaggingRepositoryAS title ${i}",
             rawContent = s"this is a ContentTaggingRepositoryAS raw content ${i}",
             htmlContent = s"this is a ContentTaggingRepositoryAS html content ${i}",
@@ -45,7 +44,7 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
   "ContentTaggingRepositoryAdapter" should {
 
     "delete bulky" in {
-      val path: Path = Path("/test/ContentTaggingRepositoryAS-1")
+      val path: ContentPath = ContentPath("/test/ContentTaggingRepositoryAS-1")
       (for {
         // find current (before delete) content
         maybeFound <- contentService.findByPathWithMeta(path)
@@ -65,9 +64,9 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
 
     "not be delete any tag" in {
       (for {
-        before <- contentService.findByPath(Path("/test/ContentTaggingRepositoryAS-2"))
+        before <- contentService.findByPath(ContentPath("/test/ContentTaggingRepositoryAS-2"))
         _ <- doobieExecuterContext.transact(contentTaggingRepositoryAdapter.bulkDelete(before.get.id, Seq()))
-        result <- contentService.findByPathWithMeta(Path("/test/ContentTaggingRepositoryAS-2"))
+        result <- contentService.findByPathWithMeta(ContentPath("/test/ContentTaggingRepositoryAS-2"))
       } yield {
         assert(result.get.tags.size === 3)
       }).unsafeRunSync()

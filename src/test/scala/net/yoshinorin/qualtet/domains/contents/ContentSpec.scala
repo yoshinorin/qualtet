@@ -1,14 +1,13 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.authors.AuthorId
-import net.yoshinorin.qualtet.domains.contents.ContentId
+import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentPath}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagPath}
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, RawContentRequired}
+import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, InvalidPath, RawContentRequired}
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
@@ -28,13 +27,28 @@ class ContentSpec extends AnyWordSpec {
     }
   }
 
-  "Path" should {
-    "can create instance" in {
-      assert(Path("/test/path").value === "/test/path")
+  "ContentPath" should {
+
+    "appllicable with prefix slush" in {
+      val pathString = "/this-is-a-pathあいうえお/q=あ%E3%80%80い&bar"
+      val path = ContentPath.apply(pathString)
+
+      assert(path.isInstanceOf[ContentPath])
+      assert(path.value === pathString)
     }
 
-    "add slash on the top" in {
-      assert(Path("test/path").value === "/test/path")
+    "appllicable without prefix slush" in {
+      val pathString = "this-is-a-path"
+      val path = ContentPath.apply(pathString)
+
+      assert(path.isInstanceOf[ContentPath])
+      assert(path.value === "/" + pathString)
+    }
+
+    "throw InvalidPath exception with invalid characters" in {
+      assertThrows[InvalidPath] {
+        ContentPath.apply("this-is-a-path\u0000")
+      }
     }
   }
 
@@ -44,7 +58,7 @@ class ContentSpec extends AnyWordSpec {
       val content = Content(
         authorId = AuthorId.apply(),
         contentTypeId = contentTypeId,
-        path = Path("/path"),
+        path = ContentPath("/path"),
         title = "",
         rawContent = "",
         htmlContent = ""
@@ -64,7 +78,7 @@ class ContentSpec extends AnyWordSpec {
       assertThrows[ContentTitleRequired] {
         ContentRequestModel(
           contentType = "article",
-          path = Path("/articles/contentSpec/1"),
+          path = ContentPath("/articles/contentSpec/1"),
           title = "",
           rawContent = "this is a articleRoute raw content",
           htmlContent = "this is a articleRoute html content",
@@ -79,7 +93,7 @@ class ContentSpec extends AnyWordSpec {
       assertThrows[RawContentRequired] {
         ContentRequestModel(
           contentType = "article",
-          path = Path("/articles/contentSpec/2"),
+          path = ContentPath("/articles/contentSpec/2"),
           title = "this is a articleRoute title",
           rawContent = "",
           htmlContent = "this is a articleRoute html content",
@@ -94,7 +108,7 @@ class ContentSpec extends AnyWordSpec {
       assertThrows[HtmlContentRequired] {
         ContentRequestModel(
           contentType = "article",
-          path = Path("/articles/contentSpec/3"),
+          path = ContentPath("/articles/contentSpec/3"),
           title = "this is a articleRoute title",
           rawContent = "this is a articleRoute raw content",
           htmlContent = "",

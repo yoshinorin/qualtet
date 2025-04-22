@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.articles
 
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.tags.TagName
@@ -24,7 +24,7 @@ object ArticleRepository {
     new ArticleRepository[ConnectionIO] {
       given articlesWithCountRead: Read[(Int, ArticleReadModel)] =
         Read[(Int, (String, String, String, String, Long, Long))].map { case (cnt, (id, path, title, content, publishedAt, updatedAt)) =>
-          (cnt, ArticleReadModel(ContentId(id), Path(path), title, content, publishedAt, updatedAt))
+          (cnt, ArticleReadModel(ContentId(id), ContentPath(path), title, content, publishedAt, updatedAt))
         }
 
       override def getWithCount(contentTypeId: ContentTypeId, pagination: Pagination): ConnectionIO[Seq[(Int, ArticleReadModel)]] = {

@@ -3,15 +3,14 @@ package net.yoshinorin.qualtet.domains.articles
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.domains.contents.ContentId
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentPath}
 
 // testOnly net.yoshinorin.qualtet.domains.articles.ArticleSpec
 class ArticleSpec extends AnyWordSpec {
 
   val responseArticle1: ArticleResponseModel = ArticleResponseModel(
     id = ContentId(generateUlid()),
-    path = Path("/test"),
+    path = ContentPath("/test"),
     title = "title",
     content = "this is a content",
     publishedAt = 0,
@@ -20,7 +19,7 @@ class ArticleSpec extends AnyWordSpec {
 
   val responseArticle2: ArticleResponseModel = ArticleResponseModel(
     id = ContentId(generateUlid()),
-    path = Path("/test/path2"),
+    path = ContentPath("/test/path2"),
     title = "title2",
     content = "this is a content2",
     publishedAt = 1,
@@ -29,7 +28,7 @@ class ArticleSpec extends AnyWordSpec {
 
   val responseArticleWithLongLengthContent: ArticleResponseModel = ArticleResponseModel(
     id = ContentId(generateUlid()),
-    path = Path("/test"),
+    path = ContentPath("/test"),
     title = "title",
     content = "a" * 101,
     publishedAt = 0,

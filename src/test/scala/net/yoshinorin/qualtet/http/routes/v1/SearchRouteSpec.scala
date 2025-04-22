@@ -6,8 +6,7 @@ import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
-import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
+import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.search.SearchWithCountResponseModel
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
@@ -29,7 +28,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = Path(s"/test/searchRoute-${i}"),
+            path = ContentPath(s"/test/searchRoute-${i}"),
             title = s"this is a searchRoute title ${i}",
             rawContent = s"this is a searchRoute raw content ${i}",
             htmlContent = s"this is a searchRoute html content ${i}",
@@ -39,7 +38,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           )
         ) :+ ContentRequestModel(
         contentType = "article",
-        path = Path(s"/test/searchServiceLast"),
+        path = ContentPath(s"/test/searchServiceLast"),
         title = s"this is a searchService titleLast",
         rawContent = s"this is a searchService raw contentLast",
         htmlContent = s"this is a searchService html contentLast",

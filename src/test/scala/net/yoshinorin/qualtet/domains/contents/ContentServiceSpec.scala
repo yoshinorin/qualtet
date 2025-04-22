@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import net.yoshinorin.qualtet.domains.Path
 import net.yoshinorin.qualtet.domains.authors.AuthorName
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries}
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
@@ -47,7 +47,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContent1: ContentRequestModel = ContentRequestModel(
     contentType = "article",
-    path = Path("/test/path"),
+    path = ContentPath("/test/path"),
     title = "this is a title",
     rawContent = "this is a raw content",
     htmlContent = "this is a html content",
@@ -94,7 +94,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       val requestContent: ContentRequestModel = ContentRequestModel(
         contentType = "article",
-        path = Path("/test/path/ContentServiceSpec/upsert"),
+        path = ContentPath("/test/path/ContentServiceSpec/upsert"),
         title = "this is a title",
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
@@ -180,7 +180,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       val requestContentNoMetas: ContentRequestModel = ContentRequestModel(
         contentType = "article",
-        path = Path("/test/no-metas"),
+        path = ContentPath("/test/no-metas"),
         title = "this is a title",
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
@@ -204,7 +204,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "findById" in {
       val createRequestContent = requestContent1.copy(
-        path = Path("ContentServiceSpec-FindById")
+        path = ContentPath("ContentServiceSpec-FindById")
       )
 
       (for {
@@ -232,7 +232,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       // create test data for delete
       val shouldDeleteContent: ContentRequestModel = ContentRequestModel(
         contentType = "article",
-        path = Path("/test/willbe/delete"),
+        path = ContentPath("/test/willbe/delete"),
         title = "this is a title",
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
@@ -251,7 +251,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
 
       val shouldNotDeleteContent: ContentRequestModel = shouldDeleteContent.copy(
-        path = Path("/test/willnot/delete"),
+        path = ContentPath("/test/willnot/delete"),
         tags = List(
           Tag(name = TagName("WillNotDelete"), path = TagPath("willnotdelete-path")),
           Tag(name = TagName("WillNotDelete2"), path = TagPath("willnotdelete2-path"))

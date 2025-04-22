@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.search
 
-import net.yoshinorin.qualtet.domains.Path
-import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
+import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -22,7 +21,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = Path(s"/test/searchService-${i}"),
+            path = ContentPath(s"/test/searchService-${i}"),
             title = s"this is a searchService title ${i}",
             rawContent = s"this is a searchService raw content ${i}",
             htmlContent = s"this is a searchService html content ${i}",
@@ -32,7 +31,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           )
         ) :+ ContentRequestModel(
         contentType = "article",
-        path = Path(s"/test/searchServiceLast"),
+        path = ContentPath(s"/test/searchServiceLast"),
         title = s"this is a searchService titleLast",
         rawContent = s"this is a searchService raw contentLast",
         htmlContent = s"this is a searchService html contentLast",
@@ -41,7 +40,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
-        path = Path(s"/test/searchServiceIncludesUrl1"),
+        path = ContentPath(s"/test/searchServiceIncludesUrl1"),
         title = s"this is a searchService IncludesUrl1",
         rawContent = s"this is a searchService raw contentIncludesUrl1 https://example.com aaabbbccc",
         htmlContent = s"this is a searchService html contentIncludesUrl1 https://example.com aaabbbccc",
@@ -50,7 +49,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
-        path = Path(s"/test/searchServiceIncludesUrl2"),
+        path = ContentPath(s"/test/searchServiceIncludesUrl2"),
         title = s"this is a searchService IncludesUrl2",
         rawContent = s"this is a searchService raw contentIncludesUrl2 http://example.com aaabbbccc",
         htmlContent = s"this is a searchService html contentIncludesUrl2 http://example.com aaabbbccc",
@@ -59,7 +58,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
-        path = Path(s"/test/searchServiceIncludesWrongUrl"),
+        path = ContentPath(s"/test/searchServiceIncludesWrongUrl"),
         title = s"this is a searchService IncludesWrongUrl1",
         rawContent = s"this is a searchService raw contentIncludesWrongUrl1 htt://example.com aaabbbccc",
         htmlContent = s"this is a searchService html contentIncludesWrongUrl1 htt://example.com aaabbbccc",
@@ -68,7 +67,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
-        path = Path(s"/test/searchServiceIncludesHttpString"),
+        path = ContentPath(s"/test/searchServiceIncludesHttpString"),
         title = s"this is a searchService IncludesHttpString",
         rawContent = s"this is a searchService raw contentIncludesHttp String http://example.com aaabbbccc http",
         htmlContent = s"this is a searchService html contentIncludesHttp String http://example.com aaabbbccc http",

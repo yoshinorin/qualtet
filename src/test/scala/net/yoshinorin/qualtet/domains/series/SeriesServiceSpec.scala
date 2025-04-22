@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesRequestModel}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec

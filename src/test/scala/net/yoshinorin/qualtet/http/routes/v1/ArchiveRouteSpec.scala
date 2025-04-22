@@ -8,7 +8,7 @@ import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.domains.archives.{ArchiveResponseModel, ArchiveService}
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
 import org.mockito.Mockito
@@ -32,12 +32,12 @@ class ArchiveRouteSpec extends AnyWordSpec {
     IO(
       Seq(
         ArchiveResponseModel(
-          path = Path("/test/path1"),
+          path = ContentPath("/test/path1"),
           title = "title1",
           publishedAt = 1567814290
         ),
         ArchiveResponseModel(
-          path = Path("/test/path2"),
+          path = ContentPath("/test/path2"),
           title = "title2",
           publishedAt = 1567814391
         )

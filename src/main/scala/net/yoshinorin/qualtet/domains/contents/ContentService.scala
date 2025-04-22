@@ -4,7 +4,7 @@ import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.authors.AuthorService
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingRepositoryAdapter}
@@ -193,7 +193,7 @@ class ContentService[F[_]: Monad](
    * @param path a content path
    * @return ResponseContent instance
    */
-  def findByPath(path: Path): IO[Option[Content]] = {
+  def findByPath(path: ContentPath): IO[Option[Content]] = {
     executer.transact(contentRepositoryAdapter.findByPath(path))
   }
 
@@ -203,7 +203,7 @@ class ContentService[F[_]: Monad](
    * @param path a content path
    * @return ResponseContent instance
    */
-  def findByPathWithMeta(path: Path): IO[Option[ContentDetailResponseModel]] = {
+  def findByPathWithMeta(path: ContentPath): IO[Option[ContentDetailResponseModel]] = {
     this.findBy(path)(contentRepositoryAdapter.findByPathWithMeta)
   }
 

@@ -1,9 +1,9 @@
 package net.yoshinorin.qualtet.domains.archives
 
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 
 final case class ArchiveReadModel(
-  path: Path,
+  path: ContentPath,
   title: String,
   publishedAt: Long
 )

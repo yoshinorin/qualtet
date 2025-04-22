@@ -4,7 +4,7 @@ import doobie.{Read, Write}
 import doobie.syntax.all.toSqlInterpolator
 import doobie.util.query.Query0
 import doobie.util.update.{Update, Update0}
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 
 object ContentQuery {
 
@@ -32,12 +32,12 @@ object ContentQuery {
       .query[ContentReadModel]
   }
 
-  def findByPath(path: Path): Read[ContentReadModel] ?=> Query0[ContentReadModel] = {
+  def findByPath(path: ContentPath): Read[ContentReadModel] ?=> Query0[ContentReadModel] = {
     sql"SELECT * FROM contents WHERE path = ${path.value}"
       .query[ContentReadModel]
   }
 
-  def findByPathWithMeta(path: Path): Read[ContentWithMetaReadModel] ?=> Query0[ContentWithMetaReadModel] = {
+  def findByPathWithMeta(path: ContentPath): Read[ContentWithMetaReadModel] ?=> Query0[ContentWithMetaReadModel] = {
     sql"""
        SELECT
          contents.id AS id,

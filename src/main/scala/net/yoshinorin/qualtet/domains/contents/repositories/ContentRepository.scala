@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import net.yoshinorin.qualtet.domains.Path
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
 trait ContentRepository[F[_]] {
   def upsert(data: ContentWriteModel): F[Int]
   def findById(id: ContentId): F[Option[ContentReadModel]]
-  def findByPath(path: Path): F[Option[ContentReadModel]]
-  def findByPathWithMeta(path: Path): F[Option[ContentWithMetaReadModel]]
+  def findByPath(path: ContentPath): F[Option[ContentReadModel]]
+  def findByPathWithMeta(path: ContentPath): F[Option[ContentWithMetaReadModel]]
   def delete(id: ContentId): F[Unit]
 }
 
@@ -28,7 +28,7 @@ object ContentRepository {
               ContentId(contentId),
               AuthorId(authorId),
               ContentTypeId(contentTypeId),
-              Path(path),
+              ContentPath(path),
               title,
               rawContent,
               htmlContent,
@@ -45,7 +45,7 @@ object ContentRepository {
                 ContentId(contentId),
                 AuthorId(authorId),
                 ContentTypeId(contentTypeId),
-                Path(path),
+                ContentPath(path),
                 title,
                 rawContent,
                 htmlContent,
@@ -109,10 +109,10 @@ object ContentRepository {
       override def findById(id: ContentId): ConnectionIO[Option[ContentReadModel]] = {
         ContentQuery.findById(id).option
       }
-      override def findByPath(path: Path): ConnectionIO[Option[ContentReadModel]] = {
+      override def findByPath(path: ContentPath): ConnectionIO[Option[ContentReadModel]] = {
         ContentQuery.findByPath(path).option
       }
-      override def findByPathWithMeta(path: Path): ConnectionIO[Option[ContentWithMetaReadModel]] = {
+      override def findByPathWithMeta(path: ContentPath): ConnectionIO[Option[ContentWithMetaReadModel]] = {
         // NOTE: use `.option` instead of `.query[Option[T]].unique`
         //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
         ContentQuery.findByPathWithMeta(path).option
