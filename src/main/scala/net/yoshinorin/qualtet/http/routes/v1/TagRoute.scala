@@ -33,9 +33,9 @@ class TagRoute[F[_]: Monad](
         this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
       case request @ OPTIONS -> Root =>
         NoContent()
-      case request @ GET -> Root / nameOrId =>
+      case request @ GET -> Root / name =>
         val p = request.uri.query.params.asPagination
-        this.get(nameOrId, p).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+        this.get(name, p).handleErrorWith(_.logWithStackTrace[IO].andResponse)
     }
   }
 
@@ -44,7 +44,7 @@ class TagRoute[F[_]: Monad](
     (ctxRequest match {
       case ContextRequest(_, r) =>
         r match {
-          case request @ DELETE -> Root / nameOrId => this.delete(nameOrId)
+          case request @ DELETE -> Root / id => this.delete(id)
           case request @ _ => MethodNotAllowed(Allow(Set(GET, DELETE)))
         }
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
@@ -67,17 +67,17 @@ class TagRoute[F[_]: Monad](
 
       But, it can not. So, I have to find the tagging contents with tagName.
    */
-  private[http] def get(nameOrId: String, p: PaginationRequestModel): IO[Response[IO]] = {
+  private[http] def get(name: String, p: PaginationRequestModel): IO[Response[IO]] = {
     (for {
-      articles <- articleService.getByTagNameWithCount(TagName(nameOrId), p)
+      articles <- articleService.getByTagNameWithCount(TagName(name), p)
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }
 
-  private[http] def delete(nameOrId: String): IO[Response[IO]] = {
+  private[http] def delete(id: String): IO[Response[IO]] = {
     (for {
-      _ <- tagService.delete(TagId(nameOrId))
-      _ = logger.info(s"deleted tag: ${nameOrId}")
+      _ <- tagService.delete(TagId(id))
+      _ = logger.info(s"deleted tag: ${id}")
       response <- NoContent()
     } yield response)
   }
