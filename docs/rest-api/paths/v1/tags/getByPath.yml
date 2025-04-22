@@ -1,5 +1,5 @@
 get:
-  summary: Get an articles by tagName
+  summary: Get an articles by tagPath
   tags:
     - tags
   parameters:

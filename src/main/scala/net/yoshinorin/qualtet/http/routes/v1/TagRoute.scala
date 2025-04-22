@@ -9,7 +9,7 @@ import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagService}
+import net.yoshinorin.qualtet.domains.tags.{TagId, TagPath, TagService}
 import net.yoshinorin.qualtet.domains.PaginationRequestModel
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.syntax.*
@@ -33,9 +33,9 @@ class TagRoute[F[_]: Monad](
         this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
       case request @ OPTIONS -> Root =>
         NoContent()
-      case request @ GET -> Root / name =>
+      case request @ GET -> Root / tagPath =>
         val p = request.uri.query.params.asPagination
-        this.get(name, p).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+        this.get(tagPath, p).handleErrorWith(_.logWithStackTrace[IO].andResponse)
     }
   }
 
@@ -57,19 +57,9 @@ class TagRoute[F[_]: Monad](
     } yield response
   }
 
-  /*
-    NOTE:
-      The Next.js can not pass custom argument with <Link> component.
-      So, I want to belows, but can not...
-
-      - Front-end visible URL: https://example.com/tags/{tagName}
-      - API call (when transition with <Link>): https://example.com/tags/{tagId}
-
-      But, it can not. So, I have to find the tagging contents with tagName.
-   */
-  private[http] def get(name: String, p: PaginationRequestModel): IO[Response[IO]] = {
+  private[http] def get(path: String, p: PaginationRequestModel): IO[Response[IO]] = {
     (for {
-      articles <- articleService.getByTagNameWithCount(TagName(name), p)
+      articles <- articleService.getByTagPathWithCount(TagPath(path), p)
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }

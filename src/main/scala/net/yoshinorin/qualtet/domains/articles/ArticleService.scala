@@ -11,6 +11,7 @@ import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Order, Page, Pagination, PaginationOps, PaginationRequestModel, TagsPagination}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.domains.tags.TagPath
 
 class ArticleService[F[_]: Monad](
   articleRepositoryAdapter: ArticleRepositoryAdapter[F],
@@ -46,6 +47,10 @@ class ArticleService[F[_]: Monad](
 
   def getByTagNameWithCount(tagName: TagName, p: PaginationRequestModel): IO[ArticleWithCountResponseModel] = {
     this.get(tagName, tagsPagination.make(p))(articleRepositoryAdapter.findByTagNameWithCount)
+  }
+
+  def getByTagPathWithCount(tagPath: TagPath, p: PaginationRequestModel): IO[ArticleWithCountResponseModel] = {
+    this.get(tagPath, tagsPagination.make(p))(articleRepositoryAdapter.findByTagPathWithCount)
   }
 
   def getBySeriesName(seriesName: SeriesName): IO[ArticleWithCountResponseModel] = {

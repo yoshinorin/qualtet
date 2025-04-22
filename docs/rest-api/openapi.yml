@@ -70,8 +70,8 @@ paths:
     $ref: './paths/v1/contents/deleteById.yml'
   /v1/tags:
     $ref: './paths/v1/tags/get.yml'
-  /v1/tags/{tagName}:
-    $ref: './paths/v1/tags/getByName.yml'
+  /v1/tags/{tagPath}:
+    $ref: './paths/v1/tags/getByPath.yml'
   /v1/tags/{tagId}:
     $ref: './paths/v1/tags/deleteById.yml'
   /v1/content-types/:
