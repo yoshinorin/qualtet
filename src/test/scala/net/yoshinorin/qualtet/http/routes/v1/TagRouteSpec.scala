@@ -114,7 +114,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .run(
           Request(
             method = Method.GET,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${t(0).name.value}")).withQueryParam("page", "1").withQueryParam("limit", "10")
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${t(0).path.value}")).withQueryParam("page", "1").withQueryParam("limit", "10")
           )
         )
         .use { response =>
@@ -132,7 +132,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .run(
           Request(
             method = Method.GET,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${t(1).name.value}")).withQueryParam("page", "1").withQueryParam("limit", "50")
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/tags/${t(1).path.value}")).withQueryParam("page", "1").withQueryParam("limit", "50")
           )
         )
         .use { response =>
