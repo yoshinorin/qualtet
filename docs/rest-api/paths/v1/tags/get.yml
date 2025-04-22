@@ -1,5 +1,5 @@
 get:
-  summary: Get a tags
+  summary: Get tags
   tags:
     - tags
   responses:
