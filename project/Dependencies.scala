@@ -2,17 +2,17 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.33.3"
-  val doobieVersion = "1.0.0-RC8"
+  val jsoniterVersion = "2.35.1"
+  val doobieVersion = "1.0.0-RC9"
   val jwtScalaVersion = "10.0.4"
-  val flywayVersion = "11.6.0"
+  val flywayVersion = "11.7.2"
   val http4sVersion = "1.0.0-M44"
   val log4catsVersion = "2.7.0"
 
   val dependencies = Seq(
     "com.typesafe" % "config" % "1.4.3",
     // NOTE: doobie 1.0.0-RC4 and http4s 1.0.0-M40 dependes on cats-effect 3.5.1
-    "org.typelevel" %% "cats-effect" % "3.6.0",
+    "org.typelevel" %% "cats-effect" % "3.6.1",
     "org.typelevel" %% "log4cats-core" % log4catsVersion,
     "org.typelevel" %% "log4cats-slf4j" % log4catsVersion,
     "org.http4s" %% "http4s-dsl" % http4sVersion,
@@ -26,7 +26,7 @@ object Dependencies {
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "2025.1.9",
+    "org.wvlet.airframe" %% "airframe-ulid" % "2025.1.10",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.2.0",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
