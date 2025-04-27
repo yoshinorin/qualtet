@@ -1,0 +1,1 @@
+ALTER TABLE series CHANGE COLUMN name path VARCHAR(512);

@@ -20,7 +20,7 @@ import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, In
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingRepositoryAdapter}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsRepositoryAdapter}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagPath, TagRepositoryAdapter, TagService}
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesRepositoryAdapter, SeriesService}
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesPath, SeriesRepositoryAdapter, SeriesService}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
@@ -63,9 +63,9 @@ class ContentService[F[_]: Monad](
       }
       maybeContentSerializing <- request.series match {
         case None => IO(None)
-        case Some(seriesName) =>
-          seriesService.findByName(seriesName).flatMap {
-            case None => IO.raiseError(InvalidSeries(detail = s"series not found: ${seriesName}"))
+        case Some(seriesPath) =>
+          seriesService.findByPath(seriesPath).flatMap {
+            case None => IO.raiseError(InvalidSeries(detail = s"series not found: ${seriesPath}"))
             case Some(s) => IO(Option(ContentSerializing(s.id, contentId)))
           }
       }

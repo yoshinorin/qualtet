@@ -25,13 +25,13 @@ class SeriesService[F[_]: Monad](
    */
   def create(data: SeriesRequestModel): IO[Series] = {
     this
-      .findByName(data.name)
+      .findByPath(data.path)
       .flatMap {
-        case Some(s: Series) => executer.transact(seriesRepositoryAdapter.upsert(Series(s.id, s.name, data.title, data.description)))
-        case None => executer.transact(seriesRepositoryAdapter.upsert(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.title, data.description)))
+        case Some(s: Series) => executer.transact(seriesRepositoryAdapter.upsert(Series(s.id, s.path, data.title, data.description)))
+        case None => executer.transact(seriesRepositoryAdapter.upsert(Series(SeriesId(ULID.newULIDString.toLower), data.path, data.title, data.description)))
       }
       .flatMap { s =>
-        this.findByName(data.name).throwIfNone(SeriesNotFound(detail = "series not found"))
+        this.findByPath(data.path).throwIfNone(SeriesNotFound(detail = "series not found"))
       }
   }
 
@@ -39,26 +39,20 @@ class SeriesService[F[_]: Monad](
     executer.transact(seriesRepositoryAdapter.findById(id))
   }
 
-  /**
-   * find a series by name
-   *
-   * @param name a series name
-   * @return Series Instance
-   */
-  def findByName(name: SeriesName): IO[Option[Series]] = {
-    executer.transact(seriesRepositoryAdapter.findByName(name))
+  def findByPath(path: SeriesPath): IO[Option[Series]] = {
+    executer.transact(seriesRepositoryAdapter.findByPath(path))
   }
 
   def findByContentId(id: ContentId): IO[Option[Series]] = {
     executer.transact(seriesRepositoryAdapter.findByContentId(id))
   }
 
-  def get(name: SeriesName): IO[SeriesResponseModel] = {
+  def get(path: SeriesPath): IO[SeriesResponseModel] = {
     for {
-      series <- executer.transact(seriesRepositoryAdapter.findByName(name)).throwIfNone(SeriesNotFound(detail = s"series not found: ${name.value}"))
-      seriesWithArticles <- articleService.getBySeriesName(series.name)
+      series <- executer.transact(seriesRepositoryAdapter.findByPath(path)).throwIfNone(SeriesNotFound(detail = s"series not found: ${path.value}"))
+      seriesWithArticles <- articleService.getBySeriesPath(series.path)
     } yield {
-      SeriesResponseModel(series.id, series.name, series.title, series.description, seriesWithArticles.articles)
+      SeriesResponseModel(series.id, series.path, series.title, series.description, seriesWithArticles.articles)
     }
   }
 

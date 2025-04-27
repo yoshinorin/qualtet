@@ -5,7 +5,7 @@ import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.{TagName, TagPath}
-import net.yoshinorin.qualtet.domains.series.SeriesName
+import net.yoshinorin.qualtet.domains.series.SeriesPath
 import net.yoshinorin.qualtet.domains.Pagination
 
 class ArticleRepositoryAdapter[F[_]: Monad](
@@ -54,13 +54,13 @@ class ArticleRepositoryAdapter[F[_]: Monad](
     }
   }
 
-  private[domains] def findBySeriesNameWithCount(
+  private[domains] def findBySeriesPathWithCount(
     contentTypeId: ContentTypeId,
-    seriesName: SeriesName,
+    seriesPath: SeriesPath,
     queryParams: Pagination // TODO: `Optional`
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
-      articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName).map { article =>
+      articleRepository.findBySeriesPathWithCount(contentTypeId, seriesPath).map { article =>
         article.map { case (count, article) =>
           (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
         }
