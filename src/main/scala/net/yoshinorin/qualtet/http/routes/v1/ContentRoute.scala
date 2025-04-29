@@ -29,12 +29,7 @@ class ContentRoute[F[_]: Monad](
       authProvider.authenticate(contentWithAuthed))
 
   private[http] def contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    // need slash on the prefix and suffix.
-    // example: /yyyy/mm/dd/content-name/
-    /* compile error
-    case GET -> Root /: path =>
-      contentRoute.get(path)
-     */
+    // NOTE: Cannot use `GET -> Root / <path>` here because it would no longer pattern match other composed HTTP methods such as `POST` or `DELETE`.
     case request @ GET -> _ =>
       implicit val r = request
       this
