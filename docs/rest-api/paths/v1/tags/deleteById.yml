@@ -1,5 +1,7 @@
 delete:
   summary: Delete a tag
+  description: |
+    Deletes a tag by its `id`. When a tag is deleted, all tag associations with contents are also deleted. `id` must be in `ULID` format.
   tags:
     - Tags
   security:

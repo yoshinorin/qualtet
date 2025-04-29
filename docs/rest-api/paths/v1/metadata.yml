@@ -1,5 +1,7 @@
 get:
   summary: Get system metadata
+  description: |
+    Retrieves application metadata details and build details. This endpoint requires 404 by default.
   tags:
     - System
   responses:

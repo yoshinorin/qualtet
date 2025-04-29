@@ -20,11 +20,17 @@ info:
     # Common Headers
 
     ## Request Header
+
+    Custom HTTP headers available for use with Qualtet requests.
+
     | name | required | format | Explain |
     | --- | --- | --- | --- |
     | X-Request-Id | false | UUID4 | Logging for server side. If the client does not set this header, Qualtet generates it randomly. If the client sets this when requesting the server, Qualtet will return its value in the response header. |
 
     ## Response Header
+
+    Custom HTTP headers available for use with Qualtet response.
+
     | name | format | Explain |
     | --- | --- | --- |
     | X-Request-Id | UUID4 | Always set by Qualtet. If the client sets this when requesting the server, Qualtet will return its value in the response header. |

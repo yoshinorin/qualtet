@@ -1,5 +1,7 @@
 get:
   summary: Get API server health
+  description: |
+    Checks if the API server is running correctly. This endpoint returns a simple 200 OK response with minimal payload to verify system availability.
   tags:
     - System
   responses:

@@ -1,5 +1,7 @@
 get:
   summary: Get all authors
+  description: |
+    Retrieves a list of all available authors. The response includes each author's details.
   tags:
     - Authors
   responses:

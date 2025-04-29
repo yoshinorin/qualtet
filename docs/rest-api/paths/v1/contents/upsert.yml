@@ -1,9 +1,16 @@
 post:
   summary: Create or Update a content
+  description: |
+    Creates or updates a content with all its metadata. This endpoint accepts a content request model and performs an upsert operation based on the `path`. If the `path` doesn't exist, a new content is created. If it exists, the content is updated.
+
+    The operation handles related data including:
+
+    - Tags (creates new tags and updates associations)
+    - Series relationships (creates or updates series connections)
+    - Robot attributes (sets search engine directives)
+    - External resources (manages JS/CSS references)
   tags:
     - Contents
-  description: |
-    Create or Update a content
   security:
     - bearerAuth: []
   requestBody:

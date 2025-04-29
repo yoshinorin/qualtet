@@ -1,5 +1,7 @@
 get:
   summary: Get an author
+  description: |
+    Retrieves a specific author by their name. The response includes detailed information about the author.
   tags:
     - Authors
   responses:

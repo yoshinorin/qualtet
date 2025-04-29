@@ -1,5 +1,7 @@
 get:
   summary: Get all series
+  description: |
+    Retrieves all available series. The response includes detailed information about each series including its details and a list of associated articles. The articles in each series are sorted by their published date in descending order.
   tags:
     - Series
   responses:
@@ -13,10 +15,10 @@ get:
               $ref: '../../../components/schemas/response/series.yml'
 post:
   summary: Create or Update a series
+  description: |
+    Creates or updates a series. An upsert operation based on the `path`. If a series with the given path already exists, it will be updated with the new title and description. If it doesn't exist, a new series will be created.
   tags:
     - Series
-  description: |
-    Create or Update a series
   security:
     - bearerAuth: []
   requestBody:

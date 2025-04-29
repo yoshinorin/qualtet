@@ -1,5 +1,7 @@
 get:
   summary: Get a feeds
+  description: |
+    Retrieves a feed containing the most recent articles. The response includes an array of feed items. Each feed item represents an article, sorted by published date in descending order.
   tags:
     - Feed
   responses:

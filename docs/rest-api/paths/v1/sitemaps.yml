@@ -2,7 +2,9 @@ get:
   summary:
     Get an articles url & updated date for sitemaps.xml
   description: |
-    NOTE: When `noindex` is included in the `robotsAttributes` of the content, that content will be excluded from the response results.
+    Retrieves URLs and last modification dates for all content in the system. The response includes location (URL path) and last modified date (in `YYYY-MM-DD` format) for each content item.
+
+    **NOTE:** When `noindex` is included in the `robotsAttributes` of the content, that content will be excluded from the response results.
   tags:
     - Sitemaps
   responses:

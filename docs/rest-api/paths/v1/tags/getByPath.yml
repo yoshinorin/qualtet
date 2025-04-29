@@ -1,6 +1,9 @@
 get:
   summary: Get an articles by tagPath
-  description: Since `v2.18.0`, it retrieves by `path` instead of by `name`. This is effectively a breaking change.
+  description: |
+    Retrieves articles associated with a specific tag by its `path`. The response includes a list of articles that have been tagged with the specified tag, along with pagination information such as the total count of matching articles. This endpoint supports pagination and sorting options through query parameters.
+
+    **NOTE:** Since `v2.18.0`, it retrieves by `path` instead of by `name`. This is effectively a breaking change.
   tags:
     - Tags
   parameters:

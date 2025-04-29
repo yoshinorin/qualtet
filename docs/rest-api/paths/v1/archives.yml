@@ -1,5 +1,7 @@
 get:
   summary: Get all articles
+  description: |
+    Retrieves all articles in published date order. The response includes a list of simplified article data containing essential information such as path, title, and published date for each article. This endpoint provides a complete archive of all published content.
   tags:
     - Archives
   responses:

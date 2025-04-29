@@ -1,5 +1,7 @@
 get:
   summary: Get tags
+  description: |
+    Retrieves a list of all available tags. The response includes each tag's details and the count of associated contents. Tags are ordered alphabetically by `name`.
   tags:
     - Tags
   responses:

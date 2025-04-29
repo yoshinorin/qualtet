@@ -1,6 +1,9 @@
 get:
   summary: Get a series
-  description: Since `v2.18.0`, it retrieves by `path` instead of by `name`. This is effectively a breaking change.
+  description: |
+    Retrieves a series by its `path`. The response includes detailed information about the series including its title, description, and a list of associated articles. This endpoint returns a complete series detail model with all articles that belong to the series. The articles are sorted by their published date in descending order.
+
+    **NOTE:** Since `v2.18.0`, it retrieves by `path` instead of by `name`. This is effectively a breaking change.
   tags:
     - Series
   responses:

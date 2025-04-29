@@ -1,5 +1,7 @@
 delete:
   summary: Delete a content
+  description: |
+    Deletes a content by its `id`. When a content is deleted, all related resources such as tag associations, external resources, robots attributes, and series relationships are also deleted. Authentication is required using a bearer token. `id` must be in `ULID` format.
   tags:
     - Contents
   security:

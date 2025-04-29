@@ -1,5 +1,7 @@
 get:
   summary: Get a content
+  description: |
+      Retrieves a content by its `path`. The response includes detailed information about the content such as title, raw and HTML content, metadata, external resources, and related information like tags and series. Returns a complete content detail model with all associated metadata.
   tags:
     - Contents
   responses:

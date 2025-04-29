@@ -1,5 +1,11 @@
 get:
   summary: Search contents
+  description: |
+    Searches content based on query parameters. The search feature performs full-text search on article content and returns matching articles sorted by published date in descending order.
+
+    Multiple search terms can be specified using multiple `q` parameters. When multiple terms are provided, results will contain content matching ALL terms (AND search). Search terms must meet length requirements and cannot contain special characters.
+
+    The response includes the total count of matching articles and a limited set of articles with highlighted snippets where search terms appear.
   tags:
     - Search
   parameters:

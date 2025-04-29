@@ -1,5 +1,9 @@
 delete:
   summary: Delete a series
+  description: |
+    Deletes a series by its `id`. When a series is deleted, all related serializing relationships are also deleted. `id` must be in `ULID` format.
+
+    **NOTE:** That the content items themselves are not deleted.
   tags:
     - Series
   security:

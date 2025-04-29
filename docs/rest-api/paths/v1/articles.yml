@@ -1,5 +1,7 @@
 get:
   summary: Get articles with count
+  description: |
+    Retrieves articles with pagination support. The response includes the total count of articles and a list of article details. This endpoint supports pagination and sorting options through query parameters.
   tags:
     - Articles
   parameters:

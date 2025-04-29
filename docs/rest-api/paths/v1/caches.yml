@@ -1,5 +1,16 @@
 delete:
   summary: Invalidate all caches
+  description: |
+    Invalidates all in-memory caches in the system.
+
+    After successful execution, the following caches will be purged:
+
+    - Sitemaps
+    - Tags
+    - Content-Types
+    - Feeds
+
+    The system will fetch fresh data from the database on subsequent requests.
   tags:
     - Cache
   security:

@@ -1,5 +1,7 @@
 get:
   summary: Get Content-Types
+  description: |
+    Retrieves all available content-types. The response includes each content-type's details.
   tags:
     - Content-Types
   responses:
