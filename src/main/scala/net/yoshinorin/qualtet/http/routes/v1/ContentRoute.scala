@@ -78,8 +78,7 @@ class ContentRoute[F[_]: Monad](
 
   def get(path: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      // TODO: should be configurlize for append suffix or prefix
-      maybeContent <- contentService.findByPathWithMeta(ContentPath(s"/${path}"))
+      maybeContent <- contentService.findByPathWithMeta(ContentPath(path))
     } yield maybeContent)
       .flatMap(_.asResponse)
   }
