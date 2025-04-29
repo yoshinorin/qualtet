@@ -33,7 +33,7 @@ class ContentRoute[F[_]: Monad](
     case request @ GET -> _ =>
       implicit val r = request
       this
-        .get(request.uri.path.toString().replace("/v1/contents/", ""))
+        .get(request.uri.path.toString().replace("/v1/contents", ""))
         .handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
