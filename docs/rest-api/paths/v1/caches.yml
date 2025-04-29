@@ -1,7 +1,7 @@
 delete:
   summary: Invalidate all caches
   tags:
-    - cache
+    - Cache
   security:
     - bearerAuth: []
   responses:

@@ -1,7 +1,7 @@
 get:
   summary: Get an author
   tags:
-    - authors
+    - Authors
   responses:
     200:
       description: Response when Success

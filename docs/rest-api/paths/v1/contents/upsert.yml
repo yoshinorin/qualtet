@@ -1,7 +1,7 @@
 post:
   summary: Create or Update a content
   tags:
-    - contents
+    - Contents
   description: |
     Create or Update a content
   security:

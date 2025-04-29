@@ -1,7 +1,7 @@
 delete:
   summary: Delete a series
   tags:
-    - series
+    - Series
   security:
     - bearerAuth: []
   responses:

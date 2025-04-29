@@ -4,7 +4,7 @@ get:
   description: |
     NOTE: When `noindex` is included in the `robotsAttributes` of the content, that content will be excluded from the response results.
   tags:
-    - sitemaps
+    - Sitemaps
   responses:
     200:
       description: Response when Success

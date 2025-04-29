@@ -2,7 +2,7 @@ get:
   summary: Get an articles by tagPath
   description: Since `v2.18.0`, it retrieves by `path` instead of by `name`. This is effectively a breaking change.
   tags:
-    - tags
+    - Tags
   parameters:
     - in: query
       name: page

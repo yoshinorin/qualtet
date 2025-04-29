@@ -1,7 +1,7 @@
 get:
   summary: Get tags
   tags:
-    - tags
+    - Tags
   responses:
     200:
       description: Response when Success

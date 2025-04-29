@@ -1,7 +1,7 @@
 get:
   summary: Search contents
   tags:
-    - search
+    - Search
   parameters:
     - in: query
       name: q

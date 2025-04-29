@@ -1,7 +1,7 @@
 get:
   summary: Get articles with count
   tags:
-    - articles
+    - Articles
   parameters:
     - in: query
       name: page

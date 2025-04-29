@@ -1,7 +1,7 @@
 delete:
   summary: Delete a content
   tags:
-    - contents
+    - Contents
   security:
     - bearerAuth: []
   responses:

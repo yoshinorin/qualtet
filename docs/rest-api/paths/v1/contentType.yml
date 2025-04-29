@@ -1,7 +1,7 @@
 get:
   summary: Get a Content-Type
   tags:
-    - content-types
+    - Content-Types
   responses:
     200:
       description: Response when Success

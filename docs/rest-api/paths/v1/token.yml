@@ -1,7 +1,7 @@
 post:
   summary: Create an IDToken
   tags:
-    - token
+    - Token
   description: |
     Create an IDToken
   security:

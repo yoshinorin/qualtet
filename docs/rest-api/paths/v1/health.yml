@@ -1,7 +1,7 @@
 get:
   summary: Get API server health
   tags:
-    - system
+    - System
   responses:
     200:
       description: API server is runnning

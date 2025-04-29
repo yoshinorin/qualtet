@@ -1,7 +1,7 @@
 get:
   summary: Get system metadata
   tags:
-    - system
+    - System
   responses:
     200:
       description: Response when Success (If envval `QUALTET_HTTP_ENDPOINT_SYSTEM_METADATA_ENABLED` is `true`)

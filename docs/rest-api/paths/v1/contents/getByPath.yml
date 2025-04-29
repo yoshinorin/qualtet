@@ -1,7 +1,7 @@
 get:
   summary: Get a content
   tags:
-    - contents
+    - Contents
   responses:
     200:
       description: Response when Success

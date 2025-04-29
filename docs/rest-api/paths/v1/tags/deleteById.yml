@@ -1,7 +1,7 @@
 delete:
   summary: Delete a tag
   tags:
-    - tags
+    - Tags
   security:
     - bearerAuth: []
   responses:

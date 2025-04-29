@@ -3,7 +3,7 @@ get:
   description:
     "**NOTE:** This API deleted in version `2.10`."
   tags:
-    - status
+    - Status
   deprecated: true
   responses:
     200:

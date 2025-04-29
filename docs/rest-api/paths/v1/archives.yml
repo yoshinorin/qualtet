@@ -1,7 +1,7 @@
 get:
   summary: Get all articles
   tags:
-    - archives
+    - Archives
   responses:
     200:
       description: Response when Success

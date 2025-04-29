@@ -1,7 +1,7 @@
 get:
   summary: Get a feeds
   tags:
-    - feed
+    - Feed
   responses:
     200:
       description: Response when Success
