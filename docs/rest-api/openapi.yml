@@ -94,8 +94,8 @@ paths:
     $ref: './paths/v1/search.yml'
   /v1/series:
     $ref: './paths/v1/series/series.yml'
-  /v1/series/{seriesPath}:
-    $ref: './paths/v1/series/byPath.yml'
+  /v1/series/{seriesName}:
+    $ref: './paths/v1/series/byName.yml'
   /v1/series/{seriesId}:
     $ref: './paths/v1/series/deleteById.yml'
 components:

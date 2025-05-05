@@ -61,7 +61,7 @@ object HttpError {
       case e: ContentTitleRequired => BadRequest(detail = e.detail, errors = e.errors)
       case e: RawContentRequired => BadRequest(detail = e.detail, errors = e.errors)
       case e: HtmlContentRequired => BadRequest(detail = e.detail, errors = e.errors)
-      case e: SeriesPathRequired => BadRequest(detail = e.detail, errors = e.errors)
+      case e: SeriesNameRequired => BadRequest(detail = e.detail, errors = e.errors)
       case e: SeriesTitleRequired => BadRequest(detail = e.detail, errors = e.errors)
       case e: UnexpectedJsonFormat => BadRequest(detail = e.detail, errors = e.errors)
       case e: UnexpectedException => InternalServerError(detail = e.detail)

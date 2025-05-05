@@ -5,7 +5,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentId
 trait SeriesRepository[F[_]] {
   def upsert(data: SeriesWriteModel): F[Int]
   def findById(id: SeriesId): F[Option[SeriesReadModel]]
-  def findByPath(path: SeriesPath): F[Option[SeriesReadModel]]
+  def findByName(name: SeriesName): F[Option[SeriesReadModel]]
   def findByContentId(id: ContentId): F[Option[SeriesReadModel]]
   def deleteByContentId(id: ContentId): F[Unit]
   def deleteBySeriesId(id: SeriesId): F[Unit]
@@ -22,25 +22,25 @@ object SeriesRepository {
 
       given seriesWrite: Write[SeriesWriteModel] =
         Write[(String, String, String, Option[String])].contramap { s =>
-          (s.id.value, s.path.value, s.title, s.description)
+          (s.id.value, s.name.value, s.title, s.description)
         }
 
       given seriesRead: Read[SeriesReadModel] =
-        Read[(String, String, String, Option[String])].map { case (seriesId, path, title, description) =>
+        Read[(String, String, String, Option[String])].map { case (seriesId, name, title, description) =>
           SeriesReadModel(
             SeriesId(seriesId),
-            SeriesPath(path),
+            SeriesName(name),
             title,
             description
           )
         }
 
       given seriesOrOptionRead: Read[Option[SeriesReadModel]] =
-        Read[(String, String, String, Option[String])].map { case (seriesId, path, title, description) =>
+        Read[(String, String, String, Option[String])].map { case (seriesId, name, title, description) =>
           Some(
             SeriesReadModel(
               SeriesId(seriesId),
-              SeriesPath(path),
+              SeriesName(name),
               title,
               description
             )
@@ -52,8 +52,8 @@ object SeriesRepository {
         SeriesQuery.upsert.run(data)
       }
 
-      override def findByPath(path: SeriesPath): ConnectionIO[Option[SeriesReadModel]] = {
-        SeriesQuery.findByPath(path).option
+      override def findByName(name: SeriesName): ConnectionIO[Option[SeriesReadModel]] = {
+        SeriesQuery.findByName(name).option
       }
 
       override def findById(id: SeriesId): ConnectionIO[Option[SeriesReadModel]] = {

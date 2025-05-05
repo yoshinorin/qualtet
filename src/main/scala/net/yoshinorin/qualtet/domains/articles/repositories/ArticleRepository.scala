@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.articles
 
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.series.SeriesPath
+import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.Pagination
 import net.yoshinorin.qualtet.domains.tags.TagPath
@@ -11,7 +11,7 @@ trait ArticleRepository[F[_]] {
   def getWithCount(contentTypeId: ContentTypeId, pagination: Pagination): F[Seq[(Int, ArticleReadModel)]]
   def findByTagNameWithCount(contentTypeId: ContentTypeId, tagName: TagName, pagination: Pagination): F[Seq[(Int, ArticleReadModel)]]
   def findByTagPathWithCount(contentTypeId: ContentTypeId, tagPath: TagPath, pagination: Pagination): F[Seq[(Int, ArticleReadModel)]]
-  def findBySeriesPathWithCount(contentTypeId: ContentTypeId, seriesPath: SeriesPath): F[Seq[(Int, ArticleReadModel)]]
+  def findBySeriesNameWithCount(contentTypeId: ContentTypeId, seriesName: SeriesName): F[Seq[(Int, ArticleReadModel)]]
 }
 
 object ArticleRepository {
@@ -46,8 +46,8 @@ object ArticleRepository {
         ArticleQuery.findByTagPathWithCount(contentTypeId, tagPath, pagination).to[Seq]
       }
 
-      override def findBySeriesPathWithCount(contentTypeId: ContentTypeId, seriesPath: SeriesPath): ConnectionIO[Seq[(Int, ArticleReadModel)]] = {
-        ArticleQuery.findBySeriesPathWithCount(contentTypeId, seriesPath).to[Seq]
+      override def findBySeriesNameWithCount(contentTypeId: ContentTypeId, seriesName: SeriesName): ConnectionIO[Seq[(Int, ArticleReadModel)]] = {
+        ArticleQuery.findBySeriesNameWithCount(contentTypeId, seriesName).to[Seq]
       }
     }
   }

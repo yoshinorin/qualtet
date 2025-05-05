@@ -47,7 +47,7 @@ import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import cats.effect.unsafe.implicits.global
-import net.yoshinorin.qualtet.domains.series.{SeriesPath, SeriesRequestModel}
+import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesRequestModel}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 
 // Just test data
@@ -213,7 +213,7 @@ object Fixture {
   def createContentRequestModels(
     numberOfCreateContents: Int,
     specName: String,
-    series: Option[SeriesPath] = None,
+    series: Option[SeriesName] = None,
     externalResources: List[ExternalResources] = List()
   ): List[ContentRequestModel] = {
     (0 until numberOfCreateContents).toList

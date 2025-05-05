@@ -110,7 +110,7 @@ final case class HtmlContentRequired(
   errors: Option[Seq[ProblemDetailsError]] = None
 ) extends DomainError
 
-final case class SeriesPathRequired(
+final case class SeriesNameRequired(
   detail: String,
   errors: Option[Seq[ProblemDetailsError]] = None
 ) extends DomainError

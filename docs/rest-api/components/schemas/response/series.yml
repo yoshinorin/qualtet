@@ -3,7 +3,7 @@ properties:
   id:
     type: string
     example: "01gs85hv65rhsq06fdp7j3ers0"
-  path:
+  name:
     type: string
     example: "qualtet-development-history"
   title:
@@ -18,7 +18,7 @@ properties:
       $ref: './article.yml'
 required:
   - id
-  - path
+  - name
   - title
   - description
   - articles

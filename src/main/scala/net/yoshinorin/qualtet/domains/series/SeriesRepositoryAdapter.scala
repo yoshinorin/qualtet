@@ -11,7 +11,7 @@ class SeriesRepositoryAdapter[F[_]: Monad](
 
   private[domains] def upsert(data: Series): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { next =>
-      val w = SeriesWriteModel(id = data.id, path = data.path, title = data.title, description = data.description)
+      val w = SeriesWriteModel(id = data.id, name = data.name, title = data.title, description = data.description)
       seriesRepository.upsert(w)
     }
   }
@@ -20,17 +20,17 @@ class SeriesRepositoryAdapter[F[_]: Monad](
     ContT.apply[F, Option[Series], Option[Series]] { next =>
       seriesRepository.findById(id).map { x =>
         x.map { s =>
-          Series(s.id, s.path, s.title, s.description)
+          Series(s.id, s.name, s.title, s.description)
         }
       }
     }
   }
 
-  private[domains] def findByPath(path: SeriesPath): ContT[F, Option[Series], Option[Series]] = {
+  private[domains] def findByName(name: SeriesName): ContT[F, Option[Series], Option[Series]] = {
     ContT.apply[F, Option[Series], Option[Series]] { next =>
-      seriesRepository.findByPath(path).map { x =>
+      seriesRepository.findByName(name).map { x =>
         x.map { s =>
-          Series(s.id, s.path, s.title, s.description)
+          Series(s.id, s.name, s.title, s.description)
         }
       }
     }
@@ -40,7 +40,7 @@ class SeriesRepositoryAdapter[F[_]: Monad](
     ContT.apply[F, Option[Series], Option[Series]] { next =>
       seriesRepository.findByContentId(id).map { x =>
         x.map { s =>
-          Series(s.id, s.path, s.title, s.description)
+          Series(s.id, s.name, s.title, s.description)
         }
       }
     }
@@ -62,7 +62,7 @@ class SeriesRepositoryAdapter[F[_]: Monad](
     ContT.apply[F, Seq[Series], Seq[Series]] { next =>
       seriesRepository.getAll().map { x =>
         x.map { s =>
-          Series(s.id, s.path, s.title, s.description)
+          Series(s.id, s.name, s.title, s.description)
         }
       }
     }
