@@ -88,8 +88,8 @@ class TagService[F[_]: Monad](
    */
   def delete(id: TagId): IO[Unit] = {
     val queries = for {
-      contentTaggingDelete <- executer.perform(contentTaggingRepositoryAdapter.deleteByTagId(id))
-      tagDelete <- executer.perform(tagRepositoryAdapter.delete(id))
+      contentTaggingDelete <- executer.defer(contentTaggingRepositoryAdapter.deleteByTagId(id))
+      tagDelete <- executer.defer(tagRepositoryAdapter.delete(id))
     } yield (contentTaggingDelete, tagDelete)
 
     for {

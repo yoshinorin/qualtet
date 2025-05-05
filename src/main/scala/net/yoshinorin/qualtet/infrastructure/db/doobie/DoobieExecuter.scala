@@ -10,7 +10,7 @@ import doobie.free.connection.ConnectionIO
 
 class DoobieExecuter(tx: Transactor[IO]) extends Executer[ConnectionIO, IO] {
 
-  override def perform[R](c: ContT[doobie.ConnectionIO, R, R]): ConnectionIO[R] = {
+  override def defer[R](c: ContT[doobie.ConnectionIO, R, R]): ConnectionIO[R] = {
     c.run { x => x.pure[ConnectionIO] }
   }
 

@@ -74,8 +74,8 @@ class SeriesService[F[_]: Monad](
   def delete(id: SeriesId): IO[Unit] = {
 
     val queries = for {
-      contentSerializingDelete <- executer.perform(contentSerializingRepositoryAdapter.deleteBySeriesId(id))
-      seriesDelete <- executer.perform(seriesRepositoryAdapter.deleteBySeriesId(id))
+      contentSerializingDelete <- executer.defer(contentSerializingRepositoryAdapter.deleteBySeriesId(id))
+      seriesDelete <- executer.defer(seriesRepositoryAdapter.deleteBySeriesId(id))
     } yield (
       contentSerializingDelete,
       seriesDelete

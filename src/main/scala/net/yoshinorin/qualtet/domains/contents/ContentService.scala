@@ -118,27 +118,27 @@ class ContentService[F[_]: Monad](
     val maybeExternalResources = externalResources.flatMap(a => a.values.map(v => ExternalResource(data.id, a.kind, v)))
 
     val queries = for {
-      contentUpsert <- executer.perform(contentRepositoryAdapter.upsert(data))
-      robotsUpsert <- executer.perform(robotsRepositoryAdapter.upsert(Robots(data.id, robotsAttributes)))
-      currentTags <- executer.perform(tagRepositoryAdapter.findByContentId(data.id))
-      tagsDiffDelete <- executer.perform(contentTaggingRepositoryAdapter.bulkDelete(data.id, currentTags.map(_.id).diff(tags.getOrElse(List()).map(t => t.id))))
-      tagsBulkUpsert <- executer.perform(tagRepositoryAdapter.bulkUpsert(tags))
-      contentTaggingBulkUpsert <- executer.perform(contentTaggingRepositoryAdapter.bulkUpsert(contentTaggings))
-      currentContentSeries <- executer.perform(seriesRepositoryAdapter.findByContentId(data.id))
+      contentUpsert <- executer.defer(contentRepositoryAdapter.upsert(data))
+      robotsUpsert <- executer.defer(robotsRepositoryAdapter.upsert(Robots(data.id, robotsAttributes)))
+      currentTags <- executer.defer(tagRepositoryAdapter.findByContentId(data.id))
+      tagsDiffDelete <- executer.defer(contentTaggingRepositoryAdapter.bulkDelete(data.id, currentTags.map(_.id).diff(tags.getOrElse(List()).map(t => t.id))))
+      tagsBulkUpsert <- executer.defer(tagRepositoryAdapter.bulkUpsert(tags))
+      contentTaggingBulkUpsert <- executer.defer(contentTaggingRepositoryAdapter.bulkUpsert(contentTaggings))
+      currentContentSeries <- executer.defer(seriesRepositoryAdapter.findByContentId(data.id))
       contentSerializingDiffDelete <- currentContentSeries match {
-        case Some(cc) if contentSerializing.isEmpty => executer.perform(contentSerializingRepositoryAdapter.deleteByContentId(data.id))
+        case Some(cc) if contentSerializing.isEmpty => executer.defer(contentSerializingRepositoryAdapter.deleteByContentId(data.id))
         case Some(cc) if contentSerializing.map(_.seriesId) != cc.id =>
-          executer.perform(contentSerializingRepositoryAdapter.deleteByContentId(data.id))
+          executer.defer(contentSerializingRepositoryAdapter.deleteByContentId(data.id))
         case _ => Monad[F].pure(())
       }
-      contentSerializingUpsert <- executer.perform(contentSerializingRepositoryAdapter.upsert(contentSerializing))
-      currentExternalResources <- executer.perform(externalResourceRepositoryAdapter.findByContentId(data.id))
-      externalResourcesDiffDelete <- executer.perform(
+      contentSerializingUpsert <- executer.defer(contentSerializingRepositoryAdapter.upsert(contentSerializing))
+      currentExternalResources <- executer.defer(externalResourceRepositoryAdapter.findByContentId(data.id))
+      externalResourcesDiffDelete <- executer.defer(
         externalResourceRepositoryAdapter.bulkDelete(
           currentExternalResources.diff(maybeExternalResources).map(e => ExternalResourceDeleteModel(e.contentId, e.kind, e.name)).toList
         )
       )
-      externalResourceBulkUpsert <- executer.perform(externalResourceRepositoryAdapter.bulkUpsert(maybeExternalResources))
+      externalResourceBulkUpsert <- executer.defer(externalResourceRepositoryAdapter.bulkUpsert(maybeExternalResources))
     } yield (
       contentUpsert,
       currentTags,
@@ -167,12 +167,12 @@ class ContentService[F[_]: Monad](
   def delete(id: ContentId): IO[Unit] = {
 
     val queries = for {
-      externalResourcesDelete <- executer.perform(externalResourceRepositoryAdapter.delete(id))
+      externalResourcesDelete <- executer.defer(externalResourceRepositoryAdapter.delete(id))
       // TODO: Tags should be deleted automatically after delete a content which are not refer from other contents.
-      contentTaggingDelete <- executer.perform(contentTaggingRepositoryAdapter.deleteByContentId(id))
-      contentSerializingDelete <- executer.perform(contentSerializingRepositoryAdapter.deleteByContentId(id))
-      robotsDelete <- executer.perform(robotsRepositoryAdapter.delete(id))
-      contentDelete <- executer.perform(contentRepositoryAdapter.delete(id))
+      contentTaggingDelete <- executer.defer(contentTaggingRepositoryAdapter.deleteByContentId(id))
+      contentSerializingDelete <- executer.defer(contentSerializingRepositoryAdapter.deleteByContentId(id))
+      robotsDelete <- executer.defer(robotsRepositoryAdapter.delete(id))
+      contentDelete <- executer.defer(contentRepositoryAdapter.delete(id))
     } yield (
       externalResourcesDelete,
       contentTaggingDelete,
