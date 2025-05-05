@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorResponseModel, Au
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt[IO])(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 

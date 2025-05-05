@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.domains.sitemaps.SitemapService
 import net.yoshinorin.qualtet.domains.tags.TagService
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.feeds.FeedService
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class CacheService[F[_]: Monad](
   sitemapService: SitemapService[F],

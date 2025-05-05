@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.auth.AuthService
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, DomainError, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class AuthProvider[F[_]: Monad](
   authService: AuthService[F]

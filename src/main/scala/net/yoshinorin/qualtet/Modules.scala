@@ -4,9 +4,9 @@ import cats.effect.IO
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor
 import doobie.util.transactor.Transactor.Aux
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
-import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
-import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache, Caffeine}
+import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
+import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
+import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.ApplicationConfig
@@ -33,19 +33,19 @@ import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
-  ArchiveRoute => ArchiveRouteV1,
-  ArticleRoute => ArticleRouteV1,
-  AuthRoute => AuthRouteV1,
-  AuthorRoute => AuthorRouteV1,
-  CacheRoute => CacheRouteV1,
-  ContentRoute => ContentRouteV1,
-  ContentTypeRoute => ContentTypeRouteV1,
-  FeedRoute => FeedRouteV1,
-  SearchRoute => SearchRouteV1,
-  SeriesRoute => SeriesRouteV1,
-  SitemapRoute => SitemapRouteV1,
-  SystemRoute => SystemRouteV1,
-  TagRoute => TagRouteV1
+  ArchiveRoute as ArchiveRouteV1,
+  ArticleRoute as ArticleRouteV1,
+  AuthRoute as AuthRouteV1,
+  AuthorRoute as AuthorRouteV1,
+  CacheRoute as CacheRouteV1,
+  ContentRoute as ContentRouteV1,
+  ContentTypeRoute as ContentTypeRouteV1,
+  FeedRoute as FeedRouteV1,
+  SearchRoute as SearchRouteV1,
+  SeriesRoute as SeriesRouteV1,
+  SitemapRoute as SitemapRouteV1,
+  SystemRoute as SystemRouteV1,
+  TagRoute as TagRouteV1
 }
 import net.yoshinorin.qualtet.infrastructure.db.Migrator
 import net.yoshinorin.qualtet.infrastructure.db.doobie.{DoobieExecuter, DoobieTransactor}

@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.domains.tags.{TagId, TagPath, TagService}
 import net.yoshinorin.qualtet.domains.PaginationRequestModel
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class TagRoute[F[_]: Monad](
   authProvider: AuthProvider[F],

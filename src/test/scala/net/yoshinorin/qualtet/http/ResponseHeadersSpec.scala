@@ -4,7 +4,7 @@ import cats.effect.IO
 import org.http4s.client.Client
 import org.http4s.*
 import org.http4s.implicits.*
-import org.typelevel.ci._
+import org.typelevel.ci.*
 import net.yoshinorin.qualtet.HttpAppBuilder
 import net.yoshinorin.qualtet.fixture.Fixture.router
 import org.scalatest.wordspec.AnyWordSpec

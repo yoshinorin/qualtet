@@ -1,22 +1,22 @@
 package net.yoshinorin.qualtet.http
 
 import cats.Monad
-import org.http4s.server.{Router => Http4sRouter}
+import org.http4s.server.Router as Http4sRouter
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
-  ArchiveRoute => ArchiveRouteV1,
-  ArticleRoute => ArticleRouteV1,
-  AuthRoute => AuthRouteV1,
-  AuthorRoute => AuthorRouteV1,
-  CacheRoute => CacheRouteV1,
-  ContentRoute => ContentRouteV1,
-  ContentTypeRoute => ContentTypeRouteV1,
-  FeedRoute => FeedRouteV1,
-  SearchRoute => SearchRouteV1,
-  SeriesRoute => SeriesRouteV1,
-  SitemapRoute => SitemapRouteV1,
-  SystemRoute => SystemRouteV1,
-  TagRoute => TagRouteV1
+  ArchiveRoute as ArchiveRouteV1,
+  ArticleRoute as ArticleRouteV1,
+  AuthRoute as AuthRouteV1,
+  AuthorRoute as AuthorRouteV1,
+  CacheRoute as CacheRouteV1,
+  ContentRoute as ContentRouteV1,
+  ContentTypeRoute as ContentTypeRouteV1,
+  FeedRoute as FeedRouteV1,
+  SearchRoute as SearchRouteV1,
+  SeriesRoute as SeriesRouteV1,
+  SitemapRoute as SitemapRouteV1,
+  SystemRoute as SystemRouteV1,
+  TagRoute as TagRouteV1
 }
 
 class Router[F[_]: Monad](

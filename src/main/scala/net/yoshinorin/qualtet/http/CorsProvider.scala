@@ -6,7 +6,7 @@ import org.http4s.HttpRoutes
 import org.http4s.Uri
 import org.http4s.server.middleware.*
 import org.http4s.headers.Origin
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
+import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
 import net.yoshinorin.qualtet.config.CorsConfig
 import java.net.URI
 

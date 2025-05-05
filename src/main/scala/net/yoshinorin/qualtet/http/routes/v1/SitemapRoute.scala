@@ -7,7 +7,7 @@ import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.sitemaps.SitemapService
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class SitemapRoute[F[_]: Monad](sitemapService: SitemapService[F])(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 

@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.auth
 
 import org.slf4j.LoggerFactory
-import java.security.{PrivateKey, Signature => JavaSignature}
+import java.security.{PrivateKey, Signature as JavaSignature}
 
 class Signature(algorithm: String, message: Array[Byte], key: KeyPair) {
 

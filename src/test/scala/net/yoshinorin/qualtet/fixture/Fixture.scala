@@ -6,10 +6,10 @@ import doobie.ConnectionIO
 import doobie.util.transactor.Transactor
 import org.http4s.Uri
 import org.http4s.Response
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory}
-import org.typelevel.log4cats.slf4j.{Slf4jFactory => Log4CatsSlf4jFactory}
+import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
+import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
 import com.github.benmanes.caffeine.cache.Caffeine
-import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
+import com.github.benmanes.caffeine.cache.Cache as CaffeineCache
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.http.AuthProvider
@@ -25,19 +25,19 @@ import net.yoshinorin.qualtet.domains.sitemaps.{SitemapRepositoryAdapter, Sitema
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
-  ArchiveRoute => ArchiveRouteV1,
-  ArticleRoute => ArticleRouteV1,
-  AuthRoute => AuthRouteV1,
-  AuthorRoute => AuthorRouteV1,
-  CacheRoute => CacheRouteV1,
-  ContentRoute => ContentRouteV1,
-  ContentTypeRoute => ContentTypeRouteV1,
-  FeedRoute => FeedRouteV1,
-  SearchRoute => SearchRouteV1,
-  SeriesRoute => SeriesRouteV1,
-  SitemapRoute => SitemapRouteV1,
-  SystemRoute => SystemRouteV1,
-  TagRoute => TagRouteV1
+  ArchiveRoute as ArchiveRouteV1,
+  ArticleRoute as ArticleRouteV1,
+  AuthRoute as AuthRouteV1,
+  AuthorRoute as AuthorRouteV1,
+  CacheRoute as CacheRouteV1,
+  ContentRoute as ContentRouteV1,
+  ContentTypeRoute as ContentTypeRouteV1,
+  FeedRoute as FeedRouteV1,
+  SearchRoute as SearchRouteV1,
+  SeriesRoute as SeriesRouteV1,
+  SitemapRoute as SitemapRouteV1,
+  SystemRoute as SystemRouteV1,
+  TagRoute as TagRouteV1
 }
 import java.util.concurrent.TimeUnit
 import wvlet.airframe.ulid.ULID

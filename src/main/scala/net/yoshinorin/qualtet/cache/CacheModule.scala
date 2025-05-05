@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.cache
 
 import cats.Monad
-import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache}
+import com.github.benmanes.caffeine.cache.Cache as CaffeineCache
 
 class CacheModule[F[_]: Monad, T1, T2](caffeineCache: CaffeineCache[T1, T2]) {
 

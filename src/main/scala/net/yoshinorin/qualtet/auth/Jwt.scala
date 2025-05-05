@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.syntax.*
 import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
 import pdi.jwt.JwtOptions
 import wvlet.airframe.ulid.ULID
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 import java.time.Instant
 import scala.util.Try

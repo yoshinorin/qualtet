@@ -9,7 +9,7 @@ import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Server
 import com.comcast.ip4s.*
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object BootStrap extends IOApp {
 

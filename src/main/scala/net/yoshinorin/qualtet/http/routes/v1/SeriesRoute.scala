@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesName, Seri
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class SeriesRoute[F[_]: Monad](
   authProvider: AuthProvider[F],

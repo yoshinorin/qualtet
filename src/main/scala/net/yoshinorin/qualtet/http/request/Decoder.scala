@@ -6,7 +6,7 @@ import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException, UnexpectedJsonFormat}
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory => Log4CatsLoggerFactory, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 import scala.util.control.NonFatal
 
