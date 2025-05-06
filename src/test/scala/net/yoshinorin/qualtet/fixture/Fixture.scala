@@ -21,6 +21,7 @@ import net.yoshinorin.qualtet.domains.authors.*
 import net.yoshinorin.qualtet.domains.contents.*
 import net.yoshinorin.qualtet.domains.contentTypes.*
 import net.yoshinorin.qualtet.domains.robots.*
+import net.yoshinorin.qualtet.domains.series.*
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapRepositoryAdapter, SitemapService, SitemapsRepository, Url}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
@@ -47,7 +48,6 @@ import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import cats.effect.unsafe.implicits.global
-import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesRequestModel}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 
 // Just test data
@@ -213,7 +213,7 @@ object Fixture {
   def createContentRequestModels(
     numberOfCreateContents: Int,
     specName: String,
-    series: Option[SeriesName] = None,
+    series: Option[Series] = None,
     externalResources: List[ExternalResources] = List()
   ): List[ContentRequestModel] = {
     (0 until numberOfCreateContents).toList

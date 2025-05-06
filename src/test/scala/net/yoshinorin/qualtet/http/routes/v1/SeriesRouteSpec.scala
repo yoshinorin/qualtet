@@ -9,7 +9,7 @@ import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesName, SeriesRequestModel}
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesName, SeriesPath, SeriesRequestModel}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
@@ -24,23 +24,34 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
   val requestSeries: List[SeriesRequestModel] = List(
     SeriesRequestModel(
       title = "Series Route Spec",
-      name = SeriesName("seriesroute-series"),
+      name = SeriesName("seriesroute-series-name"),
+      path = SeriesPath("seriesroute-series-path"),
       description = Some("Series Route Spec Description1")
     ),
     SeriesRequestModel(
       title = "Series Route Spec2",
-      name = SeriesName("seriesroute-series2"),
+      name = SeriesName("seriesroute-series2-name"),
+      path = SeriesPath("seriesroute-series2-path"),
       description = Some("Series Route Spec Description2")
     ),
     SeriesRequestModel(
       title = "Series Route Spec3",
-      name = SeriesName("seriesroute-series3"),
+      name = SeriesName("seriesroute-series3-name"),
+      path = SeriesPath("seriesroute-series3-path"),
       description = Some("Series Route Spec Description2")
     )
   )
 
   requestSeries.unsafeCreateSeries()
-  createContentRequestModels(5, "SeriesRoute", Some(requestSeries.head.name)).unsafeCreateConternt()
+  val series = Option(
+    Series(
+      title = requestSeries.head.title,
+      name = requestSeries.head.name,
+      path = requestSeries.head.path,
+      description = requestSeries.head.description
+    )
+  )
+  createContentRequestModels(5, "SeriesRoute", series).unsafeCreateConternt()
 
   /* TODO: `BeforeAndAfterAll` seems doesn't work on CI this test class.
   override protected def beforeAll(): Unit = {
@@ -66,6 +77,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         """
           |{
           |  "name": "example series",
+          |  "path": "example-series-route-path",
           |  "title": "example series title",
           |  "description": "example series description"
           |}
@@ -80,6 +92,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
             val maybeSeries = unsafeDecode[Series](response)
             assert(maybeSeries.name === "example series")
+            assert(maybeSeries.path === "example-series-route-path")
             // assert(maybeSeries.id === "TODO")  // TODO: assert id is ULID
             assert(maybeSeries.description.get === "example series description")
             assert(maybeSeries.title === "example series title")
@@ -94,6 +107,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           |{
           |  "id" : "${s1.id.value}",
           |  "name" : "${s1.name.value}",
+          |  "path" : "${s1.path.value}",
           |  "title" : "${s1.title}",
           |  "description" : "${s1.description.get}"
           |}
@@ -104,6 +118,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           |{
           |  "id" : "${s2.id.value}",
           |  "name" : "${s2.name.value}",
+          |  "path" : "${s2.path.value}",
           |  "title" : "${s2.title}",
           |  "description" : "${s2.description.get}"
           |}
@@ -124,7 +139,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "return specific series" in {
       client
-        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${s1.name.value}"))))
+        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${s1.path.value}"))))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -132,7 +147,8 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace.contains("seriesroute-series"))
 
             val maybeSeries = unsafeDecode[Series](response)
-            assert(maybeSeries.name === "seriesroute-series")
+            assert(maybeSeries.name === "seriesroute-series-name")
+            assert(maybeSeries.path === "seriesroute-series-path")
             // assert(maybeSeries.id === "TODO")  // TODO: assert id is ULID
             assert(maybeSeries.description.get === "Series Route Spec Description1")
             assert(maybeSeries.title === "Series Route Spec")
@@ -142,7 +158,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
     }
 
     "delete a series" in {
-      val series = seriesService.findByName(s3.name).unsafeRunSync().get
+      val series = seriesService.findByPath(s3.path).unsafeRunSync().get
 
       // 204 (first time)
       client
@@ -160,7 +176,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
           }
         }
         .unsafeRunSync()
-      assert(seriesService.findByName(s3.name).unsafeRunSync().isEmpty)
+      assert(seriesService.findByPath(s3.path).unsafeRunSync().isEmpty)
 
       // 404 (second time)
       client
@@ -246,7 +262,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .run(
           Request(
             method = Method.PATCH,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${s1.name.value}")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${s1.path.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )
@@ -264,6 +280,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         """
           |{
           |  "name": "",
+          |  "path": "400-badrequest-name-path",
           |  "title": "example series title",
           |  "description": "example series description"
           |}
@@ -287,11 +304,41 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
+    "return 400 BadRequest caused by empty path" in {
+      val json =
+        """
+          |{
+          |  "name": "400-badrequest-path-name",
+          |  "path": "",
+          |  "title": "example series title",
+          |  "description": "example series description"
+          |}
+        """.stripMargin
+
+      val entity = EntityEncoder[IO, String].toEntity(json)
+      client
+        .run(Request(method = Method.POST, uri = uri"/v1/series/", headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken)), entity = entity))
+        .use { response =>
+          IO {
+            assert(response.status === BadRequest)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
+            assert(maybeError.title === "Bad Request")
+            assert(maybeError.status === 400)
+            assert(maybeError.detail === "path is required")
+            assert(maybeError.instance === "/v1/series/")
+          }
+        }
+        .unsafeRunSync()
+    }
+
     "return 400 BadRequest caused by empty title" in {
       val json =
         """
           |{
           |  "name": "example-series-name",
+          |  "path": "example-series-path",
           |  "title": "",
           |  "description": "example series description"
           |}
@@ -319,7 +366,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
       val json =
         """
           |{
-          |  "name": "example series",
+          |  "path": "example-series-path-expired-token",
           |  "title": "example series title",
           |  "description": "example series description"
           |}

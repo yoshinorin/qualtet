@@ -36,7 +36,7 @@ get:
                 example: "Not Found"
               instance:
                 type: string
-                example: "/v1/series/{seriesName}"
+                example: "/v1/series/{seriesPath}"
             required:
               - type
               - title

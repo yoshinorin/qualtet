@@ -10,8 +10,8 @@ object SeriesQuery {
 
   def upsert: doobie.Write[SeriesWriteModel] ?=> doobie.Update[SeriesWriteModel] = {
     val q = s"""
-          INSERT INTO series (id, name, title, description)
-            VALUES (?, ?, ?, ?)
+          INSERT INTO series (id, name, path, title, description)
+            VALUES (?, ?, ?, ?, ?)
           ON DUPLICATE KEY UPDATE
             title = VALUES(title),
             description = VALUES(description)
@@ -29,12 +29,18 @@ object SeriesQuery {
       .query[SeriesReadModel]
   }
 
+  def findByPath(path: SeriesPath): Read[SeriesReadModel] ?=> Query0[SeriesReadModel] = {
+    sql"SELECT * FROM series WHERE path = ${path.value}"
+      .query[SeriesReadModel]
+  }
+
   def findByContentId(id: ContentId): Read[SeriesReadModel] ?=> Query0[SeriesReadModel] = {
     sql"""
       SELECT
       DISTINCT
         series.id,
         series.name,
+        series.path,
         series.title,
         series.description
       FROM

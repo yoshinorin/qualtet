@@ -1,0 +1,4 @@
+ALTER TABLE series ADD column path VARCHAR(512) NULL AFTER name;
+UPDATE series SET path = name;
+ALTER TABLE series MODIFY COLUMN path VARCHAR(512) NOT NULL;
+ALTER TABLE series ADD UNIQUE (path);

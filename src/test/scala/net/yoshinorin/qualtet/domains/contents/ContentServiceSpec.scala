@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries}
-import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesRequestModel}
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesPath, SeriesRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
@@ -25,21 +25,25 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       SeriesRequestModel(
         title = "Content Service Spec Series",
         name = SeriesName("contentservice-series"),
+        path = SeriesPath("contentservice-series-path"),
         None
       ),
       SeriesRequestModel(
         title = "Content Service Spec Series2",
         name = SeriesName("contentservice-series2"),
+        path = SeriesPath("contentservice-series2-path"),
         None
       ),
       SeriesRequestModel(
         title = "Content Service Spec will be delete",
         name = SeriesName("contentservice-willBeDelete"),
+        path = SeriesPath("contentservice-willBeDelete-path"),
         None
       ),
       SeriesRequestModel(
         title = "Content Service Spec will not delete",
         name = SeriesName("contentservice-willNotDelete"),
+        path = SeriesPath("contentservice-willNotDelete-path"),
         None
       )
     )).unsafeCreateSeries()
@@ -100,7 +104,14 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         htmlContent = "this is a html content",
         robotsAttributes = Attributes("noarchive, noimageindex"),
         tags = List(Tag(name = TagName("Scala"), path = TagPath("scala-path")), Tag(name = TagName("http4s"), path = TagPath("http4s-path"))),
-        series = Some(SeriesName("contentservice-series")),
+        series = Some(
+          Series(
+            title = "Content Service Spec Series",
+            name = SeriesName("contentservice-series"),
+            path = SeriesPath("contentservice-series-path"),
+            description = None
+          )
+        ),
         externalResources = List(
           ExternalResources(
             ExternalResourceKind("js"),
@@ -112,7 +123,14 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       val updateRequestContent = requestContent.copy(
         title = "updated title",
         tags = List(Tag(name = TagName("Scala"), path = TagPath("scala-path")), Tag(name = TagName("Scala3"), path = TagPath("scala3-path"))),
-        series = Some(SeriesName("contentservice-series2")),
+        series = Some(
+          Series(
+            title = "Content Service Spec Series2",
+            name = SeriesName("contentservice-series2"),
+            path = SeriesPath("contentservice-series-path2"),
+            description = None
+          )
+        ),
         robotsAttributes = Attributes("noarchive"),
         externalResources = List(
           ExternalResources(
@@ -169,7 +187,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
         // second time update assetion
         assert(deletedTags.get.tags.isEmpty)
-        assert(updatedSeries.get.name === "contentservice-series2")
+        assert(updatedSeries.get.path === "contentservice-series2")
 
         // third time update assertion
         assert(deletedSeries.isEmpty)
@@ -241,7 +259,14 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           Tag(name = TagName("WillBeDelete"), path = TagPath("willbedelete-path")),
           Tag(name = TagName("WillBeDelete2"), path = TagPath("willbedelete2-path"))
         ),
-        series = Some(SeriesName("contentservice-willBeDelete")),
+        series = Some(
+          Series(
+            title = "Content Service Spec willBeDelete",
+            name = SeriesName("contentservice-willBeDelete"),
+            path = SeriesPath("contentservice-willBeDelete-path"),
+            description = None
+          )
+        ),
         externalResources = List(
           ExternalResources(
             ExternalResourceKind("js"),
@@ -256,7 +281,14 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           Tag(name = TagName("WillNotDelete"), path = TagPath("willnotdelete-path")),
           Tag(name = TagName("WillNotDelete2"), path = TagPath("willnotdelete2-path"))
         ),
-        series = Some(SeriesName("contentservice-willNotDelete")),
+        series = Some(
+          Series(
+            title = "Content Service willNotDelete Series",
+            name = SeriesName("contentservice-willNotDelete"),
+            path = SeriesPath("contentservice-willNotDelete-path"),
+            description = None
+          )
+        ),
         externalResources = List(
           ExternalResources(
             ExternalResourceKind("js"),
@@ -307,7 +339,19 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "throw Series UnprocessableEntity Exception" in {
       assertThrows[InvalidSeries] {
         contentService
-          .create(AuthorName(author.name.value), requestContent1.copy(series = Some(SeriesName("not_exists_series_name"))))
+          .create(
+            AuthorName(author.name.value),
+            requestContent1.copy(series =
+              Some(
+                Series(
+                  name = SeriesName("not_exists_series_name"),
+                  path = SeriesPath("not_exists_series_path"),
+                  title = "Not exists series title",
+                  description = None
+                )
+              )
+            )
+          )
           .unsafeRunSync()
       }
     }

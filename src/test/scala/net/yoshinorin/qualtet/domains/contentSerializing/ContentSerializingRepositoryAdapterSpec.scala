@@ -19,6 +19,7 @@ class ContentSerializingRepositoryAdapterSpec extends AnyWordSpec with BeforeAnd
     val requestSeries: SeriesRequestModel = SeriesRequestModel(
       title = "Content Serializing Repository Adapter Spec",
       name = SeriesName("content-serializing-repository-adapter-spec"),
+      path = SeriesPath("content-serializing-repository-adapter-spec"),
       None
     )
     List(requestSeries).unsafeCreateSeries()
@@ -39,7 +40,14 @@ class ContentSerializingRepositoryAdapterSpec extends AnyWordSpec with BeforeAnd
               Tag(name = TagName(s"ContentSerializingRepositoryAdapterSpec${i}.2"), path = TagPath(s"ContentSerializingRepositoryAdapterSpec-path${i}.2")),
               Tag(name = TagName(s"ContentSerializingRepositoryAdapterSpec${i}.3"), path = TagPath(s"ContentSerializingRepositoryAdapterSpec-path${i}.3"))
             ),
-            series = Option(requestSeries.name),
+            series = Option(
+              Series(
+                title = requestSeries.title,
+                name = requestSeries.name,
+                path = requestSeries.path,
+                description = None
+              )
+            ),
             externalResources = List()
           )
         )

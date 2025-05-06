@@ -6,6 +6,10 @@ properties:
   name:
     type: string
     example: "qualtet-development-history"
+  path:
+    description: "Added in `v2.18.0`"
+    type: string
+    example: "qualtet-development-history"
   title:
     type: string
     example: "Example series"
@@ -19,6 +23,7 @@ properties:
 required:
   - id
   - name
+  - path
   - title
   - description
   - articles

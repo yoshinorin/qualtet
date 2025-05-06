@@ -115,6 +115,11 @@ final case class SeriesNameRequired(
   errors: Option[Seq[ProblemDetailsError]] = None
 ) extends DomainError
 
+final case class SeriesPathRequired(
+  detail: String,
+  errors: Option[Seq[ProblemDetailsError]] = None
+) extends DomainError
+
 final case class SeriesTitleRequired(
   detail: String,
   errors: Option[Seq[ProblemDetailsError]] = None

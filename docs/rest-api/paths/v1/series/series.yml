@@ -16,7 +16,9 @@ get:
 post:
   summary: Create or Update a series
   description: |
-    Creates or updates a series. An upsert operation based on the `path`. If a series with the given path already exists, it will be updated with the new title and description. If it doesn't exist, a new series will be created.
+    Creates or updates a series. An upsert operation based on the `name`. If a series with the given path already exists, it will be updated with the new title and description. If it doesn't exist, a new series will be created.
+
+    **NOTE:** Since `v2.18.0`, added `path`.
   tags:
     - Series
   security:

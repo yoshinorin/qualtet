@@ -5,7 +5,7 @@ import doobie.syntax.all.*
 import doobie.util.query.Query0
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.{TagName, TagPath}
-import net.yoshinorin.qualtet.domains.series.SeriesName
+import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
 import net.yoshinorin.qualtet.domains.{Order, Pagination}
 import doobie.util.fragment.Fragment
 
@@ -137,6 +137,32 @@ object ArticleQuery {
         content_type_id = ${contentTypeId.value}
       AND
       	series.name = ${seriesName.value}
+      ORDER BY
+        published_at ASC
+    """
+      .query[(Int, ArticleReadModel)]
+  }
+
+  def findBySeriesPathWithCount(contentTypeId: ContentTypeId, seriesPath: SeriesPath): Read[(Int, ArticleReadModel)] ?=> Query0[(Int, ArticleReadModel)] = {
+    sql"""
+        SELECT
+        count(1) OVER () AS count,
+        contents.id,
+        contents.path,
+        contents.title,
+        html_content,
+        published_at,
+        updated_at
+      FROM
+        contents
+      LEFT JOIN contents_serializing ON
+        contents.id = contents_serializing.content_id
+      LEFT JOIN series ON
+        contents_serializing.series_id = series.id
+      WHERE
+        content_type_id = ${contentTypeId.value}
+      AND
+      	series.path = ${seriesPath.value}
       ORDER BY
         published_at ASC
     """

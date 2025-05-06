@@ -68,6 +68,9 @@ class ErrorsSpec extends AnyWordSpec {
       val seriesNameRequired = SeriesNameRequired(detail = "Series name required")
       assert(HttpError.fromDomainError(seriesNameRequired) === BadRequest(detail = "Series name required"))
 
+      val seriesPathRequired = SeriesPathRequired(detail = "Series path required")
+      assert(HttpError.fromDomainError(seriesPathRequired) === BadRequest(detail = "Series path required"))
+
       val seriesTitleRequired = SeriesTitleRequired(detail = "Series title required")
       assert(HttpError.fromDomainError(seriesTitleRequired) === BadRequest(detail = "Series title required"))
 

@@ -8,7 +8,7 @@ import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesName, SeriesRequestModel, SeriesService}
+import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesPath, SeriesRequestModel, SeriesService}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
@@ -74,7 +74,7 @@ class SeriesRoute[F[_]: Monad](
 
   private[http] def get(name: String): IO[Response[IO]] = {
     (for {
-      seriesWithArticles <- seriesService.get(SeriesName(name))
+      seriesWithArticles <- seriesService.get(SeriesPath(name))
       response <- Ok(seriesWithArticles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }

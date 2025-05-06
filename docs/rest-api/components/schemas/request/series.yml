@@ -1,9 +1,13 @@
 type: object
 properties:
+  name:
+    type: string
+    example: "example-series-name"
   path:
+    description: "Added in `v2.18.0`"
     type: string
     format: url(excludes domain part)
-    example: "/series/<example>"
+    example: "example-series"
   title:
     type: string
     example: "Example series"
@@ -11,5 +15,6 @@ properties:
     type: string
     example: "Example series description"
 required:
+  - name
   - path
   - title
