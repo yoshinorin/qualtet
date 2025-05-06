@@ -127,7 +127,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           Series(
             title = "Content Service Spec Series2",
             name = SeriesName("contentservice-series2"),
-            path = SeriesPath("contentservice-series-path2"),
+            path = SeriesPath("contentservice-series2-path"),
             description = None
           )
         ),
@@ -187,7 +187,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
         // second time update assetion
         assert(deletedTags.get.tags.isEmpty)
-        assert(updatedSeries.get.path === "contentservice-series2")
+        assert(updatedSeries.get.path === "contentservice-series2-path")
 
         // third time update assertion
         assert(deletedSeries.isEmpty)
