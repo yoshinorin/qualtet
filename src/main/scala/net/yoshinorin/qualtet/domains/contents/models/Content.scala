@@ -7,8 +7,7 @@ import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.domains.errors.{InvalidPath, UnexpectedException}
-import java.net.{URI, URISyntaxException}
+import net.yoshinorin.qualtet.domains.errors.InvalidPath
 
 opaque type ContentId = String
 object ContentId extends ValueExtender[ContentId] with UlidConvertible[ContentId] {
@@ -19,13 +18,17 @@ opaque type ContentPath = String
 object ContentPath extends ValueExtender[ContentPath] {
   given codecPath: JsonValueCodec[ContentPath] = JsonCodecMaker.make
 
+  private lazy val unusableChars = "[:?#@!$&'()*+,;=<>\"\\\\^`{}|~]"
+  private lazy val invalidPercentRegex = ".*%(?![0-9A-Fa-f]{2}).*"
+
   def apply(value: String): ContentPath = {
-    // NOTE: Probably follows https://www.ietf.org/rfc/rfc3986.txt
-    try {
-      URI(value);
-    } catch {
-      case _: URISyntaxException => throw InvalidPath(detail = s"Invalid character contains: ${value}")
-      case _ => throw UnexpectedException()
+
+    if (unusableChars.r.findFirstMatchIn(value).isDefined) {
+      throw InvalidPath(detail = s"Invalid character contains: ${value}")
+    }
+
+    if (invalidPercentRegex.r.matches(value)) {
+      throw InvalidPath(detail = s"Invalid percent encoding in path: ${value}")
     }
 
     if (!value.startsWith("/")) {
