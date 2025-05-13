@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.infrastructure.db
 
-import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeService, migrator}
+import cats.effect.IO
+import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeService, flywayMigrator, migrator}
 import org.scalatest.wordspec.AnyWordSpec
 
 import cats.effect.unsafe.implicits.global
@@ -10,9 +11,12 @@ class MigratorSpec extends AnyWordSpec {
 
   "Migrator" should {
 
-    "migrate" in {
+    "flywayMigrator and migrate" in {
 
-      migrator.migrate(contentTypeService).unsafeRunSync()
+      (for {
+        _ <- IO(flywayMigrator.migrate())
+        _ <- migrator.migrate(contentTypeService)
+      } yield ()).unsafeRunSync()
 
       val result = (for {
         a <- contentTypeService.findByName("article")

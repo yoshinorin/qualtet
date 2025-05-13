@@ -10,7 +10,11 @@ object Recreate extends IOApp {
 
     Modules.transactorResource.use { tx =>
       val modules = new Modules(tx)
-      modules.migrator.recrate(modules.contentTypeService).unsafeRunSync() // FIXME
+      (for {
+        _ <- IO(modules.flywayMigrator.clean())
+        _ <- IO(modules.flywayMigrator.migrate())
+        _ <- IO(modules.migrator.migrate(modules.contentTypeService))
+      } yield ()).unsafeRunSync()
       IO(ExitCode.Success)
     }
   }

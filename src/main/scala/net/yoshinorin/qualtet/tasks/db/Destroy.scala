@@ -8,7 +8,7 @@ object Destroy extends IOApp {
 
     Modules.transactorResource.use { tx =>
       val modules = new Modules(tx)
-      modules.migrator.clean()
+      modules.flywayMigrator.clean()
       IO(ExitCode.Success)
     }
   }

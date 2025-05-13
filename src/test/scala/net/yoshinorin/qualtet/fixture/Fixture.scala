@@ -74,6 +74,7 @@ object Fixture {
   given doobieExecuterContext: DoobieExecuter = new DoobieExecuter(fixtureTx)
 
   val jwtInstance = modules.jwtInstance
+  val flywayMigrator = modules.flywayMigrator
   val migrator = modules.migrator
   val articleService = modules.articleService
   val archiveService = modules.archiveService

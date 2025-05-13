@@ -35,7 +35,8 @@ object BootStrap extends IOApp {
       val port = Port.fromInt(modules.config.http.port).getOrElse(port"9001")
       (for {
         _ <- logger.info(ApplicationInfo.asJson)
-        _ <- IO(modules.migrator.migrate(modules.contentTypeService))
+        _ <- IO(modules.flywayMigrator.migrate())
+        _ <- modules.migrator.migrate(modules.contentTypeService)
         routes <- modules.router.withCors.map[Kleisli[IO, Request[IO], Response[IO]]](x => x.orNotFound)
         httpApp <- IO(new HttpAppBuilder(routes).build)
         server <- IO(
