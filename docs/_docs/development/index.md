@@ -105,8 +105,10 @@ $ sbt testWithDb
 Run specific test
 
 ```sh
-# NOTE: Many of test depends on DB. This command may not works well...
 $ sbt
+
+# NOTE: Many of test depends on DB. Please start up DB before run test.
+$ sbt:qualtet> testDbUp
 $ sbt:qualtet> testOnly *xxxxxSpec
 ```
 
