@@ -19,7 +19,7 @@ class SearchService[F[_]: Monad](
 )(using executer: Executer[F, IO]) {
 
   def cont(query: List[String]): ContT[F, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] = {
-    ContT.apply[F, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] { next =>
+    ContT.apply[F, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] { _ =>
       searchRepository.search(query).map { x =>
         x.map { case (count, search) =>
           (count, SearchResponseModel(search.path, search.title, search.content, search.publishedAt, search.updatedAt))

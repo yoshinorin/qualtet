@@ -9,7 +9,7 @@ class AuthorRepositoryAdapter[F[_]: Monad](
 ) {
 
   private[domains] def upsert(data: Author): ContT[F, Int, Int] = {
-    ContT.apply[F, Int, Int] { next =>
+    ContT.apply[F, Int, Int] { _ =>
       val w = AuthorWriteModel(
         id = data.id,
         name = data.name,
@@ -22,7 +22,7 @@ class AuthorRepositoryAdapter[F[_]: Monad](
   }
 
   private[domains] def fetch: ContT[F, Seq[AuthorResponseModel], Seq[AuthorResponseModel]] = {
-    ContT.apply[F, Seq[AuthorResponseModel], Seq[AuthorResponseModel]] { next =>
+    ContT.apply[F, Seq[AuthorResponseModel], Seq[AuthorResponseModel]] { _ =>
       authorRepository.getAll().map { authors =>
         authors.map { author =>
           AuthorResponseModel(
@@ -37,7 +37,7 @@ class AuthorRepositoryAdapter[F[_]: Monad](
   }
 
   private[domains] def findById(id: AuthorId): ContT[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] = {
-    ContT.apply[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] { next =>
+    ContT.apply[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] { _ =>
       authorRepository.findById(id).map { author =>
         author.map { a =>
           AuthorResponseModel(
@@ -52,7 +52,7 @@ class AuthorRepositoryAdapter[F[_]: Monad](
   }
 
   private[domains] def findByIdWithPassword(id: AuthorId): ContT[F, Option[Author], Option[Author]] = {
-    ContT.apply[F, Option[Author], Option[Author]] { next =>
+    ContT.apply[F, Option[Author], Option[Author]] { _ =>
       authorRepository.findByIdWithPassword(id).map { author =>
         author match {
           case Some(a) =>
@@ -72,7 +72,7 @@ class AuthorRepositoryAdapter[F[_]: Monad](
   }
 
   private[domains] def findByName(name: AuthorName): ContT[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] = {
-    ContT.apply[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] { next =>
+    ContT.apply[F, Option[AuthorResponseModel], Option[AuthorResponseModel]] { _ =>
       authorRepository.findByName(name).map { author =>
         author.map { a =>
           AuthorResponseModel(

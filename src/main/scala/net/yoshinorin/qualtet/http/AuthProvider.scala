@@ -49,7 +49,7 @@ class AuthProvider[F[_]: Monad](
       }
     })
 
-  private def onFailure: AuthedRoutes[DomainError, IO] = Kleisli { req =>
+  private def onFailure: AuthedRoutes[DomainError, IO] = Kleisli { _ =>
     OptionT.pure[IO](Response[IO](status = Status.Unauthorized))
   }
 

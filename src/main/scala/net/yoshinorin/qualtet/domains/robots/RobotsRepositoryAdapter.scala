@@ -8,14 +8,14 @@ class RobotsRepositoryAdapter[F[_]: Monad](
   robotsRepository: RobotsRepository[F]
 ) {
   private[domains] def upsert(data: Robots): ContT[F, Int, Int] = {
-    ContT.apply[F, Int, Int] { next =>
+    ContT.apply[F, Int, Int] { _ =>
       val w = RobotsWriteModel(contentId = data.contentId, attributes = data.attributes)
       robotsRepository.upsert(w)
     }
   }
 
   private[domains] def delete(contentId: ContentId): ContT[F, Unit, Unit] = {
-    ContT.apply[F, Unit, Unit] { next =>
+    ContT.apply[F, Unit, Unit] { _ =>
       robotsRepository.delete(contentId)
     }
   }

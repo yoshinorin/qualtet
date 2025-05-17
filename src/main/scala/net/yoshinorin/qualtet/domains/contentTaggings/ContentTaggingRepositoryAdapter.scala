@@ -11,7 +11,7 @@ class ContentTaggingRepositoryAdapter[F[_]: Monad](
 ) {
 
   private[domains] def findByTagId(id: TagId): ContT[F, Seq[ContentTagging], Seq[ContentTagging]] = {
-    ContT.apply[F, Seq[ContentTagging], Seq[ContentTagging]] { next =>
+    ContT.apply[F, Seq[ContentTagging], Seq[ContentTagging]] { _ =>
       contentTaggingRepository.findByTagId(id).map { ct =>
         ct.map(c => ContentTagging(c.contentId, c.tagId))
       }
@@ -19,7 +19,7 @@ class ContentTaggingRepositoryAdapter[F[_]: Monad](
   }
 
   private[domains] def bulkUpsert(data: List[ContentTagging]): ContT[F, Int, Int] = {
-    ContT.apply[F, Int, Int] { next =>
+    ContT.apply[F, Int, Int] { _ =>
       data.size match {
         case 0 => Monad[F].pure(0)
         case _ => {
@@ -31,19 +31,19 @@ class ContentTaggingRepositoryAdapter[F[_]: Monad](
   }
 
   private[domains] def deleteByContentId(id: ContentId): ContT[F, Unit, Unit] = {
-    ContT.apply[F, Unit, Unit] { next =>
+    ContT.apply[F, Unit, Unit] { _ =>
       contentTaggingRepository.deleteByContentId(id)
     }
   }
 
   private[domains] def deleteByTagId(id: TagId): ContT[F, Unit, Unit] = {
-    ContT.apply[F, Unit, Unit] { next =>
+    ContT.apply[F, Unit, Unit] { _ =>
       contentTaggingRepository.deleteByTagId(id)
     }
   }
 
   private[domains] def delete(contentId: ContentId, tagIds: Seq[TagId]): ContT[F, Unit, Unit] = {
-    ContT.apply[F, Unit, Unit] { next =>
+    ContT.apply[F, Unit, Unit] { _ =>
       contentTaggingRepository.delete(contentId, tagIds)
     }
   }

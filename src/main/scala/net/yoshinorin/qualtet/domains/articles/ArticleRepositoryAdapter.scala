@@ -17,7 +17,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
     none: Unit = (),
     queryParams: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
-    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
+    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.getWithCount(contentTypeId, queryParams).map { article =>
         article.map { case (count, article) =>
           (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
@@ -31,7 +31,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
     tagName: TagName,
     queryParams: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
-    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
+    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams).map { article =>
         article.map { case (count, article) =>
           (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
@@ -45,7 +45,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
     tagPath: TagPath,
     queryParams: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
-    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
+    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.findByTagPathWithCount(contentTypeId, tagPath, queryParams).map { article =>
         article.map { case (count, article) =>
           (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
@@ -59,7 +59,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
     seriesName: SeriesName,
     queryParams: Pagination // TODO: `Optional`
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
-    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
+    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName).map { article =>
         article.map { case (count, article) =>
           (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
@@ -73,7 +73,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
     seriesPath: SeriesPath,
     queryParams: Pagination // TODO: `Optional`
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
-    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { next =>
+    ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.findBySeriesPathWithCount(contentTypeId, seriesPath).map { article =>
         article.map { case (count, article) =>
           (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))

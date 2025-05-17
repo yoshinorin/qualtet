@@ -10,7 +10,7 @@ class ContentRepositoryAdapter[F[_]: Monad](
 ) {
 
   private[domains] def upsert(data: Content): ContT[F, Int, Int] = {
-    ContT.apply[F, Int, Int] { next =>
+    ContT.apply[F, Int, Int] { _ =>
       val w = ContentWriteModel(
         id = data.id,
         authorId = data.authorId,
@@ -27,13 +27,13 @@ class ContentRepositoryAdapter[F[_]: Monad](
   }
 
   private[domains] def delete(id: ContentId): ContT[F, Unit, Unit] = {
-    ContT.apply[F, Unit, Unit] { next =>
+    ContT.apply[F, Unit, Unit] { _ =>
       contentRepository.delete(id)
     }
   }
 
   private[domains] def findById(id: ContentId): ContT[F, Option[Content], Option[Content]] = {
-    ContT.apply[F, Option[Content], Option[Content]] { next =>
+    ContT.apply[F, Option[Content], Option[Content]] { _ =>
       contentRepository.findById(id).map { content =>
         content match {
           case Some(c) =>
@@ -57,7 +57,7 @@ class ContentRepositoryAdapter[F[_]: Monad](
   }
 
   private[domains] def findByPath(path: ContentPath): ContT[F, Option[Content], Option[Content]] = {
-    ContT.apply[F, Option[Content], Option[Content]] { next =>
+    ContT.apply[F, Option[Content], Option[Content]] { _ =>
       contentRepository.findByPath(path).map { content =>
         content match {
           case Some(c) =>
@@ -81,7 +81,7 @@ class ContentRepositoryAdapter[F[_]: Monad](
   }
 
   private[domains] def findByPathWithMeta(path: ContentPath): ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]] = {
-    ContT.apply[F, Option[ContentWithMeta], Option[ContentWithMeta]] { next =>
+    ContT.apply[F, Option[ContentWithMeta], Option[ContentWithMeta]] { _ =>
       contentRepository.findByPathWithMeta(path).map { content =>
         content match {
           case Some(c) =>
