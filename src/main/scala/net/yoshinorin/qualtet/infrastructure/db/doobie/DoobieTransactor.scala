@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.infrastructure.db.doobie
 
 import cats.effect.{IO, Resource}
-import doobie.*
 import doobie.util.transactor.Transactor.Aux
 import doobie.hikari.*
 import com.zaxxer.hikari.HikariConfig
