@@ -3,8 +3,7 @@ package net.yoshinorin.qualtet.domains.articles
 import cats.data.ContT
 import cats.effect.IO
 import cats.Monad
-import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound}
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
@@ -27,7 +26,7 @@ class ArticleService[F[_]: Monad](
     f: (ContentTypeId, A, Pagination) => ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]]
   ): IO[ArticleWithCountResponseModel] = {
     for {
-      c <- contentTypeService.findByName("article").throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
+      c <- contentTypeService.findByName(ContentTypeName("article")).throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
       articlesWithCount <- executer.transact(f(c.id, data, queryParam))
     } yield
       if (articlesWithCount.nonEmpty) {

@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
+import net.yoshinorin.qualtet.domains.errors.InvalidContentTypeName
 import net.yoshinorin.qualtet.fixture.Fixture.contentTypeId
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -19,10 +20,24 @@ class ContentTypeSpec extends AnyWordSpec {
     }
   }
 
+  "ContentTypeName" should {
+    "valid value" in {
+      assert(ContentTypeName("123AbcDef_-").value === "123abcdef_-")
+    }
+    "invalid value" in {
+      assertThrows[InvalidContentTypeName] {
+        ContentTypeName("123AbcDef_-.")
+      }
+      assertThrows[InvalidContentTypeName] {
+        ContentTypeName("123AbcDef_-!")
+      }
+    }
+  }
+
   "ContentType" should {
     "default instance" in {
       val content = ContentType(
-        name = "article"
+        name = ContentTypeName("article")
       )
       assert(content.id.isInstanceOf[ContentTypeId])
     }

@@ -75,6 +75,11 @@ final case class InvalidContentType(
   errors: Option[Seq[ProblemDetailsError]] = None
 ) extends DomainError
 
+final case class InvalidContentTypeName(
+  detail: String,
+  errors: Option[Seq[ProblemDetailsError]] = None
+) extends DomainError
+
 final case class InvalidExternalResourceKind(
   detail: String,
   errors: Option[Seq[ProblemDetailsError]] = None

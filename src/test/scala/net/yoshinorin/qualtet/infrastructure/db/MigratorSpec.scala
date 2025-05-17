@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.infrastructure.db
 
 import cats.effect.IO
 import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeService, flywayMigrator, migrator}
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeName
 import org.scalatest.wordspec.AnyWordSpec
 
 import cats.effect.unsafe.implicits.global
@@ -19,8 +20,8 @@ class MigratorSpec extends AnyWordSpec {
       } yield ()).unsafeRunSync()
 
       val result = (for {
-        a <- contentTypeService.findByName("article")
-        p <- contentTypeService.findByName("page")
+        a <- contentTypeService.findByName(ContentTypeName("article"))
+        p <- contentTypeService.findByName(ContentTypeName("page"))
       } yield (a, p)).unsafeRunSync()
 
       assert(result._1.isDefined)

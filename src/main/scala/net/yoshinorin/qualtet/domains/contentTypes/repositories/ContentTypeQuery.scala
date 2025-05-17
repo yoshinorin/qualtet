@@ -22,8 +22,8 @@ object ContentTypeQuery {
       .query[ContentTypeReadModel]
   }
 
-  def findByName(name: String): Read[ContentTypeReadModel] ?=> Query0[ContentTypeReadModel] = {
-    sql"SELECT * FROM content_types WHERE name = ${name}"
+  def findByName(name: ContentTypeName): Read[ContentTypeReadModel] ?=> Query0[ContentTypeReadModel] = {
+    sql"SELECT * FROM content_types WHERE name = ${name.value}"
       .query[ContentTypeReadModel]
   }
 }

@@ -38,21 +38,21 @@ class ContentTypeService[F[_]: Monad](
    * @param name name of ContentType
    * @return ContentType
    */
-  def findByName(name: String): IO[Option[ContentType]] = {
+  def findByName(name: ContentTypeName): IO[Option[ContentType]] = {
 
-    def fromDB(name: String): IO[Option[ContentType]] = {
+    def fromDB(name: ContentTypeName): IO[Option[ContentType]] = {
       executer.transact(contentTypeRepositoryAdapter.findByName(name))
     }
 
     for {
-      maybeContentType <- cache.get(name)
+      maybeContentType <- cache.get(name.value)
       contentType <- maybeContentType match {
         case Some(c: ContentType) => IO.pure(Some(c))
         case _ =>
           for {
             maybeDbContentType <- fromDB(name)
             _ <- maybeDbContentType match {
-              case Some(dc: ContentType) => cache.put(name, dc)
+              case Some(dc: ContentType) => cache.put(name.value, dc)
               case _ => IO.pure(None)
             }
           } yield maybeDbContentType

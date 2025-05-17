@@ -8,7 +8,7 @@ class ContentTypeRepositoryAdapter[F[_]: Monad](
   contentRepository: ContentTypeRepository[F]
 ) {
 
-  private[domains] def findByName(name: String): ContT[F, Option[ContentType], Option[ContentType]] = {
+  private[domains] def findByName(name: ContentTypeName): ContT[F, Option[ContentType], Option[ContentType]] = {
     ContT.apply[F, Option[ContentType], Option[ContentType]] { next =>
       contentRepository.findByName(name).map {
         case Some(c) => Some(ContentType(c.id, c.name))

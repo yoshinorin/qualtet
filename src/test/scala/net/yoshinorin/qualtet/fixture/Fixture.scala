@@ -208,7 +208,7 @@ object Fixture {
 
   val contentId: ContentId = ContentId("01febb1333pd3431q1a1e00fbt")
   val contentTypeId: ContentTypeId = ContentTypeId("01febb1333pd3431q1a1e01fbc")
-  val articleContentType: ContentType = ContentType(contentTypeId, "articles")
+  val articleContentType: ContentType = ContentType(contentTypeId, ContentTypeName("articles"))
   val fullRobotsAttributes: Attributes = Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex")
 
   def createContentRequestModels(

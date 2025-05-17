@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.authors.AuthorService
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingRepositoryAdapter}
-import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.externalResources.{
   ExternalResource,
   ExternalResourceDeleteModel,
@@ -50,7 +50,9 @@ class ContentService[F[_]: Monad](
 
     for {
       a <- authorService.findByName(authorName).throwIfNone(InvalidAuthor(detail = s"user not found: ${request.contentType}"))
-      c <- contentTypeService.findByName(request.contentType).throwIfNone(InvalidContentType(detail = s"content-type not found: ${request.contentType}"))
+      c <- contentTypeService
+        .findByName(ContentTypeName(request.contentType))
+        .throwIfNone(InvalidContentType(detail = s"content-type not found: ${request.contentType}"))
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
         case None => ContentId.apply()
