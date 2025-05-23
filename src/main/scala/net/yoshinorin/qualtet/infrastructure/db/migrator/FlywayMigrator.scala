@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.infrastructure.db
+package net.yoshinorin.qualtet.infrastructure.db.migrator
 
 import org.flywaydb.core.Flyway
 import net.yoshinorin.qualtet.config.DBConfig
