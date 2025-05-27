@@ -47,7 +47,8 @@ import net.yoshinorin.qualtet.http.routes.v1.{
   SystemRoute as SystemRouteV1,
   TagRoute as TagRouteV1
 }
-import net.yoshinorin.qualtet.infrastructure.db.migrator.{FlywayMigrator, Migrator}
+import net.yoshinorin.qualtet.infrastructure.db.migrator.FlywayMigrator
+import net.yoshinorin.qualtet.infrastructure.db.migrator.application.Migrator
 import net.yoshinorin.qualtet.infrastructure.db.doobie.{DoobieExecuter, DoobieTransactor}
 import net.yoshinorin.qualtet.infrastructure.versions.{VersionRepository, VersionRepositoryAdapter, VersionService}
 

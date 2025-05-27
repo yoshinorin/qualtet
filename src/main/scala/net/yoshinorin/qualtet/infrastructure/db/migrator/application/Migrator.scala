@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.infrastructure.db.migrator
+package net.yoshinorin.qualtet.infrastructure.db.migrator.application
 
 import cats.Monad
 import cats.effect.IO
