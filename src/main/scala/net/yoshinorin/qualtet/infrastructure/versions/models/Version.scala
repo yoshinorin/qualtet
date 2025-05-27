@@ -10,6 +10,6 @@ enum MigrationStatus(val value: String) {
 
 final case class Version(
   version: String,
-  migrationStatus: MigrationStatus,
-  deployedAt: Long
+  migrationStatus: MigrationStatus = MigrationStatus.NOT_REQUIRED,
+  deployedAt: Long = 0
 )
