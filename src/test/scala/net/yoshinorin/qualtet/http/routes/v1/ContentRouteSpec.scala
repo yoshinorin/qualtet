@@ -426,7 +426,7 @@ class ContentRouteSpec extends AnyWordSpec {
 
       // NOTE: create content and related data for test
       contentService
-        .create(
+        .createOrUpdate(
           validAuthor.name,
           ContentRequestModel(
             contentType = "article",

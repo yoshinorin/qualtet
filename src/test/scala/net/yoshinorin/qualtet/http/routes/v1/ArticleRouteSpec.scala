@@ -39,7 +39,7 @@ class ArticleRouteSpec extends AnyWordSpec {
   }
 
   // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.create(AuthorName(author.name.value), rc).unsafeRunSync() }
+  requestContents.foreach { rc => contentService.createOrUpdate(AuthorName(author.name.value), rc).unsafeRunSync() }
 
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 

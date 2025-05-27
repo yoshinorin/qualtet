@@ -56,7 +56,7 @@ class ContentRoute[F[_]: Monad](
       c match {
         case Left(f) => throw f
         case Right(c) =>
-          contentService.create(payload._1.name, c).flatMap { createdContent =>
+          contentService.createOrUpdate(payload._1.name, c).flatMap { createdContent =>
             Created(createdContent.asJson, `Content-Type`(MediaType.application.json))
           }
       }

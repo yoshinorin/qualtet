@@ -40,13 +40,7 @@ class ContentService[F[_]: Monad](
   executer: Executer[F, IO]
 ) {
 
-  /**
-   * create a content from RequestContent case class
-   *
-   * @param request RequestContent
-   * @return created Content with IO
-   */
-  def create(authorName: AuthorName, request: ContentRequestModel): IO[ContentResponseModel] = {
+  def createOrUpdate(authorName: AuthorName, request: ContentRequestModel): IO[ContentResponseModel] = {
 
     for {
       a <- authorService.findByName(authorName).throwIfNone(InvalidAuthor(detail = s"user not found: ${request.contentType}"))
@@ -71,7 +65,7 @@ class ContentService[F[_]: Monad](
             case Some(s) => IO(Option(ContentSerializing(s.id, contentId)))
           }
       }
-      createdContent <- this.create(
+      createdContent <- this.createOrUpdate(
         Content(
           id = contentId,
           authorId = a.id,
@@ -102,13 +96,7 @@ class ContentService[F[_]: Monad](
     )
   }
 
-  /**
-   * create a content
-   *
-   * @param data Instance of Content
-   * @return Instance of created Content with IO
-   */
-  private def create(
+  private def createOrUpdate(
     data: Content,
     robotsAttributes: Attributes,
     tags: Option[List[Tag]],

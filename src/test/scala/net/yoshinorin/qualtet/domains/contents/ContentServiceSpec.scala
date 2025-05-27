@@ -69,7 +69,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "create content and related data" in {
       (for {
-        craeted <- contentService.create(AuthorName(author.name.value), requestContent1)
+        craeted <- contentService.createOrUpdate(AuthorName(author.name.value), requestContent1)
         maybeFound <- contentService.findByPathWithMeta(craeted.path)
       } yield {
         assert(craeted.id.isInstanceOf[ContentId])
@@ -141,20 +141,20 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
 
       (for {
-        created <- contentService.create(AuthorName(author.name.value), requestContent)
+        created <- contentService.createOrUpdate(AuthorName(author.name.value), requestContent)
         maybeCreatedFound <- contentService.findByPathWithMeta(requestContent.path)
 
         // first time update
-        updated <- contentService.create(AuthorName(author.name.value), updateRequestContent)
+        updated <- contentService.createOrUpdate(AuthorName(author.name.value), updateRequestContent)
         maybeFoundUpdated <- contentService.findByPathWithMeta(requestContent.path)
         updatedSeries <- seriesService.findByContentId(updated.id)
 
         // second time update (delete related tags)
-        _ <- contentService.create(AuthorName(author.name.value), updateRequestContent.copy(tags = List()))
+        _ <- contentService.createOrUpdate(AuthorName(author.name.value), updateRequestContent.copy(tags = List()))
         deletedTags <- contentService.findByPathWithMeta(requestContent.path)
 
         // third time update (delete related series)
-        _ <- contentService.create(AuthorName(author.name.value), updateRequestContent.copy(series = None))
+        _ <- contentService.createOrUpdate(AuthorName(author.name.value), updateRequestContent.copy(series = None))
         deletedSeries <- seriesService.findByContentId(updated.id)
       } yield {
         assert(created.id === updated.id)
@@ -208,7 +208,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
 
       (for {
-        created <- contentService.create(AuthorName(author.name.value), requestContentNoMetas)
+        created <- contentService.createOrUpdate(AuthorName(author.name.value), requestContentNoMetas)
         maybeFound <- contentService.findByPathWithMeta(created.path)
       } yield {
         assert(maybeFound.nonEmpty)
@@ -226,7 +226,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
 
       (for {
-        createdContent <- contentService.create(AuthorName(author.name.value), createRequestContent)
+        createdContent <- contentService.createOrUpdate(AuthorName(author.name.value), createRequestContent)
         maybeContent <- contentService.findById(createdContent.id)
       } yield {
         assert(maybeContent.get.path === createRequestContent.path)
@@ -239,7 +239,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
 
       (for {
-        updated <- contentService.create(AuthorName(author.name.value), updatedRequestContent)
+        updated <- contentService.createOrUpdate(AuthorName(author.name.value), updatedRequestContent)
         maybeFound <- contentService.findByPathWithMeta(requestContent1.path)
       } yield {
         assert(maybeFound.get.content === updatedRequestContent.htmlContent)
@@ -299,8 +299,8 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       (for {
         // create test data
-        shouldeDelete <- contentService.create(AuthorName(author.name.value), shouldDeleteContent)
-        shouldNotDelete <- contentService.create(AuthorName(author.name.value), shouldNotDeleteContent)
+        shouldeDelete <- contentService.createOrUpdate(AuthorName(author.name.value), shouldDeleteContent)
+        shouldNotDelete <- contentService.createOrUpdate(AuthorName(author.name.value), shouldNotDeleteContent)
 
         // delete one content
         _ <- contentService.delete(shouldeDelete.id)
@@ -326,20 +326,20 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "throw Author InvalidAuthor Exception" in {
       assertThrows[InvalidAuthor] {
-        contentService.create(AuthorName("not_exists_user"), requestContent1).unsafeRunSync()
+        contentService.createOrUpdate(AuthorName("not_exists_user"), requestContent1).unsafeRunSync()
       }
     }
 
     "throw Content-Type InvalidContentType Exception" in {
       assertThrows[InvalidContentType] {
-        contentService.create(AuthorName(author.name.value), requestContent1.copy(contentType = "not_exists_content-type")).unsafeRunSync()
+        contentService.createOrUpdate(AuthorName(author.name.value), requestContent1.copy(contentType = "not_exists_content-type")).unsafeRunSync()
       }
     }
 
     "throw Series UnprocessableEntity Exception" in {
       assertThrows[InvalidSeries] {
         contentService
-          .create(
+          .createOrUpdate(
             AuthorName(author.name.value),
             requestContent1.copy(series =
               Some(
