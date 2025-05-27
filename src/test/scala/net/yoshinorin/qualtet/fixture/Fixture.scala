@@ -87,6 +87,7 @@ object Fixture {
   val seriesService = modules.seriesService
   val searchService = modules.searchService
   val tagRepositoryAdapter = modules.tagRepositoryAdapter
+  val versionService = modules.versionService
 
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =

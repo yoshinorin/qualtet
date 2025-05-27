@@ -34,6 +34,10 @@ trait string {
     def toLower: String = {
       s.toLowerCase(Locale.ROOT)
     }
+
+    def toUpper: String = {
+      s.toUpperCase(Locale.ROOT)
+    }
   }
 
 }

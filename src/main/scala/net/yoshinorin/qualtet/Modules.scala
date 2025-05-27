@@ -49,6 +49,7 @@ import net.yoshinorin.qualtet.http.routes.v1.{
 }
 import net.yoshinorin.qualtet.infrastructure.db.migrator.{FlywayMigrator, Migrator}
 import net.yoshinorin.qualtet.infrastructure.db.doobie.{DoobieExecuter, DoobieTransactor}
+import net.yoshinorin.qualtet.infrastructure.versions.{VersionRepository, VersionRepositoryAdapter, VersionService}
 
 import pdi.jwt.JwtAlgorithm
 import java.security.SecureRandom
@@ -165,6 +166,10 @@ class Modules(tx: Transactor[IO]) {
     contentTypeService,
     feedService
   )
+
+  val versionRepository: VersionRepository[ConnectionIO] = summon[VersionRepository[ConnectionIO]]
+  val versionRepositoryAdapter: VersionRepositoryAdapter[ConnectionIO] = new VersionRepositoryAdapter[ConnectionIO](versionRepository)
+  val versionService = new VersionService(versionRepositoryAdapter)
 
   val authProvider = new AuthProvider(authService)
   val corsProvider = new CorsProvider(config.cors)
