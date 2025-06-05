@@ -24,6 +24,9 @@ subsection:
   - title: ER Diagram
     directory: docs/er-diagram
     index: er-diagram/index.md
+  - title: Versions and Migration
+    directory: docs/versions-and-migration
+    index: versions-and-migration/index.md
   - title: Releases
     directory: docs/releases
     index: releases/index.md

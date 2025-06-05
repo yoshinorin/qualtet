@@ -170,7 +170,7 @@ class Modules(tx: Transactor[IO]) {
 
   val versionRepository: VersionRepository[ConnectionIO] = summon[VersionRepository[ConnectionIO]]
   val versionRepositoryAdapter: VersionRepositoryAdapter[ConnectionIO] = new VersionRepositoryAdapter[ConnectionIO](versionRepository)
-  val versionService = new VersionService(versionRepositoryAdapter)
+  val versionService = new VersionService(versionRepositoryAdapter, None)
 
   val authProvider = new AuthProvider(authService)
   val corsProvider = new CorsProvider(config.cors)

@@ -87,6 +87,7 @@ object Fixture {
   val seriesService = modules.seriesService
   val searchService = modules.searchService
   val tagRepositoryAdapter = modules.tagRepositoryAdapter
+  val versionRepositoryAdapter = modules.versionRepositoryAdapter
   val versionService = modules.versionService
 
   // TODO: from config for cache options
