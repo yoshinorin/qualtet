@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.infrastructure.versions
 
 import cats.Monad
-import cats.Eq
 import cats.implicits.*
 import cats.effect.IO
 import net.yoshinorin.qualtet.infrastructure.db.Executer
@@ -9,8 +8,7 @@ import net.yoshinorin.qualtet.infrastructure.db.Executer
 import java.time.ZonedDateTime
 
 class VersionService[F[_]: Monad](
-  versionRepositoryAdapter: VersionRepositoryAdapter[F],
-  applicationVersions: Option[ApplicationVersion[IO]] = None // TODO: `Option` to `List`
+  versionRepositoryAdapter: VersionRepositoryAdapter[F]
 )(using executer: Executer[F, IO]) {
 
   def get: IO[Seq[Version]] = {
@@ -24,10 +22,11 @@ class VersionService[F[_]: Monad](
     } yield (versions.filter(v => v.version === data.version).head)
   }
 
-  def migrateIfNeed(): IO[Version] = {
+  // TODO: change the function scope to `private`.
+  def migrateIfNeed(applicationVersion: ApplicationVersion[IO]): IO[Version] = {
     // TODO: logging
     for {
-      data <- applicationVersions.get.get()
+      data <- applicationVersion.get()
       maybeVersions <- this.get
       version <- maybeVersions.filter(v => v.version === data.version).headOption match {
         case None => this.createOrUpdate(data)
@@ -41,7 +40,7 @@ class VersionService[F[_]: Monad](
         case MigrationStatus.UNAPPLIED | MigrationStatus.FAILED => {
           (for {
             _ <- this.createOrUpdate(data.copy(migrationStatus = MigrationStatus.IN_PROGRESS))
-            _ <- applicationVersions.get.migrate()
+            _ <- applicationVersion.migrate()
             result <- this.createOrUpdate(data.copy(migrationStatus = MigrationStatus.SUCCESS, deployedAt = ZonedDateTime.now.toEpochSecond))
           } yield (result)).handleErrorWith { _ =>
             this.createOrUpdate(data.copy(migrationStatus = MigrationStatus.FAILED))
@@ -51,6 +50,10 @@ class VersionService[F[_]: Monad](
           IO(version)
       }
     } yield (result)
+  }
+
+  def migrate(applicationVersion: Option[ApplicationVersion[IO]] = None): IO[Version] = {
+    this.migrateIfNeed(applicationVersion.get)
   }
 
 }
