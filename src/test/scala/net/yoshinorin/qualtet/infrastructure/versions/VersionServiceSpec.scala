@@ -59,7 +59,6 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     }
 
     val now = ZonedDateTime.now.toEpochSecond
-    val versionService = new VersionService(versionRepositoryAdapter)
 
     "insert new record with `not_required`" in {
 
