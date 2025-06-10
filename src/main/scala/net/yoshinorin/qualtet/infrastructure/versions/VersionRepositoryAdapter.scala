@@ -11,7 +11,7 @@ class VersionRepositoryAdapter[F[_]: Monad](
   private[versions] def upsert(data: Version): ContT[F, Int, Int] = {
     ContT.apply[F, Int, Int] { _ =>
       val w = VersionWriteModel(
-        version = data.version,
+        version = data.version.value,
         migrationStatus = data.migrationStatus,
         deployedAt = data.deployedAt
       )
@@ -24,7 +24,7 @@ class VersionRepositoryAdapter[F[_]: Monad](
       versionRepository.get.map { version =>
         version.map(v =>
           Version(
-            version = v.version,
+            version = VersionString(v.version),
             migrationStatus = v.migrationStatus,
             deployedAt = v.deployedAt
           )
