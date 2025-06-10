@@ -44,14 +44,14 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
   }
 
   "migrate" should {
-    import net.yoshinorin.qualtet.infrastructure.versions.ApplicationVersion
+    import net.yoshinorin.qualtet.infrastructure.versions.VersionMigrator
     import cats.effect.IO
 
     def createInstance[F[_]: Monad](
       defaultVersion: Version,
       migrateFunc: () => F[Unit]
-    ): ApplicationVersion[F] = {
-      new ApplicationVersion[F](default = defaultVersion) {
+    ): VersionMigrator[F] = {
+      new VersionMigrator[F](default = defaultVersion) {
         override def migrate(): F[Unit] = migrateFunc()
         override def get(): F[Version] = super.getDefault()
         override def getDefault(): F[Version] = super.getDefault()
@@ -63,10 +63,10 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "insert new record with `not_required`" in {
 
       val v0000Default: Version = Version(version = VersionString("0.0.0.0"), migrationStatus = MigrationStatus.NOT_REQUIRED, deployedAt = 0)
-      given V0000: ApplicationVersion[IO] = {
+      given V0000: VersionMigrator[IO] = {
         createInstance[IO](v0000Default, () => IO.pure(()))
       }
-      val v0000: ApplicationVersion[IO] = summon[ApplicationVersion[IO]](using V0000)
+      val v0000: VersionMigrator[IO] = summon[VersionMigrator[IO]](using V0000)
 
       (for {
         craeted <- versionService.migrate(Some(v0000))
@@ -83,10 +83,10 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "skip migration if `deployedAt` is not `0`" in {
 
       val v0001Default: Version = Version(version = VersionString("0.0.0.1"), migrationStatus = MigrationStatus.NOT_REQUIRED, deployedAt = 1749136951)
-      given V0001: ApplicationVersion[IO] = {
+      given V0001: VersionMigrator[IO] = {
         createInstance[IO](v0001Default, () => IO.pure(()))
       }
-      val v0001: ApplicationVersion[IO] = summon[ApplicationVersion[IO]](using V0001)
+      val v0001: VersionMigrator[IO] = summon[VersionMigrator[IO]](using V0001)
 
       (for {
         _ <- versionService.createOrUpdate(v0001Default)
@@ -101,10 +101,10 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "try migration if status is `unapplied`" in {
 
       val v0004Default: Version = Version(version = VersionString("0.0.0.4"), migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)
-      given V0004: ApplicationVersion[IO] = {
+      given V0004: VersionMigrator[IO] = {
         createInstance[IO](v0004Default, () => IO.pure(()))
       }
-      val v0004: ApplicationVersion[IO] = summon[ApplicationVersion[IO]](using V0004)
+      val v0004: VersionMigrator[IO] = summon[VersionMigrator[IO]](using V0004)
 
       (for {
         migrated <- versionService.migrate(Some(v0004))
@@ -121,10 +121,10 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "try migration if status is `failed`" in {
 
       val v0005Default: Version = Version(version = VersionString("0.0.0.5"), migrationStatus = MigrationStatus.FAILED, deployedAt = 0)
-      given V0005: ApplicationVersion[IO] = {
+      given V0005: VersionMigrator[IO] = {
         createInstance[IO](v0005Default, () => IO.pure(()))
       }
-      val v0005: ApplicationVersion[IO] = summon[ApplicationVersion[IO]](using V0005)
+      val v0005: VersionMigrator[IO] = summon[VersionMigrator[IO]](using V0005)
 
       (for {
         migrated <- versionService.migrate(Some(v0005))
@@ -141,7 +141,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "failed migration" in {
 
       val v0006Default: Version = Version(version = VersionString("0.0.0.6"), migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)
-      given V0006: ApplicationVersion[IO] = {
+      given V0006: VersionMigrator[IO] = {
         createInstance[IO](
           v0006Default,
           () =>
@@ -150,7 +150,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
             }
         )
       }
-      val v0006: ApplicationVersion[IO] = summon[ApplicationVersion[IO]](using V0006)
+      val v0006: VersionMigrator[IO] = summon[VersionMigrator[IO]](using V0006)
 
       (for {
         migrated <- versionService.migrate(Some(v0006))
@@ -167,10 +167,10 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "skip migration if status is `in_progress`" in {
 
       val v0002Default: Version = Version(version = VersionString("0.0.0.2"), migrationStatus = MigrationStatus.IN_PROGRESS, deployedAt = 0)
-      given V0002: ApplicationVersion[IO] = {
+      given V0002: VersionMigrator[IO] = {
         createInstance[IO](v0002Default, () => IO.pure(()))
       }
-      val v0002: ApplicationVersion[IO] = summon[ApplicationVersion[IO]](using V0002)
+      val v0002: VersionMigrator[IO] = summon[VersionMigrator[IO]](using V0002)
 
       (for {
         _ <- versionService.createOrUpdate(v0002Default)
@@ -185,10 +185,10 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "skip migration if status is `success`" in {
 
       val v0003Default: Version = Version(version = VersionString("0.0.0.3"), migrationStatus = MigrationStatus.SUCCESS, deployedAt = 1749137824)
-      given V0003: ApplicationVersion[IO] = {
+      given V0003: VersionMigrator[IO] = {
         createInstance[IO](v0003Default, () => IO.pure(()))
       }
-      val v0003: ApplicationVersion[IO] = summon[ApplicationVersion[IO]](using V0003)
+      val v0003: VersionMigrator[IO] = summon[VersionMigrator[IO]](using V0003)
 
       (for {
         _ <- versionService.createOrUpdate(v0003Default)

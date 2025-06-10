@@ -26,9 +26,9 @@ class VersionService[F[_]: Monad](
   }
 
   // TODO: change the function scope to `private`.
-  def migrateIfNeed(applicationVersion: ApplicationVersion[IO]): IO[Version] = {
+  def migrateIfNeed(VersionMigrator: VersionMigrator[IO]): IO[Version] = {
     for {
-      data <- applicationVersion.get()
+      data <- VersionMigrator.get()
       _ <- logger.info(s"Starting migration check for version: ${data.version.value}")
       maybeVersions <- this.get
       version <- maybeVersions.filter(v => v.version === data.version).headOption match {
@@ -52,7 +52,7 @@ class VersionService[F[_]: Monad](
               _ <- logger.info(s"Setting migration status to in_progress for version: ${data.version.value}")
               _ <- this.createOrUpdate(data.copy(migrationStatus = MigrationStatus.IN_PROGRESS))
               _ <- logger.info(s"Executing migration for version: ${data.version.value}")
-              _ <- applicationVersion.migrate()
+              _ <- VersionMigrator.migrate()
               _ <- logger.info(s"Migration completed successfully for version: ${data.version.value}")
               result <- this.createOrUpdate(data.copy(migrationStatus = MigrationStatus.SUCCESS, deployedAt = ZonedDateTime.now.toEpochSecond))
               _ <- logger.info(s"Version ${data.version.value} migration status updated to success")
@@ -69,8 +69,8 @@ class VersionService[F[_]: Monad](
     } yield (result)
   }
 
-  def migrate(applicationVersion: Option[ApplicationVersion[IO]] = None): IO[Version] = {
-    this.migrateIfNeed(applicationVersion.get)
+  def migrate(VersionMigrator: Option[VersionMigrator[IO]] = None): IO[Version] = {
+    this.migrateIfNeed(VersionMigrator.get)
   }
 
 }
