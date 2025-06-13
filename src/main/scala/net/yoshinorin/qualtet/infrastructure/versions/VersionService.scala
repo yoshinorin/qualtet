@@ -25,8 +25,7 @@ class VersionService[F[_]: Monad](
     } yield (versions.filter(v => v.version === data.version).head)
   }
 
-  // TODO: change the function scope to `private`.
-  def migrateIfNeed(versionMigrator: VersionMigrator[F, IO]): IO[Version] = {
+  private[versions] def migrateIfNeed(versionMigrator: VersionMigrator[F, IO]): IO[Version] = {
     for {
       data <- versionMigrator.get()
       _ <- logger.info(s"Starting migration check for version: ${data.version.value}")
