@@ -206,9 +206,9 @@ object V218Migrator {
     val seriesRepositoryV217: SeriesRepositoryV217[ConnectionIO] = summon[SeriesRepositoryV217[ConnectionIO]]
     val logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(classOf[V218Migrator.type])
 
-    new VersionMigrator[ConnectionIO, IO](default = Version(version = VersionString("2.18.0"), migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)) {
-      override def get(): IO[Version] = super.getDefault()
-      override def getDefault(): IO[Version] = super.getDefault()
+    new VersionMigrator[ConnectionIO, IO](init = Version(version = VersionString("2.18.0"), migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)) {
+      override def get(): IO[Version] = super.getInit()
+      override def getInit(): IO[Version] = super.getInit()
       override def migrate()(using executer: Executer[ConnectionIO, IO]): IO[Unit] = {
         for {
           _ <- runTagMigration(tagRepositoryV217, logger, executer)
