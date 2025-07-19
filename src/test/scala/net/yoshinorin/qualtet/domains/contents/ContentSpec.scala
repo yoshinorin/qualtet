@@ -259,12 +259,12 @@ class ContentSpec extends AnyWordSpec {
           |      {
           |        "id": "01frdbdsdty42fv147cerqpv73",
           |        "name": "content-spec1",
-          |        "path": "content-spec1-path"
+          |        "path": "/content-spec1-path"
           |      },
           |      {
           |        "id": "01frdbe1g83533h92rkhy8ctkw",
           |        "name": "content-spec2",
-          |        "path": "content-spec2-path"
+          |        "path": "/content-spec2-path"
           |      }
           |    ],
           |    "description" : "this is a description1",

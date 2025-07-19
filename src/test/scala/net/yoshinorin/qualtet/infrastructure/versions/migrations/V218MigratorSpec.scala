@@ -30,23 +30,23 @@ class V218MigratorSpec extends AnyWordSpec {
       val result = convertTags(tags)
 
       assert(result.length === 2)
-      assert(result(0)._1.path === "valid-path")
+      assert(result(0)._1.path === "/valid-path")
       assert(result(0)._2 === true)
-      assert(result(1)._1.path === "another-valid-path")
+      assert(result(1)._1.path === "/another-valid-path")
       assert(result(1)._2 === true)
     }
 
     "preserve original path and return failure flag as false for invalid TagPath values" in {
       val tags = Seq(
-        (TagUnsafeV218(TagId(), TagName("tag1"), "invalid path with spaces")),
+        (TagUnsafeV218(TagId(), TagName("tag1"), "path with spaces")),
         (TagUnsafeV218(TagId(), TagName("tag2"), "invalid<>path"))
       )
 
       val result = convertTags(tags)
 
       assert(result.length === 2)
-      assert(result(0)._1.path === "invalid path with spaces")
-      assert(result(0)._2 === false)
+      assert(result(0)._1.path === "/path with spaces")
+      assert(result(0)._2 === true)
       assert(result(1)._1.path === "invalid<>path")
       assert(result(1)._2 === false)
     }
@@ -54,18 +54,18 @@ class V218MigratorSpec extends AnyWordSpec {
     "properly handle mixed valid and invalid paths" in {
       val tags = Seq(
         (TagUnsafeV218(TagId(), TagName("tag1"), "valid-path")),
-        (TagUnsafeV218(TagId(), TagName("tag2"), "invalid path")),
+        (TagUnsafeV218(TagId(), TagName("tag2"), "invalid<>path")),
         (TagUnsafeV218(TagId(), TagName("tag3"), "another-valid"))
       )
 
       val result = convertTags(tags)
 
       assert(result.length === 3)
-      assert(result(0)._1.path === "valid-path")
+      assert(result(0)._1.path === "/valid-path")
       assert(result(0)._2 === true)
-      assert(result(1)._1.path === "invalid path")
+      assert(result(1)._1.path === "invalid<>path")
       assert(result(1)._2 === false)
-      assert(result(2)._1.path === "another-valid")
+      assert(result(2)._1.path === "/another-valid")
       assert(result(2)._2 === true)
     }
 
