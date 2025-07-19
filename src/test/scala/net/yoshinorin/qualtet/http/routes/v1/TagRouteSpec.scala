@@ -43,21 +43,6 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
     val t: Seq[TagResponseModel] = tagService.getAll.unsafeRunSync().filter(t => t.name.value.startsWith("tagRouteTag"))
 
     "return tags" in {
-      val expectJson =
-        s"""
-          |{
-          |  "id" : "${t(0).id.value}",
-          |  "name" : "${t(0).name.value}",
-          |  "path" : "${t(0).path.value}",
-          |  "count" : 1
-          |},
-          |{
-          |  "id" : "${t(1).id.value}",
-          |  "name" : "${t(1).name.value}",
-          |  "path" : "${t(1).path.value}",
-          |  "count" : 1
-          |}
-      """.stripMargin.replaceNewlineAndSpace
 
       client
         .run(Request(method = Method.GET, uri = uri"/v1/tags/"))
