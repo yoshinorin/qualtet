@@ -50,7 +50,7 @@ import net.yoshinorin.qualtet.http.routes.v1.{
 import net.yoshinorin.qualtet.infrastructure.db.migrator.FlywayMigrator
 import net.yoshinorin.qualtet.infrastructure.db.migrator.application.Migrator
 import net.yoshinorin.qualtet.infrastructure.db.doobie.{DoobieExecuter, DoobieTransactor}
-import net.yoshinorin.qualtet.infrastructure.versions.{VersionRepository, VersionRepositoryAdapter, VersionService}
+import net.yoshinorin.qualtet.infrastructure.versions.{V218Migrator, VersionMigrator, VersionRepository, VersionRepositoryAdapter, VersionService}
 
 import pdi.jwt.JwtAlgorithm
 import java.security.SecureRandom
@@ -73,6 +73,7 @@ class Modules(tx: Transactor[IO]) {
 
   val flywayMigrator: FlywayMigrator = new FlywayMigrator(config.db)
   val migrator: Migrator = new Migrator()
+  val v218Migrator: VersionMigrator[ConnectionIO, IO] = summon[VersionMigrator[ConnectionIO, IO]](using V218Migrator.V218)
 
   // NOTE: for generate JWT. They are reset when re-boot application.
   val keyPair: KeyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)

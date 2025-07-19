@@ -37,6 +37,7 @@ object BootStrap extends IOApp {
         _ <- logger.info(ApplicationInfo.asJson)
         _ <- IO(modules.flywayMigrator.migrate())
         _ <- modules.migrator.migrate(modules.contentTypeService)
+        _ <- modules.versionService.migrate(Some(modules.v218Migrator))
         routes <- modules.router.withCors.map[Kleisli[IO, Request[IO], Response[IO]]](x => x.orNotFound)
         httpApp <- IO(new HttpAppBuilder(routes).build)
         server <- IO(
