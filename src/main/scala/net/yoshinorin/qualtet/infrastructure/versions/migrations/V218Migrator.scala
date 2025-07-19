@@ -7,6 +7,7 @@ object V218Migrator {
   import doobie.syntax.all.toSqlInterpolator
   import doobie.util.update.Update
   import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagPath}
+  import net.yoshinorin.qualtet.domains.series.{SeriesId, SeriesName, SeriesPath}
 
   final case class TagUnsafeV218(
     id: TagId = TagId.apply(),
@@ -14,9 +15,20 @@ object V218Migrator {
     path: String
   )
 
+  final case class SeriesUnsafeV218(
+    id: SeriesId = SeriesId.apply(),
+    name: SeriesName,
+    path: String
+  )
+
   trait TagRepositoryV217[F[_]] {
     def bulkUpsert(data: List[TagUnsafeV218]): F[Int]
     def getAll(): F[Seq[(Int, TagUnsafeV218)]]
+  }
+
+  trait SeriesRepositoryV217[F[_]] {
+    def bulkUpsert(data: List[SeriesUnsafeV218]): F[Int]
+    def getAll(): F[Seq[(Int, SeriesUnsafeV218)]]
   }
 
   given TagRepositoryV217: TagRepositoryV217[ConnectionIO] = {
@@ -61,11 +73,54 @@ object V218Migrator {
     }
   }
 
+  given SeriesRepositoryV217: SeriesRepositoryV217[ConnectionIO] = {
+    new SeriesRepositoryV217[ConnectionIO] {
+
+      given seriesRead: Read[SeriesUnsafeV218] =
+        Read[(String, String, String)].map { case (id, name, path) => SeriesUnsafeV218(SeriesId(id), SeriesName(name), path) }
+
+      given seriesWrite: Write[SeriesUnsafeV218] =
+        Write[(String, String, String)].contramap(s => (s.id.value, s.name.value, s.path))
+
+      override def bulkUpsert(data: List[SeriesUnsafeV218]): ConnectionIO[Int] = {
+        val q = s"""
+              INSERT INTO series (id, name, path, title, description)
+                VALUES (?, ?, ?, '', NULL)
+              ON DUPLICATE KEY UPDATE
+                name = VALUES(name),
+                path = VALUES(path)
+            """
+        Update[SeriesUnsafeV218](q).updateMany(data)
+      }
+
+      override def getAll(): ConnectionIO[Seq[(Int, SeriesUnsafeV218)]] = {
+        sql"""
+          SELECT
+            COUNT(*) AS count,
+            series.id,
+            series.name,
+            series.path
+          FROM series
+          INNER JOIN contents_serializing
+            ON contents_serializing.series_id = series.id
+          INNER JOIN contents
+            ON contents_serializing.content_id = contents.id
+          GROUP BY
+            series.id
+          ORDER BY
+            series.name
+        """
+          .query[(Int, SeriesUnsafeV218)]
+          .to[Seq]
+      }
+    }
+  }
+
   import cats.effect.IO
   import net.yoshinorin.qualtet.infrastructure.db.Executer
   import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-  private[versions] def convert(tags: Seq[(Int, TagUnsafeV218)]): Seq[(TagUnsafeV218, Boolean)] = {
+  private[versions] def convertTags(tags: Seq[(Int, TagUnsafeV218)]): Seq[(TagUnsafeV218, Boolean)] = {
     tags.map { case (count, tag) =>
       val (convertedPath, isSuccess) =
         try {
@@ -77,7 +132,19 @@ object V218Migrator {
     }
   }
 
-  private[versions] def aggregateConverted(converted: Seq[(TagUnsafeV218, Boolean)]): (List[TagUnsafeV218], Int, Int, List[TagUnsafeV218]) = {
+  private[versions] def convertSeries(series: Seq[(Int, SeriesUnsafeV218)]): Seq[(SeriesUnsafeV218, Boolean)] = {
+    series.map { case (count, series) =>
+      val (convertedPath, isSuccess) =
+        try {
+          (SeriesPath(series.path).value, true)
+        } catch {
+          case _: Exception => (series.path, false)
+        }
+      (series.copy(path = convertedPath), isSuccess)
+    }
+  }
+
+  private[versions] def aggregateConvertedTags(converted: Seq[(TagUnsafeV218, Boolean)]): (List[TagUnsafeV218], Int, Int, List[TagUnsafeV218]) = {
     val tags = converted.map(_._1).toList
     val successCnt = converted.count(_._2)
     val failureCnt = converted.count(!_._2)
@@ -85,9 +152,18 @@ object V218Migrator {
     (tags, successCnt, failureCnt, failedTags)
   }
 
+  private[versions] def aggregateConvertedSeries(converted: Seq[(SeriesUnsafeV218, Boolean)]): (List[SeriesUnsafeV218], Int, Int, List[SeriesUnsafeV218]) = {
+    val series = converted.map(_._1).toList
+    val successCnt = converted.count(_._2)
+    val failureCnt = converted.count(!_._2)
+    val failedSeries = converted.filter(!_._2).map(_._1).toList
+    (series, successCnt, failureCnt, failedSeries)
+  }
+
   given V218(using loggerFactory: Log4CatsLoggerFactory[IO]): VersionMigrator[ConnectionIO, IO] = {
 
     val tagRepositoryV217: TagRepositoryV217[ConnectionIO] = summon[TagRepositoryV217[ConnectionIO]]
+    val seriesRepositoryV217: SeriesRepositoryV217[ConnectionIO] = summon[SeriesRepositoryV217[ConnectionIO]]
     val logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(classOf[V218Migrator.type])
 
     new VersionMigrator[ConnectionIO, IO](default = Version(version = VersionString("2.18.0"), migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)) {
@@ -95,13 +171,14 @@ object V218Migrator {
       override def getDefault(): IO[Version] = super.getDefault()
       override def migrate()(using executer: Executer[ConnectionIO, IO]): IO[Unit] = {
         for {
+          // Tags migration
           currentTags <- executer.transact(tagRepositoryV217.getAll())
-          convertedData = convert(currentTags)
-          (convertedTags, successCnt, failureCnt, failedTags) = aggregateConverted(convertedData)
+          convertedTagData = convertTags(currentTags)
+          (convertedTags, tagSuccessCnt, tagFailureCnt, failedTags) = aggregateConvertedTags(convertedTagData)
           _ <- Option
-            .when(failureCnt > 0)(
+            .when(tagFailureCnt > 0)(
               for {
-                _ <- logger.warn(s"TagPath validation failed for $failureCnt tags, converted to original path")
+                _ <- logger.warn(s"TagPath validation failed for $tagFailureCnt tags, converted to original path")
                 _ <- failedTags.foldLeft(IO.unit) { (acc, tag) =>
                   acc *> logger.warn(s"Failed TagPath validation - id: ${tag.id.value}, name: ${tag.name.value}, path: ${tag.path}")
                 }
@@ -109,7 +186,23 @@ object V218Migrator {
             )
             .getOrElse(IO.unit)
           _ <- executer.transact(tagRepositoryV217.bulkUpsert(convertedTags))
-          _ <- logger.info(s"Tags table migration completed. success: $successCnt, failed: $failureCnt")
+          _ <- logger.info(s"Tags table migration completed. success: $tagSuccessCnt, failed: $tagFailureCnt")
+          // Series migration
+          currentSeries <- executer.transact(seriesRepositoryV217.getAll())
+          convertedSeriesData = convertSeries(currentSeries)
+          (convertedSeries, seriesSuccessCnt, seriesFailureCnt, failedSeries) = aggregateConvertedSeries(convertedSeriesData)
+          _ <- Option
+            .when(seriesFailureCnt > 0)(
+              for {
+                _ <- logger.warn(s"SeriesPath validation failed for $seriesFailureCnt series, converted to original path")
+                _ <- failedSeries.foldLeft(IO.unit) { (acc, series) =>
+                  acc *> logger.warn(s"Failed SeriesPath validation - id: ${series.id.value}, name: ${series.name.value}, path: ${series.path}")
+                }
+              } yield ()
+            )
+            .getOrElse(IO.unit)
+          _ <- executer.transact(seriesRepositoryV217.bulkUpsert(convertedSeries))
+          _ <- logger.info(s"Series table migration completed. success: $seriesSuccessCnt, failed: $seriesFailureCnt")
         } yield ()
       }
     }
