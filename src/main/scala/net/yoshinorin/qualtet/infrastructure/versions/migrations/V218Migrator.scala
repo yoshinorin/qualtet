@@ -144,20 +144,60 @@ object V218Migrator {
     }
   }
 
-  private[versions] def aggregateConvertedTags(converted: Seq[(TagUnsafeV218, Boolean)]): (List[TagUnsafeV218], Int, Int, List[TagUnsafeV218]) = {
-    val tags = converted.map(_._1).toList
+  private[versions] def aggregateConverted[T](converted: Seq[(T, Boolean)]): (List[T], Int, Int, List[T]) = {
+    val items = converted.map(_._1).toList
     val successCnt = converted.count(_._2)
     val failureCnt = converted.count(!_._2)
-    val failedTags = converted.filter(!_._2).map(_._1).toList
-    (tags, successCnt, failureCnt, failedTags)
+    val failedItems = converted.filter(!_._2).map(_._1).toList
+    (items, successCnt, failureCnt, failedItems)
   }
 
-  private[versions] def aggregateConvertedSeries(converted: Seq[(SeriesUnsafeV218, Boolean)]): (List[SeriesUnsafeV218], Int, Int, List[SeriesUnsafeV218]) = {
-    val series = converted.map(_._1).toList
-    val successCnt = converted.count(_._2)
-    val failureCnt = converted.count(!_._2)
-    val failedSeries = converted.filter(!_._2).map(_._1).toList
-    (series, successCnt, failureCnt, failedSeries)
+  private[versions] def runTagMigration(
+    tagRepositoryV217: TagRepositoryV217[ConnectionIO],
+    logger: SelfAwareStructuredLogger[IO],
+    executer: Executer[ConnectionIO, IO]
+  ): IO[Unit] = {
+    for {
+      currentTags <- executer.transact(tagRepositoryV217.getAll())
+      convertedTagData = convertTags(currentTags)
+      (convertedTags, tagSuccessCnt, tagFailureCnt, failedTags) = aggregateConverted(convertedTagData)
+      _ <- Option
+        .when(tagFailureCnt > 0)(
+          for {
+            _ <- logger.warn(s"TagPath validation failed for $tagFailureCnt tags, converted to original path")
+            _ <- failedTags.foldLeft(IO.unit) { (acc, tag) =>
+              acc *> logger.warn(s"Failed TagPath validation - id: ${tag.id.value}, name: ${tag.name.value}, path: ${tag.path}")
+            }
+          } yield ()
+        )
+        .getOrElse(IO.unit)
+      _ <- executer.transact(tagRepositoryV217.bulkUpsert(convertedTags))
+      _ <- logger.info(s"Tags table migration completed. success: $tagSuccessCnt, failed: $tagFailureCnt")
+    } yield ()
+  }
+
+  private[versions] def runSeriesMigration(
+    seriesRepositoryV217: SeriesRepositoryV217[ConnectionIO],
+    logger: SelfAwareStructuredLogger[IO],
+    executer: Executer[ConnectionIO, IO]
+  ): IO[Unit] = {
+    for {
+      currentSeries <- executer.transact(seriesRepositoryV217.getAll())
+      convertedSeriesData = convertSeries(currentSeries)
+      (convertedSeries, seriesSuccessCnt, seriesFailureCnt, failedSeries) = aggregateConverted(convertedSeriesData)
+      _ <- Option
+        .when(seriesFailureCnt > 0)(
+          for {
+            _ <- logger.warn(s"SeriesPath validation failed for $seriesFailureCnt series, converted to original path")
+            _ <- failedSeries.foldLeft(IO.unit) { (acc, series) =>
+              acc *> logger.warn(s"Failed SeriesPath validation - id: ${series.id.value}, name: ${series.name.value}, path: ${series.path}")
+            }
+          } yield ()
+        )
+        .getOrElse(IO.unit)
+      _ <- executer.transact(seriesRepositoryV217.bulkUpsert(convertedSeries))
+      _ <- logger.info(s"Series table migration completed. success: $seriesSuccessCnt, failed: $seriesFailureCnt")
+    } yield ()
   }
 
   given V218(using loggerFactory: Log4CatsLoggerFactory[IO]): VersionMigrator[ConnectionIO, IO] = {
@@ -171,38 +211,8 @@ object V218Migrator {
       override def getDefault(): IO[Version] = super.getDefault()
       override def migrate()(using executer: Executer[ConnectionIO, IO]): IO[Unit] = {
         for {
-          // Tags migration
-          currentTags <- executer.transact(tagRepositoryV217.getAll())
-          convertedTagData = convertTags(currentTags)
-          (convertedTags, tagSuccessCnt, tagFailureCnt, failedTags) = aggregateConvertedTags(convertedTagData)
-          _ <- Option
-            .when(tagFailureCnt > 0)(
-              for {
-                _ <- logger.warn(s"TagPath validation failed for $tagFailureCnt tags, converted to original path")
-                _ <- failedTags.foldLeft(IO.unit) { (acc, tag) =>
-                  acc *> logger.warn(s"Failed TagPath validation - id: ${tag.id.value}, name: ${tag.name.value}, path: ${tag.path}")
-                }
-              } yield ()
-            )
-            .getOrElse(IO.unit)
-          _ <- executer.transact(tagRepositoryV217.bulkUpsert(convertedTags))
-          _ <- logger.info(s"Tags table migration completed. success: $tagSuccessCnt, failed: $tagFailureCnt")
-          // Series migration
-          currentSeries <- executer.transact(seriesRepositoryV217.getAll())
-          convertedSeriesData = convertSeries(currentSeries)
-          (convertedSeries, seriesSuccessCnt, seriesFailureCnt, failedSeries) = aggregateConvertedSeries(convertedSeriesData)
-          _ <- Option
-            .when(seriesFailureCnt > 0)(
-              for {
-                _ <- logger.warn(s"SeriesPath validation failed for $seriesFailureCnt series, converted to original path")
-                _ <- failedSeries.foldLeft(IO.unit) { (acc, series) =>
-                  acc *> logger.warn(s"Failed SeriesPath validation - id: ${series.id.value}, name: ${series.name.value}, path: ${series.path}")
-                }
-              } yield ()
-            )
-            .getOrElse(IO.unit)
-          _ <- executer.transact(seriesRepositoryV217.bulkUpsert(convertedSeries))
-          _ <- logger.info(s"Series table migration completed. success: $seriesSuccessCnt, failed: $seriesFailureCnt")
+          _ <- runTagMigration(tagRepositoryV217, logger, executer)
+          _ <- runSeriesMigration(seriesRepositoryV217, logger, executer)
         } yield ()
       }
     }

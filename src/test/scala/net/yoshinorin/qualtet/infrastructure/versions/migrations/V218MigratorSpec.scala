@@ -4,9 +4,20 @@ import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagName}
 import net.yoshinorin.qualtet.domains.series.{SeriesId, SeriesName}
 import net.yoshinorin.qualtet.infrastructure.versions.V218Migrator.*
+import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
+import cats.Monad
+import cats.effect.IO
+import cats.effect.unsafe.implicits.global
+import net.yoshinorin.qualtet.infrastructure.db.Executer
+import doobie.ConnectionIO
+import doobie.implicits.*
+import org.mockito.Mockito.*
+import org.mockito.ArgumentMatchers.*
 
 // testOnly net.yoshinorin.qualtet.infrastructure.versions.migrations.V218MigratorSpec
 class V218MigratorSpec extends AnyWordSpec {
+
+  val logger = log4catsLogger.getLogger
 
   "convertTags" should {
 
@@ -81,7 +92,7 @@ class V218MigratorSpec extends AnyWordSpec {
 
   }
 
-  "aggregateConvertedTags" should {
+  "aggregateConverted for Tags" should {
 
     "return correct aggregation for mixed success and failure results" in {
       val convertedData = Seq(
@@ -91,7 +102,7 @@ class V218MigratorSpec extends AnyWordSpec {
         (TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f4v"), TagName("name4"), "path4"), false)
       )
 
-      val (convertedTags, successCount, failureCount, failedTags) = aggregateConvertedTags(convertedData)
+      val (convertedTags, successCount, failureCount, failedTags) = aggregateConverted(convertedData)
 
       assert(convertedTags.length === 4)
       assert(successCount === 2)
@@ -111,7 +122,7 @@ class V218MigratorSpec extends AnyWordSpec {
         (TagUnsafeV218(TagId(), TagName("name2"), "path2"), true)
       )
 
-      val (convertedTags, successCount, failureCount, failedTags) = aggregateConvertedTags(convertedData)
+      val (convertedTags, successCount, failureCount, failedTags) = aggregateConverted(convertedData)
 
       assert(convertedTags.length === 2)
       assert(successCount === 2)
@@ -124,7 +135,7 @@ class V218MigratorSpec extends AnyWordSpec {
         (TagUnsafeV218(TagId(), TagName("name1"), "path1"), false),
         (TagUnsafeV218(TagId(), TagName("name2"), "path2"), false)
       )
-      val (convertedTags, successCount, failureCount, failedTags) = aggregateConvertedTags(convertedData)
+      val (convertedTags, successCount, failureCount, failedTags) = aggregateConverted(convertedData)
 
       assert(convertedTags.length === 2)
       assert(successCount === 0)
@@ -134,7 +145,7 @@ class V218MigratorSpec extends AnyWordSpec {
 
     "return empty results for empty input" in {
       val convertedData = Seq.empty[(TagUnsafeV218, Boolean)]
-      val (convertedTags, successCount, failureCount, failedTags) = aggregateConvertedTags(convertedData)
+      val (convertedTags, successCount, failureCount, failedTags) = aggregateConverted(convertedData)
 
       assert(convertedTags.isEmpty)
       assert(successCount === 0)
@@ -217,7 +228,7 @@ class V218MigratorSpec extends AnyWordSpec {
 
   }
 
-  "aggregateConvertedSeries" should {
+  "aggregateConverted for Series" should {
 
     "return correct aggregation for mixed success and failure results" in {
       val convertedData = Seq(
@@ -227,7 +238,7 @@ class V218MigratorSpec extends AnyWordSpec {
         (SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f4v"), SeriesName("name4"), "path4"), false)
       )
 
-      val (convertedSeries, successCount, failureCount, failedSeries) = aggregateConvertedSeries(convertedData)
+      val (convertedSeries, successCount, failureCount, failedSeries) = aggregateConverted(convertedData)
 
       assert(convertedSeries.length === 4)
       assert(successCount === 2)
@@ -247,7 +258,7 @@ class V218MigratorSpec extends AnyWordSpec {
         (SeriesUnsafeV218(SeriesId(), SeriesName("name2"), "path2"), true)
       )
 
-      val (convertedSeries, successCount, failureCount, failedSeries) = aggregateConvertedSeries(convertedData)
+      val (convertedSeries, successCount, failureCount, failedSeries) = aggregateConverted(convertedData)
 
       assert(convertedSeries.length === 2)
       assert(successCount === 2)
@@ -261,7 +272,7 @@ class V218MigratorSpec extends AnyWordSpec {
         (SeriesUnsafeV218(SeriesId(), SeriesName("name2"), "path2"), false)
       )
 
-      val (convertedSeries, successCount, failureCount, failedSeries) = aggregateConvertedSeries(convertedData)
+      val (convertedSeries, successCount, failureCount, failedSeries) = aggregateConverted(convertedData)
 
       assert(convertedSeries.length === 2)
       assert(successCount === 0)
@@ -272,12 +283,146 @@ class V218MigratorSpec extends AnyWordSpec {
     "return empty results for empty input" in {
       val convertedData = Seq.empty[(SeriesUnsafeV218, Boolean)]
 
-      val (convertedSeries, successCount, failureCount, failedSeries) = aggregateConvertedSeries(convertedData)
+      val (convertedSeries, successCount, failureCount, failedSeries) = aggregateConverted(convertedData)
 
       assert(convertedSeries.isEmpty)
       assert(successCount === 0)
       assert(failureCount === 0)
       assert(failedSeries.isEmpty)
+    }
+
+  }
+
+  "runTagMigration" should {
+
+    "successfully migrate tags with valid paths" in {
+      val mockTagRepository = mock(classOf[TagRepositoryV217[ConnectionIO]])
+      val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
+      val testTags = Seq(
+        (1, TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f1v"), TagName("tag1"), "valid-path")),
+        (2, TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f2v"), TagName("tag2"), "another-valid"))
+      )
+
+      when(mockTagRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(testTags))
+      when(mockTagRepository.bulkUpsert(any[List[TagUnsafeV218]])).thenReturn(Monad[ConnectionIO].pure(2))
+      when(mockExecuter.transact(any[ConnectionIO[Any]])).thenReturn(
+        IO.pure(testTags.asInstanceOf[Any]),
+        IO.pure(2.asInstanceOf[Any])
+      )
+
+      runTagMigration(mockTagRepository, logger, mockExecuter).unsafeRunSync()
+
+      verify(mockTagRepository).getAll()
+      verify(mockTagRepository).bulkUpsert(any[List[TagUnsafeV218]])
+      verify(mockExecuter, times(2)).transact(any[ConnectionIO[Any]])
+    }
+
+    "handle tags with invalid paths" in {
+      val mockTagRepository = mock(classOf[TagRepositoryV217[ConnectionIO]])
+      val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
+      val testTags = Seq(
+        (1, TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f1v"), TagName("tag1"), "invalid path")),
+        (2, TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f2v"), TagName("tag2"), "valid-path"))
+      )
+
+      when(mockTagRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(testTags))
+      when(mockTagRepository.bulkUpsert(any[List[TagUnsafeV218]])).thenReturn(Monad[ConnectionIO].pure(2))
+      when(mockExecuter.transact(any[ConnectionIO[Any]])).thenReturn(
+        IO.pure(testTags.asInstanceOf[Any]),
+        IO.pure(2.asInstanceOf[Any])
+      )
+
+      runTagMigration(mockTagRepository, logger, mockExecuter).unsafeRunSync()
+
+      verify(mockTagRepository).getAll()
+      verify(mockTagRepository).bulkUpsert(any[List[TagUnsafeV218]])
+      verify(mockExecuter, times(2)).transact(any[ConnectionIO[Any]])
+    }
+
+    "handle empty tag list" in {
+      val mockTagRepository = mock(classOf[TagRepositoryV217[ConnectionIO]])
+      val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
+      val emptyTags = Seq.empty[(Int, TagUnsafeV218)]
+
+      when(mockTagRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(emptyTags))
+      when(mockTagRepository.bulkUpsert(any[List[TagUnsafeV218]])).thenReturn(Monad[ConnectionIO].pure(0))
+      when(mockExecuter.transact(any[ConnectionIO[Any]])).thenReturn(
+        IO.pure(emptyTags.asInstanceOf[Any]),
+        IO.pure(0.asInstanceOf[Any])
+      )
+
+      runTagMigration(mockTagRepository, logger, mockExecuter).unsafeRunSync()
+
+      verify(mockTagRepository).getAll()
+      verify(mockTagRepository).bulkUpsert(any[List[TagUnsafeV218]])
+      verify(mockExecuter, times(2)).transact(any[ConnectionIO[Any]])
+    }
+
+  }
+
+  "runSeriesMigration" should {
+
+    "successfully migrate series with valid paths" in {
+      val mockSeriesRepository = mock(classOf[SeriesRepositoryV217[ConnectionIO]])
+      val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
+      val testSeries = Seq(
+        (1, SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f1v"), SeriesName("series1"), "valid-path")),
+        (2, SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f2v"), SeriesName("series2"), "another-valid"))
+      )
+
+      when(mockSeriesRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(testSeries))
+      when(mockSeriesRepository.bulkUpsert(any[List[SeriesUnsafeV218]])).thenReturn(Monad[ConnectionIO].pure(2))
+      when(mockExecuter.transact(any[ConnectionIO[Any]])).thenReturn(
+        IO.pure(testSeries.asInstanceOf[Any]),
+        IO.pure(2.asInstanceOf[Any])
+      )
+
+      runSeriesMigration(mockSeriesRepository, logger, mockExecuter).unsafeRunSync()
+
+      verify(mockSeriesRepository).getAll()
+      verify(mockSeriesRepository).bulkUpsert(any[List[SeriesUnsafeV218]])
+      verify(mockExecuter, times(2)).transact(any[ConnectionIO[Any]])
+    }
+
+    "handle series with invalid paths" in {
+      val mockSeriesRepository = mock(classOf[SeriesRepositoryV217[ConnectionIO]])
+      val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
+      val testSeries = Seq(
+        (1, SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f1v"), SeriesName("series1"), "invalid path")),
+        (2, SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f2v"), SeriesName("series2"), "valid-path"))
+      )
+
+      when(mockSeriesRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(testSeries))
+      when(mockSeriesRepository.bulkUpsert(any[List[SeriesUnsafeV218]])).thenReturn(Monad[ConnectionIO].pure(2))
+      when(mockExecuter.transact(any[ConnectionIO[Any]])).thenReturn(
+        IO.pure(testSeries.asInstanceOf[Any]),
+        IO.pure(2.asInstanceOf[Any])
+      )
+
+      runSeriesMigration(mockSeriesRepository, logger, mockExecuter).unsafeRunSync()
+
+      verify(mockSeriesRepository).getAll()
+      verify(mockSeriesRepository).bulkUpsert(any[List[SeriesUnsafeV218]])
+      verify(mockExecuter, times(2)).transact(any[ConnectionIO[Any]])
+    }
+
+    "handle empty series list" in {
+      val mockSeriesRepository = mock(classOf[SeriesRepositoryV217[ConnectionIO]])
+      val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
+      val emptySeries = Seq.empty[(Int, SeriesUnsafeV218)]
+
+      when(mockSeriesRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(emptySeries))
+      when(mockSeriesRepository.bulkUpsert(any[List[SeriesUnsafeV218]])).thenReturn(Monad[ConnectionIO].pure(0))
+      when(mockExecuter.transact(any[ConnectionIO[Any]])).thenReturn(
+        IO.pure(emptySeries.asInstanceOf[Any]),
+        IO.pure(0.asInstanceOf[Any])
+      )
+
+      runSeriesMigration(mockSeriesRepository, logger, mockExecuter).unsafeRunSync()
+
+      verify(mockSeriesRepository).getAll()
+      verify(mockSeriesRepository).bulkUpsert(any[List[SeriesUnsafeV218]])
+      verify(mockExecuter, times(2)).transact(any[ConnectionIO[Any]])
     }
 
   }
