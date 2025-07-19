@@ -23,8 +23,8 @@ class V218MigratorSpec extends AnyWordSpec {
 
     "return success flag as true for valid TagPath values" in {
       val tags = Seq(
-        (1, TagUnsafeV218(TagId(), TagName("tag1"), "valid-path")),
-        (2, TagUnsafeV218(TagId(), TagName("tag2"), "another-valid-path"))
+        (TagUnsafeV218(TagId(), TagName("tag1"), "valid-path")),
+        (TagUnsafeV218(TagId(), TagName("tag2"), "another-valid-path"))
       )
 
       val result = convertTags(tags)
@@ -38,8 +38,8 @@ class V218MigratorSpec extends AnyWordSpec {
 
     "preserve original path and return failure flag as false for invalid TagPath values" in {
       val tags = Seq(
-        (1, TagUnsafeV218(TagId(), TagName("tag1"), "invalid path with spaces")),
-        (2, TagUnsafeV218(TagId(), TagName("tag2"), "invalid<>path"))
+        (TagUnsafeV218(TagId(), TagName("tag1"), "invalid path with spaces")),
+        (TagUnsafeV218(TagId(), TagName("tag2"), "invalid<>path"))
       )
 
       val result = convertTags(tags)
@@ -53,9 +53,9 @@ class V218MigratorSpec extends AnyWordSpec {
 
     "properly handle mixed valid and invalid paths" in {
       val tags = Seq(
-        (1, TagUnsafeV218(TagId(), TagName("tag1"), "valid-path")),
-        (2, TagUnsafeV218(TagId(), TagName("tag2"), "invalid path")),
-        (3, TagUnsafeV218(TagId(), TagName("tag3"), "another-valid"))
+        (TagUnsafeV218(TagId(), TagName("tag1"), "valid-path")),
+        (TagUnsafeV218(TagId(), TagName("tag2"), "invalid path")),
+        (TagUnsafeV218(TagId(), TagName("tag3"), "another-valid"))
       )
 
       val result = convertTags(tags)
@@ -70,8 +70,7 @@ class V218MigratorSpec extends AnyWordSpec {
     }
 
     "return empty result for empty input list" in {
-      val tags = Seq.empty[(Int, TagUnsafeV218)]
-
+      val tags = Seq.empty[TagUnsafeV218]
       val result = convertTags(tags)
 
       assert(result.isEmpty)
@@ -81,7 +80,7 @@ class V218MigratorSpec extends AnyWordSpec {
       val originalId = TagId("01ARZ3NDEKTSV4RRFFQ69G5FHV")
       val originalName = TagName("test-name")
       val tags = Seq(
-        (1, TagUnsafeV218(originalId, originalName, "valid-path"))
+        (TagUnsafeV218(originalId, originalName, "valid-path"))
       )
 
       val result = convertTags(tags)
@@ -159,8 +158,8 @@ class V218MigratorSpec extends AnyWordSpec {
 
     "return success flag as true for valid SeriesPath values" in {
       val series = Seq(
-        (1, SeriesUnsafeV218(SeriesId(), SeriesName("series1"), "valid-path")),
-        (2, SeriesUnsafeV218(SeriesId(), SeriesName("series2"), "another-valid-path"))
+        (SeriesUnsafeV218(SeriesId(), SeriesName("series1"), "valid-path")),
+        (SeriesUnsafeV218(SeriesId(), SeriesName("series2"), "another-valid-path"))
       )
 
       val result = convertSeries(series)
@@ -174,8 +173,8 @@ class V218MigratorSpec extends AnyWordSpec {
 
     "preserve original path and return failure flag as false for invalid SeriesPath values" in {
       val series = Seq(
-        (1, SeriesUnsafeV218(SeriesId(), SeriesName("series1"), "invalid path with spaces")),
-        (2, SeriesUnsafeV218(SeriesId(), SeriesName("series2"), "invalid<>path"))
+        (SeriesUnsafeV218(SeriesId(), SeriesName("series1"), "invalid path with spaces")),
+        (SeriesUnsafeV218(SeriesId(), SeriesName("series2"), "invalid<>path"))
       )
 
       val result = convertSeries(series)
@@ -189,9 +188,9 @@ class V218MigratorSpec extends AnyWordSpec {
 
     "properly handle mixed valid and invalid paths" in {
       val series = Seq(
-        (1, SeriesUnsafeV218(SeriesId(), SeriesName("series1"), "valid-path")),
-        (2, SeriesUnsafeV218(SeriesId(), SeriesName("series2"), "invalid path")),
-        (3, SeriesUnsafeV218(SeriesId(), SeriesName("series3"), "another-valid"))
+        (SeriesUnsafeV218(SeriesId(), SeriesName("series1"), "valid-path")),
+        (SeriesUnsafeV218(SeriesId(), SeriesName("series2"), "invalid path")),
+        (SeriesUnsafeV218(SeriesId(), SeriesName("series3"), "another-valid"))
       )
 
       val result = convertSeries(series)
@@ -206,8 +205,7 @@ class V218MigratorSpec extends AnyWordSpec {
     }
 
     "return empty result for empty input list" in {
-      val series = Seq.empty[(Int, SeriesUnsafeV218)]
-
+      val series = Seq.empty[SeriesUnsafeV218]
       val result = convertSeries(series)
 
       assert(result.isEmpty)
@@ -217,7 +215,7 @@ class V218MigratorSpec extends AnyWordSpec {
       val originalId = SeriesId()
       val originalName = SeriesName("test-series")
       val series = Seq(
-        (1, SeriesUnsafeV218(originalId, originalName, "valid-path"))
+        (SeriesUnsafeV218(originalId, originalName, "valid-path"))
       )
 
       val result = convertSeries(series)
@@ -299,8 +297,8 @@ class V218MigratorSpec extends AnyWordSpec {
       val mockTagRepository = mock(classOf[TagRepositoryV217[ConnectionIO]])
       val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
       val testTags = Seq(
-        (1, TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f1v"), TagName("tag1"), "valid-path")),
-        (2, TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f2v"), TagName("tag2"), "another-valid"))
+        (TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f1v"), TagName("tag1"), "valid-path")),
+        (TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f2v"), TagName("tag2"), "another-valid"))
       )
 
       when(mockTagRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(testTags))
@@ -321,8 +319,8 @@ class V218MigratorSpec extends AnyWordSpec {
       val mockTagRepository = mock(classOf[TagRepositoryV217[ConnectionIO]])
       val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
       val testTags = Seq(
-        (1, TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f1v"), TagName("tag1"), "invalid path")),
-        (2, TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f2v"), TagName("tag2"), "valid-path"))
+        (TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f1v"), TagName("tag1"), "invalid path")),
+        (TagUnsafeV218(TagId("01arz3ndektsv4rrffq69g5f2v"), TagName("tag2"), "valid-path"))
       )
 
       when(mockTagRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(testTags))
@@ -366,8 +364,8 @@ class V218MigratorSpec extends AnyWordSpec {
       val mockSeriesRepository = mock(classOf[SeriesRepositoryV217[ConnectionIO]])
       val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
       val testSeries = Seq(
-        (1, SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f1v"), SeriesName("series1"), "valid-path")),
-        (2, SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f2v"), SeriesName("series2"), "another-valid"))
+        (SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f1v"), SeriesName("series1"), "valid-path")),
+        (SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f2v"), SeriesName("series2"), "another-valid"))
       )
 
       when(mockSeriesRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(testSeries))
@@ -388,8 +386,8 @@ class V218MigratorSpec extends AnyWordSpec {
       val mockSeriesRepository = mock(classOf[SeriesRepositoryV217[ConnectionIO]])
       val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
       val testSeries = Seq(
-        (1, SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f1v"), SeriesName("series1"), "invalid path")),
-        (2, SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f2v"), SeriesName("series2"), "valid-path"))
+        (SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f1v"), SeriesName("series1"), "invalid path")),
+        (SeriesUnsafeV218(SeriesId("01arz3ndektsv4rrffq69g5f2v"), SeriesName("series2"), "valid-path"))
       )
 
       when(mockSeriesRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(testSeries))
@@ -409,7 +407,7 @@ class V218MigratorSpec extends AnyWordSpec {
     "handle empty series list" in {
       val mockSeriesRepository = mock(classOf[SeriesRepositoryV217[ConnectionIO]])
       val mockExecuter = mock(classOf[Executer[ConnectionIO, IO]])
-      val emptySeries = Seq.empty[(Int, SeriesUnsafeV218)]
+      val emptySeries = Seq.empty[SeriesUnsafeV218]
 
       when(mockSeriesRepository.getAll()).thenReturn(Monad[ConnectionIO].pure(emptySeries))
       when(mockSeriesRepository.bulkUpsert(any[List[SeriesUnsafeV218]])).thenReturn(Monad[ConnectionIO].pure(0))

@@ -23,12 +23,12 @@ object V218Migrator {
 
   trait TagRepositoryV217[F[_]] {
     def bulkUpsert(data: List[TagUnsafeV218]): F[Int]
-    def getAll(): F[Seq[(Int, TagUnsafeV218)]]
+    def getAll(): F[Seq[TagUnsafeV218]]
   }
 
   trait SeriesRepositoryV217[F[_]] {
     def bulkUpsert(data: List[SeriesUnsafeV218]): F[Int]
-    def getAll(): F[Seq[(Int, SeriesUnsafeV218)]]
+    def getAll(): F[Seq[SeriesUnsafeV218]]
   }
 
   given TagRepositoryV217: TagRepositoryV217[ConnectionIO] = {
@@ -50,24 +50,15 @@ object V218Migrator {
         Update[TagUnsafeV218](q).updateMany(data)
       }
 
-      override def getAll(): ConnectionIO[Seq[(Int, TagUnsafeV218)]] = {
+      override def getAll(): ConnectionIO[Seq[TagUnsafeV218]] = {
         sql"""
           SELECT
-            COUNT(*) AS count,
-            tags.id,
-            tags.name,
-            tags.path
+            id,
+            name,
+            path
           FROM tags
-          INNER JOIN contents_tagging
-            ON contents_tagging.tag_id = tags.id
-          INNER JOIN contents
-            ON contents_tagging.content_id = contents.id
-          GROUP BY
-            tags.id
-          ORDER BY
-            tags.name
         """
-          .query[(Int, TagUnsafeV218)]
+          .query[TagUnsafeV218]
           .to[Seq]
       }
     }
@@ -93,24 +84,15 @@ object V218Migrator {
         Update[SeriesUnsafeV218](q).updateMany(data)
       }
 
-      override def getAll(): ConnectionIO[Seq[(Int, SeriesUnsafeV218)]] = {
+      override def getAll(): ConnectionIO[Seq[SeriesUnsafeV218]] = {
         sql"""
           SELECT
-            COUNT(*) AS count,
-            series.id,
-            series.name,
-            series.path
+            id,
+            name,
+            path
           FROM series
-          INNER JOIN contents_serializing
-            ON contents_serializing.series_id = series.id
-          INNER JOIN contents
-            ON contents_serializing.content_id = contents.id
-          GROUP BY
-            series.id
-          ORDER BY
-            series.name
         """
-          .query[(Int, SeriesUnsafeV218)]
+          .query[SeriesUnsafeV218]
           .to[Seq]
       }
     }
@@ -120,8 +102,8 @@ object V218Migrator {
   import net.yoshinorin.qualtet.infrastructure.db.Executer
   import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-  private[versions] def convertTags(tags: Seq[(Int, TagUnsafeV218)]): Seq[(TagUnsafeV218, Boolean)] = {
-    tags.map { case (count, tag) =>
+  private[versions] def convertTags(tags: Seq[TagUnsafeV218]): Seq[(TagUnsafeV218, Boolean)] = {
+    tags.map { tag =>
       val (convertedPath, isSuccess) =
         try {
           (TagPath(tag.path).value, true)
@@ -132,8 +114,8 @@ object V218Migrator {
     }
   }
 
-  private[versions] def convertSeries(series: Seq[(Int, SeriesUnsafeV218)]): Seq[(SeriesUnsafeV218, Boolean)] = {
-    series.map { case (count, series) =>
+  private[versions] def convertSeries(series: Seq[SeriesUnsafeV218]): Seq[(SeriesUnsafeV218, Boolean)] = {
+    series.map { series =>
       val (convertedPath, isSuccess) =
         try {
           (SeriesPath(series.path).value, true)
