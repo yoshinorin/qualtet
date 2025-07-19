@@ -37,19 +37,6 @@ object SeriesRepository {
           )
         }
 
-      given seriesOrOptionRead: Read[Option[SeriesReadModel]] =
-        Read[(String, String, String, String, Option[String])].map { case (seriesId, name, path, title, description) =>
-          Some(
-            SeriesReadModel(
-              SeriesId(seriesId),
-              SeriesName(name),
-              SeriesPath(path),
-              title,
-              description
-            )
-          )
-        }
-
       // TODO: do not `run` here
       override def upsert(data: SeriesWriteModel): ConnectionIO[Int] = {
         SeriesQuery.upsert.run(data)
