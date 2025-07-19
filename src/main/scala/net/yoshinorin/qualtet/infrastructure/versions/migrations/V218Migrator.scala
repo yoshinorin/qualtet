@@ -45,7 +45,8 @@ object V218Migrator {
               INSERT INTO tags (id, name, path)
                 VALUES (?, ?, ?)
               ON DUPLICATE KEY UPDATE
-                name = VALUES(name)
+                name = VALUES(name),
+                path = VALUES(path)
             """
         Update[TagUnsafeV218](q).updateMany(data)
       }
