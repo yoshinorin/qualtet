@@ -20,7 +20,7 @@ jobs:
         run: sbt doc
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: 24.x
       - name: Install npm dependencies
         working-directory: ./docs/rest-api
         run: npm install
