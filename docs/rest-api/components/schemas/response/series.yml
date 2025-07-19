@@ -7,9 +7,12 @@ properties:
     type: string
     example: "qualtet-development-history"
   path:
-    description: "Added in `v2.18.0`"
+    description: |
+      Added in `v2.18.0`. If using percent encoding, proper format is required (e.g., `%20` for space).
+      Leading slash is automatically added if missing.
     type: string
-    example: "qualtet-development-history"
+    pattern: '^/[^:?#@!$&''()*+,;=<>"\\^`{}|~]*$'
+    example: "/qualtet-development-history"
   title:
     type: string
     example: "Example series"

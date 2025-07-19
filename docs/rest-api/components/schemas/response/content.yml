@@ -13,7 +13,11 @@ properties:
     format: ulid
     example: "01fgvhjxftxfjvxg3xbvv78kr1"
   path:
+    description: |
+      If using percent encoding, proper format is required (e.g., `%20` for space).
+      Leading slash is automatically added if missing.
     type: string
+    pattern: '^/[^:?#@!$&''()*+,;=<>"\\^`{}|~]*$'
     example: "/2020/01/01/new-year"
   title:
     type: string

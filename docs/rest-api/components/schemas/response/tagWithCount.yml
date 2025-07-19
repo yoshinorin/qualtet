@@ -10,7 +10,7 @@ properties:
   path:
     description: "Added in `v2.18.0`"
     type: string
-    example: "diary-tag-path"
+    example: "/diary-tag-path"
   count:
     description: number of related articles
     type: number

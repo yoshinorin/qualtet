@@ -8,8 +8,12 @@ properties:
     type: string
     example: "Post Title"
   path:
+    description: |
+      If using percent encoding, proper format is required (e.g., `%20` for space).
+      Leading slash is automatically added if missing.
     type: string
     format: url(excludes domain part)
+    pattern: '^/[^:?#@!$&''()*+,;=<>"\\^`{}|~]*$'
     example: "/post/test-article"
   content:
     type: string

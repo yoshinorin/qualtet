@@ -4,7 +4,11 @@ properties:
     type: string
     example: "article"
   path:
+    description: |
+      If using percent encoding, proper format is required (e.g., `%20` for space).
+      Leading slash is automatically added if missing.
     type: string
+    pattern: '^/?[^:?#@!$&''()*+,;=<>"\\^`{}|~]*$'
     example: "/2020/01/01/new-year"
   externalResources:
     type: array
@@ -37,8 +41,12 @@ properties:
           type: string
           example: "diary"
         path:
+          description: |
+            If using percent encoding, proper format is required (e.g., `%20` for space).
+            Leading slash is automatically added if missing.
           type: string
-          example: "diary-tag-path"
+          pattern: '^/?[^:?#@!$&''()*+,;=<>"\\^`{}|~]*$'
+          example: "/diary-tag-path"
       required:
         - name
         - path

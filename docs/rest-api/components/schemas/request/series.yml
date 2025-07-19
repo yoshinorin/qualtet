@@ -4,9 +4,12 @@ properties:
     type: string
     example: "example-series-name"
   path:
-    description: "Added in `v2.18.0`"
+    description: |
+      Added in `v2.18.0`. If using percent encoding, proper format is required (e.g., `%20` for space).
+      Leading slash is automatically added if missing.
     type: string
     format: url(excludes domain part)
+    pattern: '^/?[^:?#@!$&''()*+,;=<>"\\^`{}|~]*$'
     example: "example-series"
   title:
     type: string
