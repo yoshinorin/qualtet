@@ -5,7 +5,7 @@ import LocalProcesses.*
 organization := "net.yoshinorin"
 name := "qualtet"
 version := "v2.17.0"
-scalaVersion := "3.7.0"
+scalaVersion := "3.7.1"
 val repository = "https://github.com/yoshinorin/qualtet"
 
 scalacOptions ++= Seq(
