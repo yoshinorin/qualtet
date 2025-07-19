@@ -23,4 +23,4 @@ The information is managed in the `versions` table in database, and migrations a
 
 ## Transition Diagram
 
-![](./assets/migration_state.png)
+![](./assets/migration_state.svg)
