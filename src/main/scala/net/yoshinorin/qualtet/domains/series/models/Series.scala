@@ -3,8 +3,7 @@ package net.yoshinorin.qualtet.domains.series
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
-import net.yoshinorin.qualtet.domains.errors.{InvalidPath, UnexpectedException}
-import java.net.{URI, URISyntaxException}
+import net.yoshinorin.qualtet.domains.errors.InvalidPath
 
 opaque type SeriesId = String
 object SeriesId extends ValueExtender[SeriesId] with UlidConvertible[SeriesId] {
@@ -21,15 +20,23 @@ opaque type SeriesPath = String
 object SeriesPath extends ValueExtender[SeriesPath] {
   given codecSeriesPath: JsonValueCodec[SeriesPath] = JsonCodecMaker.make
 
+  private lazy val unusableChars = "[:?#@!$&'()*+,;=<>\"\\\\^`{}|~]"
+  private lazy val invalidPercentRegex = ".*%(?![0-9A-Fa-f]{2}).*"
+
   def apply(value: String): SeriesPath = {
-    // NOTE: Probably follows https://www.ietf.org/rfc/rfc3986.txt
-    try {
-      URI(value);
-    } catch {
-      case _: URISyntaxException => throw InvalidPath(detail = s"Invalid character contains: ${value}")
-      case _ => throw UnexpectedException()
+    if (unusableChars.r.findFirstMatchIn(value).isDefined) {
+      throw InvalidPath(detail = s"Invalid character contains: ${value}")
     }
-    value
+
+    if (invalidPercentRegex.r.matches(value)) {
+      throw InvalidPath(detail = s"Invalid percent encoding in path: ${value}")
+    }
+
+    if (!value.startsWith("/")) {
+      s"/${value}"
+    } else {
+      value
+    }
   }
 }
 

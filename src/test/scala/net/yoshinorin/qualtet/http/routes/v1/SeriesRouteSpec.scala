@@ -92,7 +92,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
             val maybeSeries = unsafeDecode[Series](response)
             assert(maybeSeries.name === "example series")
-            assert(maybeSeries.path === "example-series-route-path")
+            assert(maybeSeries.path === "/example-series-route-path")
             // assert(maybeSeries.id === "TODO")  // TODO: assert id is ULID
             assert(maybeSeries.description.get === "example series description")
             assert(maybeSeries.title === "example series title")
@@ -139,7 +139,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "return specific series" in {
       client
-        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${s1.path.value}"))))
+        .run(Request(method = Method.GET, uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series${s1.path.value}"))))
         .use { response =>
           IO {
             assert(response.status === Ok)
@@ -148,7 +148,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
             val maybeSeries = unsafeDecode[Series](response)
             assert(maybeSeries.name === "seriesroute-series-name")
-            assert(maybeSeries.path === "seriesroute-series-path")
+            assert(maybeSeries.path === "/seriesroute-series-path")
             // assert(maybeSeries.id === "TODO")  // TODO: assert id is ULID
             assert(maybeSeries.description.get === "Series Route Spec Description1")
             assert(maybeSeries.title === "Series Route Spec")
@@ -250,7 +250,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             val maybeError = unsafeDecode[ResponseProblemDetails](response)
             assert(maybeError.title === "Not Found")
             assert(maybeError.status === 404)
-            assert(maybeError.detail === "series not found: not-exists")
+            assert(maybeError.detail === "series not found: /not-exists")
             assert(maybeError.instance === "/v1/series/not-exists")
           }
         }
@@ -262,7 +262,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .run(
           Request(
             method = Method.PATCH,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series/${s1.path.value}")),
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/series${s1.path.value}")),
             headers = Headers(Header.Raw(ci"Authorization", "Bearer " + validToken))
           )
         )

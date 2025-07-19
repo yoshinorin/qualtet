@@ -165,9 +165,9 @@ class V218MigratorSpec extends AnyWordSpec {
       val result = convertSeries(series)
 
       assert(result.length === 2)
-      assert(result(0)._1.path === "valid-path")
+      assert(result(0)._1.path === "/valid-path")
       assert(result(0)._2 === true)
-      assert(result(1)._1.path === "another-valid-path")
+      assert(result(1)._1.path === "/another-valid-path")
       assert(result(1)._2 === true)
     }
 
@@ -180,8 +180,8 @@ class V218MigratorSpec extends AnyWordSpec {
       val result = convertSeries(series)
 
       assert(result.length === 2)
-      assert(result(0)._1.path === "invalid path with spaces")
-      assert(result(0)._2 === false)
+      assert(result(0)._1.path === "/invalid path with spaces")
+      assert(result(0)._2 === true)
       assert(result(1)._1.path === "invalid<>path")
       assert(result(1)._2 === false)
     }
@@ -189,18 +189,18 @@ class V218MigratorSpec extends AnyWordSpec {
     "properly handle mixed valid and invalid paths" in {
       val series = Seq(
         (SeriesUnsafeV218(SeriesId(), SeriesName("series1"), "valid-path")),
-        (SeriesUnsafeV218(SeriesId(), SeriesName("series2"), "invalid path")),
+        (SeriesUnsafeV218(SeriesId(), SeriesName("series2"), "invalid<>path")),
         (SeriesUnsafeV218(SeriesId(), SeriesName("series3"), "another-valid"))
       )
 
       val result = convertSeries(series)
 
       assert(result.length === 3)
-      assert(result(0)._1.path === "valid-path")
+      assert(result(0)._1.path === "/valid-path")
       assert(result(0)._2 === true)
-      assert(result(1)._1.path === "invalid path")
+      assert(result(1)._1.path === "invalid<>path")
       assert(result(1)._2 === false)
-      assert(result(2)._1.path === "another-valid")
+      assert(result(2)._1.path === "/another-valid")
       assert(result(2)._2 === true)
     }
 

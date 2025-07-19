@@ -187,7 +187,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
         // second time update assetion
         assert(deletedTags.get.tags.isEmpty)
-        assert(updatedSeries.get.path === "contentservice-series2-path")
+        assert(updatedSeries.get.path === "/contentservice-series2-path")
 
         // third time update assertion
         assert(deletedSeries.isEmpty)
