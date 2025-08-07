@@ -90,6 +90,11 @@ lazy val root = (project in file("."))
     buildInfoPackage := "net.yoshinorin.qualtet.buildinfo"
   )
 
+// Fork a new JVM process for 'sbt run' to enable javaOptions below
+// This allows passing system properties (-D flags) to the application JVM
+run / fork := true
+
+
 reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
 
 // https://github.com/scoverage/sbt-scoverage?tab=readme-ov-file#exclude-classes-and-packages-and-files

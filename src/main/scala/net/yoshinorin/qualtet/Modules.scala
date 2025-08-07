@@ -51,6 +51,7 @@ import net.yoshinorin.qualtet.infrastructure.db.migrator.FlywayMigrator
 import net.yoshinorin.qualtet.infrastructure.db.migrator.application.Migrator
 import net.yoshinorin.qualtet.infrastructure.db.doobie.{DoobieExecuter, DoobieTransactor}
 import net.yoshinorin.qualtet.infrastructure.versions.{V218Migrator, VersionMigrator, VersionRepository, VersionRepositoryAdapter, VersionService}
+import net.yoshinorin.qualtet.infrastructure.telemetry.Otel
 
 import pdi.jwt.JwtAlgorithm
 import java.security.SecureRandom
@@ -61,6 +62,7 @@ object Modules {
   private val doobieTransactor: DoobieTransactor[Aux] = summon[DoobieTransactor[Aux]]
 
   val transactorResource = doobieTransactor.make(config.db)
+  val otel = Otel.initialize
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
 }
 

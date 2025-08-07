@@ -29,23 +29,26 @@ object BootStrap extends IOApp {
   }
 
   def run(args: List[String]): IO[ExitCode] = {
-    Modules.transactorResource.use { tx =>
-      val modules = new Modules(tx)
-      val host = Ipv4Address.fromString(modules.config.http.host).getOrElse(ipv4"127.0.0.1")
-      val port = Port.fromInt(modules.config.http.port).getOrElse(port"9001")
-      (for {
-        _ <- logger.info(ApplicationInfo.asJson)
-        _ <- IO(modules.flywayMigrator.migrate())
-        _ <- modules.migrator.migrate(modules.contentTypeService)
-        _ <- modules.versionService.migrate(Some(modules.v218Migrator))
-        routes <- modules.router.withCors.map[Kleisli[IO, Request[IO], Response[IO]]](x => x.orNotFound)
-        httpApp <- IO(new HttpAppBuilder(routes).build)
-        server <- IO(
-          server(host, port, httpApp)
-            .use(_ => IO.never)
-            .as(ExitCode.Success)
-        )
-      } yield server).flatMap(identity)
+    Modules.otel.use { tracer =>
+      Modules.transactorResource.use { tx =>
+        val modules = new Modules(tx)
+        val host = Ipv4Address.fromString(modules.config.http.host).getOrElse(ipv4"127.0.0.1")
+        val port = Port.fromInt(modules.config.http.port).getOrElse(port"9001")
+        (for {
+          _ <- logger.info(ApplicationInfo.asJson)
+          _ <- IO(modules.flywayMigrator.migrate())
+          _ <- modules.migrator.migrate(modules.contentTypeService)
+          _ <- modules.versionService.migrate(Some(modules.v218Migrator))
+          routes <- modules.router.withCors.map[Kleisli[IO, Request[IO], Response[IO]]](x => x.orNotFound)
+          httpApp <- IO(new HttpAppBuilder(routes, Some(tracer)).build)
+          server <- IO(
+            server(host, port, httpApp)
+              .use(_ => IO.never)
+              .as(ExitCode.Success)
+          )
+        } yield server).flatMap(identity)
+        // TODO: should flush otel telemetries
+      }
     }
 
   }

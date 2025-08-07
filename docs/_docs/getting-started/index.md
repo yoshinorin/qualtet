@@ -89,6 +89,20 @@ Qualtet using `full-text-search`. So, please specify `--innodb-ft-min-token-size
 |`QUALTET_SEARCH_WORD_MIN_LENGTH `|Minimum length of search word|`int`|`2`|-|
 |`QUALTET_SEARCH_WORD_MAX_LENGTH `|Maximum length of search word|`int`|`15`|-|
 
+### OpenTelemetry
+
+Qualtet supports OpenTelemetry for distributed tracing and observability.
+
+|Property|Description|Type|Default|Example|
+|---|---|---|---|---|
+|`QUALTET_OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED`|Enable OpenTelemetry Java auto-configuration|`boolean`|`true`|`true`|
+|`QUALTET_OTEL_PROPAGATOR`|Which propagator to use|`string`|`tracecontext`|`tracecontext`|
+|`QUALTET_OTEL_SERVICE_NAME`|Service name for OpenTelemetry|`string`|`qualtet`|`example.net`|
+|`QUALTET_OTEL_SERVICE_NAMESPACE`|Service namespace for OpenTelemetry|`string`|`qualtet`|`qualtet`|
+|`QUALTET_OTEL_EXPORTER_OTLP_ENDPOINT`|OTLP exporter endpoint URL|`string`|`http://localhost:4317`|`http://jaeger:4317`|
+
+These settings allow you to configure OpenTelemetry tracing for monitoring HTTP requests, database operations, and other application metrics. The traces can be exported to OTLP-compatible systems.
+
 ## Create an author
 
 Qualtet does not support the signup endpoint. Need to create an author with `sbt task`, like below.
