@@ -112,6 +112,40 @@ class ContentSpec extends AnyWordSpec {
       }
     }
 
+    "accept paths with contains reserved path partially" in {
+      val validPaths = List(
+        "/adjacent_after/",
+        "/ADJACENT_after/",
+        "/before_adjacent/",
+        "/before_adjacent_after/"
+      )
+
+      validPaths.foreach { path =>
+        val contentPath = ContentPath(path)
+        assert(contentPath === path)
+      }
+    }
+
+    "throw InvalidPath exception with reserved path" in {
+      val containReservedPaths = List(
+        "/adjacent/",
+        "/adjacent",
+        "/ADJACENT/",
+        "adjacent",
+        "/before/adjacent/",
+        "/adjacent/after",
+        "/before/adjacent/after",
+        "/system"
+      )
+
+      containReservedPaths.foreach { path =>
+        val exception = intercept[InvalidPath] {
+          ContentPath(path)
+        }
+        assert(exception.detail === s"Path contains reserved word: ${path}")
+      }
+    }
+
     "accept valid percent encoding" in {
       val validEncodedPaths = List(
         "/valid/path/with%20space",

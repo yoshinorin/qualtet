@@ -545,7 +545,6 @@ class ContentRouteSpec extends AnyWordSpec {
         }
         .unsafeRunSync()
     }
-
   }
 
 }

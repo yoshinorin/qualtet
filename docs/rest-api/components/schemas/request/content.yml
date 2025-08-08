@@ -7,6 +7,10 @@ properties:
     description: |
       If using percent encoding, proper format is required (e.g., `%20` for space).
       Leading slash is automatically added if missing.
+      
+      **Restrictions** _(Added in v2.19.0)_:
+      - Cannot contain reserved words as path segments: `adjacent`, `admin`, `api`, `assets`, `health`, `metrics`, `navigation`, `public`, `recommendations`, `related`, `static`, `system`
+      - Reserved words are checked as complete path segments separated by slashes (e.g., `/admin/foo` is invalid, but `/administrator` is valid)
     type: string
     pattern: '^/?[^:?#@!$&''()*+,;=<>"\\^`{}|~]*$'
     example: "/2020/01/01/new-year"

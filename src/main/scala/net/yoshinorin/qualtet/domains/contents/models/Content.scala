@@ -21,6 +21,25 @@ object ContentPath extends ValueExtender[ContentPath] {
   private lazy val unusableChars = "[:?#@!$&'()*+,;=<>\"\\\\^`{}|~]"
   private lazy val invalidPercentRegex = ".*%(?![0-9A-Fa-f]{2}).*"
 
+  private val RESERVED_PATHS: Set[String] = Set(
+    "adjacent",
+    "admin",
+    "api",
+    "assets",
+    "health",
+    "metrics",
+    "navigation",
+    "public",
+    "recommendations",
+    "related",
+    "static",
+    "system"
+  )
+
+  private def isReserved(path: String): Boolean = {
+    path.split("/").filter(_.nonEmpty).exists(segment => RESERVED_PATHS.contains(segment.toLowerCase))
+  }
+
   def apply(value: String): ContentPath = {
 
     if (unusableChars.r.findFirstMatchIn(value).isDefined) {
@@ -29,6 +48,10 @@ object ContentPath extends ValueExtender[ContentPath] {
 
     if (invalidPercentRegex.r.matches(value)) {
       throw InvalidPath(detail = s"Invalid percent encoding in path: ${value}")
+    }
+
+    if (isReserved(value)) {
+      throw InvalidPath(detail = s"Path contains reserved word: ${value}")
     }
 
     if (!value.startsWith("/")) {
