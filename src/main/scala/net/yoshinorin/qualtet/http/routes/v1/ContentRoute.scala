@@ -39,11 +39,15 @@ class ContentRoute[F[_]: Monad](
     path.replace("/v1/contents/", "")
   }
 
+  private def isAdjacentEndpointRequest(path: String): Boolean = {
+    path.endsWith("/adjacent") || path.endsWith("/adjacent/")
+  }
+
   private[http] def contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     // NOTE: Cannot use `GET -> Root / <path>` here because it would no longer pattern match other composed HTTP methods such as `POST` or `DELETE`.
     (r match
-      case request @ GET -> _ if request.path.endsWith("/adjacent") =>
-        val maybeId = removeApiPath(request.path).replace("/adjacent", "")
+      case request @ GET -> _ if isAdjacentEndpointRequest(request.path) =>
+        val maybeId = removeApiPath(request.path).replace("adjacent", "").replace("/", "")
         this
           .getAdjacent(maybeId)
           .handleErrorWith(_.logWithStackTrace[IO].andResponse)

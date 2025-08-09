@@ -553,25 +553,44 @@ class ContentRouteSpec extends AnyWordSpec {
         .unsafeRunSync()
     }
 
+    val testContent = ContentRequestModel(
+      contentType = "article",
+      path = ContentPath("/test/adjacent-content/"),
+      title = "Main Article for Adjacent Test",
+      robotsAttributes = Attributes("noarchive, noimageindex"),
+      rawContent = "This is the main article for testing adjacent functionality",
+      htmlContent = "<p>This is the main article for testing adjacent functionality</p>",
+      publishedAt = 1644075206,
+      updatedAt = 1644075206
+    )
+    val createdContent = contentService.createOrUpdate(validAuthor.name, testContent).unsafeRunSync()
+
     "return adjacent content for valid content ID" in {
-      val testContent = ContentRequestModel(
-        contentType = "article",
-        path = ContentPath("/test/adjacent-content/"),
-        title = "Main Article for Adjacent Test",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        rawContent = "This is the main article for testing adjacent functionality",
-        htmlContent = "<p>This is the main article for testing adjacent functionality</p>",
-        publishedAt = 1644075206,
-        updatedAt = 1644075206
-      )
-
-      val createdContent = contentService.createOrUpdate(validAuthor.name, testContent).unsafeRunSync()
-
       client
         .run(
           Request(
             method = Method.GET,
             uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${createdContent.id.value}/adjacent"))
+          )
+        )
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+
+            val adjacentContent = unsafeDecode[AdjacentContentResponseModel](response)
+            assert(adjacentContent.isInstanceOf[AdjacentContentResponseModel])
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "return adjacent content for valid content ID with trailing slash" in {
+      client
+        .run(
+          Request(
+            method = Method.GET,
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${createdContent.id.value}/adjacent/"))
           )
         )
         .use { response =>
