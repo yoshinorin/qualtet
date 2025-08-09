@@ -13,7 +13,8 @@ class OtelSpec extends AnyWordSpec {
       namespace = Some("test-namespace")
     ),
     exporter = OtelExporterConfig(
-      endpoint = Some("http://localhost:4317")
+      endpoint = Some("http://localhost:4317"),
+      headers = None
     ),
     propagator = Some("tracecontext")
   )
@@ -37,7 +38,7 @@ class OtelSpec extends AnyWordSpec {
     "return properties with defaults when config has no optional values" in {
       val config = baseConfig.copy(
         service = OtelServiceConfig(name = None, namespace = None),
-        exporter = OtelExporterConfig(endpoint = None),
+        exporter = OtelExporterConfig(endpoint = None, headers = None),
         propagator = None
       )
 
@@ -55,7 +56,7 @@ class OtelSpec extends AnyWordSpec {
     "return properties with mixed optional and default values" in {
       val config = baseConfig.copy(
         service = baseConfig.service.copy(name = Some("mixed-service"), namespace = None),
-        exporter = OtelExporterConfig(endpoint = None),
+        exporter = OtelExporterConfig(endpoint = None, headers = None),
         propagator = Some("b3")
       )
 
@@ -69,10 +70,30 @@ class OtelSpec extends AnyWordSpec {
       assert(!properties.contains("otel.exporter.otlp.endpoint"))
     }
 
+    "return properties with headers when exporter.headers is provided" in {
+      val config = baseConfig.copy(
+        exporter = baseConfig.exporter.copy(headers = Some("Authorization=Bearer token123,X-Custom=value"))
+      )
+
+      val properties = Otel.configureSystemProperties(config)
+
+      assert(properties("otel.exporter.otlp.headers") === "Authorization=Bearer token123,X-Custom=value")
+    }
+
+    "not include headers property when exporter.headers is None" in {
+      val config = baseConfig.copy(
+        exporter = baseConfig.exporter.copy(headers = None)
+      )
+
+      val properties = Otel.configureSystemProperties(config)
+
+      assert(!properties.contains("otel.exporter.otlp.headers"))
+    }
+
     "return consistent property count for same config type" in {
       val minimalConfig = baseConfig.copy(
         service = OtelServiceConfig(name = None, namespace = None),
-        exporter = OtelExporterConfig(endpoint = None),
+        exporter = OtelExporterConfig(endpoint = None, headers = None),
         propagator = None
       )
       val config1 = minimalConfig.copy(enabled = Some(true))
@@ -146,17 +167,17 @@ class OtelSpec extends AnyWordSpec {
     }
 
     "return None when otelConfig.enabled is true but exporter.endpoint is None" in {
-      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = None))
+      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = None, headers = None))
       assert(Otel.initialize(config).isEmpty)
     }
 
     "return None when otelConfig.enabled is true but exporter.endpoint is empty string" in {
-      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = Some("")))
+      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = Some(""), headers = None))
       assert(Otel.initialize(config).isEmpty)
     }
 
     "return None when otelConfig.enabled is true but exporter.endpoint is whitespace only" in {
-      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = Some("   ")))
+      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = Some("   "), headers = None))
       assert(Otel.initialize(config).isEmpty)
     }
   }

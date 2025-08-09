@@ -32,7 +32,8 @@ object Otel {
     val optionalProperties = List(
       otelConfig.service.name.map("otel.service.name" -> _),
       otelConfig.service.namespace.map("otel.service.namespace" -> _),
-      otelConfig.exporter.endpoint.map("otel.exporter.otlp.endpoint" -> _)
+      otelConfig.exporter.endpoint.map("otel.exporter.otlp.endpoint" -> _),
+      otelConfig.exporter.headers.map("otel.exporter.otlp.headers" -> _)
     ).flatten.toMap
 
     baseProperties ++ optionalProperties

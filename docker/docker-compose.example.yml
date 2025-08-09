@@ -40,6 +40,7 @@ services:
       QUALTET_OTEL_SERVICE_NAME: qualtet
       QUALTET_OTEL_SERVICE_NAMESPACE: qualtet
       QUALTET_OTEL_EXPORTER_ENDPOINT: http://localhost:4317
+      QUALTET_OTEL_EXPORTER_HEADERS: "Authorization=Basic example"
       QUALTET_OTEL_PROPAGATOR: tracecontext
       JAVA_OPTS: "-Xms512M -Xmx768M -Xss2M -Xlog:gc*=info:file=/usr/opt/qualtet/logs/gc.log -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/opt/qualtet/dumps/heapdump.bin"
     volumes:

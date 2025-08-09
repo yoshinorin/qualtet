@@ -16,7 +16,7 @@ final case class JwtConfig(iss: String, aud: String, expiration: Long)
 final case class CacheConfig(contentType: Long, sitemap: Long, feed: Long, tags: Long)
 final case class SearchConfig(maxWords: Int, minWordLength: Int, maxWordLength: Int)
 final case class OtelServiceConfig(name: Option[String], namespace: Option[String])
-final case class OtelExporterConfig(endpoint: Option[String])
+final case class OtelExporterConfig(endpoint: Option[String], headers: Option[String])
 final case class OtelConfig(enabled: Option[Boolean], service: OtelServiceConfig, exporter: OtelExporterConfig, propagator: Option[String])
 final case class ApplicationConfig(
   db: DBConfig,
@@ -68,6 +68,7 @@ object ApplicationConfig {
   private val otelServiceName: Option[String] = getOptionalString("otel.service.name")
   private val otelServiceNamespace: Option[String] = getOptionalString("otel.service.namespace")
   private val otelExporterEndpoint: Option[String] = getOptionalString("otel.exporter.endpoint")
+  private val otelExporterHeaders: Option[String] = getOptionalString("otel.exporter.headers")
   private val otelPropagator: Option[String] = getOptionalString("otel.propagator")
 
   def load: ApplicationConfig = ApplicationConfig(
@@ -80,7 +81,7 @@ object ApplicationConfig {
     otel = OtelConfig(
       enabled = otelEnabled,
       service = OtelServiceConfig(otelServiceName, otelServiceNamespace),
-      exporter = OtelExporterConfig(otelExporterEndpoint),
+      exporter = OtelExporterConfig(otelExporterEndpoint, otelExporterHeaders),
       propagator = otelPropagator
     )
   )
