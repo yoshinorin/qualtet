@@ -14,6 +14,7 @@ import scala.concurrent.duration.*
 object BootStrap extends IOApp {
 
   import Modules.log4catsLogger
+  import org.typelevel.otel4s.trace.Tracer
 
   val logger: SelfAwareStructuredLogger[IO] = log4catsLogger.getLoggerFromClass(this.getClass)
 
@@ -29,27 +30,28 @@ object BootStrap extends IOApp {
   }
 
   def run(args: List[String]): IO[ExitCode] = {
-    Modules.otel.use { tracer =>
+    val runApp = (maybeTracer: Option[Tracer[IO]]) =>
       Modules.transactorResource.use { tx =>
         val modules = new Modules(tx)
         val host = Ipv4Address.fromString(modules.config.http.host).getOrElse(ipv4"127.0.0.1")
         val port = Port.fromInt(modules.config.http.port).getOrElse(port"9001")
-        (for {
+
+        for {
           _ <- logger.info(ApplicationInfo.asJson)
           _ <- IO(modules.flywayMigrator.migrate())
           _ <- modules.migrator.migrate(modules.contentTypeService)
           _ <- modules.versionService.migrate(Some(modules.v218Migrator))
-          routes <- modules.router.withCors.map[Kleisli[IO, Request[IO], Response[IO]]](x => x.orNotFound)
-          httpApp <- IO(new HttpAppBuilder(routes, Some(tracer)).build)
-          server <- IO(
-            server(host, port, httpApp)
-              .use(_ => IO.never)
-              .as(ExitCode.Success)
-          )
-        } yield server).flatMap(identity)
+          routes <- modules.router.withCors.map[Kleisli[IO, Request[IO], Response[IO]]](_.orNotFound)
+          httpApp <- IO(new HttpAppBuilder(routes, maybeTracer).build)
+          _ <- server(host, port, httpApp).use(_ => IO.never)
+        } yield ExitCode.Success
         // TODO: should flush otel telemetries
       }
-    }
 
+    Modules.otel.fold(runApp(None)) {
+      _.use { tracer =>
+        runApp(Some(tracer))
+      }
+    }
   }
 }

@@ -15,13 +15,17 @@ final case class CorsConfig(allowOrigins: List[String])
 final case class JwtConfig(iss: String, aud: String, expiration: Long)
 final case class CacheConfig(contentType: Long, sitemap: Long, feed: Long, tags: Long)
 final case class SearchConfig(maxWords: Int, minWordLength: Int, maxWordLength: Int)
+final case class OtelServiceConfig(name: Option[String], namespace: Option[String])
+final case class OtelExporterConfig(endpoint: Option[String])
+final case class OtelConfig(enabled: Option[Boolean], service: OtelServiceConfig, exporter: OtelExporterConfig, propagator: Option[String])
 final case class ApplicationConfig(
   db: DBConfig,
   http: HttpConfig,
   cors: CorsConfig,
   jwt: JwtConfig,
   cache: CacheConfig,
-  search: SearchConfig
+  search: SearchConfig,
+  otel: OtelConfig
 )
 
 object ApplicationConfig {
@@ -54,13 +58,31 @@ object ApplicationConfig {
   private val searchMinWordLength: Int = config.getInt("search.min-word-length")
   private val searchMaxWordLength: Int = config.getInt("search.max-word-length")
 
+  private def getOptionalBoolean(path: String): Option[Boolean] =
+    if (config.hasPath(path)) Some(config.getBoolean(path)) else None
+
+  private def getOptionalString(path: String): Option[String] =
+    if (config.hasPath(path)) Some(config.getString(path)) else None
+
+  private val otelEnabled: Option[Boolean] = getOptionalBoolean("otel.enabled")
+  private val otelServiceName: Option[String] = getOptionalString("otel.service.name")
+  private val otelServiceNamespace: Option[String] = getOptionalString("otel.service.namespace")
+  private val otelExporterEndpoint: Option[String] = getOptionalString("otel.exporter.endpoint")
+  private val otelPropagator: Option[String] = getOptionalString("otel.propagator")
+
   def load: ApplicationConfig = ApplicationConfig(
     db = DBConfig(dbUrl, dbUser, dbPassword, dbConnectionPool),
     http = HttpConfig(httpHost, httpPort, httpEndpoints),
     cors = CorsConfig(corsAllowOrigins),
     jwt = JwtConfig(jwtIss, jwtAud, jwtExpiration),
     cache = CacheConfig(cacheContentType, cacheSitemap, cacheFeed, cacheTags),
-    search = SearchConfig(searchMaxWords, searchMinWordLength, searchMaxWordLength)
+    search = SearchConfig(searchMaxWords, searchMinWordLength, searchMaxWordLength),
+    otel = OtelConfig(
+      enabled = otelEnabled,
+      service = OtelServiceConfig(otelServiceName, otelServiceNamespace),
+      exporter = OtelExporterConfig(otelExporterEndpoint),
+      propagator = otelPropagator
+    )
   )
 
 }

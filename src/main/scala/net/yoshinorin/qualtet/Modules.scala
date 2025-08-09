@@ -1,11 +1,13 @@
 package net.yoshinorin.qualtet
 
 import cats.effect.IO
+import cats.effect.kernel.Resource
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor
 import doobie.util.transactor.Transactor.Aux
 import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
 import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
+import org.typelevel.otel4s.trace.Tracer
 import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
@@ -62,7 +64,7 @@ object Modules {
   private val doobieTransactor: DoobieTransactor[Aux] = summon[DoobieTransactor[Aux]]
 
   val transactorResource = doobieTransactor.make(config.db)
-  val otel = Otel.initialize
+  val otel: Option[Resource[IO, Tracer[IO]]] = Otel.initialize(config.otel)
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
 }
 
