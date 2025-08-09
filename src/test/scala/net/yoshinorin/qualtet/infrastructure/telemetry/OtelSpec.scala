@@ -27,12 +27,12 @@ class OtelSpec extends AnyWordSpec {
       val properties = Otel.configureSystemProperties(config)
 
       assert(properties("otel.java.global-autoconfigure.enabled") === "true")
-      assert(properties("otel.service.version") === "v2.18.0") // BuildInfo.version
+      assert(properties("otel.service.version") === "v2.19.0") // BuildInfo.version
       assert(properties("otel.service.name") === "test-service")
       assert(properties("otel.service.namespace") === "test-namespace")
       assert(properties("otel.exporter.otlp.endpoint") === "http://localhost:4317")
       assert(properties("otel.propagators") === "tracecontext,baggage")
-      assert(properties("otel.resource.attributes") === "service.name=test-service,service.version=v2.18.0,service.namespace=test-namespace")
+      assert(properties("otel.resource.attributes") === "service.name=test-service,service.version=v2.19.0,service.namespace=test-namespace")
       assert(properties("otel.exporter.otlp.protocol") === "http/protobuf")
     }
 
@@ -46,9 +46,9 @@ class OtelSpec extends AnyWordSpec {
       val properties = Otel.configureSystemProperties(config)
 
       assert(properties("otel.java.global-autoconfigure.enabled") === "true")
-      assert(properties("otel.service.version") === "v2.18.0")
+      assert(properties("otel.service.version") === "v2.19.0")
       assert(properties("otel.propagators") === "tracecontext") // default
-      assert(properties("otel.resource.attributes") === "service.name=qualtet,service.version=v2.18.0")
+      assert(properties("otel.resource.attributes") === "service.name=qualtet,service.version=v2.19.0")
       assert(properties("otel.exporter.otlp.protocol") === "http/protobuf")
       assert(!properties.contains("otel.service.name"))
       assert(!properties.contains("otel.service.namespace"))
@@ -65,7 +65,7 @@ class OtelSpec extends AnyWordSpec {
       val properties = Otel.configureSystemProperties(config)
 
       assert(properties("otel.java.global-autoconfigure.enabled") === "true")
-      assert(properties("otel.service.version") === "v2.18.0")
+      assert(properties("otel.service.version") === "v2.19.0")
       assert(properties("otel.service.name") === "mixed-service")
       assert(properties("otel.propagators") === "b3")
       assert(properties("otel.exporter.otlp.protocol") === "http/protobuf")
@@ -123,7 +123,7 @@ class OtelSpec extends AnyWordSpec {
     "return all resource attributes when config has all values" in {
       val resourceAttributes = Otel.buildResourceAttributes(baseConfig)
 
-      assert(resourceAttributes === "service.name=test-service,service.version=v2.18.0,service.namespace=test-namespace")
+      assert(resourceAttributes === "service.name=test-service,service.version=v2.19.0,service.namespace=test-namespace")
     }
 
     "return minimal resource attributes when config has no optional values" in {
@@ -132,7 +132,7 @@ class OtelSpec extends AnyWordSpec {
       )
       val resourceAttributes = Otel.buildResourceAttributes(config)
 
-      assert(resourceAttributes === "service.name=qualtet,service.version=v2.18.0")
+      assert(resourceAttributes === "service.name=qualtet,service.version=v2.19.0")
     }
 
     "return resource attributes with only service name when namespace is None" in {
@@ -141,7 +141,7 @@ class OtelSpec extends AnyWordSpec {
       )
       val resourceAttributes = Otel.buildResourceAttributes(config)
 
-      assert(resourceAttributes === "service.name=test-service,service.version=v2.18.0")
+      assert(resourceAttributes === "service.name=test-service,service.version=v2.19.0")
     }
 
     "return resource attributes with custom service name" in {
@@ -150,7 +150,7 @@ class OtelSpec extends AnyWordSpec {
       )
       val resourceAttributes = Otel.buildResourceAttributes(config)
 
-      assert(resourceAttributes === "service.name=custom-service,service.version=v2.18.0,service.namespace=test-namespace")
+      assert(resourceAttributes === "service.name=custom-service,service.version=v2.19.0,service.namespace=test-namespace")
     }
   }
 
