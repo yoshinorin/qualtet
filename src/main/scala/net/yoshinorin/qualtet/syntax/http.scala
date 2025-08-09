@@ -10,6 +10,12 @@ import scala.util.Try
 
 trait http {
 
+  extension (request: Request[IO]) {
+    def path: String = {
+      request.uri.path.toString()
+    }
+  }
+
   extension (e: Throwable) {
     def asResponse: Request[IO] ?=> IO[Response[IO]] = {
       Translator.toResponse(e)

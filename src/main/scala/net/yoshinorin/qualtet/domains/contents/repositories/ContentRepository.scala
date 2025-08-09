@@ -8,6 +8,7 @@ trait ContentRepository[F[_]] {
   def findById(id: ContentId): F[Option[ContentReadModel]]
   def findByPath(path: ContentPath): F[Option[ContentReadModel]]
   def findByPathWithMeta(path: ContentPath): F[Option[ContentWithMetaReadModel]]
+  def findAdjacent(id: ContentId): F[Option[(Option[AdjacentContentModel], Option[AdjacentContentModel])]]
   def delete(id: ContentId): F[Unit]
 }
 
@@ -87,6 +88,26 @@ object ContentRepository {
             )
         }
 
+      given adjacentContentRead: Read[(Option[AdjacentContentModel], Option[AdjacentContentModel])] =
+        Read[(Option[String], Option[String], Option[String], Option[Long], Option[String], Option[String], Option[String], Option[Long])].map {
+          case (prevId, prevPath, prevTitle, prevPublished, nextId, nextPath, nextTitle, nextPublished) =>
+            val previous = for {
+              id <- prevId
+              path <- prevPath
+              title <- prevTitle
+              published <- prevPublished
+            } yield AdjacentContentModel(ContentId(id), ContentPath(path), title, published)
+
+            val next = for {
+              id <- nextId
+              path <- nextPath
+              title <- nextTitle
+              published <- nextPublished
+            } yield AdjacentContentModel(ContentId(id), ContentPath(path), title, published)
+
+            (previous, next)
+        }
+
       given contentWrite: Write[ContentWriteModel] =
         Write[(String, String, String, String, String, String, String, Long, Long)].contramap(c =>
           (
@@ -116,6 +137,9 @@ object ContentRepository {
         // NOTE: use `.option` instead of `.query[Option[T]].unique`
         //       https://stackoverflow.com/questions/57873699/sql-null-read-at-column-1-jdbc-type-null-but-mapping-is-to-a-non-option-type
         ContentQuery.findByPathWithMeta(path).option
+      }
+      override def findAdjacent(id: ContentId): ConnectionIO[Option[(Option[AdjacentContentModel], Option[AdjacentContentModel])]] = {
+        ContentQuery.findAdjacent(id).option
       }
       override def delete(id: ContentId): ConnectionIO[Unit] = {
         ContentQuery.delete(id).run.map(_ => ())

@@ -9,7 +9,14 @@ import org.http4s.dsl.io.*
 import org.http4s.{ContextRequest, Request}
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.domains.contents.{ContentDetailResponseModel, ContentId, ContentRequestModel, ContentResponseModel, ContentService}
+import net.yoshinorin.qualtet.domains.contents.{
+  AdjacentContentResponseModel,
+  ContentDetailResponseModel,
+  ContentId,
+  ContentRequestModel,
+  ContentResponseModel,
+  ContentService
+}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
@@ -28,13 +35,23 @@ class ContentRoute[F[_]: Monad](
     (contentWithoutAuth <+>
       authProvider.authenticate(contentWithAuthed))
 
-  private[http] def contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private def removeApiPath(path: String): String = {
+    path.replace("/v1/contents/", "")
+  }
+
+  private[http] def contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     // NOTE: Cannot use `GET -> Root / <path>` here because it would no longer pattern match other composed HTTP methods such as `POST` or `DELETE`.
-    case request @ GET -> _ =>
-      implicit val r = request
-      this
-        .get(request.uri.path.toString().replace("/v1/contents", ""))
-        .handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    (r match
+      case request @ GET -> _ if request.path.endsWith("/adjacent") =>
+        val maybeId = removeApiPath(request.path).replace("/adjacent", "")
+        this
+          .getAdjacent(maybeId)
+          .handleErrorWith(_.logWithStackTrace[IO].andResponse)
+      case request @ GET -> _ =>
+        this
+          .get(removeApiPath(request.path))
+          .handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    )
   }
 
   private[http] def contentWithAuthed: AuthedRoutes[(AuthorResponseModel, String), IO] = AuthedRoutes.of { ctxRequest =>
@@ -75,6 +92,17 @@ class ContentRoute[F[_]: Monad](
     (for {
       maybeContent <- contentService.findByPathWithMeta(ContentPath(path))
     } yield maybeContent)
+      .flatMap(_.asResponse)
+  }
+
+  def getAdjacent(id: String): Request[IO] ?=> IO[Response[IO]] = {
+    (for {
+      maybeContent <- contentService.findById(ContentId(id))
+      adjacent <- maybeContent match {
+        case Some(content) => contentService.findAdjacent(content.id)
+        case None => IO(None)
+      }
+    } yield adjacent)
       .flatMap(_.asResponse)
   }
 

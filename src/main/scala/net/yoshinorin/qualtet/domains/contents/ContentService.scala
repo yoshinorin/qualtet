@@ -207,6 +207,13 @@ class ContentService[F[_]: Monad](
     executer.transact(contentRepositoryAdapter.findById(id))
   }
 
+  def findAdjacent(id: ContentId): IO[Option[AdjacentContentResponseModel]] = {
+    executer.transact(contentRepositoryAdapter.findAdjacent(id)).map {
+      case None => None
+      case Some((previous, next)) => Some(AdjacentContentResponseModel(previous, next))
+    }
+  }
+
   def findBy[A](data: A)(f: A => ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]]): IO[Option[ContentDetailResponseModel]] = {
     executer.transact(f(data)).flatMap {
       case None => IO(None)

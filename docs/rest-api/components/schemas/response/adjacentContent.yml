@@ -1,0 +1,55 @@
+type: object
+properties:
+  previous:
+    type: object
+    nullable: true
+    properties:
+      id:
+        type: string
+        format: ulid
+        example: "01arz3ndektsv4rrffq69g5fav"
+      path:
+        type: string
+        example: "/previous-article-path"
+        description: "Content path"
+      title:
+        type: string
+        example: "Previous Article Title"
+        description: "Content title"
+      publishedAt:
+        type: integer
+        format: int64
+        example: 1640995200
+        description: "Published timestamp (Unix epoch seconds)"
+    required:
+      - id
+      - path
+      - title
+      - publishedAt
+  next:
+    type: object
+    nullable: true
+    properties:
+      id:
+        type: string
+        example: "01arz3ndektsv4rrffq69g5fav"
+        format: ulid
+      path:
+        type: string
+        example: "/next-article-path"
+        description: "Content path"
+      title:
+        type: string
+        example: "Next Article Title"
+        description: "Content title"
+      publishedAt:
+        type: integer
+        format: int64
+        example: 1640995200
+        description: "Published timestamp (Unix epoch seconds)"
+    required:
+      - id
+      - path
+      - title
+      - publishedAt
+description: "Adjacent articles (previous and next) for navigation purposes. Either previous or next can be null if there are no adjacent articles."

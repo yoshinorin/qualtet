@@ -74,6 +74,8 @@ paths:
     $ref: './paths/v1/contents/upsert.yml'
   /v1/contents/{contentId}:
     $ref: './paths/v1/contents/deleteById.yml'
+  /v1/contents/{contentId}/adjacent:
+    $ref: './paths/v1/contents/adjacent.yml'
   /v1/tags:
     $ref: './paths/v1/tags/get.yml'
   /v1/tags/{tagPath}:
