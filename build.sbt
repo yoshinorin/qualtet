@@ -1,7 +1,7 @@
 organization := "net.yoshinorin"
 name := "qualtet"
 version := "v2.18.0"
-scalaVersion := "3.7.1"
+scalaVersion := "3.7.2"
 val repository = "https://github.com/yoshinorin/qualtet"
 
 scalacOptions ++= Seq(
