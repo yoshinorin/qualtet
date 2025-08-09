@@ -107,4 +107,18 @@ class ContentRepositoryAdapter[F[_]: Monad](
     }
   }
 
+  private[domains] def findAdjacent(id: ContentId): ContT[
+    F,
+    Option[(Option[AdjacentContentModel], Option[AdjacentContentModel])],
+    Option[(Option[AdjacentContentModel], Option[AdjacentContentModel])]
+  ] = {
+    ContT.apply[
+      F,
+      Option[(Option[AdjacentContentModel], Option[AdjacentContentModel])],
+      Option[(Option[AdjacentContentModel], Option[AdjacentContentModel])]
+    ] { _ =>
+      contentRepository.findAdjacent(id)
+    }
+  }
+
 }

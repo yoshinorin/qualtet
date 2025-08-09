@@ -9,7 +9,14 @@ import org.http4s.implicits.*
 import org.typelevel.ci.*
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.domains.contents.{ContentDetailResponseModel, ContentId, ContentPath, ContentRequestModel, ContentResponseModel}
+import net.yoshinorin.qualtet.domains.contents.{
+  AdjacentContentResponseModel,
+  ContentDetailResponseModel,
+  ContentId,
+  ContentPath,
+  ContentRequestModel,
+  ContentResponseModel
+}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
@@ -541,6 +548,64 @@ class ContentRouteSpec extends AnyWordSpec {
           IO {
             assert(response.status === MethodNotAllowed)
             assert(response.contentType.isEmpty)
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "return adjacent content for valid content ID" in {
+      val testContent = ContentRequestModel(
+        contentType = "article",
+        path = ContentPath("/test/adjacent-content/"),
+        title = "Main Article for Adjacent Test",
+        robotsAttributes = Attributes("noarchive, noimageindex"),
+        rawContent = "This is the main article for testing adjacent functionality",
+        htmlContent = "<p>This is the main article for testing adjacent functionality</p>",
+        publishedAt = 1644075206,
+        updatedAt = 1644075206
+      )
+
+      val createdContent = contentService.createOrUpdate(validAuthor.name, testContent).unsafeRunSync()
+
+      client
+        .run(
+          Request(
+            method = Method.GET,
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${createdContent.id.value}/adjacent"))
+          )
+        )
+        .use { response =>
+          IO {
+            assert(response.status === Ok)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.json))
+
+            val adjacentContent = unsafeDecode[AdjacentContentResponseModel](response)
+            assert(adjacentContent.isInstanceOf[AdjacentContentResponseModel])
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "return 404 for adjacent content with non-existent content ID" in {
+      val nonExistentId = ContentId(generateUlid())
+
+      client
+        .run(
+          Request(
+            method = Method.GET,
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${nonExistentId.value}/adjacent"))
+          )
+        )
+        .use { response =>
+          IO {
+            assert(response.status === NotFound)
+            assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
+
+            val maybeError = unsafeDecode[ResponseProblemDetails](response)
+            assert(maybeError.title === "Not Found")
+            assert(maybeError.status === 404)
+            assert(maybeError.detail === "Not Found")
+            assert(maybeError.instance === s"/v1/contents/${nonExistentId.value}/adjacent")
           }
         }
         .unsafeRunSync()

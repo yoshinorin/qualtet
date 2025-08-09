@@ -8,6 +8,7 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
+import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationRequestModel}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import org.scalatest.wordspec.AnyWordSpec
@@ -354,6 +355,56 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           )
           .unsafeRunSync()
       }
+    }
+
+    "find adjacent articles using existing articles" in {
+      // NOTE: We only test second article because first/last articles may be affected by data inserted from other tests running in parallel
+      (for {
+        articles <- articleService.getWithCount(PaginationRequestModel(page = Some(Page(1)), limit = Some(Limit(10)), order = Some(Order.DESC)))
+        firstPaginationArticles = articles.articles
+        secondArticle = firstPaginationArticles(1)
+        maybeAdjacentArticle <- contentService.findAdjacent(secondArticle.id)
+      } yield {
+        val adjacentArticles = maybeAdjacentArticle.get
+
+        adjacentArticles.previous.foreach { prev =>
+          assert(
+            prev.publishedAt <= secondArticle.publishedAt,
+            s"Previous article publishedAt (${prev.publishedAt}) should be less than second article (${secondArticle.publishedAt})"
+          )
+        }
+
+        adjacentArticles.next.foreach { next =>
+          assert(
+            next.publishedAt >= secondArticle.publishedAt,
+            s"Next article publishedAt (${next.publishedAt}) should be greater than second article (${secondArticle.publishedAt})"
+          )
+        }
+
+        adjacentArticles.previous.foreach { prev =>
+          assert(prev.id.value.nonEmpty, "Previous article ID should not be empty")
+          assert(prev.path.value.nonEmpty, "Previous article path should not be empty")
+          assert(prev.title.nonEmpty, "Previous article title should not be empty")
+          assert(prev.publishedAt > 0, "Previous article publishedAt should be positive")
+        }
+
+        adjacentArticles.next.foreach { next =>
+          assert(next.id.value.nonEmpty, "Next article ID should not be empty")
+          assert(next.path.value.nonEmpty, "Next article path should not be empty")
+          assert(next.title.nonEmpty, "Next article title should not be empty")
+          assert(next.publishedAt > 0, "Next article publishedAt should be positive")
+        }
+      }).unsafeRunSync()
+    }
+
+    "find adjacent for non-existent article" in {
+      val nonExistentId = ContentId("01arz3ndektsv4rrffq69g5fav")
+
+      (for {
+        adjacent <- contentService.findAdjacent(nonExistentId)
+      } yield {
+        assert(adjacent.isEmpty, "Non-existent article should return None")
+      }).unsafeRunSync()
     }
   }
 

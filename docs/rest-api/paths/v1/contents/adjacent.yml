@@ -1,0 +1,50 @@
+get:
+  summary: Get adjacent articles
+  description: |
+      Retrieves the previous and next articles relative to the specified content by `id`.
+      Returns null for previous/next if noadjacent articles exist (e.g., first or last article).
+  tags:
+    - Contents
+  parameters:
+    - name: contentId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: ulid
+        example: "01arz3ndektsv4rrffq69g5fav"
+  responses:
+    200:
+      description: Response when success
+      content:
+        application/json:
+          schema:
+            $ref: '../../../components/schemas/response/adjacentContent.yml'
+    404:
+      description: Content not found
+      content:
+        application/json+problem:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "https://yoshinorin.github.io/qualtet/rest-api/"
+              title:
+                type: string
+                example: "Not Found"
+              status:
+                type: number
+                example: 404
+              detail:
+                type: string
+                example: "Content not found"
+              instance:
+                type: string
+                example: "/v1/contents/{contentId}/adjacent"
+            required:
+              - type
+              - title
+              - status
+              - detail
+              - instance

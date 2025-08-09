@@ -72,4 +72,37 @@ object ContentQuery {
       .query[ContentWithMetaReadModel]
   }
 
+  def findAdjacent(id: ContentId): Read[(Option[AdjacentContentModel], Option[AdjacentContentModel])] ?=> Query0[
+    (Option[AdjacentContentModel], Option[AdjacentContentModel])
+  ] = {
+    sql"""
+       SELECT
+         prev_id,
+         prev_path,
+         prev_title,
+         prev_published_at,
+         next_id,
+         next_path,
+         next_title,
+         next_published_at
+       FROM (
+         SELECT
+           contents.id,
+           LAG(contents.id) OVER (ORDER BY contents.published_at) AS prev_id,
+           LAG(contents.path) OVER (ORDER BY contents.published_at) AS prev_path,
+           LAG(contents.title) OVER (ORDER BY contents.published_at) AS prev_title,
+           LAG(contents.published_at) OVER (ORDER BY contents.published_at) AS prev_published_at,
+           LEAD(contents.id) OVER (ORDER BY contents.published_at) AS next_id,
+           LEAD(contents.path) OVER (ORDER BY contents.published_at) AS next_path,
+           LEAD(contents.title) OVER (ORDER BY contents.published_at) AS next_title,
+           LEAD(contents.published_at) OVER (ORDER BY contents.published_at) AS next_published_at
+         FROM contents
+         INNER JOIN content_types ON contents.content_type_id = content_types.id
+         WHERE content_types.name = 'article'
+       ) windowed
+       WHERE windowed.id = ${id.value}
+    """
+      .query[(Option[AdjacentContentModel], Option[AdjacentContentModel])]
+  }
+
 }
