@@ -104,6 +104,8 @@ Qualtet supports OpenTelemetry for distributed tracing and observability. OpenTe
 
 These settings allow you to configure OpenTelemetry tracing for monitoring HTTP requests, database operations, and other application metrics. The traces can be exported to OTLP-compatible systems.
 
+**Protocol:** The OTLP protocol is automatically set to `http/protobuf` for compatibility with Grafana Cloud and other HTTP-based OTLP endpoints.
+
 **Authentication:** If needed, use `QUALTET_OTEL_EXPORTER_HEADERS` to provide authentication credentials. Multiple headers can be specified using comma separation: `key1=value1,key2=value2`.
 
 **Note:** The service version is automatically set from the application build version.

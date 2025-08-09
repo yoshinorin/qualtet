@@ -33,6 +33,7 @@ class OtelSpec extends AnyWordSpec {
       assert(properties("otel.exporter.otlp.endpoint") === "http://localhost:4317")
       assert(properties("otel.propagators") === "tracecontext,baggage")
       assert(properties("otel.resource.attributes") === "service.name=test-service,service.version=v2.18.0,service.namespace=test-namespace")
+      assert(properties("otel.exporter.otlp.protocol") === "http/protobuf")
     }
 
     "return properties with defaults when config has no optional values" in {
@@ -48,6 +49,7 @@ class OtelSpec extends AnyWordSpec {
       assert(properties("otel.service.version") === "v2.18.0")
       assert(properties("otel.propagators") === "tracecontext") // default
       assert(properties("otel.resource.attributes") === "service.name=qualtet,service.version=v2.18.0")
+      assert(properties("otel.exporter.otlp.protocol") === "http/protobuf")
       assert(!properties.contains("otel.service.name"))
       assert(!properties.contains("otel.service.namespace"))
       assert(!properties.contains("otel.exporter.otlp.endpoint"))
@@ -66,6 +68,7 @@ class OtelSpec extends AnyWordSpec {
       assert(properties("otel.service.version") === "v2.18.0")
       assert(properties("otel.service.name") === "mixed-service")
       assert(properties("otel.propagators") === "b3")
+      assert(properties("otel.exporter.otlp.protocol") === "http/protobuf")
       assert(!properties.contains("otel.service.namespace"))
       assert(!properties.contains("otel.exporter.otlp.endpoint"))
     }
@@ -106,10 +109,12 @@ class OtelSpec extends AnyWordSpec {
       assert(properties1.contains("otel.java.global-autoconfigure.enabled"))
       assert(properties1.contains("otel.service.version"))
       assert(properties1.contains("otel.propagators"))
+      assert(properties1.contains("otel.exporter.otlp.protocol"))
 
       assert(properties2.contains("otel.java.global-autoconfigure.enabled"))
       assert(properties2.contains("otel.service.version"))
       assert(properties2.contains("otel.propagators"))
+      assert(properties2.contains("otel.exporter.otlp.protocol"))
     }
   }
 

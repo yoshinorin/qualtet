@@ -26,7 +26,8 @@ object Otel {
       "otel.java.global-autoconfigure.enabled" -> "true",
       "otel.service.version" -> BuildInfo.version,
       "otel.propagators" -> otelConfig.propagator.getOrElse("tracecontext"),
-      "otel.resource.attributes" -> buildResourceAttributes(otelConfig)
+      "otel.resource.attributes" -> buildResourceAttributes(otelConfig),
+      "otel.exporter.otlp.protocol" -> "http/protobuf"
     )
 
     val optionalProperties = List(
