@@ -57,28 +57,28 @@ Please see [releases page](./docs/_docs/releases/index.md).
 
 ## Using Stacks
 
-|Stack|-|
-|---|---|
-|[Scala](https://www.scala-lang.org/)|-|
-|[cats](https://github.com/typelevel/cats)| Functional programming library |
-|[cats-effect](https://github.com/typelevel/cats-effect)| Pure asynchronous runtime |
-|[http4s](https://github.com/http4s/http4s)| HTTP Server |
-|[jsoniter-scala](https://github.com/plokhotnyuk/jsoniter-scala)| JSON codecs |
-|[jwt-scala](https://github.com/jwt-scala/jwt-scala)| JWT support |
-|[doobie](https://github.com/tpolecat/doobie)| JDBC Layer |
-|[airframe-ulid](https://github.com/wvlet/airframe/)| ULID Generator |
-|[caffeine](https://github.com/ben-manes/caffeine)| Caching library |
-|[logback](https://github.com/qos-ch/logback)| Logging framework |
-|[slf4j](https://github.com/qos-ch/slf4j)| Logging facade |
-|[Spring Security](https://github.com/spring-projects/spring-security)| BCrypt password |
-|[Flyway](https://flywaydb.org/)| Database Migration |
-|[ScalaTest](http://www.scalatest.org/)| Unit test |
-|[Mockito](https://github.com/mockito/mockito)| Mocking framework |
-|[Scalafmt](https://scalameta.org/scalafmt/)| Code formatter |
-|[GitHub Action](https://github.com/yoshinorin/cahsper/actions)| CI/CD |
-|[COVERALLS](https://coveralls.io/github/yoshinorin/qualtet?branch=master)| Coverage report |
-|[ReDoc](https://github.com/Redocly/redoc)| API documentation |
-|[GitHub Pages](https://pages.github.com/)| Hosting WebSite & API docuementation |
+| | Technology | Purpose |
+|----------|------------|---------|
+| **Core** | [Scala](https://www.scala-lang.org/) | Primary programming language |
+| | [cats](https://github.com/typelevel/cats) | Functional programming library |
+| | [cats-effect](https://github.com/typelevel/cats-effect) | Pure asynchronous runtime |
+| **HTTP/API** | [http4s](https://github.com/http4s/http4s) | HTTP server |
+| | [jsoniter-scala](https://github.com/plokhotnyuk/jsoniter-scala) | JSON codec |
+| | [jwt-scala](https://github.com/jwt-scala/jwt-scala) | JWT authentication support |
+| **Database** | [doobie](https://github.com/tpolecat/doobie) | Functional JDBC layer |
+| | [Flyway](https://flywaydb.org/) | Database migration management |
+| **Utils** | [airframe-ulid](https://github.com/wvlet/airframe/) | ULID generation |
+| | [caffeine](https://github.com/ben-manes/caffeine) | Caching |
+| | [Spring Security](https://github.com/spring-projects/spring-security) | Password hashing |
+| **Logging** | [logback](https://github.com/qos-ch/logback) | Logging implementation |
+| | [slf4j](https://github.com/qos-ch/slf4j) | Logging facade |
+| **Testing** | [ScalaTest](http://www.scalatest.org/) | Testing framework |
+| | [Mockito](https://github.com/mockito/mockito) | Mock |
+| **DevOps** | [Scalafmt](https://scalameta.org/scalafmt/) | Code formatter |
+| | [GitHub Actions](https://github.com/yoshinorin/qualtet/actions) | CI/CD pipeline |
+| | [Coveralls](https://coveralls.io/github/yoshinorin/qualtet) | Code coverage reporting |
+| | [ReDoc](https://github.com/Redocly/redoc) | API documentation generation |
+| | [GitHub Pages](https://pages.github.com/) | Documentation hosting |
 
 ## Branches
 
