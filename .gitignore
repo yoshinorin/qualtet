@@ -53,7 +53,9 @@ null/
 # Artifacts
 *.jar
 
-# Copilot
+# AI
 .github/copilot-instructions.md
 .github/copilot/*.md
 .github/copilot/**/*.md
+.claude
+
