@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.series
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{Request, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.InvalidPath
 
 opaque type SeriesId = String
@@ -46,7 +46,11 @@ final case class Series(
   path: SeriesPath,
   title: String,
   description: Option[String]
-)
+) extends Request[Series] {
+  def postDecode: Series = {
+    Series(id, name, SeriesPath(path.value), title, description)
+  }
+}
 
 object Series {
   given codecSeries: JsonValueCodec[Series] = JsonCodecMaker.make

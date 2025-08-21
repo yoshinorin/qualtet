@@ -113,6 +113,43 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder[IO] {
       }).unsafeRunSync()
     }
 
+    "Request content JSON can decode with tags (postDecode path processing)" in {
+      val json =
+        """
+          |{
+          |  "contentType" : "article",
+          |  "path" : "test/path/without/leading/slash",
+          |  "title" : "this is a title",
+          |  "rawContent" : "this is a raw content",
+          |  "htmlContent" : "this is a html content",
+          |  "robotsAttributes" : "noindex, noarchive, noimageindex, nofollow",
+          |  "tags": [
+          |    {"id": "01febb1333pd3431q1aliwofbz", "name": "scala", "path": "scala"},
+          |    {"id": "01febb1333pd3431q1aliwofba", "name": "http4s", "path": "http4s-tag"}
+          |  ],
+          |  "publishedAt" : 1537974000,
+          |  "updatedAt" : 1621098091
+          |}
+        """.stripMargin
+
+      (for {
+        decoded <- decode[ContentRequestModel](json)
+      } yield {
+        decoded match {
+          case Left(error) => fail(s"JSON decode failed: ${error}")
+          case Right(c) =>
+            assert(c.isInstanceOf[ContentRequestModel])
+            assert(c.contentType === "article")
+            assert(c.path.value === "/test/path/without/leading/slash")
+            assert(c.tags.length === 2)
+            assert(c.tags(0).name.value === "scala")
+            assert(c.tags(0).path.value === "/scala")
+            assert(c.tags(1).name.value === "http4s")
+            assert(c.tags(1).path.value === "/http4s-tag")
+        }
+      }).unsafeRunSync()
+    }
+
     "Request content JSON can not decode" in {
       val json =
         """

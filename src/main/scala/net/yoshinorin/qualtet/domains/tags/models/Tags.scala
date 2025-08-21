@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.tags
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{Request, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.InvalidPath
 
 opaque type TagId = String
@@ -46,7 +46,11 @@ final case class Tag(
   id: TagId = TagId.apply(),
   name: TagName,
   path: TagPath
-)
+) extends Request[Tag] {
+  def postDecode: Tag = {
+    Tag(id, name, TagPath(path.value))
+  }
+}
 object Tag {
   given codecTag: JsonValueCodec[Tag] = JsonCodecMaker.make
   given codecTags: JsonValueCodec[Option[Seq[Tag]]] = JsonCodecMaker.make

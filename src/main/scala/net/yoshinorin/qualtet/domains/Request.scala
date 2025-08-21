@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains
 
 trait Request[T] {
-  // NOTE: If use `jsoniter_scala`, a `case class` smart-constructor will be ignored.
-  //       It means any constructor operation will be ignored (e.g. raise an exception, sorting... etc...) when decode.
-  //       So, this `def postDecode` is deal with them when decode.
+  // NOTE: JsonCodecMaker.make bypasses opaque type constructors during JSON deserialization.
+  //       This means validation logic and transformations (e.g. adding leading slashes to paths,
+  //       exception handling, sorting) defined in opaque type constructors are not executed.
+  //       The postDecode method ensures these operations are performed after deserialization.
   // TODO: I want to delete this.
   def postDecode: T
 }
