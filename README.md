@@ -66,12 +66,17 @@ Please see [releases page](./docs/_docs/releases/index.md).
 | | [jsoniter-scala](https://github.com/plokhotnyuk/jsoniter-scala) | JSON codec |
 | | [jwt-scala](https://github.com/jwt-scala/jwt-scala) | JWT authentication support |
 | **Database** | [doobie](https://github.com/tpolecat/doobie) | Functional JDBC layer |
+| | [MariaDB JDBC Driver](https://mariadb.com/kb/en/mariadb-connector-j/) | Database connectivity |
 | | [Flyway](https://flywaydb.org/) | Database migration management |
+| **Observability** | [OpenTelemetry](https://opentelemetry.io/) | Distributed tracing and metrics |
+| | [otel4s](https://github.com/typelevel/otel4s) | Scala OpenTelemetry integration |
+| **Logging** | [logback](https://github.com/qos-ch/logback) | Logging implementation |
+| | [slf4j](https://github.com/qos-ch/slf4j) | Logging facade |
+| | [Logstash Encoder](https://github.com/logfellow/logstash-logback-encoder) | Structured logging |
+| **Configuration** | [Typesafe Config](https://github.com/lightbend/config) | Configuration management |
 | **Utils** | [airframe-ulid](https://github.com/wvlet/airframe/) | ULID generation |
 | | [caffeine](https://github.com/ben-manes/caffeine) | Caching |
 | | [Spring Security](https://github.com/spring-projects/spring-security) | Password hashing |
-| **Logging** | [logback](https://github.com/qos-ch/logback) | Logging implementation |
-| | [slf4j](https://github.com/qos-ch/slf4j) | Logging facade |
 | **Testing** | [ScalaTest](http://www.scalatest.org/) | Testing framework |
 | | [Mockito](https://github.com/mockito/mockito) | Mock |
 | **DevOps** | [Scalafmt](https://scalameta.org/scalafmt/) | Code formatter |
