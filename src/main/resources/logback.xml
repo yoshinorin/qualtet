@@ -57,33 +57,48 @@
         </then>
     </if>
 
+    <!-- NOTE: OpenTelemetry Appender: Works safely even when OpenTelemetry is disabled (graceful degradation) -->
+    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+        <includeInstrumentationScopeInfo>true</includeInstrumentationScopeInfo>
+        <captureExperimentalAttributes>true</captureExperimentalAttributes>
+        <captureKeyValuePairAttributes>true</captureKeyValuePairAttributes>
+        <captureMarkerAttribute>true</captureMarkerAttribute>
+        <captureMdcAttributes>*</captureMdcAttributes>
+    </appender>
+
     <logger name="error" level="ERROR" additivity="false">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE" />
+        <appender-ref ref="OTEL"/>
     </logger>
 
     <logger name="info" level="INFO" additivity="false">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE" />
+        <appender-ref ref="OTEL"/>
     </logger>
 
     <logger name="debug" level="DEBUG" additivity="false">
         <appender-ref ref="DEBUG_FILE" />
+        <appender-ref ref="OTEL"/>
     </logger>
 
     <root level="ERROR">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE"/>
+        <appender-ref ref="OTEL"/>
     </root>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE"/>
+        <appender-ref ref="OTEL"/>
     </root>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE"/>
         <appender-ref ref="DEBUG_FILE"/>
+        <appender-ref ref="OTEL"/>
     </root>
 </configuration>

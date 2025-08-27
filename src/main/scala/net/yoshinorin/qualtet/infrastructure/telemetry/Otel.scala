@@ -5,6 +5,7 @@ import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import io.opentelemetry.api.OpenTelemetry
 import io.opentelemetry.instrumentation.runtimemetrics.java17.*
+import io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender;
 import org.typelevel.otel4s.oteljava.OtelJava
 import org.typelevel.otel4s.trace.Tracer
 import net.yoshinorin.qualtet.config.OtelConfig
@@ -56,9 +57,13 @@ object Otel {
 
   private def createTracerResource(otelConfig: OtelConfig): Resource[IO, Tracer[IO]] = {
     val serviceName = otelConfig.service.name.getOrElse("qualtet")
-    OtelJava.autoConfigured[IO]().flatTap(otel4s => registerRuntimeMetrics(otel4s.underlying)).flatMap { otel =>
-      Resource.make(otel.tracerProvider.get(serviceName))(_ => IO.pure(()))
-    }
+    OtelJava
+      .autoConfigured[IO]()
+      .flatTap(otel4s => registerRuntimeMetrics(otel4s.underlying))
+      .flatTap(otel4s => registerLogAppender(otel4s.underlying))
+      .flatMap { otel =>
+        Resource.make(otel.tracerProvider.get(serviceName))(_ => IO.pure(()))
+      }
   }
 
   private def registerRuntimeMetrics[F[_]: Sync](
@@ -66,6 +71,12 @@ object Otel {
   ): Resource[F, Unit] = {
     val acquire = Sync[F].delay(RuntimeMetrics.create(openTelemetry))
     Resource.fromAutoCloseable(acquire).void
+  }
+
+  private def registerLogAppender[F[_]: Sync](
+    openTelemetry: OpenTelemetry
+  ): Resource[F, Unit] = {
+    Resource.eval(Sync[F].delay(OpenTelemetryAppender.install(openTelemetry)))
   }
 
 }
