@@ -19,6 +19,7 @@ object Dependencies {
     "org.http4s" %% "http4s-ember-server" % http4sVersion,
     "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
     "org.typelevel" %% "otel4s-oteljava" % "0.13.1",
+    "io.opentelemetry.instrumentation" % "opentelemetry-runtime-telemetry-java17" % "2.19.0-alpha",
     "io.opentelemetry" % "opentelemetry-exporter-otlp" % "1.53.0",
     "io.opentelemetry" % "opentelemetry-sdk-extension-autoconfigure" % "1.53.0",
     "com.github.jwt-scala" %% "jwt-core" % jwtScalaVersion,
