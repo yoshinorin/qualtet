@@ -22,7 +22,7 @@ object Otel {
       properties.foreach { case (key, value) =>
         System.setProperty(key, value)
       }
-      createTracerResource(otelConfig)
+      makeOtel4sResource(otelConfig)
     }
   }
 
@@ -55,14 +55,14 @@ object Otel {
     attributes.mkString(",")
   }
 
-  private def createTracerResource(otelConfig: OtelConfig): Resource[IO, Tracer[IO]] = {
+  private def makeOtel4sResource(otelConfig: OtelConfig): Resource[IO, Tracer[IO]] = {
     val serviceName = otelConfig.service.name.getOrElse("qualtet")
     OtelJava
       .autoConfigured[IO]()
       .flatTap(otel4s => registerRuntimeMetrics(otel4s.underlying))
       .flatTap(otel4s => registerLogAppender(otel4s.underlying))
-      .flatMap { otel =>
-        Resource.make(otel.tracerProvider.get(serviceName))(_ => IO.pure(()))
+      .flatMap { otel4s =>
+        Resource.make(otel4s.tracerProvider.get(serviceName))(_ => IO.pure(()))
       }
   }
 
