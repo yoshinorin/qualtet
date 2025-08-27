@@ -64,6 +64,10 @@
         <captureKeyValuePairAttributes>true</captureKeyValuePairAttributes>
         <captureMarkerAttribute>true</captureMarkerAttribute>
         <captureMdcAttributes>*</captureMdcAttributes>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>DENY</onMatch>
+        </filter>
     </appender>
 
     <logger name="error" level="ERROR" additivity="false">
@@ -80,7 +84,6 @@
 
     <logger name="debug" level="DEBUG" additivity="false">
         <appender-ref ref="DEBUG_FILE" />
-        <appender-ref ref="OTEL"/>
     </logger>
 
     <root level="ERROR">
@@ -99,6 +102,5 @@
         <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_FILE"/>
         <appender-ref ref="DEBUG_FILE"/>
-        <appender-ref ref="OTEL"/>
     </root>
 </configuration>
