@@ -36,7 +36,7 @@ object Otel {
       "otel.service.version" -> BuildInfo.version,
       "otel.propagators" -> otelConfig.propagator.getOrElse("tracecontext"),
       "otel.resource.attributes" -> buildResourceAttributes(otelConfig),
-      "otel.exporter.otlp.protocol" -> "http/protobuf"
+      "otel.exporter.otlp.protocol" -> otelConfig.exporter.protocol.getOrElse("http/protobuf")
     )
 
     val optionalProperties = List(

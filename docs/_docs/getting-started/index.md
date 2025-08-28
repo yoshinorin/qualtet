@@ -99,12 +99,15 @@ Qualtet supports OpenTelemetry for distributed tracing and observability. OpenTe
 |`QUALTET_OTEL_SERVICE_NAME`|Service name for OpenTelemetry|`string`|`qualtet`|`my-service`|
 |`QUALTET_OTEL_SERVICE_NAMESPACE`|Service namespace for OpenTelemetry|`string`|-|`production`|
 |`QUALTET_OTEL_EXPORTER_ENDPOINT`|OTLP exporter endpoint URL|`string`|-|`http://localhost:4317`|
+|`QUALTET_OTEL_EXPORTER_PROTOCOL`|OTLP protocol (`grpc` or `http/protobuf`)|`string`|`http/protobuf`|`grpc`|
 |`QUALTET_OTEL_EXPORTER_HEADERS`|OTLP exporter headers for authentication|`string`|-|`Authorization=Bearer token123`|
 |`QUALTET_OTEL_PROPAGATOR`|Which propagator to use|`string`|`tracecontext`|`tracecontext,baggage`|
 
 These settings allow you to configure OpenTelemetry tracing for monitoring HTTP requests, database operations, and other application metrics. The traces can be exported to OTLP-compatible systems.
 
-**Protocol:** The OTLP protocol is automatically set to `http/protobuf` for compatibility with Grafana Cloud and other HTTP-based OTLP endpoints.
+**Protocol:** Qualtet supports both gRPC and HTTP protocols:
+- `grpc`: Use for direct communication with OpenTelemetry Collector (typically port 4317)
+- `http/protobuf`: Use for HTTP-based OTLP endpoints like Grafana Cloud (typically port 4318)
 
 **Authentication:** If needed, use `QUALTET_OTEL_EXPORTER_HEADERS` to provide authentication credentials. Multiple headers can be specified using comma separation: `key1=value1,key2=value2`.
 

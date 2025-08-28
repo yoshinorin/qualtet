@@ -17,7 +17,8 @@ class OtelSpec extends AnyWordSpec {
     ),
     exporter = OtelExporterConfig(
       endpoint = Some("http://localhost:4317"),
-      headers = None
+      headers = None,
+      protocol = None
     ),
     propagator = Some("tracecontext")
   )
@@ -42,7 +43,7 @@ class OtelSpec extends AnyWordSpec {
     "return properties with defaults when config has no optional values" in {
       val config = baseConfig.copy(
         service = OtelServiceConfig(name = None, namespace = None),
-        exporter = OtelExporterConfig(endpoint = None, headers = None),
+        exporter = OtelExporterConfig(endpoint = None, headers = None, protocol = None),
         propagator = None
       )
 
@@ -61,7 +62,7 @@ class OtelSpec extends AnyWordSpec {
     "return properties with mixed optional and default values" in {
       val config = baseConfig.copy(
         service = baseConfig.service.copy(name = Some("mixed-service"), namespace = None),
-        exporter = OtelExporterConfig(endpoint = None, headers = None),
+        exporter = OtelExporterConfig(endpoint = None, headers = None, protocol = None),
         propagator = Some("b3")
       )
 
@@ -99,7 +100,7 @@ class OtelSpec extends AnyWordSpec {
     "return consistent property count for same config type" in {
       val minimalConfig = baseConfig.copy(
         service = OtelServiceConfig(name = None, namespace = None),
-        exporter = OtelExporterConfig(endpoint = None, headers = None),
+        exporter = OtelExporterConfig(endpoint = None, headers = None, protocol = None),
         propagator = None
       )
       val config1 = minimalConfig.copy(enabled = Some(true))
@@ -118,6 +119,26 @@ class OtelSpec extends AnyWordSpec {
       assert(properties2.contains("otel.service.version"))
       assert(properties2.contains("otel.propagators"))
       assert(properties2.contains("otel.exporter.otlp.protocol"))
+    }
+
+    "return properties with grpc protocol when configured" in {
+      val config = baseConfig.copy(
+        exporter = baseConfig.exporter.copy(protocol = Some("grpc"))
+      )
+
+      val properties = Otel.configureSystemProperties(config)
+
+      assert(properties("otel.exporter.otlp.protocol") === "grpc")
+    }
+
+    "return properties with default protocol when protocol is None" in {
+      val config = baseConfig.copy(
+        exporter = baseConfig.exporter.copy(protocol = None)
+      )
+
+      val properties = Otel.configureSystemProperties(config)
+
+      assert(properties("otel.exporter.otlp.protocol") === "http/protobuf")
     }
   }
 
@@ -175,17 +196,17 @@ class OtelSpec extends AnyWordSpec {
     }
 
     "return None when otelConfig.enabled is true but exporter.endpoint is None" in {
-      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = None, headers = None))
+      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = None, headers = None, protocol = None))
       assert(Otel.initialize(runtime, config).isEmpty)
     }
 
     "return None when otelConfig.enabled is true but exporter.endpoint is empty string" in {
-      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = Some(""), headers = None))
+      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = Some(""), headers = None, protocol = None))
       assert(Otel.initialize(runtime, config).isEmpty)
     }
 
     "return None when otelConfig.enabled is true but exporter.endpoint is whitespace only" in {
-      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = Some("   "), headers = None))
+      val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = Some("   "), headers = None, protocol = None))
       assert(Otel.initialize(runtime, config).isEmpty)
     }
   }
