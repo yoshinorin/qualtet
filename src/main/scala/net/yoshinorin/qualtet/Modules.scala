@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet
 
 import cats.effect.IO
+import cats.effect.unsafe.IORuntime
 import cats.effect.kernel.Resource
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor
@@ -64,7 +65,7 @@ object Modules {
   private val doobieTransactor: DoobieTransactor[Aux] = summon[DoobieTransactor[Aux]]
 
   val transactorResource = doobieTransactor.make(config.db)
-  val otel: Option[Resource[IO, Tracer[IO]]] = Otel.initialize(config.otel)
+  def otel(runtime: IORuntime): Option[Resource[IO, Tracer[IO]]] = Otel.initialize(runtime, config.otel)
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
 }
 

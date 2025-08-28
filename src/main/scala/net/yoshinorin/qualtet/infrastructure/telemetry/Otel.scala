@@ -1,19 +1,23 @@
 package net.yoshinorin.qualtet.infrastructure.telemetry
 
 import cats.effect.{IO, Resource, Sync}
+import cats.effect.unsafe.IORuntime
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
+import cats.effect.*
 import io.opentelemetry.api.OpenTelemetry
 import io.opentelemetry.instrumentation.runtimemetrics.java17.*
 import io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender;
 import org.typelevel.otel4s.oteljava.OtelJava
 import org.typelevel.otel4s.trace.Tracer
+import org.typelevel.otel4s.instrumentation.ce.IORuntimeMetrics
+import org.typelevel.otel4s.metrics.MeterProvider
 import net.yoshinorin.qualtet.config.OtelConfig
 import net.yoshinorin.qualtet.buildinfo.BuildInfo
 
 object Otel {
 
-  def initialize(otelConfig: OtelConfig): Option[Resource[IO, Tracer[IO]]] = {
+  def initialize(runtime: IORuntime, otelConfig: OtelConfig): Option[Resource[IO, Tracer[IO]]] = {
     val isEnabled = otelConfig.enabled.getOrElse(false)
     val hasValidEndpoint = otelConfig.exporter.endpoint.exists(_.trim.nonEmpty)
 
@@ -22,7 +26,7 @@ object Otel {
       properties.foreach { case (key, value) =>
         System.setProperty(key, value)
       }
-      makeOtel4sResource(otelConfig)
+      makeOtel4sResource(runtime, otelConfig)
     }
   }
 
@@ -55,14 +59,20 @@ object Otel {
     attributes.mkString(",")
   }
 
-  private def makeOtel4sResource(otelConfig: OtelConfig): Resource[IO, Tracer[IO]] = {
+  private def makeOtel4sResource(runtime: IORuntime, otelConfig: OtelConfig): Resource[IO, Tracer[IO]] = {
     val serviceName = otelConfig.service.name.getOrElse("qualtet")
+
     OtelJava
       .autoConfigured[IO]()
       .flatTap(otel4s => registerRuntimeMetrics(otel4s.underlying))
       .flatTap(otel4s => registerLogAppender(otel4s.underlying))
       .flatMap { otel4s =>
-        Resource.make(otel4s.tracerProvider.get(serviceName))(_ => IO.pure(()))
+        given MeterProvider[IO] = otel4s.meterProvider
+        IORuntimeMetrics
+          .register[IO](runtime.metrics, IORuntimeMetrics.Config.default)
+          .flatMap { _ =>
+            Resource.make(otel4s.tracerProvider.get(serviceName))(_ => IO.pure(()))
+          }
       }
   }
 

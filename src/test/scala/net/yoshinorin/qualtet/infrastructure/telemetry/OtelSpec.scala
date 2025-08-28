@@ -1,10 +1,13 @@
 package net.yoshinorin.qualtet.infrastructure.telemetry
 
+import cats.effect.unsafe.IORuntime
 import net.yoshinorin.qualtet.config.{OtelConfig, OtelExporterConfig, OtelServiceConfig}
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.infrastructure.telemetry.OtelSpec
 class OtelSpec extends AnyWordSpec {
+
+  private val runtime: IORuntime = IORuntime.global
 
   private val baseConfig = OtelConfig(
     enabled = Some(true),
@@ -163,27 +166,27 @@ class OtelSpec extends AnyWordSpec {
 
     "return None when otelConfig.enabled is false" in {
       val config = baseConfig.copy(enabled = Some(false))
-      assert(Otel.initialize(config).isEmpty)
+      assert(Otel.initialize(runtime, config).isEmpty)
     }
 
     "return None when otelConfig.enabled is None (defaults to false)" in {
       val config = baseConfig.copy(enabled = None)
-      assert(Otel.initialize(config).isEmpty)
+      assert(Otel.initialize(runtime, config).isEmpty)
     }
 
     "return None when otelConfig.enabled is true but exporter.endpoint is None" in {
       val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = None, headers = None))
-      assert(Otel.initialize(config).isEmpty)
+      assert(Otel.initialize(runtime, config).isEmpty)
     }
 
     "return None when otelConfig.enabled is true but exporter.endpoint is empty string" in {
       val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = Some(""), headers = None))
-      assert(Otel.initialize(config).isEmpty)
+      assert(Otel.initialize(runtime, config).isEmpty)
     }
 
     "return None when otelConfig.enabled is true but exporter.endpoint is whitespace only" in {
       val config = baseConfig.copy(exporter = OtelExporterConfig(endpoint = Some("   "), headers = None))
-      assert(Otel.initialize(config).isEmpty)
+      assert(Otel.initialize(runtime, config).isEmpty)
     }
   }
 

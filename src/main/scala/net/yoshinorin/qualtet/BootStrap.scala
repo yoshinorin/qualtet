@@ -48,7 +48,7 @@ object BootStrap extends IOApp {
         // TODO: should flush otel telemetries
       }
 
-    Modules.otel.fold(runApp(None)) {
+    Modules.otel(runtime).fold(runApp(None)) {
       _.use { tracer =>
         runApp(Some(tracer))
       }
