@@ -36,10 +36,10 @@ properties:
         example: "https://github.com/yoshinorin/qualtet/commit/237856f"
       scalaVersion:
         type: string
-        example: "3.7.2"
+        example: "3.7.3"
       sbtVersion:
         type: string
-        example: "1.11.4"
+        example: "1.11.6"
     required:
       - commit
       - url
