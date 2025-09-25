@@ -30,10 +30,10 @@ object Translator {
       case e: Unauthorized =>
         org.http4s.dsl.io.Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
       case e: UnprocessableEntity =>
-        org.http4s.dsl.io.UnprocessableEntity(
+        org.http4s.dsl.io.UnprocessableContent(
           ResponseProblemDetails(
             title = e.title,
-            status = org.http4s.dsl.io.UnprocessableEntity.code,
+            status = org.http4s.dsl.io.UnprocessableContent.code,
             detail = e.detail,
             instance = req.uri.toString(),
             errors = e.errors
