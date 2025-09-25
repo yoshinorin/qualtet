@@ -16,6 +16,8 @@ final case class Unauthorized(
   errors: Option[Seq[ProblemDetailsError]] = None
 ) extends HttpError
 
+// TODO: Migrate to `UnprocessableContent`
+//       https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/422
 final case class UnprocessableEntity(
   title: String = "Unprocessable Entity",
   detail: String,
