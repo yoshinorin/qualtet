@@ -2,13 +2,13 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.38.1"
+  val jsoniterVersion = "2.38.3"
   val doobieVersion = "1.0.0-RC10"
   val jwtScalaVersion = "11.0.3"
-  val flywayVersion = "11.13.1"
+  val flywayVersion = "11.14.1"
   val http4sVersion = "1.0.0-M45"
   val log4catsVersion = "2.7.1"
-  val otel = "1.54.1"
+  val otel = "1.55.0"
   val otelInstrumentation = "2.20.1-alpha"
 
   val dependencies = Seq(
@@ -34,19 +34,16 @@ object Dependencies {
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "2025.1.19",
+    "org.wvlet.airframe" %% "airframe-ulid" % "2025.1.20",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.2.2",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
-    "ch.qos.logback" % "logback-classic" % "1.5.18",
+    "ch.qos.logback" % "logback-classic" % "1.5.19",
     "net.logstash.logback" % "logstash-logback-encoder" % "8.1",
     "org.codehaus.janino" % "janino" % "3.1.12",
     "org.springframework.security" % "spring-security-core" % "6.5.5",
     "org.slf4j" % "slf4j-api" % "2.0.17",
     "org.scalatest" %% "scalatest" % "3.2.19" % "test",
-    "org.mockito" % "mockito-core" % "5.20.0" % "test",
-    // This is needed to avoid a packaging error on opentelemetry-exporter-otlp 1.52.0
-    // See: https://github.com/open-telemetry/opentelemetry-java/issues/7491
-    "com.squareup.okhttp3" % "okhttp-jvm" % "5.1.0" % Runtime
+    "org.mockito" % "mockito-core" % "5.20.0" % "test"
   )
 }
