@@ -7,8 +7,9 @@ import doobie.syntax.all.*
 import cats.effect.*
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import doobie.free.connection.ConnectionIO
+import org.typelevel.otel4s.trace.Tracer
 
-class DoobieExecuter(tx: Transactor[IO]) extends Executer[ConnectionIO, IO] {
+class DoobieExecuter(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) extends Executer[ConnectionIO, IO] {
 
   override def defer[R](c: ContT[doobie.ConnectionIO, R, R]): ConnectionIO[R] = {
     c.run { x => x.pure[ConnectionIO] }
@@ -16,7 +17,17 @@ class DoobieExecuter(tx: Transactor[IO]) extends Executer[ConnectionIO, IO] {
 
   override def transact[R](t: ContT[doobie.ConnectionIO, R, R]): IO[R] = transact(t.run { x => x.pure[ConnectionIO] })
 
-  override def transact[T](connectionIO: ConnectionIO[T]): IO[T] = connectionIO.transact(tx)
+  override def transact[T](connectionIO: ConnectionIO[T]): IO[T] = {
+    maybeTracer match {
+      case Some(tracer) =>
+        tracer
+          .span("database-transaction")
+          .surround(
+            connectionIO.transact(tx)
+          )
+      case None => connectionIO.transact(tx)
+    }
+  }
 
   override def transact2[T1, T2](ts: (ConnectionIO[(T1, T2)])): IO[T2] = {
     for {

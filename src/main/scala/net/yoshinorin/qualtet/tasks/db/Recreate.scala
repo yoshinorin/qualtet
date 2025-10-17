@@ -8,7 +8,7 @@ import cats.effect.unsafe.implicits.global
 object Recreate extends IOApp {
   def run(args: List[String]): IO[ExitCode] = {
 
-    Modules.transactorResource.use { tx =>
+    Modules.transactorResource(None).use { tx =>
       val modules = new Modules(tx)
       (for {
         _ <- IO(modules.flywayMigrator.clean())

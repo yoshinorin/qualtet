@@ -25,7 +25,7 @@ object CreateOrUpdateAuthor extends IOApp {
     // https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage-bcrypt
     val bcryptPasswordEncoder = new BCryptPasswordEncoder()
 
-    Modules.transactorResource.use { tx =>
+    Modules.transactorResource(None).use { tx =>
       val modules = new Modules(tx)
       (for {
         author <- modules.authorService.create(

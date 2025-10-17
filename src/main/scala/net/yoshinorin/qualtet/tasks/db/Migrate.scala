@@ -8,7 +8,7 @@ import cats.effect.unsafe.implicits.global
 object Migrate extends IOApp {
   def run(args: List[String]): IO[ExitCode] = {
 
-    Modules.transactorResource.use { tx =>
+    Modules.transactorResource(None).use { tx =>
       val modules = new Modules(tx)
       modules.migrator.migrate(modules.contentTypeService).unsafeRunSync() // FIXME
       IO(ExitCode.Success)

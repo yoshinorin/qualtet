@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.Modules
 object Destroy extends IOApp {
   def run(args: List[String]): IO[ExitCode] = {
 
-    Modules.transactorResource.use { tx =>
+    Modules.transactorResource(None).use { tx =>
       val modules = new Modules(tx)
       modules.flywayMigrator.clean()
       IO(ExitCode.Success)

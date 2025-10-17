@@ -94,6 +94,12 @@ lazy val root = (project in file("."))
 // This allows passing system properties (-D flags) to the application JVM
 run / fork := true
 
+// NOTE: This javaOptions setting only applies to 'sbt run'. When running the assembled jar,
+// you must specify this JVM option manually:
+//   java -Dcats.effect.trackFiberContext=true -jar qualtet-assembly-v2.19.0.jar
+// TODO: Currently this option doesn't affect OpenTelemetry context propagation for Doobie tracing.
+// Consider implementing LogHandler-based SQL detail capture in DoobieExecuter if needed.
+javaOptions += "-Dcats.effect.trackFiberContext=true"
 
 reStart / mainClass := Some("net.yoshinorin.qualtet.BootStrap")
 
