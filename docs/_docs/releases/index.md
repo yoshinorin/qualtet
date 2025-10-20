@@ -5,6 +5,7 @@ title: Releases
 
 | Version | Code name | Released at |
 | --- | --- | --- |
+| [v2.20.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.20.0)                      | Scarlet Ugui             |                        |
 | [v2.19.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.19.0)                      | Scarlet Tshering         | 2025-08-09T15:04:58Z   |
 | [v2.18.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.18.0)                      | Scarlet Soui             | 2025-07-20T14:32:04Z   |
 | [v2.17.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.17.0)                      | Scarlet Roji             | 2025-03-22T15:24:54Z   |
