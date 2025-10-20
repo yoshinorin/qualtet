@@ -9,7 +9,6 @@ import doobie.util.transactor.Transactor.Aux
 import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
 import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
 import org.typelevel.otel4s.trace.Tracer
-import org.typelevel.otel4s.oteljava.OtelJava
 import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
@@ -65,14 +64,9 @@ object Modules {
   private val config = ApplicationConfig.load
   private val doobieTransactor: DoobieTransactor[Aux] = summon[DoobieTransactor[Aux]]
 
-  def makeOtel(runtime: IORuntime): Option[Resource[IO, (OtelJava[IO], Tracer[IO])]] = Otel.initialize(runtime, config.otel)
+  def makeOtel(runtime: IORuntime): Option[Resource[IO, Tracer[IO]]] = Otel.initialize(runtime, config.otel)
 
-  def transactorResource(maybeOtelJava: Option[OtelJava[IO]]): Resource[IO, Transactor[IO]] = {
-    maybeOtelJava match {
-      case Some(otelJava) => doobieTransactor.makeTraced(config.db, otelJava)
-      case None => doobieTransactor.make(config.db)
-    }
-  }
+  def transactorResource(maybeTracer: Option[Tracer[IO]]): Resource[IO, Transactor[IO]] = doobieTransactor.make(config.db, maybeTracer)
 
   given log4catsLogger: Log4CatsLoggerFactory[IO] = Log4CatsSlf4jFactory.create[IO]
 }

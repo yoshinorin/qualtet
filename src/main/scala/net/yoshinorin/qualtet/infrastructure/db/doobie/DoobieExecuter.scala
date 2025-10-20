@@ -8,6 +8,7 @@ import cats.effect.*
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import doobie.free.connection.ConnectionIO
 import org.typelevel.otel4s.trace.Tracer
+import net.yoshinorin.qualtet.infrastructure.telemetry.DoobieTracing
 
 class DoobieExecuter(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) extends Executer[ConnectionIO, IO] {
 
@@ -19,12 +20,7 @@ class DoobieExecuter(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None)
 
   override def transact[T](connectionIO: ConnectionIO[T]): IO[T] = {
     maybeTracer match {
-      case Some(tracer) =>
-        tracer
-          .span("database-transaction")
-          .surround(
-            connectionIO.transact(tx)
-          )
+      case Some(tracer) => DoobieTracing.traceTransaction(tracer)(connectionIO.transact(tx))
       case None => connectionIO.transact(tx)
     }
   }

@@ -17,7 +17,7 @@ import net.yoshinorin.qualtet.buildinfo.BuildInfo
 
 object Otel {
 
-  def initialize(runtime: IORuntime, otelConfig: OtelConfig): Option[Resource[IO, (OtelJava[IO], Tracer[IO])]] = {
+  def initialize(runtime: IORuntime, otelConfig: OtelConfig): Option[Resource[IO, Tracer[IO]]] = {
     val isEnabled = otelConfig.enabled.getOrElse(false)
     val hasValidEndpoint = otelConfig.exporter.endpoint.exists(_.trim.nonEmpty)
 
@@ -59,7 +59,7 @@ object Otel {
     attributes.mkString(",")
   }
 
-  private def makeOtel4sResource(runtime: IORuntime, otelConfig: OtelConfig): Resource[IO, (OtelJava[IO], Tracer[IO])] = {
+  private def makeOtel4sResource(runtime: IORuntime, otelConfig: OtelConfig): Resource[IO, Tracer[IO]] = {
     val serviceName = otelConfig.service.name.getOrElse("qualtet")
 
     OtelJava
@@ -71,7 +71,7 @@ object Otel {
         IORuntimeMetrics
           .register[IO](runtime.metrics, IORuntimeMetrics.Config.default)
           .flatMap { _ =>
-            Resource.make(otel4s.tracerProvider.get(serviceName))(_ => IO.pure(())).map(tracer => (otel4s, tracer))
+            Resource.make(otel4s.tracerProvider.get(serviceName))(_ => IO.pure(()))
           }
       }
   }

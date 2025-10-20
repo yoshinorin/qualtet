@@ -3,16 +3,15 @@ package net.yoshinorin.qualtet.infrastructure.db.doobie
 import cats.effect.{IO, Resource}
 import doobie.util.transactor.Transactor
 import doobie.util.transactor.Transactor.Aux
+import doobie.util.log.LogHandler
 import doobie.hikari.*
-import doobie.otel4s.hikari.TelemetryHikariTransactor
 import org.typelevel.otel4s.trace.Tracer
 import com.zaxxer.hikari.HikariConfig
 import net.yoshinorin.qualtet.config.DBConfig
-import org.typelevel.otel4s.oteljava.OtelJava
+import net.yoshinorin.qualtet.infrastructure.telemetry.DoobieTracing
 
 trait DoobieTransactor[F[G[_], _]] {
-  def make(config: DBConfig): Resource[IO, HikariTransactor[IO]]
-  def makeTraced(config: DBConfig, otelJava: OtelJava[IO]): Resource[IO, Transactor[IO]]
+  def make(config: DBConfig, tracer: Option[Tracer[IO]]): Resource[IO, Transactor[IO]]
 }
 
 object DoobieTransactor {
@@ -32,19 +31,12 @@ object DoobieTransactor {
         hConfig
       }
 
-      override def make(config: DBConfig): Resource[IO, HikariTransactor[IO]] = {
-        for {
-          hikariConfig <- Resource.pure(createHikariConfig(config))
-          xa <- HikariTransactor.fromHikariConfig[IO](hikariConfig)
-        } yield xa
-      }
+      override def make(config: DBConfig, tracer: Option[Tracer[IO]]): Resource[IO, Transactor[IO]] = {
+        val logHandler: Option[LogHandler[IO]] = tracer.map(DoobieTracing.logHandler)
 
-      override def makeTraced(config: DBConfig, otelJava: OtelJava[IO]): Resource[IO, Transactor[IO]] = {
-        // Note: TelemetryHikariTransactor doesn't support Otel4s IOLocal context propagation,
-        // so we use regular HikariTransactor and handle tracing in DoobieExecuter instead.
         for {
           hikariConfig <- Resource.pure(createHikariConfig(config))
-          xa <- HikariTransactor.fromHikariConfig[IO](hikariConfig)
+          xa <- HikariTransactor.fromHikariConfig[IO](hikariConfig, logHandler)
         } yield xa
       }
     }
