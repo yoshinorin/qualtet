@@ -9,14 +9,35 @@ title: Development
 
 ```sh
 $ cd docker
-$ docker compose -f ./docker-compose.local.yml up
+$ docker compose -f ./docker-compose.local.db.yml up
 ```
 
-or
+or use sbt command
 
 ```sh
 $ sbt
 $ sbt:qualtet> localDbUp
+```
+
+If you also need OpenTelemetry container:
+
+```sh
+$ cd docker
+$ docker compose -f ./docker-compose.local.otel.yml up
+```
+
+or use sbt command
+
+```sh
+$ sbt
+$ sbt:qualtet> localOtelUp
+```
+
+or start both containers at once
+
+```sh
+$ sbt
+$ sbt:qualtet> localUp
 ```
 
 2. create author
@@ -76,7 +97,7 @@ $ sbt
 $ sbt:qualtet> kills
 ```
 
-### local db using by docker
+### Local containers using by docker
 
 ```
 $ sbt
@@ -86,6 +107,18 @@ $ sbt:qualtet> localDbUp
 
 // shutdown local db
 $ sbt:qualtet> localDbDown
+
+// start up local otel using by docker
+$ sbt:qualtet> localOtelUp
+
+// shutdown local otel
+$ sbt:qualtet> localOtelDown
+
+// start up both db and otel
+$ sbt:qualtet> localUp
+
+// shutdown both db and otel
+$ sbt:qualtet> localDown
 ```
 
 ## Code format

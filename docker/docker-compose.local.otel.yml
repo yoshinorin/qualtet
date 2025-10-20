@@ -1,0 +1,8 @@
+services:
+  otel-lgtm:
+    image: grafana/otel-lgtm:0.11.11
+    ports:
+      - "3003:3000"
+      - "4317:4317"
+      - "4318:4318"
+    restart: unless-stopped

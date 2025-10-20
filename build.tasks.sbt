@@ -18,15 +18,31 @@ addCommandAlias("testDBUp", testingDocker.Commands.upDbAndCreateMinData)
 // Register Task and its Commands for run local db with container.
 val runLocalDbContainer = TaskKey[Unit]("runLocalDbContainer", "Run DB container for local development.")
 val shutDownLocalDbContainer = TaskKey[Unit]("shutDownLocalDbContainer", "Shut down DB container for local development.")
-val localDocker = new Local()
+val localDbDocker = new LocalDb()
 
-localDocker.tasks
-runLocalDbContainer := Def.sequential(localDocker.upLocal).value
-shutDownLocalDbContainer := Def.sequential(localDocker.downLocal).value
-addCommandAlias("localDbUp", localDocker.Commands.up)
-addCommandAlias("localDBUp", localDocker.Commands.up)
-addCommandAlias("localDbDown", localDocker.Commands.down)
-addCommandAlias("localDBDown", localDocker.Commands.down)
+localDbDocker.tasks
+runLocalDbContainer := Def.sequential(localDbDocker.upLocalDb).value
+shutDownLocalDbContainer := Def.sequential(localDbDocker.downLocalDb).value
+addCommandAlias("localDbUp", localDbDocker.Commands.up)
+addCommandAlias("localDBUp", localDbDocker.Commands.up)
+addCommandAlias("localDbDown", localDbDocker.Commands.down)
+addCommandAlias("localDBDown", localDbDocker.Commands.down)
+
+// Register Task and its Commands for run local otel with container.
+val runLocalOtelContainer = TaskKey[Unit]("runLocalOtelContainer", "Run Otel container for local development.")
+val shutDownLocalOtelContainer = TaskKey[Unit]("shutDownLocalOtelContainer", "Shut down Otel container for local development.")
+val localOtelDocker = new LocalOtel()
+
+localOtelDocker.tasks
+runLocalOtelContainer := Def.sequential(localOtelDocker.upLocalOtel).value
+shutDownLocalOtelContainer := Def.sequential(localOtelDocker.downLocalOtel).value
+addCommandAlias("localOtelUp", localOtelDocker.Commands.up)
+addCommandAlias("localOtelDown", localOtelDocker.Commands.down)
+
+// run db and otel
+addCommandAlias("localUp", ";localDbUp;localOtelUp")
+addCommandAlias("localDown", ";localDbDown;localOtelDown")
+
 
 // Register Task and its Commands for kill server and run server locally.
 val forceKillServer = TaskKey[Unit]("forceKillServer", "force kill http server")

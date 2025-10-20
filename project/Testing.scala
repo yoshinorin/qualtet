@@ -10,8 +10,8 @@ class Testing extends Docker {
   val downTesting = taskKey[Unit]("shutdown db container for testing")
 
   val tasks = Seq(
-    upTesting := up_(dockerComposeFilePath),
-    downTesting := down_(dockerComposeFilePath)
+    upTesting := up_("db", dockerComposeFilePath),
+    downTesting := down_("db", dockerComposeFilePath)
   )
 
   object Commands {
