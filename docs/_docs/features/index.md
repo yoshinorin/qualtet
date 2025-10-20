@@ -93,3 +93,8 @@ title: Features
 - [x] RSS
 - [x] Sitemap
 - [ ] GraphQL
+- [x] Otel
+    - [x] HTTP Tracing
+    - [x] HTTP Loggin
+    - [x] DB Tracing
+    - [x] DB Loggin

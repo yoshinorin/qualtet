@@ -111,6 +111,23 @@ These settings allow you to configure OpenTelemetry tracing for monitoring HTTP 
 
 **Authentication:** If needed, use `QUALTET_OTEL_EXPORTER_HEADERS` to provide authentication credentials. Multiple headers can be specified using comma separation: `key1=value1,key2=value2`.
 
+**Fiber Context Tracking:** For better trace correlation with OpenTelemetry, enable Cats Effect fiber context tracking by adding `-Dcats.effect.trackFiberContext=true` to `JAVA_OPTS`:
+
+When running with Docker:
+
+```yaml
+environment:
+  JAVA_OPTS: "-Xms512M -Xmx768M -Dcats.effect.trackFiberContext=true"
+```
+
+When running jar directly:
+
+```sh
+java -Dcats.effect.trackFiberContext=true -jar qualtet-assembly.jar
+```
+
+This option provides more detailed tracing information and better trace correlation across asynchronous operations.
+
 **Note:** The service version is automatically set from the application build version.
 
 ## Create an author
