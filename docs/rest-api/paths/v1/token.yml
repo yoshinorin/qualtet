@@ -1,7 +1,7 @@
 post:
-  summary: Create an IDToken
+  summary: Create an AccessToken
   description: |
-    Creates a JSON Web Token (JWT) for authentication. This endpoint accepts author ID and password credentials and returns a JWT token that can be used for authenticated API requests.
+    Creates a AccessToken (JWT) for authentication. This endpoint accepts author ID and password credentials and returns a JWT token that can be used for authenticated API requests.
 
     The token has a configurable expiration time (default: 3600 seconds) and must be passed in the Authorization header as a Bearer token for protected endpoints.
   tags:
@@ -15,7 +15,7 @@ post:
           $ref: '../../components/schemas/request/token.yml'
   responses:
     201:
-      description: Create an IDToken succeeded
+      description: Create an AccessToken succeeded
       content:
         application/json:
           schema:
