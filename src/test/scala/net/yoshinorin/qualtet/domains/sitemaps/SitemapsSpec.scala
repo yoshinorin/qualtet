@@ -1,8 +1,10 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
 import net.yoshinorin.qualtet.domains.sitemaps.{LastMod, Loc}
+import net.yoshinorin.qualtet.domains.errors.InvalidLastMod
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
+import net.yoshinorin.qualtet.fixture.unsafe
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.sitemaps.SitemapsSpec
@@ -19,17 +21,32 @@ class SitemapsSpec extends AnyWordSpec {
 
   "LastMod" should {
     "valid value" in {
-      assert(LastMod("1620738897").value === "2021-05-11")
+      assert(LastMod("1620738897").unsafe.value === "2021-05-11")
     }
     "invalid value (NOT a unixtime)" in {
-      // TODO: throw exception
-      assert(LastMod("1620738").value === "1970-01-19")
+      assert(LastMod("1620738").unsafe.value === "1970-01-19")
     }
     "invalid value (can not toLong)" in {
-      // TODO: throw exception
-      assertThrows[NumberFormatException] {
-        LastMod("aaaa")
-      }
+      val result = LastMod("aaaa")
+      assert(result.isLeft)
+      assert(result.left.get.isInstanceOf[InvalidLastMod])
+    }
+  }
+
+  "LastMod.unsafe" should {
+    "not modify the input" in {
+      val lastMod = LastMod.unsafe("2024-01-01")
+      assert(lastMod.value === "2024-01-01")
+    }
+
+    "skip validation for invalid format" in {
+      val lastMod = LastMod.unsafe("invalid-date")
+      assert(lastMod.value === "invalid-date")
+    }
+
+    "skip validation for empty string" in {
+      val lastMod = LastMod.unsafe("")
+      assert(lastMod.value === "")
     }
   }
 
@@ -52,8 +69,8 @@ class SitemapsSpec extends AnyWordSpec {
 
       val urls =
         Seq(
-          Url(Loc("https://example.com/aaa/bbb"), LastMod("1620738897")),
-          Url(Loc("https://example.com/ccc/ddd"), LastMod("1620938897"))
+          Url(Loc("https://example.com/aaa/bbb"), LastMod("1620738897").unsafe),
+          Url(Loc("https://example.com/ccc/ddd"), LastMod("1620938897").unsafe)
         ).asJson.replaceNewlineAndSpace
 
       assert(expectJson === urls)

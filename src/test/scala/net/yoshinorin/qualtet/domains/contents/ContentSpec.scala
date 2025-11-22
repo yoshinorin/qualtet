@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentPath}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
@@ -33,16 +34,16 @@ class ContentSpec extends AnyWordSpec {
       val pathString = "/this-is-a-pathあいうえお/あ%E3%20%20いbar"
       val path = ContentPath.apply(pathString)
 
-      assert(path.isInstanceOf[ContentPath])
-      assert(path.value === pathString)
+      assert(path.isRight)
+      assert(path.unsafe.value === pathString)
     }
 
     "appllicable without prefix slush" in {
       val pathString = "this-is-a-path"
       val path = ContentPath.apply(pathString)
 
-      assert(path.isInstanceOf[ContentPath])
-      assert(path.value === "/" + pathString)
+      assert(path.isRight)
+      assert(path.unsafe.value === "/" + pathString)
     }
 
     "accept paths with valid characters" in {
@@ -58,7 +59,8 @@ class ContentSpec extends AnyWordSpec {
 
       validPaths.foreach { path =>
         val contentPath = ContentPath(path)
-        assert(contentPath === path)
+        assert(contentPath.isRight)
+        assert(contentPath.unsafe.value === path)
       }
     }
 
@@ -89,10 +91,9 @@ class ContentSpec extends AnyWordSpec {
       )
 
       invalidPaths.foreach { path =>
-        val exception = intercept[InvalidPath] {
-          ContentPath(path)
-        }
-        assert(exception.detail === s"Invalid character contains: ${path}")
+        val result = ContentPath(path)
+        assert(result.isLeft)
+        assert(result.left.get.detail === s"Invalid character contains: ${path}")
       }
     }
 
@@ -105,10 +106,9 @@ class ContentSpec extends AnyWordSpec {
       )
 
       invalidEncodedPaths.foreach { path =>
-        val exception = intercept[InvalidPath] {
-          ContentPath(path)
-        }
-        assert(exception.detail === s"Invalid percent encoding in path: ${path}")
+        val result = ContentPath(path)
+        assert(result.isLeft)
+        assert(result.left.get.detail === s"Invalid percent encoding in path: ${path}")
       }
     }
 
@@ -122,7 +122,8 @@ class ContentSpec extends AnyWordSpec {
 
       validPaths.foreach { path =>
         val contentPath = ContentPath(path)
-        assert(contentPath === path)
+        assert(contentPath.isRight)
+        assert(contentPath.unsafe.value === path)
       }
     }
 
@@ -139,10 +140,9 @@ class ContentSpec extends AnyWordSpec {
       )
 
       containReservedPaths.foreach { path =>
-        val exception = intercept[InvalidPath] {
-          ContentPath(path)
-        }
-        assert(exception.detail === s"Path contains reserved word: ${path}")
+        val result = ContentPath(path)
+        assert(result.isLeft)
+        assert(result.left.get.detail === s"Path contains reserved word: ${path}")
       }
     }
 
@@ -156,14 +156,43 @@ class ContentSpec extends AnyWordSpec {
 
       validEncodedPaths.foreach { path =>
         val contentPath = ContentPath(path)
-        assert(contentPath === path)
+        assert(contentPath.isRight)
+        assert(contentPath.unsafe.value === path)
       }
     }
 
     "add leading slash to path when missing" in {
       val pathWithoutSlash = "path/without/leading/slash"
       val contentPath = ContentPath(pathWithoutSlash)
-      assert(contentPath === s"/${pathWithoutSlash}")
+      assert(contentPath.isRight)
+      assert(contentPath.unsafe.value === s"/${pathWithoutSlash}")
+    }
+  }
+
+  "ContentPath.unsafe" should {
+    "normalize path by adding leading slash" in {
+      val path = ContentPath.unsafe("test/path")
+      assert(path.value === "/test/path")
+    }
+
+    "not add leading slash if already present" in {
+      val path = ContentPath.unsafe("/test/path")
+      assert(path.value === "/test/path")
+    }
+
+    "skip validation for invalid characters" in {
+      val path = ContentPath.unsafe("invalid:path")
+      assert(path.value === "/invalid:path")
+    }
+
+    "skip validation for reserved words" in {
+      val path = ContentPath.unsafe("admin")
+      assert(path.value === "/admin")
+    }
+
+    "skip validation for invalid percent encoding" in {
+      val path = ContentPath.unsafe("test%")
+      assert(path.value === "/test%")
     }
   }
 
@@ -173,7 +202,7 @@ class ContentSpec extends AnyWordSpec {
       val content = Content(
         authorId = AuthorId.apply(),
         contentTypeId = contentTypeId,
-        path = ContentPath("/path"),
+        path = ContentPath("/path").unsafe,
         title = "",
         rawContent = "",
         htmlContent = ""
@@ -193,11 +222,11 @@ class ContentSpec extends AnyWordSpec {
       assertThrows[ContentTitleRequired] {
         ContentRequestModel(
           contentType = "article",
-          path = ContentPath("/articles/contentSpec/1"),
+          path = ContentPath("/articles/contentSpec/1").unsafe,
           title = "",
           rawContent = "this is a articleRoute raw content",
           htmlContent = "this is a articleRoute html content",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
+          robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
           tags = List(),
           externalResources = List()
         )
@@ -208,11 +237,11 @@ class ContentSpec extends AnyWordSpec {
       assertThrows[RawContentRequired] {
         ContentRequestModel(
           contentType = "article",
-          path = ContentPath("/articles/contentSpec/2"),
+          path = ContentPath("/articles/contentSpec/2").unsafe,
           title = "this is a articleRoute title",
           rawContent = "",
           htmlContent = "this is a articleRoute html content",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
+          robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
           tags = List(),
           externalResources = List()
         )
@@ -223,11 +252,11 @@ class ContentSpec extends AnyWordSpec {
       assertThrows[HtmlContentRequired] {
         ContentRequestModel(
           contentType = "article",
-          path = ContentPath("/articles/contentSpec/3"),
+          path = ContentPath("/articles/contentSpec/3").unsafe,
           title = "this is a articleRoute title",
           rawContent = "this is a articleRoute raw content",
           htmlContent = "",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
+          robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
           tags = List(),
           externalResources = List()
         )
@@ -258,7 +287,7 @@ class ContentSpec extends AnyWordSpec {
         ContentDetailResponseModel(
           id = ContentId("01h08dm4th59wsk81d4h96cf6b"),
           title = "title",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
+          robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
           description = "this is a description",
           content = "this is a content",
           length = "this is a content".length,
@@ -329,20 +358,20 @@ class ContentSpec extends AnyWordSpec {
           ContentDetailResponseModel(
             id = ContentId("01h08dm4th59wsk81d4h96cf6b"),
             title = "title1",
-            robotsAttributes = Attributes("noarchive, noimageindex"),
+            robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
             externalResources = List(
               ExternalResources(
-                ExternalResourceKind("css"),
+                ExternalResourceKind("css").unsafe,
                 List("css1", "css2")
               ),
               ExternalResources(
-                ExternalResourceKind("js"),
+                ExternalResourceKind("js").unsafe,
                 List("js1", "js2")
               )
             ),
             tags = List(
-              Tag(TagId("01frdbdsdty42fv147cerqpv73"), TagName("content-spec1"), TagPath("content-spec1-path")),
-              Tag(TagId("01frdbe1g83533h92rkhy8ctkw"), TagName("content-spec2"), TagPath("content-spec2-path"))
+              Tag(TagId("01frdbdsdty42fv147cerqpv73"), TagName("content-spec1"), TagPath("content-spec1-path").unsafe),
+              Tag(TagId("01frdbe1g83533h92rkhy8ctkw"), TagName("content-spec2"), TagPath("content-spec2-path").unsafe)
             ),
             description = "this is a description1",
             content = "this is a content1",
@@ -354,7 +383,7 @@ class ContentSpec extends AnyWordSpec {
           ContentDetailResponseModel(
             id = ContentId("01h08dm4th59wsk81d4h96cf6c"),
             title = "title2",
-            robotsAttributes = Attributes("all"),
+            robotsAttributes = Attributes("all").unsafe,
             externalResources = List(),
             description = "this is a description2",
             content = "this is a content2",

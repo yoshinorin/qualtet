@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.archives
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -20,7 +21,7 @@ class ArchiveSpec extends AnyWordSpec {
       """.stripMargin.replaceNewlineAndSpace
 
       val json = ArchiveResponseModel(
-        path = ContentPath("/test"),
+        path = ContentPath("/test").unsafe,
         title = "title",
         publishedAt = 1567814290
       ).asJson.replaceNewlineAndSpace
@@ -48,12 +49,12 @@ class ArchiveSpec extends AnyWordSpec {
 
       val json = Seq(
         ArchiveResponseModel(
-          path = ContentPath("/test/path1"),
+          path = ContentPath("/test/path1").unsafe,
           title = "title1",
           publishedAt = 1567814290
         ),
         ArchiveResponseModel(
-          path = ContentPath("/test/path2"),
+          path = ContentPath("/test/path2").unsafe,
           title = "title2",
           publishedAt = 1567814391
         )

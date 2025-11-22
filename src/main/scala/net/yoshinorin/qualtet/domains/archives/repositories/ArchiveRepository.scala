@@ -16,7 +16,7 @@ object ArchiveRepository {
     new ArchiveRepository[ConnectionIO] {
       given archivesRead: Read[ArchiveReadModel] =
         Read[(String, String, Long)].map { case (path, title, publishedAt) =>
-          ArchiveReadModel(ContentPath(path), title, publishedAt)
+          ArchiveReadModel(ContentPath.unsafe(path), title, publishedAt)
         }
 
       override def get(contentTypeId: ContentTypeId): ConnectionIO[Seq[ArchiveReadModel]] = ArchiveQuery.get(contentTypeId).to[Seq]

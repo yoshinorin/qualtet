@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.robots
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.errors.InvalidAttributes
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.syntax.*
@@ -28,7 +29,7 @@ class RobotsSpec extends AnyWordSpec {
       val json =
         Robots(
           contentId,
-          Attributes("all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate")
+          Attributes("all, noarchive, nofollow, noimageindex, noindex, none, nosnippet, notranslate").unsafe
         ).asJson.replaceNewlineAndSpace
 
       // NOTE: failed equally compare
@@ -38,7 +39,7 @@ class RobotsSpec extends AnyWordSpec {
 
   "Attributes" should {
     "create instance with valid attribute" in {
-      assert(Attributes("nofollow").value === "nofollow")
+      assert(Attributes("nofollow").unsafe.value === "nofollow")
     }
 
     "create instance with all valid attributes and result are sorted" in {
@@ -49,40 +50,57 @@ class RobotsSpec extends AnyWordSpec {
 
     "create instance with valid attributes pattern one" in {
       assert(
-        Attributes("all, noindex, nofollow, none, noarchive, notranslate").value === "all, noarchive, nofollow, noindex, none, notranslate"
+        Attributes("all, noindex, nofollow, none, noarchive, notranslate").unsafe.value === "all, noarchive, nofollow, noindex, none, notranslate"
       )
     }
 
     "create instance with valid attributes pattern two" in {
-      assert(Attributes("all, noindex, nofollow, none, noarchive").value === "all, noarchive, nofollow, noindex, none")
+      assert(Attributes("all, noindex, nofollow, none, noarchive").unsafe.value === "all, noarchive, nofollow, noindex, none")
     }
 
     "create instance with valid attributes and format them" in {
-      assert(Attributes(" all,noindex,    nofollow,none, noarchive  ").value === "all, noarchive, nofollow, noindex, none")
+      assert(Attributes(" all,noindex,    nofollow,none, noarchive  ").unsafe.value === "all, noarchive, nofollow, noindex, none")
     }
 
     "can not create instance with invalid attribute" in {
-      assertThrows[InvalidAttributes] {
-        Attributes("invalid-attribute")
-      }
+      val result = Attributes("invalid-attribute")
+      assert(result.isLeft)
+      assert(result.left.get.isInstanceOf[InvalidAttributes])
     }
 
     "can not create instance with includes invalid attribute" in {
-      assertThrows[InvalidAttributes] {
-        Attributes("all, noindex, nofollow, invalid, none, noarchive, notranslate")
-      }
+      val result = Attributes("all, noindex, nofollow, invalid, none, noarchive, notranslate")
+      assert(result.isLeft)
+      assert(result.left.get.isInstanceOf[InvalidAttributes])
     }
 
     "can not create instance with includes empty attribute start of string" in {
-      assertThrows[InvalidAttributes] {
-        Attributes(",all, noindex, nofollow, none, noarchive")
-      }
+      val result = Attributes(",all, noindex, nofollow, none, noarchive")
+      assert(result.isLeft)
+      assert(result.left.get.isInstanceOf[InvalidAttributes])
     }
 
     "can not create instance with includes empty attribute end of string" in {
-      assertThrows[InvalidAttributes] {
-        Attributes("all, noindex, nofollow, none, noarchive,")
-      }
+      val result = Attributes("all, noindex, nofollow, none, noarchive,")
+      assert(result.isLeft)
+      assert(result.left.get.isInstanceOf[InvalidAttributes])
+    }
+  }
+
+  "Attributes.unsafe" should {
+    "not modify the input" in {
+      val attrs = Attributes.unsafe("noindex, nofollow")
+      assert(attrs.value === "noindex, nofollow")
+    }
+
+    "skip validation for invalid attributes" in {
+      val attrs = Attributes.unsafe("invalid-attr")
+      assert(attrs.value === "invalid-attr")
+    }
+
+    "skip validation for malformed input" in {
+      val attrs = Attributes.unsafe("noindex,")
+      assert(attrs.value === "noindex,")
     }
   }
 

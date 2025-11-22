@@ -25,8 +25,12 @@ class ArticleService[F[_]: Monad](
   )(
     f: (ContentTypeId, A, Pagination) => ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]]
   ): IO[ArticleWithCountResponseModel] = {
+    // TODO: Refactor to handle Either properly
+    val validatedContentTypeName = ContentTypeName("article").getOrElse(
+      throw new IllegalStateException("Invalid content type name: article")
+    )
     for {
-      c <- contentTypeService.findByName(ContentTypeName("article")).throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
+      c <- contentTypeService.findByName(validatedContentTypeName).throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
       articlesWithCount <- executer.transact(f(c.id, data, queryParam))
     } yield
       if (articlesWithCount.nonEmpty) {

@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.Series
 import net.yoshinorin.qualtet.domains.tags.Tag
-import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, RawContentRequired}
+import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, InvalidPath, RawContentRequired}
 import net.yoshinorin.qualtet.syntax.*
 
 final case class ContentRequestModel(
@@ -27,13 +27,19 @@ final case class ContentRequestModel(
 ) extends Request[ContentRequestModel] {
   // NOTE: see `net.yoshinorin.qualtet.domains.Request` comment.
   def postDecode: ContentRequestModel = {
+    // TODO: Refactor to return Either instead of throwing
+    val validatedPath = ContentPath(path.value) match {
+      case Right(p) => p
+      case Left(error) => throw error
+    }
+
     new ContentRequestModel(
       contentType = contentType,
       robotsAttributes = this.robotsAttributes.sort,
       externalResources = externalResources,
       tags = tags.map(_.postDecode),
       series = series.map(_.postDecode),
-      path = ContentPath(path.value),
+      path = validatedPath,
       title = title.trimOrThrow(ContentTitleRequired(detail = "title required.")),
       rawContent = rawContent.trimOrThrow(RawContentRequired(detail = "rawContent required.")),
       htmlContent = htmlContent.trimOrThrow(HtmlContentRequired(detail = "htmlContent required.")),

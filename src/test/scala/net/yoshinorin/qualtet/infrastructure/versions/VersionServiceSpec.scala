@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.infrastructure.versions
 
 import java.time.ZonedDateTime
 import net.yoshinorin.qualtet.fixture.Fixture.*
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -17,24 +18,24 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "create and update version" in {
 
-      val newVersion: Version = Version(version = VersionString("0.0.0"), migrationStatus = MigrationStatus.NOT_REQUIRED, deployedAt = 0)
-      val updatedVersion: Version = Version(version = VersionString("0.0.1"), migrationStatus = MigrationStatus.SUCCESS, deployedAt = 1748126398)
-      val anotherVersion: Version = Version(version = VersionString("0.1.0"), migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 1748126397)
+      val newVersion: Version = Version(version = VersionString("0.0.0").unsafe, migrationStatus = MigrationStatus.NOT_REQUIRED, deployedAt = 0)
+      val updatedVersion: Version = Version(version = VersionString("0.0.1").unsafe, migrationStatus = MigrationStatus.SUCCESS, deployedAt = 1748126398)
+      val anotherVersion: Version = Version(version = VersionString("0.1.0").unsafe, migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 1748126397)
 
       (for {
         craeted <- versionService.createOrUpdate(newVersion)
         updated <- versionService.createOrUpdate(updatedVersion)
         craetedAnother <- versionService.createOrUpdate(anotherVersion)
       } yield {
-        assert(craeted.version === VersionString("0.0.0"))
+        assert(craeted.version === VersionString("0.0.0").unsafe)
         assert(craeted.migrationStatus === MigrationStatus.NOT_REQUIRED)
         assert(craeted.deployedAt === 0)
 
-        assert(updated.version === VersionString("0.0.1"))
+        assert(updated.version === VersionString("0.0.1").unsafe)
         assert(updated.migrationStatus === MigrationStatus.SUCCESS)
         assert(updated.deployedAt === 1748126398)
 
-        assert(craetedAnother.version === VersionString("0.1.0"))
+        assert(craetedAnother.version === VersionString("0.1.0").unsafe)
         assert(craetedAnother.migrationStatus === MigrationStatus.UNAPPLIED)
         assert(craetedAnother.deployedAt === 1748126397)
       }).unsafeRunSync()
@@ -52,7 +53,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "insert new record with `not_required`" in {
 
-      val v0000Default: Version = Version(version = VersionString("0.0.0.0"), migrationStatus = MigrationStatus.NOT_REQUIRED, deployedAt = 0)
+      val v0000Default: Version = Version(version = VersionString("0.0.0.0").unsafe, migrationStatus = MigrationStatus.NOT_REQUIRED, deployedAt = 0)
       given V0000: VersionMigrator[ConnectionIO, IO] = {
         instance[ConnectionIO, IO](v0000Default, () => IO.pure(()))
       }
@@ -72,7 +73,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "skip migration if `deployedAt` is not `0`" in {
 
-      val v0001Default: Version = Version(version = VersionString("0.0.0.1"), migrationStatus = MigrationStatus.NOT_REQUIRED, deployedAt = 1749136951)
+      val v0001Default: Version = Version(version = VersionString("0.0.0.1").unsafe, migrationStatus = MigrationStatus.NOT_REQUIRED, deployedAt = 1749136951)
       given V0001: VersionMigrator[ConnectionIO, IO] = {
         instance[ConnectionIO, IO](v0001Default, () => IO.pure(()))
       }
@@ -82,7 +83,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         _ <- versionService.createOrUpdate(v0001Default)
         migrated <- versionService.migrate(Some(v0001))
       } yield {
-        assert(migrated.version === VersionString("0.0.0.1"))
+        assert(migrated.version === VersionString("0.0.0.1").unsafe)
         assert(migrated.migrationStatus === MigrationStatus.NOT_REQUIRED)
         assert(migrated.deployedAt === v0001Default.deployedAt)
       }).unsafeRunSync()
@@ -90,7 +91,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "try migration if status is `unapplied`" in {
 
-      val v0004Default: Version = Version(version = VersionString("0.0.0.4"), migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)
+      val v0004Default: Version = Version(version = VersionString("0.0.0.4").unsafe, migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)
       given V0004: VersionMigrator[ConnectionIO, IO] = {
         instance[ConnectionIO, IO](v0004Default, () => IO.pure(()))
       }
@@ -102,7 +103,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         // TODO: delete from DB
         _ <- versionService.createOrUpdate(migrated.copy(migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0))
       } yield {
-        assert(migrated.version === VersionString("0.0.0.4"))
+        assert(migrated.version === VersionString("0.0.0.4").unsafe)
         assert(migrated.migrationStatus === MigrationStatus.SUCCESS)
         assert(migrated.deployedAt >= now)
       }).unsafeRunSync()
@@ -110,7 +111,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "try migration if status is `failed`" in {
 
-      val v0005Default: Version = Version(version = VersionString("0.0.0.5"), migrationStatus = MigrationStatus.FAILED, deployedAt = 0)
+      val v0005Default: Version = Version(version = VersionString("0.0.0.5").unsafe, migrationStatus = MigrationStatus.FAILED, deployedAt = 0)
       given V0005: VersionMigrator[ConnectionIO, IO] = {
         instance[ConnectionIO, IO](v0005Default, () => IO.pure(()))
       }
@@ -122,7 +123,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         // TODO: delete from DB
         _ <- versionService.createOrUpdate(migrated.copy(migrationStatus = MigrationStatus.FAILED, deployedAt = 0))
       } yield {
-        assert(migrated.version === VersionString("0.0.0.5"))
+        assert(migrated.version === VersionString("0.0.0.5").unsafe)
         assert(migrated.migrationStatus === MigrationStatus.SUCCESS)
         assert(migrated.deployedAt >= now)
       }).unsafeRunSync()
@@ -130,7 +131,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "failed migration" in {
 
-      val v0006Default: Version = Version(version = VersionString("0.0.0.6"), migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)
+      val v0006Default: Version = Version(version = VersionString("0.0.0.6").unsafe, migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)
       given V0006: VersionMigrator[ConnectionIO, IO] = {
         instance[ConnectionIO, IO](
           v0006Default,
@@ -148,7 +149,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         // TODO: delete from DB
         _ <- versionService.createOrUpdate(v0006Default)
       } yield {
-        assert(migrated.version === VersionString("0.0.0.6"))
+        assert(migrated.version === VersionString("0.0.0.6").unsafe)
         assert(migrated.migrationStatus === MigrationStatus.FAILED)
         assert(migrated.deployedAt === 0)
       }).unsafeRunSync()
@@ -156,7 +157,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "skip migration if status is `in_progress`" in {
 
-      val v0002Default: Version = Version(version = VersionString("0.0.0.2"), migrationStatus = MigrationStatus.IN_PROGRESS, deployedAt = 0)
+      val v0002Default: Version = Version(version = VersionString("0.0.0.2").unsafe, migrationStatus = MigrationStatus.IN_PROGRESS, deployedAt = 0)
       given V0002: VersionMigrator[ConnectionIO, IO] = {
         instance[ConnectionIO, IO](v0002Default, () => IO.pure(()))
       }
@@ -166,7 +167,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         _ <- versionService.createOrUpdate(v0002Default)
         migrated <- versionService.migrate(Some(v0002))
       } yield {
-        assert(migrated.version === VersionString("0.0.0.2"))
+        assert(migrated.version === VersionString("0.0.0.2").unsafe)
         assert(migrated.migrationStatus === MigrationStatus.IN_PROGRESS)
         assert(migrated.deployedAt === v0002Default.deployedAt)
       }).unsafeRunSync()
@@ -174,7 +175,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "skip migration if status is `success`" in {
 
-      val v0003Default: Version = Version(version = VersionString("0.0.0.3"), migrationStatus = MigrationStatus.SUCCESS, deployedAt = 1749137824)
+      val v0003Default: Version = Version(version = VersionString("0.0.0.3").unsafe, migrationStatus = MigrationStatus.SUCCESS, deployedAt = 1749137824)
       given V0003: VersionMigrator[ConnectionIO, IO] = {
         instance[ConnectionIO, IO](v0003Default, () => IO.pure(()))
       }
@@ -184,7 +185,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         _ <- versionService.createOrUpdate(v0003Default)
         migrated <- versionService.migrate(Some(v0003))
       } yield {
-        assert(migrated.version === VersionString("0.0.0.3"))
+        assert(migrated.version === VersionString("0.0.0.3").unsafe)
         assert(migrated.migrationStatus === MigrationStatus.SUCCESS)
         assert(migrated.deployedAt === v0003Default.deployedAt)
       }).unsafeRunSync()

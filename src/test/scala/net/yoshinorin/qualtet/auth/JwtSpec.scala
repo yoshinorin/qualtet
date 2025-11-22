@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.auth
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.errors.Unauthorized
@@ -34,8 +35,8 @@ class JwtSpec extends AnyWordSpec {
         jwtString <- jwtInstance.encode(
           Author(
             id = AuthorId(id),
-            name = AuthorName("Jhon"),
-            displayName = AuthorDisplayName("JD"),
+            name = AuthorName("Jhon").unsafe,
+            displayName = AuthorDisplayName("JD").unsafe,
             password = validBCryptPassword
           )
         )

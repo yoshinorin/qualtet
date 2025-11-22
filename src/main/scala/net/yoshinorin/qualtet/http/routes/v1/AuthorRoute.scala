@@ -34,8 +34,13 @@ class AuthorRoute[F[_]: Monad](
   }
 
   private[http] def get(authorName: String): Request[IO] ?=> IO[Response[IO]] = {
+    // TODO: Refactor to return Either instead of throwing
+    val validatedName = AuthorName(authorName) match {
+      case Right(name) => name
+      case Left(error) => throw error
+    }
     (for {
-      maybeAuthor <- authorService.findByName(AuthorName(authorName))
+      maybeAuthor <- authorService.findByName(validatedName)
     } yield maybeAuthor).flatMap(_.asResponse)
   }
 

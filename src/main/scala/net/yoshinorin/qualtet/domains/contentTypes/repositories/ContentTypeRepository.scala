@@ -14,10 +14,22 @@ object ContentTypeRepository {
   given ContentTypeRepository: ContentTypeRepository[ConnectionIO] = {
     new ContentTypeRepository[ConnectionIO] {
       given contentTypeRead: Read[ContentTypeReadModel] =
-        Read[(String, String)].map { case (id, name) => ContentTypeReadModel(ContentTypeId(id), ContentTypeName(name)) }
+        Read[(String, String)].map { case (id, name) =>
+          ContentTypeReadModel(
+            ContentTypeId(id),
+            ContentTypeName.unsafe(name)
+          )
+        }
 
       given contentTypeOrOptionRead: Read[Option[ContentTypeReadModel]] =
-        Read[(String, String)].map { case (id, name) => Some(ContentTypeReadModel(ContentTypeId(id), ContentTypeName(name))) }
+        Read[(String, String)].map { case (id, name) =>
+          Some(
+            ContentTypeReadModel(
+              ContentTypeId(id),
+              ContentTypeName.unsafe(name)
+            )
+          )
+        }
 
       given contentTypeWrite: Write[ContentTypeWriteModel] =
         Write[(String, String)].contramap(c => (c.id.value, c.name.value))

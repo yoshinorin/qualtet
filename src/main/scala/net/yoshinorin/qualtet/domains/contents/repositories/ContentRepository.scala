@@ -29,7 +29,7 @@ object ContentRepository {
               ContentId(contentId),
               AuthorId(authorId),
               ContentTypeId(contentTypeId),
-              ContentPath(path),
+              ContentPath.unsafe(path),
               title,
               rawContent,
               htmlContent,
@@ -46,7 +46,7 @@ object ContentRepository {
                 ContentId(contentId),
                 AuthorId(authorId),
                 ContentTypeId(contentTypeId),
-                ContentPath(path),
+                ContentPath.unsafe(path),
                 title,
                 rawContent,
                 htmlContent,
@@ -75,14 +75,14 @@ object ContentRepository {
             ContentWithMetaReadModel(
               ContentId(id),
               title,
-              Attributes(robotsAttributes),
+              Attributes.unsafe(robotsAttributes),
               externalResourceKindKeys,
               externalResourceKindValues,
               tagIds,
               tagNames,
               tagPaths,
               content,
-              AuthorName(authorName),
+              AuthorName.unsafe(authorName),
               publishedAt,
               updatedAt
             )
@@ -96,14 +96,24 @@ object ContentRepository {
               path <- prevPath
               title <- prevTitle
               published <- prevPublished
-            } yield AdjacentContentModel(ContentId(id), ContentPath(path), title, published)
+            } yield AdjacentContentModel(
+              ContentId(id),
+              ContentPath.unsafe(path),
+              title,
+              published
+            )
 
             val next = for {
               id <- nextId
               path <- nextPath
               title <- nextTitle
               published <- nextPublished
-            } yield AdjacentContentModel(ContentId(id), ContentPath(path), title, published)
+            } yield AdjacentContentModel(
+              ContentId(id),
+              ContentPath.unsafe(path),
+              title,
+              published
+            )
 
             (previous, next)
         }

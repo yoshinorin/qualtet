@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
 import net.yoshinorin.qualtet.domains.errors.InvalidExternalResourceKind
 import net.yoshinorin.qualtet.syntax.*
@@ -12,7 +13,7 @@ class ExternalResourcesSpec extends AnyWordSpec {
   "ExternalResources" should {
     "create instance" in {
       val externalResources = ExternalResources(
-        ExternalResourceKind("js"),
+        ExternalResourceKind("js").unsafe,
         values = List("test", "foo", "bar")
       )
       assert(externalResources.kind.value === "js")
@@ -30,7 +31,7 @@ class ExternalResourcesSpec extends AnyWordSpec {
 
       val json =
         ExternalResources(
-          ExternalResourceKind("js"),
+          ExternalResourceKind("js").unsafe,
           values = List("test", "foo", "bar")
         ).asJson.replaceNewlineAndSpace
 
@@ -41,18 +42,32 @@ class ExternalResourcesSpec extends AnyWordSpec {
   "ExternalResourceKind" should {
     "create instance if specify js" in {
       val externalResourceKind = ExternalResourceKind("js")
-      assert(externalResourceKind.value === "js")
+      assert(externalResourceKind.isRight)
+      assert(externalResourceKind.unsafe.value === "js")
     }
 
     "create instance if specify css" in {
       val externalResourceKind = ExternalResourceKind("css")
-      assert(externalResourceKind.value === "css")
+      assert(externalResourceKind.isRight)
+      assert(externalResourceKind.unsafe.value === "css")
     }
 
     "can not create instance with invalid value" in {
-      assertThrows[InvalidExternalResourceKind] {
-        ExternalResourceKind("invalid-value")
-      }
+      val result = ExternalResourceKind("invalid-value")
+      assert(result.isLeft)
+      assert(result.left.get.detail === "The field externalResource.kind allowed only js or css.")
+    }
+  }
+
+  "ExternalResourceKind.unsafe" should {
+    "not modify the input for valid kind" in {
+      val kind = ExternalResourceKind.unsafe("js")
+      assert(kind.value === "js")
+    }
+
+    "skip validation for invalid kind" in {
+      val kind = ExternalResourceKind.unsafe("invalid")
+      assert(kind.value === "invalid")
     }
   }
 

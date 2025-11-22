@@ -58,6 +58,7 @@ object HttpError {
       case e: InvalidContentType => UnprocessableEntity(detail = e.detail, errors = e.errors)
       case e: InvalidContentTypeName => UnprocessableEntity(detail = e.detail, errors = e.errors)
       case e: InvalidExternalResourceKind => UnprocessableEntity(detail = e.detail, errors = e.errors)
+      case e: InvalidLastMod => UnprocessableEntity(detail = e.detail, errors = e.errors)
       case e: InvalidPath => UnprocessableEntity(detail = e.detail, errors = e.errors)
       case e: InvalidSearchConditions => UnprocessableEntity(detail = e.detail, errors = e.errors)
       case e: InvalidSeries => UnprocessableEntity(detail = e.detail, errors = e.errors)

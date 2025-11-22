@@ -19,7 +19,13 @@ class ContentTypeRoute[F[_]: Monad](
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ GET -> Root => this.get
-      case request @ GET -> Root / name => this.get(ContentTypeName(name))
+      case request @ GET -> Root / name =>
+        // TODO: Refactor to return Either instead of throwing
+        val validatedName = ContentTypeName(name) match {
+          case Right(n) => n
+          case Left(error) => throw error
+        }
+        this.get(validatedName)
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)

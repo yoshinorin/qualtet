@@ -93,8 +93,14 @@ class ContentRoute[F[_]: Monad](
   }
 
   def get(path: String): Request[IO] ?=> IO[Response[IO]] = {
+    // TODO: Refactor to return Either instead of throwing
+    val validatedPath = ContentPath(path) match {
+      case Right(p) => p
+      case Left(error) => throw error
+    }
+
     (for {
-      maybeContent <- contentService.findByPathWithMeta(ContentPath(path))
+      maybeContent <- contentService.findByPathWithMeta(validatedPath)
     } yield maybeContent)
       .flatMap(_.asResponse)
   }

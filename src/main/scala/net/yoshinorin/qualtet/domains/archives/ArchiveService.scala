@@ -13,8 +13,12 @@ class ArchiveService[F[_]: Monad](
 )(using executer: Executer[F, IO]) {
 
   def get: IO[Seq[ArchiveResponseModel]] = {
+    // TODO: Refactor to handle Either properly
+    val validatedContentTypeName = ContentTypeName("article").getOrElse(
+      throw new IllegalStateException("Invalid content type name: article")
+    )
     for {
-      c <- contentTypeService.findByName(ContentTypeName("article")).throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
+      c <- contentTypeService.findByName(validatedContentTypeName).throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
       articles <- executer.transact(archiveRepositoryAdapter.get(c.id))
     } yield articles
   }

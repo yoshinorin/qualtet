@@ -105,24 +105,20 @@ object V218Migrator {
 
   private[versions] def convertTags(tags: Seq[TagUnsafeV218]): Seq[(TagUnsafeV218, Boolean)] = {
     tags.map { tag =>
-      val (convertedPath, isSuccess) =
-        try {
-          (TagPath(tag.path).value, true)
-        } catch {
-          case _: Exception => (tag.path, false)
-        }
+      val (convertedPath, isSuccess) = TagPath(tag.path) match {
+        case Right(validPath) => (validPath.value, true)
+        case Left(_) => (tag.path, false)
+      }
       (tag.copy(path = convertedPath), isSuccess)
     }
   }
 
   private[versions] def convertSeries(series: Seq[SeriesUnsafeV218]): Seq[(SeriesUnsafeV218, Boolean)] = {
     series.map { series =>
-      val (convertedPath, isSuccess) =
-        try {
-          (SeriesPath(series.path).value, true)
-        } catch {
-          case _: Exception => (series.path, false)
-        }
+      val (convertedPath, isSuccess) = SeriesPath(series.path) match {
+        case Right(validPath) => (validPath.value, true)
+        case Left(_) => (series.path, false)
+      }
       (series.copy(path = convertedPath), isSuccess)
     }
   }
@@ -189,7 +185,9 @@ object V218Migrator {
     val seriesRepositoryV217: SeriesRepositoryV217[ConnectionIO] = summon[SeriesRepositoryV217[ConnectionIO]]
     val logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(classOf[V218Migrator.type])
 
-    new VersionMigrator[ConnectionIO, IO](init = Version(version = VersionString("2.18.0"), migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)) {
+    new VersionMigrator[ConnectionIO, IO](init =
+      Version(version = VersionString("2.18.0").toOption.get, migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)
+    ) {
       override def get(): IO[Version] = super.getInit()
       override def getInit(): IO[Version] = super.getInit()
       override def migrate()(using executer: Executer[ConnectionIO, IO]): IO[Unit] = {

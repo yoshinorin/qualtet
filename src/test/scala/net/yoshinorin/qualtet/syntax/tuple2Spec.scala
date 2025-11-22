@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.syntax
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -53,7 +54,7 @@ class Tuple2Spec extends AnyWordSpec {
       val maybeExternalResource = (
         Option("js, css, js, js, css"),
         Option("js1, css1, js2, js3, css2")
-      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
+      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x).unsafe, y.map(_._2)))
 
       assert(maybeExternalResource.get(0).kind.value === "css")
       assert(maybeExternalResource.get(1).kind.value === "js")
@@ -66,7 +67,7 @@ class Tuple2Spec extends AnyWordSpec {
       val maybeExternalResource = (
         None,
         Option("js1, css1, js2, js3, css2")
-      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
+      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x).unsafe, y.map(_._2)))
       assert(maybeExternalResource.isEmpty)
     }
 
@@ -74,7 +75,7 @@ class Tuple2Spec extends AnyWordSpec {
       val maybeExternalResource = (
         Option("js, css, js, js, css"),
         None
-      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
+      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x).unsafe, y.map(_._2)))
       assert(maybeExternalResource.isEmpty)
     }
 
@@ -82,7 +83,7 @@ class Tuple2Spec extends AnyWordSpec {
       val maybeExternalResource = (
         Option("js, css, js, js, css"),
         Option("js1, css1, js2, js3")
-      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2)))
+      ).zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x).unsafe, y.map(_._2)))
       assert(maybeExternalResource.isEmpty)
     }
   }

@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
 import org.http4s.client.Client
 import org.http4s.*
@@ -25,19 +26,19 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
     SeriesRequestModel(
       title = "Series Route Spec",
       name = SeriesName("seriesroute-series-name"),
-      path = SeriesPath("seriesroute-series-path"),
+      path = SeriesPath("seriesroute-series-path").unsafe,
       description = Some("Series Route Spec Description1")
     ),
     SeriesRequestModel(
       title = "Series Route Spec2",
       name = SeriesName("seriesroute-series2-name"),
-      path = SeriesPath("seriesroute-series2-path"),
+      path = SeriesPath("seriesroute-series2-path").unsafe,
       description = Some("Series Route Spec Description2")
     ),
     SeriesRequestModel(
       title = "Series Route Spec3",
       name = SeriesName("seriesroute-series3-name"),
-      path = SeriesPath("seriesroute-series3-path"),
+      path = SeriesPath("seriesroute-series3-path").unsafe,
       description = Some("Series Route Spec Description2")
     )
   )

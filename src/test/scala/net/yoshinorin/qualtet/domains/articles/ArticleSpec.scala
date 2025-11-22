@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.articles
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -10,7 +11,7 @@ class ArticleSpec extends AnyWordSpec {
 
   val responseArticle1: ArticleResponseModel = ArticleResponseModel(
     id = ContentId(generateUlid()),
-    path = ContentPath("/test"),
+    path = ContentPath("/test").unsafe,
     title = "title",
     content = "this is a content",
     publishedAt = 0,
@@ -19,7 +20,7 @@ class ArticleSpec extends AnyWordSpec {
 
   val responseArticle2: ArticleResponseModel = ArticleResponseModel(
     id = ContentId(generateUlid()),
-    path = ContentPath("/test/path2"),
+    path = ContentPath("/test/path2").unsafe,
     title = "title2",
     content = "this is a content2",
     publishedAt = 1,
@@ -28,7 +29,7 @@ class ArticleSpec extends AnyWordSpec {
 
   val responseArticleWithLongLengthContent: ArticleResponseModel = ArticleResponseModel(
     id = ContentId(generateUlid()),
-    path = ContentPath("/test"),
+    path = ContentPath("/test").unsafe,
     title = "title",
     content = "a" * 101,
     publishedAt = 0,

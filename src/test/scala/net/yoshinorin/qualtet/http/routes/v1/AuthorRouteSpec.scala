@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
 import org.http4s.client.Client
 import org.http4s.*
@@ -18,8 +19,8 @@ class AuthorRouteSpec extends AnyWordSpec {
 
   val authorRoute = new AuthorRoute(authorService)
 
-  val a: AuthorResponseModel = authorService.findByName(AuthorName(author.name.value)).unsafeRunSync().get
-  val a2: AuthorResponseModel = authorService.findByName(AuthorName(author2.name.value)).unsafeRunSync().get
+  val a: AuthorResponseModel = authorService.findByName(AuthorName(author.name.value).unsafe).unsafeRunSync().get
+  val a2: AuthorResponseModel = authorService.findByName(AuthorName(author2.name.value).unsafe).unsafeRunSync().get
 
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 

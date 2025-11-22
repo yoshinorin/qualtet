@@ -15,7 +15,16 @@ object SearchRepository {
 
       given responseArticleWithCountRead: Read[(Int, SearchResuletReadModel)] =
         Read[(Int, (String, String, String, Long, Long))].map { case (cnt, (path, title, content, publishedAt, updatedAt)) =>
-          (cnt, SearchResuletReadModel(ContentPath(path), title, content, publishedAt, updatedAt))
+          (
+            cnt,
+            SearchResuletReadModel(
+              ContentPath.unsafe(path),
+              title,
+              content,
+              publishedAt,
+              updatedAt
+            )
+          )
         }
 
       override def search(query: List[String]): ConnectionIO[Seq[(Int, SearchResuletReadModel)]] = {

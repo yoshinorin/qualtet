@@ -58,8 +58,14 @@ class TagRoute[F[_]: Monad](
   }
 
   private[http] def get(path: String, p: PaginationRequestModel): IO[Response[IO]] = {
+    // TODO: Refactor to return Either instead of throwing
+    val validatedPath = TagPath(path) match {
+      case Right(p) => p
+      case Left(error) => throw error
+    }
+
     (for {
-      articles <- articleService.getByTagPathWithCount(TagPath(path), p)
+      articles <- articleService.getByTagPathWithCount(validatedPath, p)
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }

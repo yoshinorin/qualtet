@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries}
@@ -26,25 +27,25 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       SeriesRequestModel(
         title = "Content Service Spec Series",
         name = SeriesName("contentservice-series"),
-        path = SeriesPath("contentservice-series-path"),
+        path = SeriesPath("contentservice-series-path").unsafe,
         None
       ),
       SeriesRequestModel(
         title = "Content Service Spec Series2",
         name = SeriesName("contentservice-series2"),
-        path = SeriesPath("contentservice-series2-path"),
+        path = SeriesPath("contentservice-series2-path").unsafe,
         None
       ),
       SeriesRequestModel(
         title = "Content Service Spec will be delete",
         name = SeriesName("contentservice-willBeDelete"),
-        path = SeriesPath("contentservice-willBeDelete-path"),
+        path = SeriesPath("contentservice-willBeDelete-path").unsafe,
         None
       ),
       SeriesRequestModel(
         title = "Content Service Spec will not delete",
         name = SeriesName("contentservice-willNotDelete"),
-        path = SeriesPath("contentservice-willNotDelete-path"),
+        path = SeriesPath("contentservice-willNotDelete-path").unsafe,
         None
       )
     )).unsafeCreateSeries()
@@ -52,15 +53,15 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val requestContent1: ContentRequestModel = ContentRequestModel(
     contentType = "article",
-    path = ContentPath("/test/path"),
+    path = ContentPath("/test/path").unsafe,
     title = "this is a title",
     rawContent = "this is a raw content",
     htmlContent = "this is a html content",
-    robotsAttributes = Attributes("noarchive, noimageindex"),
-    tags = List(Tag(name = TagName("Scala"), path = TagPath("scala-path")), Tag(name = TagName("http4s"), path = TagPath("http4s-path"))),
+    robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+    tags = List(Tag(name = TagName("Scala"), path = TagPath("scala-path").unsafe), Tag(name = TagName("http4s"), path = TagPath("http4s-path").unsafe)),
     externalResources = List(
       ExternalResources(
-        ExternalResourceKind("js"),
+        ExternalResourceKind("js").unsafe,
         values = List("test", "foo", "bar")
       )
     )
@@ -70,7 +71,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "create content and related data" in {
       (for {
-        craeted <- contentService.createOrUpdate(AuthorName(author.name.value), requestContent1)
+        craeted <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent1)
         maybeFound <- contentService.findByPathWithMeta(craeted.path)
       } yield {
         assert(craeted.id.isInstanceOf[ContentId])
@@ -99,23 +100,26 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       val requestContent: ContentRequestModel = ContentRequestModel(
         contentType = "article",
-        path = ContentPath("/test/path/ContentServiceSpec/upsert"),
+        path = ContentPath("/test/path/ContentServiceSpec/upsert").unsafe,
         title = "this is a title",
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(Tag(name = TagName("Scala"), path = TagPath("scala-path")), Tag(name = TagName("http4s"), path = TagPath("http4s-path"))),
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+        tags = List(
+          Tag(name = TagName("Scala"), path = TagPath("scala-path").unsafe),
+          Tag(name = TagName("http4s"), path = TagPath("http4s-path").unsafe)
+        ),
         series = Some(
           Series(
             title = "Content Service Spec Series",
             name = SeriesName("contentservice-series"),
-            path = SeriesPath("contentservice-series-path"),
+            path = SeriesPath("contentservice-series-path").unsafe,
             description = None
           )
         ),
         externalResources = List(
           ExternalResources(
-            ExternalResourceKind("js"),
+            ExternalResourceKind("js").unsafe,
             values = List("test", "foo", "bar")
           )
         )
@@ -123,39 +127,42 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       val updateRequestContent = requestContent.copy(
         title = "updated title",
-        tags = List(Tag(name = TagName("Scala"), path = TagPath("scala-path")), Tag(name = TagName("Scala3"), path = TagPath("scala3-path"))),
+        tags = List(
+          Tag(name = TagName("Scala"), path = TagPath("scala-path").unsafe),
+          Tag(name = TagName("Scala3"), path = TagPath("scala3-path").unsafe)
+        ),
         series = Some(
           Series(
             title = "Content Service Spec Series2",
             name = SeriesName("contentservice-series2"),
-            path = SeriesPath("contentservice-series2-path"),
+            path = SeriesPath("contentservice-series2-path").unsafe,
             description = None
           )
         ),
-        robotsAttributes = Attributes("noarchive"),
+        robotsAttributes = Attributes("noarchive").unsafe,
         externalResources = List(
           ExternalResources(
-            ExternalResourceKind("js"),
+            ExternalResourceKind("js").unsafe,
             values = List("foo", "bar", "baz")
           )
         )
       )
 
       (for {
-        created <- contentService.createOrUpdate(AuthorName(author.name.value), requestContent)
+        created <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent)
         maybeCreatedFound <- contentService.findByPathWithMeta(requestContent.path)
 
         // first time update
-        updated <- contentService.createOrUpdate(AuthorName(author.name.value), updateRequestContent)
+        updated <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent)
         maybeFoundUpdated <- contentService.findByPathWithMeta(requestContent.path)
         updatedSeries <- seriesService.findByContentId(updated.id)
 
         // second time update (delete related tags)
-        _ <- contentService.createOrUpdate(AuthorName(author.name.value), updateRequestContent.copy(tags = List()))
+        _ <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent.copy(tags = List()))
         deletedTags <- contentService.findByPathWithMeta(requestContent.path)
 
         // third time update (delete related series)
-        _ <- contentService.createOrUpdate(AuthorName(author.name.value), updateRequestContent.copy(series = None))
+        _ <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent.copy(series = None))
         deletedSeries <- seriesService.findByContentId(updated.id)
       } yield {
         assert(created.id === updated.id)
@@ -199,17 +206,17 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       val requestContentNoMetas: ContentRequestModel = ContentRequestModel(
         contentType = "article",
-        path = ContentPath("/test/no-metas"),
+        path = ContentPath("/test/no-metas").unsafe,
         title = "this is a title",
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
         tags = List(),
         externalResources = List()
       )
 
       (for {
-        created <- contentService.createOrUpdate(AuthorName(author.name.value), requestContentNoMetas)
+        created <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContentNoMetas)
         maybeFound <- contentService.findByPathWithMeta(created.path)
       } yield {
         assert(maybeFound.nonEmpty)
@@ -223,11 +230,11 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "findById" in {
       val createRequestContent = requestContent1.copy(
-        path = ContentPath("ContentServiceSpec-FindById")
+        path = ContentPath("ContentServiceSpec-FindById").unsafe
       )
 
       (for {
-        createdContent <- contentService.createOrUpdate(AuthorName(author.name.value), createRequestContent)
+        createdContent <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, createRequestContent)
         maybeContent <- contentService.findById(createdContent.id)
       } yield {
         assert(maybeContent.get.path === createRequestContent.path)
@@ -240,7 +247,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
 
       (for {
-        updated <- contentService.createOrUpdate(AuthorName(author.name.value), updatedRequestContent)
+        updated <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updatedRequestContent)
         maybeFound <- contentService.findByPathWithMeta(requestContent1.path)
       } yield {
         assert(maybeFound.get.content === updatedRequestContent.htmlContent)
@@ -251,48 +258,48 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       // create test data for delete
       val shouldDeleteContent: ContentRequestModel = ContentRequestModel(
         contentType = "article",
-        path = ContentPath("/test/willbe/delete"),
+        path = ContentPath("/test/willbe/delete").unsafe,
         title = "this is a title",
         rawContent = "this is a raw content",
         htmlContent = "this is a html content",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
         tags = List(
-          Tag(name = TagName("WillBeDelete"), path = TagPath("willbedelete-path")),
-          Tag(name = TagName("WillBeDelete2"), path = TagPath("willbedelete2-path"))
+          Tag(name = TagName("WillBeDelete"), path = TagPath("willbedelete-path").unsafe),
+          Tag(name = TagName("WillBeDelete2"), path = TagPath("willbedelete2-path").unsafe)
         ),
         series = Some(
           Series(
             title = "Content Service Spec willBeDelete",
             name = SeriesName("contentservice-willBeDelete"),
-            path = SeriesPath("contentservice-willBeDelete-path"),
+            path = SeriesPath("contentservice-willBeDelete-path").unsafe,
             description = None
           )
         ),
         externalResources = List(
           ExternalResources(
-            ExternalResourceKind("js"),
+            ExternalResourceKind("js").unsafe,
             values = List("willBeDelete1", "willBeDelete2")
           )
         )
       )
 
       val shouldNotDeleteContent: ContentRequestModel = shouldDeleteContent.copy(
-        path = ContentPath("/test/willnot/delete"),
+        path = ContentPath("/test/willnot/delete").unsafe,
         tags = List(
-          Tag(name = TagName("WillNotDelete"), path = TagPath("willnotdelete-path")),
-          Tag(name = TagName("WillNotDelete2"), path = TagPath("willnotdelete2-path"))
+          Tag(name = TagName("WillNotDelete"), path = TagPath("willnotdelete-path").unsafe),
+          Tag(name = TagName("WillNotDelete2"), path = TagPath("willnotdelete2-path").unsafe)
         ),
         series = Some(
           Series(
             title = "Content Service willNotDelete Series",
             name = SeriesName("contentservice-willNotDelete"),
-            path = SeriesPath("contentservice-willNotDelete-path"),
+            path = SeriesPath("contentservice-willNotDelete-path").unsafe,
             description = None
           )
         ),
         externalResources = List(
           ExternalResources(
-            ExternalResourceKind("js"),
+            ExternalResourceKind("js").unsafe,
             values = List("willNotDelete1", "willNotDelete2")
           )
         )
@@ -300,8 +307,8 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       (for {
         // create test data
-        shouldeDelete <- contentService.createOrUpdate(AuthorName(author.name.value), shouldDeleteContent)
-        shouldNotDelete <- contentService.createOrUpdate(AuthorName(author.name.value), shouldNotDeleteContent)
+        shouldeDelete <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, shouldDeleteContent)
+        shouldNotDelete <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, shouldNotDeleteContent)
 
         // delete one content
         _ <- contentService.delete(shouldeDelete.id)
@@ -327,13 +334,13 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "throw Author InvalidAuthor Exception" in {
       assertThrows[InvalidAuthor] {
-        contentService.createOrUpdate(AuthorName("not_exists_user"), requestContent1).unsafeRunSync()
+        contentService.createOrUpdate(AuthorName("not_exists_user").unsafe, requestContent1).unsafeRunSync()
       }
     }
 
     "throw Content-Type InvalidContentType Exception" in {
       assertThrows[InvalidContentType] {
-        contentService.createOrUpdate(AuthorName(author.name.value), requestContent1.copy(contentType = "not_exists_content-type")).unsafeRunSync()
+        contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent1.copy(contentType = "not_exists_content-type")).unsafeRunSync()
       }
     }
 
@@ -341,12 +348,12 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       assertThrows[InvalidSeries] {
         contentService
           .createOrUpdate(
-            AuthorName(author.name.value),
+            AuthorName(author.name.value).unsafe,
             requestContent1.copy(series =
               Some(
                 Series(
                   name = SeriesName("not_exists_series_name"),
-                  path = SeriesPath("not_exists_series_path"),
+                  path = SeriesPath("not_exists_series_path").unsafe,
                   title = "Not exists series title",
                   description = None
                 )

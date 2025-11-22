@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.articles
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
@@ -23,12 +24,12 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = ContentPath(s"/test/same/tags/${i}"),
+            path = ContentPath(s"/test/same/tags/${i}").unsafe,
             title = s"this is a same tag title ${i}",
             rawContent = s"this is a same tag raw content ${i}",
             htmlContent = s"this is a html content ${i}",
-            robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = List(Tag(name = TagName("SameTag"), path = TagPath("sametag-path"))),
+            robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+            tags = List(Tag(name = TagName("SameTag"), path = TagPath("sametag-path").unsafe)),
             externalResources = List()
           )
         )

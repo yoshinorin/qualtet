@@ -41,11 +41,15 @@ class ContentService[F[_]: Monad](
 ) {
 
   def createOrUpdate(authorName: AuthorName, request: ContentRequestModel): IO[ContentResponseModel] = {
+    // TODO: Refactor to handle Either properly
+    val validatedContentTypeName = ContentTypeName(request.contentType).getOrElse(
+      throw new IllegalStateException(s"Invalid content type name: ${request.contentType}")
+    )
 
     for {
       a <- authorService.findByName(authorName).throwIfNone(InvalidAuthor(detail = s"user not found: ${request.contentType}"))
       c <- contentTypeService
-        .findByName(ContentTypeName(request.contentType))
+        .findByName(validatedContentTypeName)
         .throwIfNone(InvalidContentType(detail = s"content-type not found: ${request.contentType}"))
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
@@ -229,9 +233,25 @@ class ContentService[F[_]: Monad](
               title = x.title,
               robotsAttributes = x.robotsAttributes,
               externalResources = (x.externalResourceKindKeys, x.externalResourceKindValues)
-                .zipWithGroupBy((x, y) => ExternalResources(ExternalResourceKind(x), y.map(_._2).distinct))
+                .zipWithGroupBy((x, y) =>
+                  // TODO: Refactor to handle Either properly - DB data should be validated
+                  ExternalResources(
+                    ExternalResourceKind(x).getOrElse(throw new IllegalStateException(s"Invalid external resource kind from DB: $x")),
+                    y.map(_._2).distinct
+                  )
+                )
                 .getOrElse(List()),
-              tags = (x.tagIds, x.tagNames, x.tagPaths).zip((x, y, z) => new Tag(TagId(x), TagName(y), TagPath(z))).map(x => x.distinct).getOrElse(List()),
+              tags = (x.tagIds, x.tagNames, x.tagPaths)
+                .zip((x, y, z) =>
+                  new Tag(
+                    TagId(x),
+                    TagName(y),
+                    // TODO: Refactor to handle Either properly - DB data should be validated
+                    TagPath(z).getOrElse(throw new IllegalStateException(s"Invalid path from DB: $z"))
+                  )
+                )
+                .map(x => x.distinct)
+                .getOrElse(List()),
               description = strippedContent.substring(0, descriptionLength),
               content = x.content,
               length = strippedContent.replaceAll(" ", "").length,

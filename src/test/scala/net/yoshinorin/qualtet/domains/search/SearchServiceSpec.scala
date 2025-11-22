@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.search
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
@@ -21,58 +22,58 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = ContentPath(s"/test/searchService-${i}"),
+            path = ContentPath(s"/test/searchService-${i}").unsafe,
             title = s"this is a searchService title ${i}",
             rawContent = s"this is a searchService raw content ${i}",
             htmlContent = s"this is a searchService html content ${i}",
-            robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = List(Tag(name = TagName(s"searchService${i}"), path = TagPath(s"searchService${i}-path"))),
+            robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+            tags = List(Tag(name = TagName(s"searchService${i}"), path = TagPath(s"searchService${i}-path").unsafe)),
             externalResources = List()
           )
         ) :+ ContentRequestModel(
         contentType = "article",
-        path = ContentPath(s"/test/searchServiceLast"),
+        path = ContentPath(s"/test/searchServiceLast").unsafe,
         title = s"this is a searchService titleLast",
         rawContent = s"this is a searchService raw contentLast",
         htmlContent = s"this is a searchService html contentLast",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(Tag(name = TagName(s"searchServiceLast"), path = TagPath(s"searchServiceLast-path"))),
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+        tags = List(Tag(name = TagName(s"searchServiceLast"), path = TagPath(s"searchServiceLast-path").unsafe)),
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
-        path = ContentPath(s"/test/searchServiceIncludesUrl1"),
+        path = ContentPath(s"/test/searchServiceIncludesUrl1").unsafe,
         title = s"this is a searchService IncludesUrl1",
         rawContent = s"this is a searchService raw contentIncludesUrl1 https://example.com aaabbbccc",
         htmlContent = s"this is a searchService html contentIncludesUrl1 https://example.com aaabbbccc",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(Tag(name = TagName(s"IncludesUrl1"), path = TagPath(s"IncludesUrl1-path"))),
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+        tags = List(Tag(name = TagName(s"IncludesUrl1"), path = TagPath(s"IncludesUrl1-path").unsafe)),
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
-        path = ContentPath(s"/test/searchServiceIncludesUrl2"),
+        path = ContentPath(s"/test/searchServiceIncludesUrl2").unsafe,
         title = s"this is a searchService IncludesUrl2",
         rawContent = s"this is a searchService raw contentIncludesUrl2 http://example.com aaabbbccc",
         htmlContent = s"this is a searchService html contentIncludesUrl2 http://example.com aaabbbccc",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(Tag(name = TagName(s"IncludesUrl2"), path = TagPath(s"IncludesUrl2-path"))),
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+        tags = List(Tag(name = TagName(s"IncludesUrl2"), path = TagPath(s"IncludesUrl2-path").unsafe)),
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
-        path = ContentPath(s"/test/searchServiceIncludesWrongUrl"),
+        path = ContentPath(s"/test/searchServiceIncludesWrongUrl").unsafe,
         title = s"this is a searchService IncludesWrongUrl1",
         rawContent = s"this is a searchService raw contentIncludesWrongUrl1 htt://example.com aaabbbccc",
         htmlContent = s"this is a searchService html contentIncludesWrongUrl1 htt://example.com aaabbbccc",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(Tag(name = TagName(s"IncludesWrongUrl1"), path = TagPath(s"IncludesWrongUrl1-path"))),
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+        tags = List(Tag(name = TagName(s"IncludesWrongUrl1"), path = TagPath(s"IncludesWrongUrl1-path").unsafe)),
         externalResources = List()
       ) :+ ContentRequestModel(
         contentType = "article",
-        path = ContentPath(s"/test/searchServiceIncludesHttpString"),
+        path = ContentPath(s"/test/searchServiceIncludesHttpString").unsafe,
         title = s"this is a searchService IncludesHttpString",
         rawContent = s"this is a searchService raw contentIncludesHttp String http://example.com aaabbbccc http",
         htmlContent = s"this is a searchService html contentIncludesHttp String http://example.com aaabbbccc http",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(Tag(name = TagName(s"IncludesHttpString"), path = TagPath(s"IncludesHttpString-path"))),
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+        tags = List(Tag(name = TagName(s"IncludesHttpString"), path = TagPath(s"IncludesHttpString-path").unsafe)),
         externalResources = List()
       )
     }

@@ -52,22 +52,48 @@ object AuthorRepository {
 
       given authorWithoutPasswordRead: Read[AuthorWithoutPasswordReadModel] =
         Read[(String, String, String, Long)].map { case (id, name, displayName, createdAt) =>
-          AuthorWithoutPasswordReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), createdAt)
+          AuthorWithoutPasswordReadModel(
+            AuthorId(id),
+            AuthorName.unsafe(name),
+            AuthorDisplayName.unsafe(displayName),
+            createdAt
+          )
         }
 
       given authorWithoutPasswordOrOptionRead: Read[Option[AuthorWithoutPasswordReadModel]] =
         Read[(String, String, String, Long)].map { case (id, name, displayName, createdAt) =>
-          Some(AuthorWithoutPasswordReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), createdAt))
+          Some(
+            AuthorWithoutPasswordReadModel(
+              AuthorId(id),
+              AuthorName.unsafe(name),
+              AuthorDisplayName.unsafe(displayName),
+              createdAt
+            )
+          )
         }
 
       given authorRead: Read[AuthorReadModel] =
         Read[(String, String, String, String, Long)].map { case (id, name, displayName, password, createdAt) =>
-          AuthorReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt)
+          AuthorReadModel(
+            AuthorId(id),
+            AuthorName.unsafe(name),
+            AuthorDisplayName.unsafe(displayName),
+            BCryptPassword(password),
+            createdAt
+          )
         }
 
       given authorOrOptionRead: Read[Option[AuthorReadModel]] =
         Read[(String, String, String, String, Long)].map { case (id, name, displayName, password, createdAt) =>
-          Some(AuthorReadModel(AuthorId(id), AuthorName(name), AuthorDisplayName(displayName), BCryptPassword(password), createdAt))
+          Some(
+            AuthorReadModel(
+              AuthorId(id),
+              AuthorName.unsafe(name),
+              AuthorDisplayName.unsafe(displayName),
+              BCryptPassword(password),
+              createdAt
+            )
+          )
         }
 
       given authorWrite: Write[AuthorWriteModel] =

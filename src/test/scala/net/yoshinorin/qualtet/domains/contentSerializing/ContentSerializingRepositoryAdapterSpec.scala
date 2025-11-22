@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.*
@@ -19,7 +20,7 @@ class ContentSerializingRepositoryAdapterSpec extends AnyWordSpec with BeforeAnd
     val requestSeries: SeriesRequestModel = SeriesRequestModel(
       title = "Content Serializing Repository Adapter Spec",
       name = SeriesName("content-serializing-repository-adapter-spec"),
-      path = SeriesPath("content-serializing-repository-adapter-spec"),
+      path = SeriesPath("content-serializing-repository-adapter-spec").unsafe,
       None
     )
     List(requestSeries).unsafeCreateSeries()
@@ -30,15 +31,24 @@ class ContentSerializingRepositoryAdapterSpec extends AnyWordSpec with BeforeAnd
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = ContentPath(s"/test/ContentSerializingRepositoryAdapterSpec-${i}"),
+            path = ContentPath(s"/test/ContentSerializingRepositoryAdapterSpec-${i}").unsafe,
             title = s"this is a ContentSerializingRepositoryAdapterSpec title ${i}",
             rawContent = s"this is a ContentSerializingRepositoryAdapterSpec raw content ${i}",
             htmlContent = s"this is a ContentSerializingRepositoryAdapterSpec html content ${i}",
-            robotsAttributes = Attributes("noarchive, noimageindex"),
+            robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
             tags = List(
-              Tag(name = TagName(s"ContentSerializingRepositoryAdapterSpec${i}.1"), path = TagPath(s"ContentSerializingRepositoryAdapterSpec-path${i}.1")),
-              Tag(name = TagName(s"ContentSerializingRepositoryAdapterSpec${i}.2"), path = TagPath(s"ContentSerializingRepositoryAdapterSpec-path${i}.2")),
-              Tag(name = TagName(s"ContentSerializingRepositoryAdapterSpec${i}.3"), path = TagPath(s"ContentSerializingRepositoryAdapterSpec-path${i}.3"))
+              Tag(
+                name = TagName(s"ContentSerializingRepositoryAdapterSpec${i}.1"),
+                path = TagPath(s"ContentSerializingRepositoryAdapterSpec-path${i}.1").unsafe
+              ),
+              Tag(
+                name = TagName(s"ContentSerializingRepositoryAdapterSpec${i}.2"),
+                path = TagPath(s"ContentSerializingRepositoryAdapterSpec-path${i}.2").unsafe
+              ),
+              Tag(
+                name = TagName(s"ContentSerializingRepositoryAdapterSpec${i}.3"),
+                path = TagPath(s"ContentSerializingRepositoryAdapterSpec-path${i}.3").unsafe
+              )
             ),
             series = Option(
               Series(

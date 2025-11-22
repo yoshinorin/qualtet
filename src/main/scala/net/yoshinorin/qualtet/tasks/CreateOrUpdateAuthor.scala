@@ -27,9 +27,18 @@ object CreateOrUpdateAuthor extends IOApp {
 
     Modules.transactorResource(None).use { tx =>
       val modules = new Modules(tx)
+      // TODO: Refactor to handle Either properly
+      val validatedName = AuthorName(args(0)) match {
+        case Right(name) => name
+        case Left(error) => throw error
+      }
+      val validatedDisplayName = AuthorDisplayName(args(1)) match {
+        case Right(name) => name
+        case Left(error) => throw error
+      }
       (for {
         author <- modules.authorService.create(
-          Author(name = AuthorName(args(0)), displayName = AuthorDisplayName(args(1)), password = BCryptPassword(bcryptPasswordEncoder.encode(args(2))))
+          Author(name = validatedName, displayName = validatedDisplayName, password = BCryptPassword(bcryptPasswordEncoder.encode(args(2))))
         )
         _ <- IO(logger.info(s"author created: ${author.asJson}"))
       } yield author)

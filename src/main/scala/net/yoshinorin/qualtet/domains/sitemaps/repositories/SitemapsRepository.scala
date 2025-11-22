@@ -13,7 +13,12 @@ object SitemapsRepository {
     new SitemapsRepository[ConnectionIO] {
 
       given sitemapsRead: Read[UrlReadModel] =
-        Read[(String, String)].map { case (loc, mod) => UrlReadModel(Loc(loc), LastMod(mod)) }
+        Read[(String, String)].map { case (loc, mod) =>
+          UrlReadModel(
+            Loc(loc),
+            LastMod.unsafe(mod)
+          )
+        }
 
       override def get(): ConnectionIO[Seq[UrlReadModel]] = {
         SitemapsQuery.get.to[Seq]

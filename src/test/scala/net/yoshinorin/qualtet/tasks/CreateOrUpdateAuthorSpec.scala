@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.tasks
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.fixture.Fixture.{author, author2, authorService}
 import org.scalatest.wordspec.AnyWordSpec
@@ -13,7 +14,7 @@ class CreateOrUpdateAuthorSpec extends AnyWordSpec {
     "create author" in {
       CreateOrUpdateAuthor.run(List(author.name.value, author.displayName.value, "pass")).unsafeRunSync()
 
-      val a = authorService.findByName(AuthorName(author.name.value)).unsafeRunSync()
+      val a = authorService.findByName(AuthorName(author.name.value).unsafe).unsafeRunSync()
       assert(a.get.name.value === author.name.value)
 
       // NOTE: just for create test data
@@ -25,7 +26,7 @@ class CreateOrUpdateAuthorSpec extends AnyWordSpec {
         CreateOrUpdateAuthor.run(List("testUser2", "tu")).unsafeRunSync()
       }
 
-      val a = authorService.findByName(AuthorName("testUser2")).unsafeRunSync()
+      val a = authorService.findByName(AuthorName("testUser2").unsafe).unsafeRunSync()
       assert(a.isEmpty)
     }
 

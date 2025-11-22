@@ -20,13 +20,36 @@ object TagRepository {
     new TagRepository[ConnectionIO] {
 
       given tagWithCountRead: Read[(Int, TagReadModel)] =
-        Read[(Int, (String, String, String))].map { case (count, (id, name, path)) => (count, TagReadModel(TagId(id), TagName(name), TagPath(path))) }
+        Read[(Int, (String, String, String))].map { case (count, (id, name, path)) =>
+          (
+            count,
+            TagReadModel(
+              TagId(id),
+              TagName(name),
+              TagPath.unsafe(path)
+            )
+          )
+        }
 
       given tagRead: Read[TagReadModel] =
-        Read[(String, String, String)].map { case (id, name, path) => TagReadModel(TagId(id), TagName(name), TagPath(path)) }
+        Read[(String, String, String)].map { case (id, name, path) =>
+          TagReadModel(
+            TagId(id),
+            TagName(name),
+            TagPath.unsafe(path)
+          )
+        }
 
       given tagOrOptionRead: Read[Option[TagReadModel]] =
-        Read[(String, String, String)].map { case (id, name, path) => Some(TagReadModel(TagId(id), TagName(name), TagPath(path))) }
+        Read[(String, String, String)].map { case (id, name, path) =>
+          Some(
+            TagReadModel(
+              TagId(id),
+              TagName(name),
+              TagPath.unsafe(path)
+            )
+          )
+        }
 
       given tagWrite: Write[TagWriteModel] =
         Write[(String, String, String)].contramap(p => (p.id.value, p.name.value, p.path.value))

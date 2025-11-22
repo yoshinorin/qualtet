@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.infrastructure.db
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
 import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeService, flywayMigrator, migrator}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeName
@@ -20,8 +21,8 @@ class MigratorSpec extends AnyWordSpec {
       } yield ()).unsafeRunSync()
 
       val result = (for {
-        a <- contentTypeService.findByName(ContentTypeName("article"))
-        p <- contentTypeService.findByName(ContentTypeName("page"))
+        a <- contentTypeService.findByName(ContentTypeName("article").unsafe)
+        p <- contentTypeService.findByName(ContentTypeName("page").unsafe)
       } yield (a, p)).unsafeRunSync()
 
       assert(result._1.isDefined)

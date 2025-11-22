@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.syntax
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 
@@ -27,7 +28,7 @@ class OptionSpec extends AnyWordSpec {
       "return Right if not None" in {
         val result = Some("some values").asEither[DomainError](UnexpectedException(detail = "unprocessable!!"))
         assert(result.isRight)
-        assert(result.toOption.get === "some values")
+        assert(result.unsafe === "some values")
       }
 
       "return Left if None" in {

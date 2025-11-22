@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.tags
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.errors.TagNotFound
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -53,7 +54,7 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "findByContentId" in {
       (for {
-        maybeContent <- contentService.findByPath(ContentPath("/test/tagService-4"))
+        maybeContent <- contentService.findByPath(ContentPath("/test/tagService-4").unsafe)
         maybeTags <- doobieExecuterContext.transact(tagRepositoryAdapter.findByContentId(maybeContent.get.id))
       } yield {
         assert(maybeTags.head.name === TagName("tagServiceTag4"))
@@ -65,8 +66,8 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         maybeTags <- tagService.getTags(
           Option(
             List(
-              Tag(name = TagName("tagServiceTag1"), path = TagPath("tag-service-tag-path1")),
-              Tag(name = TagName("tagServiceTag2"), path = TagPath("tag-service-tag-path2"))
+              Tag(name = TagName("tagServiceTag1"), path = TagPath("tag-service-tag-path1").unsafe),
+              Tag(name = TagName("tagServiceTag2"), path = TagPath("tag-service-tag-path2").unsafe)
             )
           )
         )

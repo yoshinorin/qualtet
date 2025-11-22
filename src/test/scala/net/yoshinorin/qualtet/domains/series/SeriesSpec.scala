@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.series
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.errors.InvalidPath
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -26,16 +27,16 @@ class SeriesSpec extends AnyWordSpec {
       val pathString = "/this-is-a-pathあいうえお/あ%E3%20%20いbar"
       val path = SeriesPath.apply(pathString)
 
-      assert(path.isInstanceOf[SeriesPath])
-      assert(path.value === pathString)
+      assert(path.isRight)
+      assert(path.unsafe.value === pathString)
     }
 
     "appllicable without prefix slush" in {
       val pathString = "this-is-a-path"
       val path = SeriesPath.apply(pathString)
 
-      assert(path.isInstanceOf[SeriesPath])
-      assert(path.value === "/" + pathString)
+      assert(path.isRight)
+      assert(path.unsafe.value === "/" + pathString)
     }
 
     "accept paths with valid characters" in {
@@ -50,8 +51,9 @@ class SeriesSpec extends AnyWordSpec {
       )
 
       validPaths.foreach { path =>
-        val tagSpec = SeriesPath(path)
-        assert(tagSpec === path)
+        val seriesPath = SeriesPath(path)
+        assert(seriesPath.isRight)
+        assert(seriesPath.unsafe.value === path)
       }
     }
 
@@ -82,10 +84,9 @@ class SeriesSpec extends AnyWordSpec {
       )
 
       invalidPaths.foreach { path =>
-        val exception = intercept[InvalidPath] {
-          SeriesPath(path)
-        }
-        assert(exception.detail === s"Invalid character contains: ${path}")
+        val result = SeriesPath(path)
+        assert(result.isLeft)
+        assert(result.left.get.detail === s"Invalid character contains: ${path}")
       }
     }
 
@@ -98,10 +99,9 @@ class SeriesSpec extends AnyWordSpec {
       )
 
       invalidEncodedPaths.foreach { path =>
-        val exception = intercept[InvalidPath] {
-          SeriesPath(path)
-        }
-        assert(exception.detail === s"Invalid percent encoding in path: ${path}")
+        val result = SeriesPath(path)
+        assert(result.isLeft)
+        assert(result.left.get.detail === s"Invalid percent encoding in path: ${path}")
       }
     }
 
@@ -115,14 +115,38 @@ class SeriesSpec extends AnyWordSpec {
 
       validEncodedPaths.foreach { path =>
         val seriesPath = SeriesPath(path)
-        assert(seriesPath === path)
+        assert(seriesPath.isRight)
+        assert(seriesPath.unsafe.value === path)
       }
     }
 
     "add leading slash to path when missing" in {
       val pathWithoutSlash = "path/without/leading/slash"
       val seriesPath = SeriesPath(pathWithoutSlash)
-      assert(seriesPath === s"/${pathWithoutSlash}")
+      assert(seriesPath.isRight)
+      assert(seriesPath.unsafe.value === s"/${pathWithoutSlash}")
+    }
+  }
+
+  "SeriesPath.unsafe" should {
+    "normalize path by adding leading slash" in {
+      val path = SeriesPath.unsafe("my-series")
+      assert(path.value === "/my-series")
+    }
+
+    "not add leading slash if already present" in {
+      val path = SeriesPath.unsafe("/my-series")
+      assert(path.value === "/my-series")
+    }
+
+    "skip validation for invalid characters" in {
+      val path = SeriesPath.unsafe("invalid:series")
+      assert(path.value === "/invalid:series")
+    }
+
+    "skip validation for invalid percent encoding" in {
+      val path = SeriesPath.unsafe("test%")
+      assert(path.value === "/test%")
     }
   }
 }

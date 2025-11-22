@@ -73,8 +73,14 @@ class SeriesRoute[F[_]: Monad](
   }
 
   private[http] def get(name: String): IO[Response[IO]] = {
+    // TODO: Refactor to return Either instead of throwing
+    val validatedPath = SeriesPath(name) match {
+      case Right(p) => p
+      case Left(error) => throw error
+    }
+
     (for {
-      seriesWithArticles <- seriesService.get(SeriesPath(name))
+      seriesWithArticles <- seriesService.get(validatedPath)
       response <- Ok(seriesWithArticles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }

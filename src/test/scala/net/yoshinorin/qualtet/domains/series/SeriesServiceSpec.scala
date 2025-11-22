@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.tags
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesPath, SeriesRequestModel}
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -12,10 +13,10 @@ import cats.effect.unsafe.implicits.global
 class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val seriesName = SeriesName("seriesservice-series-name")
-  val seriesPath = SeriesPath("seriesservice-series-path")
+  val seriesPath = SeriesPath("seriesservice-series-path").unsafe
 
   val upsertSeriesName = SeriesName("seriesservice-upsert-name")
-  val upsertSeriesPath = SeriesPath("seriesservice-upsert-path")
+  val upsertSeriesPath = SeriesPath("seriesservice-upsert-path").unsafe
 
   override protected def beforeAll(): Unit = {
     val requestSeries: List[SeriesRequestModel] = List(
@@ -28,7 +29,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       SeriesRequestModel(
         title = "Series Service Spec2",
         name = SeriesName("seriesservice-series2-name"),
-        path = SeriesPath("seriesservice-series2-path"),
+        path = SeriesPath("seriesservice-series2-path").unsafe,
         None
       ),
       SeriesRequestModel(

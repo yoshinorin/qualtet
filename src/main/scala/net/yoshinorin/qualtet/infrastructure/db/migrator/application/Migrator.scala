@@ -11,8 +11,9 @@ class Migrator() {
    */
   def migrate[F[_]: Monad](contentTypeService: ContentTypeService[F]): IO[Unit] = {
     (for {
-      _ <- contentTypeService.create(ContentType(name = ContentTypeName("article")))
-      _ <- contentTypeService.create(ContentType(name = ContentTypeName("page")))
+      // FIXME: avoid using `toOption.get`
+      _ <- contentTypeService.create(ContentType(name = ContentTypeName("article").toOption.get))
+      _ <- contentTypeService.create(ContentType(name = ContentTypeName("page").toOption.get))
     } yield ())
   }
 }

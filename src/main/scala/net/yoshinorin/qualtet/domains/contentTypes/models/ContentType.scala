@@ -18,12 +18,30 @@ object ContentTypeName extends ValueExtender[ContentTypeName] {
   given codecContentTypeName: JsonValueCodec[ContentTypeName] = JsonCodecMaker.make
   val contentTypeNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
-  def apply(value: String): ContentTypeName = {
+  def apply(value: String): Either[InvalidContentTypeName, ContentTypeName] = {
     if (!contentTypeNamePattern.matches(value)) {
-      throw InvalidContentTypeName(detail = "contentTypeName must be number, alphabet and underscore.")
+      Left(InvalidContentTypeName(detail = "contentTypeName must be number, alphabet and underscore."))
+    } else {
+      Right(value.toLower)
     }
-    value.toLower
   }
+
+  /**
+   * Create a ContentTypeName from a trusted source (e.g., database) without validation.
+   *
+   * This method should ONLY be used in Repository layer when reading data from the database.
+   * Database data is assumed to be already validated at write time, so we skip validation
+   * for performance reasons while still applying normalization (toLowerCase) for consistency.
+   *
+   * DO NOT use this method in:
+   * - HTTP request handlers
+   * - User input processing
+   * - Any external data source
+   *
+   * @param value The raw string value from a trusted source
+   * @return The normalized ContentTypeName without validation
+   */
+  private[contentTypes] def unsafe(value: String): ContentTypeName = value.toLower
 }
 
 final case class ContentType(

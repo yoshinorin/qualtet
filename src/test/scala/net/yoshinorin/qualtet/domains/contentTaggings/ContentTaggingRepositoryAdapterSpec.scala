@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
@@ -24,15 +25,15 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = ContentPath(s"/test/ContentTaggingRepositoryAS-${i}"),
+            path = ContentPath(s"/test/ContentTaggingRepositoryAS-${i}").unsafe,
             title = s"this is a ContentTaggingRepositoryAS title ${i}",
             rawContent = s"this is a ContentTaggingRepositoryAS raw content ${i}",
             htmlContent = s"this is a ContentTaggingRepositoryAS html content ${i}",
-            robotsAttributes = Attributes("noarchive, noimageindex"),
+            robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
             tags = List(
-              Tag(name = TagName(s"ContentTaggingRepositoryAS${i}.1"), path = TagPath(s"ContentTaggingRepositoryAdapterService-path${i}.1")),
-              Tag(name = TagName(s"ContentTaggingRepositoryAS${i}.2"), path = TagPath(s"ContentTaggingRepositoryAdapterService-path${i}.2")),
-              Tag(name = TagName(s"ContentTaggingRepositoryAS${i}.3"), path = TagPath(s"ContentTaggingRepositoryAdapterService-path${i}.3"))
+              Tag(name = TagName(s"ContentTaggingRepositoryAS${i}.1"), path = TagPath(s"ContentTaggingRepositoryAdapterService-path${i}.1").unsafe),
+              Tag(name = TagName(s"ContentTaggingRepositoryAS${i}.2"), path = TagPath(s"ContentTaggingRepositoryAdapterService-path${i}.2").unsafe),
+              Tag(name = TagName(s"ContentTaggingRepositoryAS${i}.3"), path = TagPath(s"ContentTaggingRepositoryAdapterService-path${i}.3").unsafe)
             ),
             externalResources = List()
           )
@@ -44,7 +45,7 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
   "ContentTaggingRepositoryAdapter" should {
 
     "delete bulky" in {
-      val path: ContentPath = ContentPath("/test/ContentTaggingRepositoryAS-1")
+      val path: ContentPath = ContentPath("/test/ContentTaggingRepositoryAS-1").unsafe
       (for {
         // find current (before delete) content
         maybeFound <- contentService.findByPathWithMeta(path)
@@ -64,9 +65,9 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
 
     "not be delete any tag" in {
       (for {
-        before <- contentService.findByPath(ContentPath("/test/ContentTaggingRepositoryAS-2"))
+        before <- contentService.findByPath(ContentPath("/test/ContentTaggingRepositoryAS-2").unsafe)
         _ <- doobieExecuterContext.transact(contentTaggingRepositoryAdapter.bulkDelete(before.get.id, Seq()))
-        result <- contentService.findByPathWithMeta(ContentPath("/test/ContentTaggingRepositoryAS-2"))
+        result <- contentService.findByPathWithMeta(ContentPath("/test/ContentTaggingRepositoryAS-2").unsafe)
       } yield {
         assert(result.get.tags.size === 3)
       }).unsafeRunSync()

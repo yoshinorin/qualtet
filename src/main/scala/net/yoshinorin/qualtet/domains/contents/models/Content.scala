@@ -40,25 +40,40 @@ object ContentPath extends ValueExtender[ContentPath] {
     path.split("/").filter(_.nonEmpty).exists(segment => RESERVED_PATHS.contains(segment.toLowerCase))
   }
 
-  def apply(value: String): ContentPath = {
+  def apply(value: String): Either[InvalidPath, ContentPath] = {
 
     if (unusableChars.r.findFirstMatchIn(value).isDefined) {
-      throw InvalidPath(detail = s"Invalid character contains: ${value}")
+      return Left(InvalidPath(detail = s"Invalid character contains: ${value}"))
     }
-
     if (invalidPercentRegex.r.matches(value)) {
-      throw InvalidPath(detail = s"Invalid percent encoding in path: ${value}")
+      return Left(InvalidPath(detail = s"Invalid percent encoding in path: ${value}"))
     }
-
     if (isReserved(value)) {
-      throw InvalidPath(detail = s"Path contains reserved word: ${value}")
+      return Left(InvalidPath(detail = s"Path contains reserved word: ${value}"))
     }
+    val normalized = if (!value.startsWith("/")) s"/${value}" else value
+    Right(normalized)
+  }
 
-    if (!value.startsWith("/")) {
-      s"/${value}"
-    } else {
-      value
-    }
+  /**
+   * Create a ContentPath from a trusted source (e.g., database) without validation.
+   *
+   * This method should ONLY be used in Repository layer when reading data from the database.
+   * Database data is assumed to be already validated at write time, so we skip validation
+   * for performance reasons while still applying normalization for consistency.
+   *
+   * DO NOT use this method in:
+   * - HTTP request handlers
+   * - User input processing
+   * - Any external data source
+   *
+   * TODO: restrict scope
+   *
+   * @param value The raw string value from a trusted source
+   * @return The normalized ContentPath without validation
+   */
+  private[domains] def unsafe(value: String): ContentPath = {
+    if (!value.startsWith("/")) s"/${value}" else value
   }
 }
 

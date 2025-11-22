@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.tags
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.errors.InvalidPath
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -26,16 +27,16 @@ class TagSpec extends AnyWordSpec {
       val pathString = "/this-is-a-pathあいうえお/あ%E3%20%20いbar"
       val path = TagPath.apply(pathString)
 
-      assert(path.isInstanceOf[TagPath])
-      assert(path.value === pathString)
+      assert(path.isRight)
+      assert(path.unsafe.value === pathString)
     }
 
     "appllicable without prefix slush" in {
       val pathString = "this-is-a-path"
       val path = TagPath.apply(pathString)
 
-      assert(path.isInstanceOf[TagPath])
-      assert(path.value === "/" + pathString)
+      assert(path.isRight)
+      assert(path.unsafe.value === "/" + pathString)
     }
 
     "accept paths with valid characters" in {
@@ -50,8 +51,9 @@ class TagSpec extends AnyWordSpec {
       )
 
       validPaths.foreach { path =>
-        val tagSpec = TagPath(path)
-        assert(tagSpec === path)
+        val tagPath = TagPath(path)
+        assert(tagPath.isRight)
+        assert(tagPath.unsafe.value === path)
       }
     }
 
@@ -82,10 +84,9 @@ class TagSpec extends AnyWordSpec {
       )
 
       invalidPaths.foreach { path =>
-        val exception = intercept[InvalidPath] {
-          TagPath(path)
-        }
-        assert(exception.detail === s"Invalid character contains: ${path}")
+        val result = TagPath(path)
+        assert(result.isLeft)
+        assert(result.left.get.detail === s"Invalid character contains: ${path}")
       }
     }
 
@@ -98,10 +99,9 @@ class TagSpec extends AnyWordSpec {
       )
 
       invalidEncodedPaths.foreach { path =>
-        val exception = intercept[InvalidPath] {
-          TagPath(path)
-        }
-        assert(exception.detail === s"Invalid percent encoding in path: ${path}")
+        val result = TagPath(path)
+        assert(result.isLeft)
+        assert(result.left.get.detail === s"Invalid percent encoding in path: ${path}")
       }
     }
 
@@ -115,14 +115,38 @@ class TagSpec extends AnyWordSpec {
 
       validEncodedPaths.foreach { path =>
         val tagPath = TagPath(path)
-        assert(tagPath === path)
+        assert(tagPath.isRight)
+        assert(tagPath.unsafe.value === path)
       }
     }
 
     "add leading slash to path when missing" in {
       val pathWithoutSlash = "path/without/leading/slash"
       val tagPath = TagPath(pathWithoutSlash)
-      assert(tagPath === s"/${pathWithoutSlash}")
+      assert(tagPath.isRight)
+      assert(tagPath.unsafe.value === s"/${pathWithoutSlash}")
+    }
+  }
+
+  "TagPath.unsafe" should {
+    "normalize path by adding leading slash" in {
+      val path = TagPath.unsafe("scala")
+      assert(path.value === "/scala")
+    }
+
+    "not add leading slash if already present" in {
+      val path = TagPath.unsafe("/scala")
+      assert(path.value === "/scala")
+    }
+
+    "skip validation for invalid characters" in {
+      val path = TagPath.unsafe("invalid:tag")
+      assert(path.value === "/invalid:tag")
+    }
+
+    "skip validation for invalid percent encoding" in {
+      val path = TagPath.unsafe("test%")
+      assert(path.value === "/test%")
     }
   }
 }

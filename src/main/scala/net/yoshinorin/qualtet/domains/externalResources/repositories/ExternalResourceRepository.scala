@@ -22,7 +22,11 @@ object ExternalResourceRepository {
 
       given externalResourceRead: Read[ExternalResourcesReadModel] =
         Read[(String, String, String)].map { case (contentId, kind, name) =>
-          ExternalResourcesReadModel(ContentId(contentId), ExternalResourceKind(kind), name)
+          ExternalResourcesReadModel(
+            ContentId(contentId),
+            ExternalResourceKind.unsafe(kind),
+            name
+          )
         }
 
       override def bulkUpsert(data: List[ExternalResourceWriteModel]): ConnectionIO[Int] = ExternalResourceQuery.bulkUpsert.updateMany(data)

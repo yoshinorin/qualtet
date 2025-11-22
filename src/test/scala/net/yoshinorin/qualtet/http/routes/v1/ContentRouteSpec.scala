@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
 import org.http4s.client.Client
 import org.http4s.*
@@ -100,7 +101,7 @@ class ContentRouteSpec extends AnyWordSpec {
     }
 
     "delete a content" in {
-      val content = contentService.findByPath(ContentPath("/test/ContentRouteSpec1")).unsafeRunSync().get
+      val content = contentService.findByPath(ContentPath("/test/ContentRouteSpec1").unsafe).unsafeRunSync().get
 
       // 204 (first time)
       client
@@ -437,12 +438,12 @@ class ContentRouteSpec extends AnyWordSpec {
           validAuthor.name,
           ContentRequestModel(
             contentType = "article",
-            path = ContentPath("/test/content/route/spec/2"),
+            path = ContentPath("/test/content/route/spec/2").unsafe,
             title = "this is a ContentRouteSpec2 title",
             rawContent = "this is a raw ContentRouteSpec2",
             htmlContent = "<p>this is a html ContentRouteSpec2<p>",
-            robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = List(Tag(name = TagName("ContentRoute"), path = TagPath("ContentRoute-path"))),
+            robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+            tags = List(Tag(name = TagName("ContentRoute"), path = TagPath("ContentRoute-path").unsafe)),
             externalResources = List(),
             publishedAt = 1644075206
           )
@@ -555,9 +556,9 @@ class ContentRouteSpec extends AnyWordSpec {
 
     val testContent = ContentRequestModel(
       contentType = "article",
-      path = ContentPath("/test/adjacent-content/"),
+      path = ContentPath("/test/adjacent-content/").unsafe,
       title = "Main Article for Adjacent Test",
-      robotsAttributes = Attributes("noarchive, noimageindex"),
+      robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
       rawContent = "This is the main article for testing adjacent functionality",
       htmlContent = "<p>This is the main article for testing adjacent functionality</p>",
       publishedAt = 1644075206,

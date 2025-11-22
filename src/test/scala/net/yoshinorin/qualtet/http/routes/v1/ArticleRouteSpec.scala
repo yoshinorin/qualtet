@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
 import org.http4s.client.Client
 import org.http4s.*
@@ -27,19 +28,19 @@ class ArticleRouteSpec extends AnyWordSpec {
       .map(i =>
         ContentRequestModel(
           contentType = "article",
-          path = ContentPath(s"/articles/route/article-${i}"),
+          path = ContentPath(s"/articles/route/article-${i}").unsafe,
           title = s"this is a articleRoute title ${i}",
           rawContent = s"this is a articleRoute raw content ${i}",
           htmlContent = s"this is a articleRoute html content ${i}",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(Tag(name = TagName(s"articleRoute-${i}"), path = TagPath(s"articleRoute-${i}-path"))),
+          robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+          tags = List(Tag(name = TagName(s"articleRoute-${i}"), path = TagPath(s"articleRoute-${i}-path").unsafe)),
           externalResources = List()
         )
       )
   }
 
   // NOTE: create content and related data for test
-  requestContents.foreach { rc => contentService.createOrUpdate(AuthorName(author.name.value), rc).unsafeRunSync() }
+  requestContents.foreach { rc => contentService.createOrUpdate(AuthorName(author.name.value).unsafe, rc).unsafeRunSync() }
 
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 

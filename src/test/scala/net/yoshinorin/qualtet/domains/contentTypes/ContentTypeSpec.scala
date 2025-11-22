@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.InvalidContentTypeName
 import net.yoshinorin.qualtet.fixture.Fixture.contentTypeId
@@ -22,22 +23,40 @@ class ContentTypeSpec extends AnyWordSpec {
 
   "ContentTypeName" should {
     "valid value" in {
-      assert(ContentTypeName("123AbcDef_-").value === "123abcdef_-")
+      assert(ContentTypeName("123AbcDef_-").unsafe.value === "123abcdef_-")
     }
     "invalid value" in {
-      assertThrows[InvalidContentTypeName] {
-        ContentTypeName("123AbcDef_-.")
-      }
-      assertThrows[InvalidContentTypeName] {
-        ContentTypeName("123AbcDef_-!")
-      }
+      val result1 = ContentTypeName("123AbcDef_-.")
+      assert(result1.isLeft)
+      assert(result1.left.get.isInstanceOf[InvalidContentTypeName])
+
+      val result2 = ContentTypeName("123AbcDef_-!")
+      assert(result2.isLeft)
+      assert(result2.left.get.isInstanceOf[InvalidContentTypeName])
+    }
+  }
+
+  "ContentTypeName.unsafe" should {
+    "normalize to lowercase" in {
+      val name = ContentTypeName.unsafe("Article")
+      assert(name.value === "article")
+    }
+
+    "handle already lowercase input" in {
+      val name = ContentTypeName.unsafe("article")
+      assert(name.value === "article")
+    }
+
+    "skip validation for invalid characters" in {
+      val name = ContentTypeName.unsafe("invalid@type")
+      assert(name.value === "invalid@type")
     }
   }
 
   "ContentType" should {
     "default instance" in {
       val content = ContentType(
-        name = ContentTypeName("article")
+        name = ContentTypeName("article").unsafe
       )
       assert(content.id.isInstanceOf[ContentTypeId])
     }

@@ -85,12 +85,22 @@ final case class InvalidExternalResourceKind(
   errors: Option[Seq[ProblemDetailsError]] = None
 ) extends DomainError
 
+final case class InvalidLastMod(
+  detail: String,
+  errors: Option[Seq[ProblemDetailsError]] = None
+) extends DomainError
+
 final case class InvalidPath(
   detail: String,
   errors: Option[Seq[ProblemDetailsError]] = None
 ) extends DomainError
 
 final case class InvalidSearchConditions(
+  detail: String,
+  errors: Option[Seq[ProblemDetailsError]] = None
+) extends DomainError
+
+final case class InvalidVersion(
   detail: String,
   errors: Option[Seq[ProblemDetailsError]] = None
 ) extends DomainError

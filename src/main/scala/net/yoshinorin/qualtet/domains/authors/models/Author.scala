@@ -19,12 +19,32 @@ object AuthorName extends ValueExtender[AuthorName] {
   given codecAuthorName: JsonValueCodec[AuthorName] = JsonCodecMaker.make
   val authorNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
-  def apply(value: String): AuthorName = {
+  def apply(value: String): Either[InvalidAuthorName, AuthorName] = {
     if (!authorNamePattern.matches(value)) {
-      throw InvalidAuthorName(detail = "authorName must be number, alphabet and underscore.")
+      Left(InvalidAuthorName(detail = "authorName must be number, alphabet and underscore."))
+    } else {
+      Right(value.toLower)
     }
-    value.toLower
   }
+
+  /**
+   * Create an AuthorName from a trusted source (e.g., database) without validation.
+   *
+   * This method should ONLY be used in Repository layer when reading data from the database.
+   * Database data is assumed to be already validated at write time, so we skip validation
+   * for performance reasons while still applying normalization (toLowerCase) for consistency.
+   *
+   * DO NOT use this method in:
+   * - HTTP request handlers
+   * - User input processing
+   * - Any external data source
+   *
+   * TODO: restrict scope
+   *
+   * @param value The raw string value from a trusted source
+   * @return The normalized AuthorName without validation
+   */
+  private[domains] def unsafe(value: String): AuthorName = value.toLower
 }
 
 opaque type AuthorDisplayName = String
@@ -32,12 +52,30 @@ object AuthorDisplayName extends ValueExtender[AuthorDisplayName] {
   given codecAuthorDisplayName: JsonValueCodec[AuthorDisplayName] = JsonCodecMaker.make
   val authorDisplayNamePattern: Regex = "[0-9a-zA-Z_-]+".r
 
-  def apply(value: String): AuthorDisplayName = {
+  def apply(value: String): Either[InvalidAuthorDisplayName, AuthorDisplayName] = {
     if (!authorDisplayNamePattern.matches(value)) {
-      throw InvalidAuthorDisplayName(detail = "authorDisplayName must be number, alphabet or underscore.")
+      Left(InvalidAuthorDisplayName(detail = "authorDisplayName must be number, alphabet or underscore."))
+    } else {
+      Right(value)
     }
-    value
   }
+
+  /**
+   * Create an AuthorDisplayName from a trusted source (e.g., database) without validation.
+   *
+   * This method should ONLY be used in Repository layer when reading data from the database.
+   * Database data is assumed to be already validated at write time, so we skip validation
+   * for performance reasons.
+   *
+   * DO NOT use this method in:
+   * - HTTP request handlers
+   * - User input processing
+   * - Any external data source
+   *
+   * @param value The raw string value from a trusted source
+   * @return The AuthorDisplayName without validation
+   */
+  private[authors] def unsafe(value: String): AuthorDisplayName = value
 }
 
 opaque type BCryptPassword = String
@@ -45,6 +83,7 @@ object BCryptPassword extends ValueExtender[BCryptPassword] {
   def apply(value: String): BCryptPassword = {
     // https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage-dpe
     if (!value.startsWith("$2a$")) {
+      // TODO: Throw to Either
       throw Unauthorized()
     }
     value

@@ -23,20 +23,34 @@ object SeriesPath extends ValueExtender[SeriesPath] {
   private lazy val unusableChars = "[:?#@!$&'()*+,;=<>\"\\\\^`{}|~]"
   private lazy val invalidPercentRegex = ".*%(?![0-9A-Fa-f]{2}).*"
 
-  def apply(value: String): SeriesPath = {
+  def apply(value: String): Either[InvalidPath, SeriesPath] = {
     if (unusableChars.r.findFirstMatchIn(value).isDefined) {
-      throw InvalidPath(detail = s"Invalid character contains: ${value}")
+      return Left(InvalidPath(detail = s"Invalid character contains: ${value}"))
     }
-
     if (invalidPercentRegex.r.matches(value)) {
-      throw InvalidPath(detail = s"Invalid percent encoding in path: ${value}")
+      return Left(InvalidPath(detail = s"Invalid percent encoding in path: ${value}"))
     }
+    val normalized = if (!value.startsWith("/")) s"/${value}" else value
+    Right(normalized)
+  }
 
-    if (!value.startsWith("/")) {
-      s"/${value}"
-    } else {
-      value
-    }
+  /**
+   * Create a SeriesPath from a trusted source (e.g., database) without validation.
+   *
+   * This method should ONLY be used in Repository layer when reading data from the database.
+   * Database data is assumed to be already validated at write time, so we skip validation
+   * for performance reasons while still applying normalization for consistency.
+   *
+   * DO NOT use this method in:
+   * - HTTP request handlers
+   * - User input processing
+   * - Any external data source
+   *
+   * @param value The raw string value from a trusted source
+   * @return The normalized SeriesPath without validation
+   */
+  private[series] def unsafe(value: String): SeriesPath = {
+    if (!value.startsWith("/")) s"/${value}" else value
   }
 }
 
@@ -48,7 +62,13 @@ final case class Series(
   description: Option[String]
 ) extends Request[Series] {
   def postDecode: Series = {
-    Series(id, name, SeriesPath(path.value), title, description)
+    // TODO: Refactor to return Either instead of throwing
+    val validatedPath = SeriesPath(path.value) match {
+      case Right(p) => p
+      case Left(error) => throw error
+    }
+
+    Series(id, name, validatedPath, title, description)
   }
 }
 

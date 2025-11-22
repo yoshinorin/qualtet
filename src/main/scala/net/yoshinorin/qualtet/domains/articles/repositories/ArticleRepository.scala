@@ -26,7 +26,17 @@ object ArticleRepository {
     new ArticleRepository[ConnectionIO] {
       given articlesWithCountRead: Read[(Int, ArticleReadModel)] =
         Read[(Int, (String, String, String, String, Long, Long))].map { case (cnt, (id, path, title, content, publishedAt, updatedAt)) =>
-          (cnt, ArticleReadModel(ContentId(id), ContentPath(path), title, content, publishedAt, updatedAt))
+          (
+            cnt,
+            ArticleReadModel(
+              ContentId(id),
+              ContentPath.unsafe(path),
+              title,
+              content,
+              publishedAt,
+              updatedAt
+            )
+          )
         }
 
       override def getWithCount(contentTypeId: ContentTypeId, pagination: Pagination): ConnectionIO[Seq[(Int, ArticleReadModel)]] = {

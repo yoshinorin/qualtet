@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.request
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorId
@@ -106,7 +107,7 @@ class RequestDecoderSpec extends AnyWordSpec with Decoder[IO] {
           assert(c.title === "this is a title")
           assert(c.rawContent === "this is a raw content")
           assert(c.htmlContent === "this is a html content")
-          assert(c.robotsAttributes === Attributes("noarchive, nofollow, noimageindex, noindex"))
+          assert(c.robotsAttributes === Attributes("noarchive, nofollow, noimageindex, noindex").unsafe)
           assert(c.publishedAt === 1537974000)
           assert(c.updatedAt === 1621098091)
         }

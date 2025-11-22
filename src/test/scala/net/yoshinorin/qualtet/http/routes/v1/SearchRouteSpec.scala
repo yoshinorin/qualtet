@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
 import org.http4s.client.Client
 import org.http4s.*
@@ -28,22 +29,22 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .map(i =>
           ContentRequestModel(
             contentType = "article",
-            path = ContentPath(s"/test/searchRoute-${i}"),
+            path = ContentPath(s"/test/searchRoute-${i}").unsafe,
             title = s"this is a searchRoute title ${i}",
             rawContent = s"this is a searchRoute raw content ${i}",
             htmlContent = s"this is a searchRoute html content ${i}",
-            robotsAttributes = Attributes("noarchive, noimageindex"),
-            tags = List(Tag(name = TagName(s"searchRoute${i}"), path = TagPath(s"searchRoute${i}-path"))),
+            robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+            tags = List(Tag(name = TagName(s"searchRoute${i}"), path = TagPath(s"searchRoute${i}-path").unsafe)),
             externalResources = List()
           )
         ) :+ ContentRequestModel(
         contentType = "article",
-        path = ContentPath(s"/test/searchServiceLast"),
+        path = ContentPath(s"/test/searchServiceLast").unsafe,
         title = s"this is a searchService titleLast",
         rawContent = s"this is a searchService raw contentLast",
         htmlContent = s"this is a searchService html contentLast",
-        robotsAttributes = Attributes("noarchive, noimageindex"),
-        tags = List(Tag(name = TagName(s"searchServiceLast"), path = TagPath(s"searchServiceLast-path"))),
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+        tags = List(Tag(name = TagName(s"searchServiceLast"), path = TagPath(s"searchServiceLast-path").unsafe)),
         externalResources = List()
       )
     }

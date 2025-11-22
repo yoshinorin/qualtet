@@ -50,6 +50,11 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import cats.effect.unsafe.implicits.global
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 
+// Extension method for test convenience: converts Either to value unsafely
+extension [L, R](either: Either[L, R]) {
+  def unsafe: R = either.toOption.get
+}
+
 // Just test data
 object Fixture {
 
@@ -189,15 +194,15 @@ object Fixture {
 
   val author: Author = Author(
     id = authorId,
-    name = AuthorName("JhonDue"),
-    displayName = AuthorDisplayName("JD"),
+    name = AuthorName("JhonDue").unsafe,
+    displayName = AuthorDisplayName("JD").unsafe,
     password = validBCryptPassword
   )
 
   val author2: Author = Author(
     id = authorId2,
-    name = AuthorName("JhonDue2"),
-    displayName = AuthorDisplayName("JD2"),
+    name = AuthorName("JhonDue2").unsafe,
+    displayName = AuthorDisplayName("JD2").unsafe,
     password = validBCryptPassword
   )
 
@@ -210,8 +215,8 @@ object Fixture {
 
   val contentId: ContentId = ContentId("01febb1333pd3431q1a1e00fbt")
   val contentTypeId: ContentTypeId = ContentTypeId("01febb1333pd3431q1a1e01fbc")
-  val articleContentType: ContentType = ContentType(contentTypeId, ContentTypeName("articles"))
-  val fullRobotsAttributes: Attributes = Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex")
+  val articleContentType: ContentType = ContentType(contentTypeId, ContentTypeName("articles").unsafe)
+  val fullRobotsAttributes: Attributes = Attributes("all, noindex, nofollow, none, noarchive, nosnippet, notranslate, noimageindex").unsafe
 
   def createContentRequestModels(
     numberOfCreateContents: Int,
@@ -224,12 +229,12 @@ object Fixture {
       .map(i =>
         ContentRequestModel(
           contentType = "article",
-          path = ContentPath(s"/test/${specName}-${i}"),
+          path = ContentPath(s"/test/${specName}-${i}").unsafe,
           title = s"this is a ${specName} title ${i}",
           rawContent = s"this is a ${specName} raw content ${i}",
           htmlContent = s"this is a ${specName} html content ${i}",
-          robotsAttributes = Attributes("noarchive, noimageindex"),
-          tags = List(Tag(name = TagName(s"${specName}Tag${i}"), path = TagPath(s"${specName}Tag${i}-path"))),
+          robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+          tags = List(Tag(name = TagName(s"${specName}Tag${i}"), path = TagPath(s"${specName}Tag${i}-path").unsafe)),
           series = series,
           externalResources = externalResources
         )
@@ -239,7 +244,7 @@ object Fixture {
   extension (requestContents: List[ContentRequestModel]) {
     def unsafeCreateConternt() = {
       requestContents.foreach { rc =>
-        modules.contentService.createOrUpdate(AuthorName(author.name.value), rc).unsafeRunSync()
+        modules.contentService.createOrUpdate(AuthorName(author.name.value).unsafe, rc).unsafeRunSync()
       }
     }
   }
