@@ -24,7 +24,7 @@ object ExternalResourceRepository {
         Read[(String, String, String)].map { case (contentId, kind, name) =>
           ExternalResourcesReadModel(
             ContentId(contentId),
-            ExternalResourceKind.unsafe(kind),
+            ExternalResourceKind.fromTrusted(kind),
             name
           )
         }

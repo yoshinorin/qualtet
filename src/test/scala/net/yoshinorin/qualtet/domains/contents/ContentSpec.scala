@@ -169,29 +169,29 @@ class ContentSpec extends AnyWordSpec {
     }
   }
 
-  "ContentPath.unsafe" should {
+  "ContentPath.fromTrusted" should {
     "normalize path by adding leading slash" in {
-      val path = ContentPath.unsafe("test/path")
+      val path = ContentPath.fromTrusted("test/path")
       assert(path.value === "/test/path")
     }
 
     "not add leading slash if already present" in {
-      val path = ContentPath.unsafe("/test/path")
+      val path = ContentPath.fromTrusted("/test/path")
       assert(path.value === "/test/path")
     }
 
     "skip validation for invalid characters" in {
-      val path = ContentPath.unsafe("invalid:path")
+      val path = ContentPath.fromTrusted("invalid:path")
       assert(path.value === "/invalid:path")
     }
 
     "skip validation for reserved words" in {
-      val path = ContentPath.unsafe("admin")
+      val path = ContentPath.fromTrusted("admin")
       assert(path.value === "/admin")
     }
 
     "skip validation for invalid percent encoding" in {
-      val path = ContentPath.unsafe("test%")
+      val path = ContentPath.fromTrusted("test%")
       assert(path.value === "/test%")
     }
   }

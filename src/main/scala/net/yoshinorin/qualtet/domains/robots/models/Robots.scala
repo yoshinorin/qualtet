@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.robots
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.ValueExtender
+import net.yoshinorin.qualtet.domains.{FromTrustedSource, ValueExtender}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.errors.InvalidAttributes
 
@@ -40,24 +40,11 @@ object Attributes extends ValueExtender[Attributes] {
     }
   }
 
-  /**
-   * Create Attributes from a trusted source (e.g., database) without validation.
-   *
-   * This method should ONLY be used in Repository layer when reading data from the database.
-   * Database data is assumed to be already validated at write time, so we skip validation
-   * for performance reasons.
-   *
-   * DO NOT use this method in:
-   * - HTTP request handlers
-   * - User input processing
-   * - Any external data source
-   *
-   * TODO: restrict scope
-   *
-   * @param value The raw string value from a trusted source
-   * @return The Attributes without validation
-   */
-  private[domains] def unsafe(value: String): Attributes = value
+  private def unsafeFrom(value: String): Attributes = value
+
+  given fromTrustedSource: FromTrustedSource[Attributes] with {
+    def fromTrusted(value: String): Attributes = unsafeFrom(value)
+  }
 
   extension (attributes: Attributes) {
     def sort: Attributes = attributes.value.split(",").map(x => x.trim).sorted.mkString(", ")

@@ -69,31 +69,31 @@ class AuthorSpec extends AnyWordSpec {
     }
   }
 
-  "AuthorName.unsafe" should {
+  "AuthorName.fromTrusted" should {
     "normalize to lowercase" in {
-      val name = AuthorName.unsafe("JohnDoe")
+      val name = AuthorName.fromTrusted("JohnDoe")
       assert(name.value === "johndoe")
     }
 
     "handle already lowercase input" in {
-      val name = AuthorName.unsafe("johndoe")
+      val name = AuthorName.fromTrusted("johndoe")
       assert(name.value === "johndoe")
     }
 
     "skip validation for invalid characters" in {
-      val name = AuthorName.unsafe("invalid@name")
+      val name = AuthorName.fromTrusted("invalid@name")
       assert(name.value === "invalid@name")
     }
   }
 
-  "AuthorDisplayName.unsafe" should {
+  "AuthorDisplayName.fromTrusted" should {
     "not modify the input" in {
-      val displayName = AuthorDisplayName.unsafe("JohnDoe")
+      val displayName = AuthorDisplayName.fromTrusted("JohnDoe")
       assert(displayName.value === "JohnDoe")
     }
 
     "skip validation for invalid characters" in {
-      val displayName = AuthorDisplayName.unsafe("invalid@name")
+      val displayName = AuthorDisplayName.fromTrusted("invalid@name")
       assert(displayName.value === "invalid@name")
     }
   }

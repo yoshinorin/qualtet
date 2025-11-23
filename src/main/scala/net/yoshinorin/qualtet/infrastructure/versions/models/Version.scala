@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.infrastructure.versions
 
+import net.yoshinorin.qualtet.domains.{FromTrustedSource, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.InvalidVersion
 
 enum MigrationStatus(val value: String) {
@@ -12,7 +13,7 @@ enum MigrationStatus(val value: String) {
 
 opaque type VersionString = String
 
-object VersionString {
+object VersionString extends ValueExtender[VersionString] {
 
   import cats.Eq
 
@@ -41,29 +42,14 @@ object VersionString {
     }
   }
 
-  /**
-   * Create a VersionString from a trusted source (e.g., database) without validation.
-   *
-   * This method should ONLY be used in Repository layer when reading data from the database.
-   * Database data is assumed to be already validated at write time, so we skip validation
-   * for performance reasons.
-   *
-   * DO NOT use this method in:
-   * - HTTP request handlers
-   * - User input processing
-   * - Any external data source
-   *
-   * @param value The raw string value from a trusted source
-   * @return The VersionString without validation
-   */
-  private[versions] def unsafe(value: String): VersionString = value
+  private def unsafeFrom(value: String): VersionString = value
+
+  given fromTrustedSource: FromTrustedSource[VersionString] with {
+    def fromTrusted(value: String): VersionString = unsafeFrom(value)
+  }
 
   given eq: Eq[VersionString] = Eq.instance { (a, b) =>
     a.value == b.value
-  }
-
-  extension (vs: VersionString) {
-    def value: String = vs
   }
 }
 

@@ -31,7 +31,7 @@ object SeriesRepository {
           SeriesReadModel(
             SeriesId(seriesId),
             SeriesName(name),
-            SeriesPath.unsafe(path),
+            SeriesPath.fromTrusted(path),
             title,
             description
           )

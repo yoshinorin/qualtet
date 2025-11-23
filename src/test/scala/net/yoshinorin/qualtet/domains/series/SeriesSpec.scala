@@ -128,24 +128,24 @@ class SeriesSpec extends AnyWordSpec {
     }
   }
 
-  "SeriesPath.unsafe" should {
+  "SeriesPath.fromTrusted" should {
     "normalize path by adding leading slash" in {
-      val path = SeriesPath.unsafe("my-series")
+      val path = SeriesPath.fromTrusted("my-series")
       assert(path.value === "/my-series")
     }
 
     "not add leading slash if already present" in {
-      val path = SeriesPath.unsafe("/my-series")
+      val path = SeriesPath.fromTrusted("/my-series")
       assert(path.value === "/my-series")
     }
 
     "skip validation for invalid characters" in {
-      val path = SeriesPath.unsafe("invalid:series")
+      val path = SeriesPath.fromTrusted("invalid:series")
       assert(path.value === "/invalid:series")
     }
 
     "skip validation for invalid percent encoding" in {
-      val path = SeriesPath.unsafe("test%")
+      val path = SeriesPath.fromTrusted("test%")
       assert(path.value === "/test%")
     }
   }

@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contents
 import java.time.ZonedDateTime
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{FromTrustedSource, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.robots.Attributes
@@ -55,25 +55,12 @@ object ContentPath extends ValueExtender[ContentPath] {
     Right(normalized)
   }
 
-  /**
-   * Create a ContentPath from a trusted source (e.g., database) without validation.
-   *
-   * This method should ONLY be used in Repository layer when reading data from the database.
-   * Database data is assumed to be already validated at write time, so we skip validation
-   * for performance reasons while still applying normalization for consistency.
-   *
-   * DO NOT use this method in:
-   * - HTTP request handlers
-   * - User input processing
-   * - Any external data source
-   *
-   * TODO: restrict scope
-   *
-   * @param value The raw string value from a trusted source
-   * @return The normalized ContentPath without validation
-   */
-  private[domains] def unsafe(value: String): ContentPath = {
+  private def unsafeFrom(value: String): ContentPath = {
     if (!value.startsWith("/")) s"/${value}" else value
+  }
+
+  given fromTrustedSource: FromTrustedSource[ContentPath] with {
+    def fromTrusted(value: String): ContentPath = unsafeFrom(value)
   }
 }
 

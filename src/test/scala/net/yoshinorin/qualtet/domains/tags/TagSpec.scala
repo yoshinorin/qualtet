@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.tags
 import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.errors.InvalidPath
 import org.scalatest.wordspec.AnyWordSpec
+import TagPath.*
 
 // testOnly net.yoshinorin.qualtet.domains.tags.TagSpec
 class TagSpec extends AnyWordSpec {
@@ -128,24 +129,24 @@ class TagSpec extends AnyWordSpec {
     }
   }
 
-  "TagPath.unsafe" should {
+  "TagPath.fromTrusted" should {
     "normalize path by adding leading slash" in {
-      val path = TagPath.unsafe("scala")
+      val path = TagPath.fromTrusted("scala")
       assert(path.value === "/scala")
     }
 
     "not add leading slash if already present" in {
-      val path = TagPath.unsafe("/scala")
+      val path = TagPath.fromTrusted("/scala")
       assert(path.value === "/scala")
     }
 
     "skip validation for invalid characters" in {
-      val path = TagPath.unsafe("invalid:tag")
+      val path = TagPath.fromTrusted("invalid:tag")
       assert(path.value === "/invalid:tag")
     }
 
     "skip validation for invalid percent encoding" in {
-      val path = TagPath.unsafe("test%")
+      val path = TagPath.fromTrusted("test%")
       assert(path.value === "/test%")
     }
   }

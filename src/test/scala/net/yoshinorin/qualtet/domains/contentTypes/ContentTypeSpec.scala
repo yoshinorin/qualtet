@@ -36,19 +36,19 @@ class ContentTypeSpec extends AnyWordSpec {
     }
   }
 
-  "ContentTypeName.unsafe" should {
+  "ContentTypeName.fromTrusted" should {
     "normalize to lowercase" in {
-      val name = ContentTypeName.unsafe("Article")
+      val name = ContentTypeName.fromTrusted("Article")
       assert(name.value === "article")
     }
 
     "handle already lowercase input" in {
-      val name = ContentTypeName.unsafe("article")
+      val name = ContentTypeName.fromTrusted("article")
       assert(name.value === "article")
     }
 
     "skip validation for invalid characters" in {
-      val name = ContentTypeName.unsafe("invalid@type")
+      val name = ContentTypeName.fromTrusted("invalid@type")
       assert(name.value === "invalid@type")
     }
   }

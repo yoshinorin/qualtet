@@ -29,7 +29,7 @@ object ContentRepository {
               ContentId(contentId),
               AuthorId(authorId),
               ContentTypeId(contentTypeId),
-              ContentPath.unsafe(path),
+              ContentPath.fromTrusted(path),
               title,
               rawContent,
               htmlContent,
@@ -46,7 +46,7 @@ object ContentRepository {
                 ContentId(contentId),
                 AuthorId(authorId),
                 ContentTypeId(contentTypeId),
-                ContentPath.unsafe(path),
+                ContentPath.fromTrusted(path),
                 title,
                 rawContent,
                 htmlContent,
@@ -75,14 +75,14 @@ object ContentRepository {
             ContentWithMetaReadModel(
               ContentId(id),
               title,
-              Attributes.unsafe(robotsAttributes),
+              Attributes.fromTrusted(robotsAttributes),
               externalResourceKindKeys,
               externalResourceKindValues,
               tagIds,
               tagNames,
               tagPaths,
               content,
-              AuthorName.unsafe(authorName),
+              AuthorName.fromTrusted(authorName),
               publishedAt,
               updatedAt
             )
@@ -98,7 +98,7 @@ object ContentRepository {
               published <- prevPublished
             } yield AdjacentContentModel(
               ContentId(id),
-              ContentPath.unsafe(path),
+              ContentPath.fromTrusted(path),
               title,
               published
             )
@@ -110,7 +110,7 @@ object ContentRepository {
               published <- nextPublished
             } yield AdjacentContentModel(
               ContentId(id),
-              ContentPath.unsafe(path),
+              ContentPath.fromTrusted(path),
               title,
               published
             )

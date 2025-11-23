@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.externalResources
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.ValueExtender
+import net.yoshinorin.qualtet.domains.{FromTrustedSource, ValueExtender}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.errors.InvalidExternalResourceKind
 
@@ -19,22 +19,11 @@ object ExternalResourceKind extends ValueExtender[ExternalResourceKind] {
     }
   }
 
-  /**
-   * Create an ExternalResourceKind from a trusted source (e.g., database) without validation.
-   *
-   * This method should ONLY be used in Repository layer when reading data from the database.
-   * Database data is assumed to be already validated at write time, so we skip validation
-   * for performance reasons.
-   *
-   * DO NOT use this method in:
-   * - HTTP request handlers
-   * - User input processing
-   * - Any external data source
-   *
-   * @param value The raw string value from a trusted source
-   * @return The ExternalResourceKind without validation
-   */
-  private[externalResources] def unsafe(value: String): ExternalResourceKind = value
+  private def unsafeFrom(value: String): ExternalResourceKind = value
+
+  given fromTrustedSource: FromTrustedSource[ExternalResourceKind] with {
+    def fromTrusted(value: String): ExternalResourceKind = unsafeFrom(value)
+  }
 }
 
 final case class ExternalResource(

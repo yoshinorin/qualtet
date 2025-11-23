@@ -33,19 +33,19 @@ class SitemapsSpec extends AnyWordSpec {
     }
   }
 
-  "LastMod.unsafe" should {
+  "LastMod.fromTrusted" should {
     "not modify the input" in {
-      val lastMod = LastMod.unsafe("2024-01-01")
+      val lastMod = LastMod.fromTrusted("2024-01-01")
       assert(lastMod.value === "2024-01-01")
     }
 
     "skip validation for invalid format" in {
-      val lastMod = LastMod.unsafe("invalid-date")
+      val lastMod = LastMod.fromTrusted("invalid-date")
       assert(lastMod.value === "invalid-date")
     }
 
     "skip validation for empty string" in {
-      val lastMod = LastMod.unsafe("")
+      val lastMod = LastMod.fromTrusted("")
       assert(lastMod.value === "")
     }
   }

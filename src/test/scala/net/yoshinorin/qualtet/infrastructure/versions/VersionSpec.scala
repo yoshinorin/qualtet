@@ -74,19 +74,19 @@ class VersionSpec extends AnyWordSpec {
 
   }
 
-  "VersionString.unsafe" should {
+  "VersionString.fromTrusted" should {
     "not modify the input for valid version" in {
-      val version = VersionString.unsafe("1.2.3")
+      val version = VersionString.fromTrusted("1.2.3")
       assert(version.value === "1.2.3")
     }
 
     "skip validation for invalid version" in {
-      val version = VersionString.unsafe("invalid")
+      val version = VersionString.fromTrusted("invalid")
       assert(version.value === "invalid")
     }
 
     "skip validation for empty string" in {
-      val version = VersionString.unsafe("")
+      val version = VersionString.fromTrusted("")
       assert(version.value === "")
     }
   }

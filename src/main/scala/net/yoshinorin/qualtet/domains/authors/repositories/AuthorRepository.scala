@@ -54,8 +54,8 @@ object AuthorRepository {
         Read[(String, String, String, Long)].map { case (id, name, displayName, createdAt) =>
           AuthorWithoutPasswordReadModel(
             AuthorId(id),
-            AuthorName.unsafe(name),
-            AuthorDisplayName.unsafe(displayName),
+            AuthorName.fromTrusted(name),
+            AuthorDisplayName.fromTrusted(displayName),
             createdAt
           )
         }
@@ -65,8 +65,8 @@ object AuthorRepository {
           Some(
             AuthorWithoutPasswordReadModel(
               AuthorId(id),
-              AuthorName.unsafe(name),
-              AuthorDisplayName.unsafe(displayName),
+              AuthorName.fromTrusted(name),
+              AuthorDisplayName.fromTrusted(displayName),
               createdAt
             )
           )
@@ -76,8 +76,8 @@ object AuthorRepository {
         Read[(String, String, String, String, Long)].map { case (id, name, displayName, password, createdAt) =>
           AuthorReadModel(
             AuthorId(id),
-            AuthorName.unsafe(name),
-            AuthorDisplayName.unsafe(displayName),
+            AuthorName.fromTrusted(name),
+            AuthorDisplayName.fromTrusted(displayName),
             BCryptPassword(password),
             createdAt
           )
@@ -88,8 +88,8 @@ object AuthorRepository {
           Some(
             AuthorReadModel(
               AuthorId(id),
-              AuthorName.unsafe(name),
-              AuthorDisplayName.unsafe(displayName),
+              AuthorName.fromTrusted(name),
+              AuthorDisplayName.fromTrusted(displayName),
               BCryptPassword(password),
               createdAt
             )

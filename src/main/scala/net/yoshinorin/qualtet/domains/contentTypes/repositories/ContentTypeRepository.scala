@@ -17,7 +17,7 @@ object ContentTypeRepository {
         Read[(String, String)].map { case (id, name) =>
           ContentTypeReadModel(
             ContentTypeId(id),
-            ContentTypeName.unsafe(name)
+            ContentTypeName.fromTrusted(name)
           )
         }
 
@@ -26,7 +26,7 @@ object ContentTypeRepository {
           Some(
             ContentTypeReadModel(
               ContentTypeId(id),
-              ContentTypeName.unsafe(name)
+              ContentTypeName.fromTrusted(name)
             )
           )
         }

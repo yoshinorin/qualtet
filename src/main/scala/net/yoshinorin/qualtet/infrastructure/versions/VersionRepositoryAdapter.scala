@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.infrastructure.versions
 import cats.Monad
 import cats.data.ContT
 import cats.implicits.*
+import VersionString.*
 
 class VersionRepositoryAdapter[F[_]: Monad](
   versionRepository: VersionRepository[F]
@@ -25,7 +26,7 @@ class VersionRepositoryAdapter[F[_]: Monad](
         version.map(v =>
           Version(
             // TODO: use `unsafe` in `Repository`
-            version = VersionString.unsafe(v.version),
+            version = VersionString.fromTrusted(v.version),
             migrationStatus = v.migrationStatus,
             deployedAt = v.deployedAt
           )

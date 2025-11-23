@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.sitemaps
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.ValueExtender
+import net.yoshinorin.qualtet.domains.{FromTrustedSource, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.InvalidLastMod
 
 import java.time.format.DateTimeFormatter
@@ -54,22 +54,11 @@ object LastMod extends ValueExtender[LastMod] {
     }
   }
 
-  /**
-   * Create a LastMod from a trusted source (e.g., database) without validation.
-   *
-   * This method should ONLY be used in Repository layer when reading data from the database.
-   * Database data is assumed to be already validated at write time, so we skip validation
-   * for performance reasons.
-   *
-   * DO NOT use this method in:
-   * - HTTP request handlers
-   * - User input processing
-   * - Any external data source
-   *
-   * @param value The raw string value from a trusted source (should be formatted as YYYY-MM-DD)
-   * @return The LastMod without validation
-   */
-  private[sitemaps] def unsafe(value: String): LastMod = value
+  private def unsafeFrom(value: String): LastMod = value
+
+  given fromTrustedSource: FromTrustedSource[LastMod] with {
+    def fromTrusted(value: String): LastMod = unsafeFrom(value)
+  }
 }
 
 // TODO: consider rename to Sitemaps

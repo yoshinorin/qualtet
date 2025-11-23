@@ -18,7 +18,7 @@ object SearchRepository {
           (
             cnt,
             SearchResuletReadModel(
-              ContentPath.unsafe(path),
+              ContentPath.fromTrusted(path),
               title,
               content,
               publishedAt,

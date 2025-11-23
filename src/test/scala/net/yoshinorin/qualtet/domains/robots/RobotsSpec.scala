@@ -87,19 +87,19 @@ class RobotsSpec extends AnyWordSpec {
     }
   }
 
-  "Attributes.unsafe" should {
+  "Attributes.fromTrusted" should {
     "not modify the input" in {
-      val attrs = Attributes.unsafe("noindex, nofollow")
+      val attrs = Attributes.fromTrusted("noindex, nofollow")
       assert(attrs.value === "noindex, nofollow")
     }
 
     "skip validation for invalid attributes" in {
-      val attrs = Attributes.unsafe("invalid-attr")
+      val attrs = Attributes.fromTrusted("invalid-attr")
       assert(attrs.value === "invalid-attr")
     }
 
     "skip validation for malformed input" in {
-      val attrs = Attributes.unsafe("noindex,")
+      val attrs = Attributes.fromTrusted("noindex,")
       assert(attrs.value === "noindex,")
     }
   }

@@ -16,7 +16,7 @@ object SitemapsRepository {
         Read[(String, String)].map { case (loc, mod) =>
           UrlReadModel(
             Loc(loc),
-            LastMod.unsafe(mod)
+            LastMod.fromTrusted(mod)
           )
         }
 

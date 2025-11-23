@@ -59,14 +59,14 @@ class ExternalResourcesSpec extends AnyWordSpec {
     }
   }
 
-  "ExternalResourceKind.unsafe" should {
+  "ExternalResourceKind.fromTrusted" should {
     "not modify the input for valid kind" in {
-      val kind = ExternalResourceKind.unsafe("js")
+      val kind = ExternalResourceKind.fromTrusted("js")
       assert(kind.value === "js")
     }
 
     "skip validation for invalid kind" in {
-      val kind = ExternalResourceKind.unsafe("invalid")
+      val kind = ExternalResourceKind.fromTrusted("invalid")
       assert(kind.value === "invalid")
     }
   }

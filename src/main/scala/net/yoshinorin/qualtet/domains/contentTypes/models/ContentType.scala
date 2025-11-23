@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.contentTypes
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{FromTrustedSource, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.InvalidContentTypeName
 import net.yoshinorin.qualtet.syntax.*
 
@@ -26,22 +26,11 @@ object ContentTypeName extends ValueExtender[ContentTypeName] {
     }
   }
 
-  /**
-   * Create a ContentTypeName from a trusted source (e.g., database) without validation.
-   *
-   * This method should ONLY be used in Repository layer when reading data from the database.
-   * Database data is assumed to be already validated at write time, so we skip validation
-   * for performance reasons while still applying normalization (toLowerCase) for consistency.
-   *
-   * DO NOT use this method in:
-   * - HTTP request handlers
-   * - User input processing
-   * - Any external data source
-   *
-   * @param value The raw string value from a trusted source
-   * @return The normalized ContentTypeName without validation
-   */
-  private[contentTypes] def unsafe(value: String): ContentTypeName = value.toLower
+  private def unsafeFrom(value: String): ContentTypeName = value.toLower
+
+  given fromTrustedSource: FromTrustedSource[ContentTypeName] with {
+    def fromTrusted(value: String): ContentTypeName = unsafeFrom(value)
+  }
 }
 
 final case class ContentType(

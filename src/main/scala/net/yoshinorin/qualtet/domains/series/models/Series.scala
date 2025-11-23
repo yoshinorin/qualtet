@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.series
 
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.{Request, UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{FromTrustedSource, Request, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.InvalidPath
 
 opaque type SeriesId = String
@@ -34,23 +34,12 @@ object SeriesPath extends ValueExtender[SeriesPath] {
     Right(normalized)
   }
 
-  /**
-   * Create a SeriesPath from a trusted source (e.g., database) without validation.
-   *
-   * This method should ONLY be used in Repository layer when reading data from the database.
-   * Database data is assumed to be already validated at write time, so we skip validation
-   * for performance reasons while still applying normalization for consistency.
-   *
-   * DO NOT use this method in:
-   * - HTTP request handlers
-   * - User input processing
-   * - Any external data source
-   *
-   * @param value The raw string value from a trusted source
-   * @return The normalized SeriesPath without validation
-   */
-  private[series] def unsafe(value: String): SeriesPath = {
+  private def unsafeFrom(value: String): SeriesPath = {
     if (!value.startsWith("/")) s"/${value}" else value
+  }
+
+  given fromTrustedSource: FromTrustedSource[SeriesPath] with {
+    def fromTrusted(value: String): SeriesPath = unsafeFrom(value)
   }
 }
 

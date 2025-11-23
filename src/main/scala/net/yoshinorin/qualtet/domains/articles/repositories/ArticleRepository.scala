@@ -30,7 +30,7 @@ object ArticleRepository {
             cnt,
             ArticleReadModel(
               ContentId(id),
-              ContentPath.unsafe(path),
+              ContentPath.fromTrusted(path),
               title,
               content,
               publishedAt,

@@ -26,7 +26,7 @@ object TagRepository {
             TagReadModel(
               TagId(id),
               TagName(name),
-              TagPath.unsafe(path)
+              TagPath.fromTrusted(path)
             )
           )
         }
@@ -36,7 +36,7 @@ object TagRepository {
           TagReadModel(
             TagId(id),
             TagName(name),
-            TagPath.unsafe(path)
+            TagPath.fromTrusted(path)
           )
         }
 
@@ -46,7 +46,7 @@ object TagRepository {
             TagReadModel(
               TagId(id),
               TagName(name),
-              TagPath.unsafe(path)
+              TagPath.fromTrusted(path)
             )
           )
         }
