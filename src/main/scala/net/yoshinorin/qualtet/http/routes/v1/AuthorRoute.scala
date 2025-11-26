@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
+import cats.implicits.*
 import cats.Monad
 import org.http4s.Request
 import org.http4s.headers.{Allow, `Content-Type`}
@@ -34,13 +35,9 @@ class AuthorRoute[F[_]: Monad](
   }
 
   private[http] def get(authorName: String): Request[IO] ?=> IO[Response[IO]] = {
-    // TODO: Refactor to return Either instead of throwing
-    val validatedName = AuthorName(authorName) match {
-      case Right(name) => name
-      case Left(error) => throw error
-    }
     (for {
-      maybeAuthor <- authorService.findByName(validatedName)
+      name <- AuthorName(authorName).liftTo[IO]
+      maybeAuthor <- authorService.findByName(name)
     } yield maybeAuthor).flatMap(_.asResponse)
   }
 

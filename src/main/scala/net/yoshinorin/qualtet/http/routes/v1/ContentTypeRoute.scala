@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
+import cats.implicits.*
 import cats.Monad
 import org.http4s.Request
 import org.http4s.headers.{Allow, `Content-Type`}
@@ -20,12 +21,7 @@ class ContentTypeRoute[F[_]: Monad](
     (r match {
       case request @ GET -> Root => this.get
       case request @ GET -> Root / name =>
-        // TODO: Refactor to return Either instead of throwing
-        val validatedName = ContentTypeName(name) match {
-          case Right(n) => n
-          case Left(error) => throw error
-        }
-        this.get(validatedName)
+        ContentTypeName(name).liftTo[IO].flatMap(contentTypeName => this.get(contentTypeName))
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
