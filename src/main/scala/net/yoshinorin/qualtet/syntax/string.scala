@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import java.util.Locale
+import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.types.Points
 
 trait string {
@@ -25,6 +26,15 @@ trait string {
         throw t
       }
       s2
+    }
+
+    def trimOrError(error: DomainError): Either[DomainError, String] = {
+      val s2 = s.trim()
+      if (s2.isEmpty()) {
+        Left(error)
+      } else {
+        Right(s2)
+      }
     }
 
     def position(word: String): Seq[Points] = {

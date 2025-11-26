@@ -4,12 +4,13 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.Request
+import net.yoshinorin.qualtet.domains.errors.DomainError
 
 final case class RequestToken(
   authorId: AuthorId,
   password: String
 ) extends Request[RequestToken] {
-  def postDecode: RequestToken = this // NOTE: nothing todo
+  def postDecode: Either[DomainError, RequestToken] = Right(this) // NOTE: nothing to validate
 }
 
 object RequestToken {

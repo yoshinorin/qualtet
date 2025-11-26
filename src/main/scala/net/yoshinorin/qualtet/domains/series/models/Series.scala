@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.series
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{FromTrustedSource, Request, UlidConvertible, ValueExtender}
-import net.yoshinorin.qualtet.domains.errors.InvalidPath
+import net.yoshinorin.qualtet.domains.errors.{DomainError, InvalidPath}
 
 opaque type SeriesId = String
 object SeriesId extends ValueExtender[SeriesId] with UlidConvertible[SeriesId] {
@@ -50,14 +50,8 @@ final case class Series(
   title: String,
   description: Option[String]
 ) extends Request[Series] {
-  def postDecode: Series = {
-    // TODO: Refactor to return Either instead of throwing
-    val validatedPath = SeriesPath(path.value) match {
-      case Right(p) => p
-      case Left(error) => throw error
-    }
-
-    Series(id, name, validatedPath, title, description)
+  def postDecode: Either[DomainError, Series] = {
+    SeriesPath(path.value).map(seriesPath => Series(id, name, seriesPath, title, description))
   }
 }
 

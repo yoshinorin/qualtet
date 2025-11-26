@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.tags
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{FromTrustedSource, Request, UlidConvertible, ValueExtender}
-import net.yoshinorin.qualtet.domains.errors.InvalidPath
+import net.yoshinorin.qualtet.domains.errors.{DomainError, InvalidPath}
 
 opaque type TagId = String
 object TagId extends ValueExtender[TagId] with UlidConvertible[TagId] {
@@ -50,14 +50,8 @@ final case class Tag(
   name: TagName,
   path: TagPath
 ) extends Request[Tag] {
-  def postDecode: Tag = {
-    // TODO: Refactor to return Either instead of throwing
-    val validatedPath = TagPath(path.value) match {
-      case Right(p) => p
-      case Left(error) => throw error
-    }
-
-    Tag(id, name, validatedPath)
+  def postDecode: Either[DomainError, Tag] = {
+    TagPath(path.value).map(tagPath => Tag(id, name, tagPath))
   }
 }
 object Tag {

@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.series
 
+import cats.implicits.*
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.Request
-import net.yoshinorin.qualtet.domains.errors.{SeriesNameRequired, SeriesPathRequired, SeriesTitleRequired}
+import net.yoshinorin.qualtet.domains.errors.{DomainError, SeriesNameRequired, SeriesPathRequired, SeriesTitleRequired}
 import net.yoshinorin.qualtet.syntax.*
 
 final case class SeriesRequestModel(
@@ -12,14 +13,15 @@ final case class SeriesRequestModel(
   title: String,
   description: Option[String]
 ) extends Request[SeriesRequestModel] {
-  def postDecode: SeriesRequestModel = {
-    // TODO: improve
-    name.value.trimOrThrow(SeriesNameRequired(detail = "name is required"))
-    path.value.trimOrThrow(SeriesPathRequired(detail = "path is required"))
-    new SeriesRequestModel(
+  def postDecode: Either[DomainError, SeriesRequestModel] = {
+    for {
+      _ <- name.value.trimOrError(SeriesNameRequired(detail = "name is required"))
+      _ <- path.value.trimOrError(SeriesPathRequired(detail = "path is required"))
+      decodedTitle <- title.trimOrError(SeriesTitleRequired(detail = "title is required"))
+    } yield new SeriesRequestModel(
       name = name,
       path = path,
-      title = title.trimOrThrow(SeriesTitleRequired(detail = "title is required")),
+      title = decodedTitle,
       description = description
     )
   }

@@ -16,7 +16,8 @@ trait Decoder[F[_]: Monad](using loggerFactory: Log4CatsLoggerFactory[F]) {
 
   private[http] def decode[T <: Request[T]](maybeJsonString: String): JsonValueCodec[T] ?=> F[Either[DomainError, T]] = {
     try {
-      Monad[F].pure { Right(maybeJsonString.decode.postDecode) }
+      val decoded = maybeJsonString.decode
+      Monad[F].pure { decoded.postDecode }
     } catch {
       case NonFatal(t) =>
         logger.error(t.getMessage()) *>
