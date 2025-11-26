@@ -41,15 +41,11 @@ class ContentService[F[_]: Monad](
 ) {
 
   def createOrUpdate(authorName: AuthorName, request: ContentRequestModel): IO[ContentResponseModel] = {
-    // TODO: Refactor to handle Either properly
-    val validatedContentTypeName = ContentTypeName(request.contentType).getOrElse(
-      throw new IllegalStateException(s"Invalid content type name: ${request.contentType}")
-    )
-
     for {
+      contentTypeName <- ContentTypeName(request.contentType).liftTo[IO]
       a <- authorService.findByName(authorName).throwIfNone(InvalidAuthor(detail = s"user not found: ${request.contentType}"))
       c <- contentTypeService
-        .findByName(validatedContentTypeName)
+        .findByName(contentTypeName)
         .throwIfNone(InvalidContentType(detail = s"content-type not found: ${request.contentType}"))
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {

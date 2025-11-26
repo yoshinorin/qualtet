@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.articles
 
 import cats.data.ContT
 import cats.effect.IO
+import cats.implicits.*
 import cats.Monad
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound}
@@ -25,12 +26,9 @@ class ArticleService[F[_]: Monad](
   )(
     f: (ContentTypeId, A, Pagination) => ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]]
   ): IO[ArticleWithCountResponseModel] = {
-    // TODO: Refactor to handle Either properly
-    val validatedContentTypeName = ContentTypeName("article").getOrElse(
-      throw new IllegalStateException("Invalid content type name: article")
-    )
     for {
-      c <- contentTypeService.findByName(validatedContentTypeName).throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
+      contentTypeName <- ContentTypeName("article").liftTo[IO]
+      c <- contentTypeService.findByName(contentTypeName).throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
       articlesWithCount <- executer.transact(f(c.id, data, queryParam))
     } yield
       if (articlesWithCount.nonEmpty) {

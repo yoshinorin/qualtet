@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.tasks
 
-import cats.implicits.catsSyntaxEq
+import cats.implicits.*
 import cats.effect.{ExitCode, IO, IOApp}
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -27,18 +27,11 @@ object CreateOrUpdateAuthor extends IOApp {
 
     Modules.transactorResource(None).use { tx =>
       val modules = new Modules(tx)
-      // TODO: Refactor to handle Either properly
-      val validatedName = AuthorName(args(0)) match {
-        case Right(name) => name
-        case Left(error) => throw error
-      }
-      val validatedDisplayName = AuthorDisplayName(args(1)) match {
-        case Right(name) => name
-        case Left(error) => throw error
-      }
       (for {
+        authorName <- AuthorName(args(0)).liftTo[IO]
+        displayName <- AuthorDisplayName(args(1)).liftTo[IO]
         author <- modules.authorService.create(
-          Author(name = validatedName, displayName = validatedDisplayName, password = BCryptPassword(bcryptPasswordEncoder.encode(args(2))))
+          Author(name = authorName, displayName = displayName, password = BCryptPassword(bcryptPasswordEncoder.encode(args(2))))
         )
         _ <- IO(logger.info(s"author created: ${author.asJson}"))
       } yield author)
