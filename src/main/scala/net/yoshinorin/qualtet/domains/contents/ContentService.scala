@@ -9,17 +9,11 @@ import net.yoshinorin.qualtet.domains.authors.AuthorService
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingRepositoryAdapter}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeName, ContentTypeService}
-import net.yoshinorin.qualtet.domains.externalResources.{
-  ExternalResource,
-  ExternalResourceDeleteModel,
-  ExternalResourceKind,
-  ExternalResourceRepositoryAdapter,
-  ExternalResources
-}
-import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries, UnexpectedException}
+import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceDeleteModel, ExternalResourceRepositoryAdapter, ExternalResources}
+import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, DomainError, InvalidAuthor, InvalidContentType, InvalidSeries, UnexpectedException}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingRepositoryAdapter}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsRepositoryAdapter}
-import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagPath, TagRepositoryAdapter, TagService}
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagRepositoryAdapter, TagService}
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesRepositoryAdapter, SeriesService}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
@@ -214,49 +208,37 @@ class ContentService[F[_]: Monad](
     }
   }
 
-  def findBy[A](data: A)(f: A => ContT[F, Option[ContentWithMeta], Option[ContentWithMeta]]): IO[Option[ContentDetailResponseModel]] = {
-    executer.transact(f(data)).flatMap {
-      case None => IO(None)
-      case Some(x) =>
-        val strippedContent = x.content.stripHtmlTags.replaceAll("\n", "")
-        // TODO: Configurable
-        val descriptionLength = if (strippedContent.length > 50) 50 else strippedContent.length
+  def findBy[A](
+    data: A
+  )(f: A => ContT[F, Either[DomainError, Option[ContentWithMeta]], Either[DomainError, Option[ContentWithMeta]]]): IO[Option[ContentDetailResponseModel]] = {
+    for {
+      eitherContentWithMeta <- executer.transact(f(data))
+      maybeContentWithMeta <- eitherContentWithMeta.liftTo[IO]
+      result <- maybeContentWithMeta match {
+        case None => IO(None)
+        case Some(x) =>
+          val strippedContent = x.content.stripHtmlTags.replaceAll("\n", "")
+          // TODO: Configurable
+          val descriptionLength = if (strippedContent.length > 50) 50 else strippedContent.length
 
-        IO(
-          Some(
-            ContentDetailResponseModel(
-              id = x.id,
-              title = x.title,
-              robotsAttributes = x.robotsAttributes,
-              externalResources = (x.externalResourceKindKeys, x.externalResourceKindValues)
-                .zipWithGroupBy((x, y) =>
-                  // TODO: Refactor to handle Either properly - DB data should be validated
-                  ExternalResources(
-                    ExternalResourceKind(x).getOrElse(throw new IllegalStateException(s"Invalid external resource kind from DB: $x")),
-                    y.map(_._2).distinct
-                  )
-                )
-                .getOrElse(List()),
-              tags = (x.tagIds, x.tagNames, x.tagPaths)
-                .zip((x, y, z) =>
-                  new Tag(
-                    TagId(x),
-                    TagName(y),
-                    // TODO: Refactor to handle Either properly - DB data should be validated
-                    TagPath(z).getOrElse(throw new IllegalStateException(s"Invalid path from DB: $z"))
-                  )
-                )
-                .map(x => x.distinct)
-                .getOrElse(List()),
-              description = strippedContent.substring(0, descriptionLength),
-              content = x.content,
-              length = strippedContent.replaceAll(" ", "").length,
-              authorName = x.authorName,
-              publishedAt = x.publishedAt,
-              updatedAt = x.updatedAt
+          IO(
+            Some(
+              ContentDetailResponseModel(
+                id = x.id,
+                title = x.title,
+                robotsAttributes = x.robotsAttributes,
+                externalResources = x.externalResources,
+                tags = x.tags,
+                description = strippedContent.substring(0, descriptionLength),
+                content = x.content,
+                length = strippedContent.replaceAll(" ", "").length,
+                authorName = x.authorName,
+                publishedAt = x.publishedAt,
+                updatedAt = x.updatedAt
+              )
             )
           )
-        )
-    }
+      }
+    } yield result
   }
 }

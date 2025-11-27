@@ -8,6 +8,8 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.errors.InvalidPath
+import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
+import net.yoshinorin.qualtet.domains.tags.Tag
 
 opaque type ContentId = String
 object ContentId extends ValueExtender[ContentId] with UlidConvertible[ContentId] {
@@ -80,11 +82,8 @@ final case class ContentWithMeta(
   id: ContentId,
   title: String,
   robotsAttributes: Attributes,
-  externalResourceKindKeys: Option[String],
-  externalResourceKindValues: Option[String],
-  tagIds: Option[String],
-  tagNames: Option[String],
-  tagPaths: Option[String],
+  externalResources: List[ExternalResources],
+  tags: List[Tag],
   content: String,
   authorName: AuthorName,
   publishedAt: Long = ZonedDateTime.now.toEpochSecond,
