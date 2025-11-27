@@ -16,7 +16,7 @@ class ArchiveService[F[_]: Monad](
   def get: IO[Seq[ArchiveResponseModel]] = {
     for {
       contentTypeName <- ContentTypeName("article").liftTo[IO]
-      c <- contentTypeService.findByName(contentTypeName).throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
+      c <- contentTypeService.findByName(contentTypeName).errorIfNone(ContentTypeNotFound(detail = "content-type not found: article")).flatMap(_.liftTo[IO])
       articles <- executer.transact(archiveRepositoryAdapter.get(c.id))
     } yield articles
   }

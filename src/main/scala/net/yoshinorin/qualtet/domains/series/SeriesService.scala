@@ -24,16 +24,16 @@ class SeriesService[F[_]: Monad](
    * @return created Series
    */
   def create(data: SeriesRequestModel): IO[Series] = {
-    this
-      .findByName(data.name)
-      .flatMap {
-        case Some(s: Series) => executer.transact(seriesRepositoryAdapter.upsert(Series(s.id, s.name, s.path, data.title, data.description)))
-        case None =>
-          executer.transact(seriesRepositoryAdapter.upsert(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.path, data.title, data.description)))
-      }
-      .flatMap { s =>
-        this.findByName(data.name).throwIfNone(SeriesNotFound(detail = "series not found"))
-      }
+    for {
+      _ <- this
+        .findByName(data.name)
+        .flatMap {
+          case Some(s: Series) => executer.transact(seriesRepositoryAdapter.upsert(Series(s.id, s.name, s.path, data.title, data.description)))
+          case None =>
+            executer.transact(seriesRepositoryAdapter.upsert(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.path, data.title, data.description)))
+        }
+      series <- this.findByName(data.name).errorIfNone(SeriesNotFound(detail = "series not found")).flatMap(_.liftTo[IO])
+    } yield series
   }
 
   def findById(id: SeriesId): IO[Option[Series]] = {
@@ -54,7 +54,10 @@ class SeriesService[F[_]: Monad](
 
   def get(path: SeriesPath): IO[SeriesResponseModel] = {
     for {
-      series <- executer.transact(seriesRepositoryAdapter.findByPath(path)).throwIfNone(SeriesNotFound(detail = s"series not found: ${path.value}"))
+      series <- executer
+        .transact(seriesRepositoryAdapter.findByPath(path))
+        .errorIfNone(SeriesNotFound(detail = s"series not found: ${path.value}"))
+        .flatMap(_.liftTo[IO])
       seriesWithArticles <- articleService.getBySeriesPath(series.path)
     } yield {
       SeriesResponseModel(series.id, series.name, series.path, series.title, series.description, seriesWithArticles.articles)
@@ -81,7 +84,7 @@ class SeriesService[F[_]: Monad](
     )
 
     for {
-      _ <- this.findById(id).throwIfNone(SeriesNotFound(detail = s"series not found: ${id}"))
+      _ <- this.findById(id).errorIfNone(SeriesNotFound(detail = s"series not found: ${id}")).flatMap(_.liftTo[IO])
       _ <- executer.transact2[Unit, Unit](queries)
     } yield ()
   }

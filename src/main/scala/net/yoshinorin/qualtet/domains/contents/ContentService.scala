@@ -37,10 +37,11 @@ class ContentService[F[_]: Monad](
   def createOrUpdate(authorName: AuthorName, request: ContentRequestModel): IO[ContentResponseModel] = {
     for {
       contentTypeName <- ContentTypeName(request.contentType).liftTo[IO]
-      a <- authorService.findByName(authorName).throwIfNone(InvalidAuthor(detail = s"user not found: ${request.contentType}"))
+      a <- authorService.findByName(authorName).errorIfNone(InvalidAuthor(detail = s"user not found: ${request.contentType}")).flatMap(_.liftTo[IO])
       c <- contentTypeService
         .findByName(contentTypeName)
-        .throwIfNone(InvalidContentType(detail = s"content-type not found: ${request.contentType}"))
+        .errorIfNone(InvalidContentType(detail = s"content-type not found: ${request.contentType}"))
+        .flatMap(_.liftTo[IO])
       maybeCurrentContent <- this.findByPath(request.path)
       contentId = maybeCurrentContent match {
         case None => ContentId.apply()
@@ -139,7 +140,7 @@ class ContentService[F[_]: Monad](
 
     for {
       _ <- executer.transact11[Int, Seq[Tag], Unit, Int, Int, Int, Option[Series], Unit, Int, Unit, Int](queries)
-      c <- this.findByPath(data.path).throwIfNone(UnexpectedException("content not found")) // NOTE: 404 is better?
+      c <- this.findByPath(data.path).errorIfNone(UnexpectedException("content not found")).flatMap(_.liftTo[IO]) // NOTE: 404 is better?
     } yield c
   }
 
@@ -166,7 +167,7 @@ class ContentService[F[_]: Monad](
     )
 
     for {
-      _ <- this.findById(id).throwIfNone(ContentNotFound(detail = s"content not found: ${id}"))
+      _ <- this.findById(id).errorIfNone(ContentNotFound(detail = s"content not found: ${id}")).flatMap(_.liftTo[IO])
       _ <- executer.transact5[Unit, Unit, Unit, Unit, Unit](queries)
     } yield ()
   }

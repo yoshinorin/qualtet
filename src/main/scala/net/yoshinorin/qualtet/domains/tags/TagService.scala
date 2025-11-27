@@ -93,7 +93,7 @@ class TagService[F[_]: Monad](
     } yield (contentTaggingDelete, tagDelete)
 
     for {
-      _ <- this.findById(id).throwIfNone(TagNotFound(detail = s"tag not found: ${id}"))
+      _ <- this.findById(id).errorIfNone(TagNotFound(detail = s"tag not found: ${id}")).flatMap(_.liftTo[IO])
       _ <- executer.transact2(queries)
     } yield ()
   }

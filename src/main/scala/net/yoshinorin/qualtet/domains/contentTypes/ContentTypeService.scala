@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.contentTypes
 
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.errors.UnexpectedException
 import net.yoshinorin.qualtet.domains.Cacheable
@@ -26,7 +27,7 @@ class ContentTypeService[F[_]: Monad](
       case None =>
         for {
           _ <- executer.transact(contentTypeRepositoryAdapter.upsert(data))
-          c <- this.findByName(data.name).throwIfNone(UnexpectedException("contentType not found"))
+          c <- this.findByName(data.name).errorIfNone(UnexpectedException("contentType not found")).flatMap(_.liftTo[IO])
         } yield c
     }
 

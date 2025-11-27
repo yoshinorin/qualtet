@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.authors
 
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.errors.UnexpectedException
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
@@ -19,7 +20,7 @@ class AuthorService[F[_]: Monad](
   def create(data: Author): IO[AuthorResponseModel] = {
     for {
       _ <- executer.transact(authorRepositoryAdapter.upsert(data))
-      a <- this.findByName(data.name).throwIfNone(UnexpectedException("user not found"))
+      a <- this.findByName(data.name).errorIfNone(UnexpectedException("user not found")).flatMap(_.liftTo[IO])
     } yield a
   }
 

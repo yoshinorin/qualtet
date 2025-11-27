@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.auth
 
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorResponseModel, AuthorService, BCryptPassword}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Unauthorized}
@@ -27,7 +28,8 @@ class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt[IO])(us
     for {
       a <- authorService
         .findByIdWithPassword(tokenRequest.authorId)
-        .throwIfNone(AuthorNotFound(detail = s"${tokenRequest.authorId} is not found."))
+        .errorIfNone(AuthorNotFound(detail = s"${tokenRequest.authorId} is not found."))
+        .flatMap(_.liftTo[IO])
       _ <- verifyPassword(a.password)
       jwt <- jwt.encode(a)
       responseToken <- IO(ResponseToken(jwt))

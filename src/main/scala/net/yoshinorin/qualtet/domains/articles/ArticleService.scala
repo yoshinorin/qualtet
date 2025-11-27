@@ -28,7 +28,7 @@ class ArticleService[F[_]: Monad](
   ): IO[ArticleWithCountResponseModel] = {
     for {
       contentTypeName <- ContentTypeName("article").liftTo[IO]
-      c <- contentTypeService.findByName(contentTypeName).throwIfNone(ContentTypeNotFound(detail = "content-type not found: article"))
+      c <- contentTypeService.findByName(contentTypeName).errorIfNone(ContentTypeNotFound(detail = "content-type not found: article")).flatMap(_.liftTo[IO])
       articlesWithCount <- executer.transact(f(c.id, data, queryParam))
     } yield
       if (articlesWithCount.nonEmpty) {
