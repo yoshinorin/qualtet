@@ -29,7 +29,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
             robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
             tags = List(Tag(name = TagName(s"searchService${i}"), path = TagPath(s"searchService${i}-path").unsafe)),
             externalResources = List()
-          )
+          ).unsafe
         ) :+ ContentRequestModel(
         contentType = "article",
         path = ContentPath(s"/test/searchServiceLast").unsafe,
@@ -39,7 +39,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
         tags = List(Tag(name = TagName(s"searchServiceLast"), path = TagPath(s"searchServiceLast-path").unsafe)),
         externalResources = List()
-      ) :+ ContentRequestModel(
+      ).unsafe :+ ContentRequestModel(
         contentType = "article",
         path = ContentPath(s"/test/searchServiceIncludesUrl1").unsafe,
         title = s"this is a searchService IncludesUrl1",
@@ -48,7 +48,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
         tags = List(Tag(name = TagName(s"IncludesUrl1"), path = TagPath(s"IncludesUrl1-path").unsafe)),
         externalResources = List()
-      ) :+ ContentRequestModel(
+      ).unsafe :+ ContentRequestModel(
         contentType = "article",
         path = ContentPath(s"/test/searchServiceIncludesUrl2").unsafe,
         title = s"this is a searchService IncludesUrl2",
@@ -57,7 +57,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
         tags = List(Tag(name = TagName(s"IncludesUrl2"), path = TagPath(s"IncludesUrl2-path").unsafe)),
         externalResources = List()
-      ) :+ ContentRequestModel(
+      ).unsafe :+ ContentRequestModel(
         contentType = "article",
         path = ContentPath(s"/test/searchServiceIncludesWrongUrl").unsafe,
         title = s"this is a searchService IncludesWrongUrl1",
@@ -66,7 +66,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
         tags = List(Tag(name = TagName(s"IncludesWrongUrl1"), path = TagPath(s"IncludesWrongUrl1-path").unsafe)),
         externalResources = List()
-      ) :+ ContentRequestModel(
+      ).unsafe :+ ContentRequestModel(
         contentType = "article",
         path = ContentPath(s"/test/searchServiceIncludesHttpString").unsafe,
         title = s"this is a searchService IncludesHttpString",
@@ -75,7 +75,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
         tags = List(Tag(name = TagName(s"IncludesHttpString"), path = TagPath(s"IncludesHttpString-path").unsafe)),
         externalResources = List()
-      )
+      ).unsafe
     }
     requestContents.unsafeCreateConternt()
   }

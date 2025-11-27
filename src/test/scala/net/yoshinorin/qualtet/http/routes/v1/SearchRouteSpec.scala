@@ -36,7 +36,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
             robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
             tags = List(Tag(name = TagName(s"searchRoute${i}"), path = TagPath(s"searchRoute${i}-path").unsafe)),
             externalResources = List()
-          )
+          ).unsafe
         ) :+ ContentRequestModel(
         contentType = "article",
         path = ContentPath(s"/test/searchServiceLast").unsafe,
@@ -46,7 +46,7 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
         tags = List(Tag(name = TagName(s"searchServiceLast"), path = TagPath(s"searchServiceLast-path").unsafe)),
         externalResources = List()
-      )
+      ).unsafe
     }
 
     requestContents.unsafeCreateConternt()

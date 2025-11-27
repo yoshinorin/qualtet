@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.syntax
 
 import java.util.Locale
-import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.types.Points
 
 trait string {
@@ -20,15 +19,7 @@ trait string {
 
     def filterIgnoreChars: String = s.replaceAll(ignoreCharsRegex, "")
 
-    def trimOrThrow(t: Throwable): String = {
-      val s2 = s.trim()
-      if (s2.isEmpty()) {
-        throw t
-      }
-      s2
-    }
-
-    def trimOrError(error: DomainError): Either[DomainError, String] = {
+    def trimOrError[E <: Exception](error: E): Either[E, String] = {
       val s2 = s.trim()
       if (s2.isEmpty()) {
         Left(error)

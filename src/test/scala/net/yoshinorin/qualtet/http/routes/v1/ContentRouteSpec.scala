@@ -446,7 +446,7 @@ class ContentRouteSpec extends AnyWordSpec {
             tags = List(Tag(name = TagName("ContentRoute"), path = TagPath("ContentRoute-path").unsafe)),
             externalResources = List(),
             publishedAt = 1644075206
-          )
+          ).unsafe
         )
         .unsafeRunSync()
 
@@ -563,7 +563,7 @@ class ContentRouteSpec extends AnyWordSpec {
       htmlContent = "<p>This is the main article for testing adjacent functionality</p>",
       publishedAt = 1644075206,
       updatedAt = 1644075206
-    )
+    ).unsafe
     val createdContent = contentService.createOrUpdate(validAuthor.name, testContent).unsafeRunSync()
 
     "return adjacent content for valid content ID" in {

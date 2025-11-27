@@ -28,19 +28,19 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
       name = SeriesName("seriesroute-series-name"),
       path = SeriesPath("seriesroute-series-path").unsafe,
       description = Some("Series Route Spec Description1")
-    ),
+    ).unsafe,
     SeriesRequestModel(
       title = "Series Route Spec2",
       name = SeriesName("seriesroute-series2-name"),
       path = SeriesPath("seriesroute-series2-path").unsafe,
       description = Some("Series Route Spec Description2")
-    ),
+    ).unsafe,
     SeriesRequestModel(
       title = "Series Route Spec3",
       name = SeriesName("seriesroute-series3-name"),
       path = SeriesPath("seriesroute-series3-path").unsafe,
       description = Some("Series Route Spec Description2")
-    )
+    ).unsafe
   )
 
   requestSeries.unsafeCreateSeries()

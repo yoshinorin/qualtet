@@ -29,25 +29,25 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         name = SeriesName("contentservice-series"),
         path = SeriesPath("contentservice-series-path").unsafe,
         None
-      ),
+      ).unsafe,
       SeriesRequestModel(
         title = "Content Service Spec Series2",
         name = SeriesName("contentservice-series2"),
         path = SeriesPath("contentservice-series2-path").unsafe,
         None
-      ),
+      ).unsafe,
       SeriesRequestModel(
         title = "Content Service Spec will be delete",
         name = SeriesName("contentservice-willBeDelete"),
         path = SeriesPath("contentservice-willBeDelete-path").unsafe,
         None
-      ),
+      ).unsafe,
       SeriesRequestModel(
         title = "Content Service Spec will not delete",
         name = SeriesName("contentservice-willNotDelete"),
         path = SeriesPath("contentservice-willNotDelete-path").unsafe,
         None
-      )
+      ).unsafe
     )).unsafeCreateSeries()
   }
 
@@ -65,7 +65,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         values = List("test", "foo", "bar")
       )
     )
-  )
+  ).unsafe
 
   "ContentServiceSpec" should {
 
@@ -123,7 +123,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
             values = List("test", "foo", "bar")
           )
         )
-      )
+      ).unsafe
 
       val updateRequestContent = requestContent.copy(
         title = "updated title",
@@ -213,7 +213,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
         tags = List(),
         externalResources = List()
-      )
+      ).unsafe
 
       (for {
         created <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContentNoMetas)
@@ -281,7 +281,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
             values = List("willBeDelete1", "willBeDelete2")
           )
         )
-      )
+      ).unsafe
 
       val shouldNotDeleteContent: ContentRequestModel = shouldDeleteContent.copy(
         path = ContentPath("/test/willnot/delete").unsafe,

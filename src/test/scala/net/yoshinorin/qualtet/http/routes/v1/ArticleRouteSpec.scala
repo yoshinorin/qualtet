@@ -35,7 +35,7 @@ class ArticleRouteSpec extends AnyWordSpec {
           robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
           tags = List(Tag(name = TagName(s"articleRoute-${i}"), path = TagPath(s"articleRoute-${i}-path").unsafe)),
           externalResources = List()
-        )
+        ).unsafe
       )
   }
 

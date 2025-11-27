@@ -53,6 +53,7 @@ import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 // Extension method for test convenience: converts Either to value unsafely
 extension [L, R](either: Either[L, R]) {
   def unsafe: R = either.toOption.get
+  def error: L = either.swap.toOption.get
 }
 
 // Just test data
@@ -237,7 +238,7 @@ object Fixture {
           tags = List(Tag(name = TagName(s"${specName}Tag${i}"), path = TagPath(s"${specName}Tag${i}-path").unsafe)),
           series = series,
           externalResources = externalResources
-        )
+        ).unsafe
       )
   }
 

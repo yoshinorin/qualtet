@@ -25,19 +25,19 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         name = seriesName,
         path = seriesPath,
         None
-      ),
+      ).unsafe,
       SeriesRequestModel(
         title = "Series Service Spec2",
         name = SeriesName("seriesservice-series2-name"),
         path = SeriesPath("seriesservice-series2-path").unsafe,
         None
-      ),
+      ).unsafe,
       SeriesRequestModel(
         title = "Series Service Spec Upsert",
         name = upsertSeriesName,
         path = upsertSeriesPath,
         None
-      )
+      ).unsafe
     )
 
     requestSeries.unsafeCreateSeries()
@@ -101,7 +101,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           name = upsertSeriesName,
           path = upsertSeriesPath,
           description = Some("series description")
-        )
+        ).unsafe
       )
       // update series title
       updated <- seriesService.create(
@@ -110,7 +110,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           name = upsertSeriesName,
           path = upsertSeriesPath,
           description = Some("series description")
-        )
+        ).unsafe
       )
     } yield {
       assert(created.id === updated.id)

@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import net.yoshinorin.qualtet.fixture.unsafe
+import net.yoshinorin.qualtet.fixture.{error, unsafe}
 import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentPath}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagPath}
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, InvalidPath, RawContentRequired}
+import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, RawContentRequired}
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
@@ -93,7 +93,7 @@ class ContentSpec extends AnyWordSpec {
       invalidPaths.foreach { path =>
         val result = ContentPath(path)
         assert(result.isLeft)
-        assert(result.left.get.detail === s"Invalid character contains: ${path}")
+        assert(result.error.detail === s"Invalid character contains: ${path}")
       }
     }
 
@@ -108,7 +108,7 @@ class ContentSpec extends AnyWordSpec {
       invalidEncodedPaths.foreach { path =>
         val result = ContentPath(path)
         assert(result.isLeft)
-        assert(result.left.get.detail === s"Invalid percent encoding in path: ${path}")
+        assert(result.error.detail === s"Invalid percent encoding in path: ${path}")
       }
     }
 
@@ -142,7 +142,7 @@ class ContentSpec extends AnyWordSpec {
       containReservedPaths.foreach { path =>
         val result = ContentPath(path)
         assert(result.isLeft)
-        assert(result.left.get.detail === s"Path contains reserved word: ${path}")
+        assert(result.error.detail === s"Path contains reserved word: ${path}")
       }
     }
 
@@ -218,49 +218,52 @@ class ContentSpec extends AnyWordSpec {
   }
 
   "RequestContent" should {
-    "thrown ContentTitleRequired if title is empty" in {
-      assertThrows[ContentTitleRequired] {
-        ContentRequestModel(
-          contentType = "article",
-          path = ContentPath("/articles/contentSpec/1").unsafe,
-          title = "",
-          rawContent = "this is a articleRoute raw content",
-          htmlContent = "this is a articleRoute html content",
-          robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
-          tags = List(),
-          externalResources = List()
-        )
-      }
+    "return Left with ContentTitleRequired if title is empty" in {
+      val result = ContentRequestModel(
+        contentType = "article",
+        path = ContentPath("/articles/contentSpec/1").unsafe,
+        title = "",
+        rawContent = "this is a articleRoute raw content",
+        htmlContent = "this is a articleRoute html content",
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+        tags = List(),
+        externalResources = List()
+      )
+      assert(result.isLeft)
+      assert(result.error.isInstanceOf[ContentTitleRequired])
+      assert(result.error.asInstanceOf[ContentTitleRequired].detail === "title required.")
     }
 
-    "thrown RawContentRequired if rawContent is empty" in {
-      assertThrows[RawContentRequired] {
-        ContentRequestModel(
-          contentType = "article",
-          path = ContentPath("/articles/contentSpec/2").unsafe,
-          title = "this is a articleRoute title",
-          rawContent = "",
-          htmlContent = "this is a articleRoute html content",
-          robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
-          tags = List(),
-          externalResources = List()
-        )
-      }
+    "return Left with RawContentRequired if rawContent is empty" in {
+      val result = ContentRequestModel(
+        contentType = "article",
+        path = ContentPath("/articles/contentSpec/2").unsafe,
+        title = "this is a articleRoute title",
+        rawContent = "",
+        htmlContent = "this is a articleRoute html content",
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+        tags = List(),
+        externalResources = List()
+      )
+      assert(result.isLeft)
+      assert(result.error.isInstanceOf[RawContentRequired])
+      assert(result.error.asInstanceOf[RawContentRequired].detail === "rawContent required.")
     }
 
-    "thrown HtmlContentRequired if htmlContent is empty" in {
-      assertThrows[HtmlContentRequired] {
-        ContentRequestModel(
-          contentType = "article",
-          path = ContentPath("/articles/contentSpec/3").unsafe,
-          title = "this is a articleRoute title",
-          rawContent = "this is a articleRoute raw content",
-          htmlContent = "",
-          robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
-          tags = List(),
-          externalResources = List()
-        )
-      }
+    "return Left with HtmlContentRequired if htmlContent is empty" in {
+      val result = ContentRequestModel(
+        contentType = "article",
+        path = ContentPath("/articles/contentSpec/3").unsafe,
+        title = "this is a articleRoute title",
+        rawContent = "this is a articleRoute raw content",
+        htmlContent = "",
+        robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
+        tags = List(),
+        externalResources = List()
+      )
+      assert(result.isLeft)
+      assert(result.error.isInstanceOf[HtmlContentRequired])
+      assert(result.error.asInstanceOf[HtmlContentRequired].detail === "htmlContent required.")
     }
   }
 

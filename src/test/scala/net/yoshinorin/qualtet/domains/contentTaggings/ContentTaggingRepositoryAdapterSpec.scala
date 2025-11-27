@@ -36,7 +36,7 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
               Tag(name = TagName(s"ContentTaggingRepositoryAS${i}.3"), path = TagPath(s"ContentTaggingRepositoryAdapterService-path${i}.3").unsafe)
             ),
             externalResources = List()
-          )
+          ).unsafe
         )
     }
     requestContents.unsafeCreateConternt()

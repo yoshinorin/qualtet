@@ -64,25 +64,6 @@ class StringSpec extends AnyWordSpec {
 
   }
 
-  "trimOrThrow" should {
-
-    "not be thrown exception" in {
-      assert("test".trimOrThrow(UnexpectedException(detail = "error")) === "test")
-      assert(" test ".trimOrThrow(UnexpectedException(detail = "error")) === "test")
-    }
-
-    "thrown exception" in {
-      assertThrows[UnexpectedException] {
-        "".trimOrThrow(UnexpectedException(detail = "error"))
-      }
-
-      assertThrows[UnexpectedException] {
-        " ".trimOrThrow(UnexpectedException(detail = "error"))
-      }
-    }
-
-  }
-
   "position" should {
 
     "return any word's start and end position in string" in {

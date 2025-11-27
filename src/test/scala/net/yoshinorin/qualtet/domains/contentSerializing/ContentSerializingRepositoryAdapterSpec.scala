@@ -22,7 +22,7 @@ class ContentSerializingRepositoryAdapterSpec extends AnyWordSpec with BeforeAnd
       name = SeriesName("content-serializing-repository-adapter-spec"),
       path = SeriesPath("content-serializing-repository-adapter-spec").unsafe,
       None
-    )
+    ).unsafe
     List(requestSeries).unsafeCreateSeries()
 
     val requestContents: List[ContentRequestModel] = {
@@ -59,7 +59,7 @@ class ContentSerializingRepositoryAdapterSpec extends AnyWordSpec with BeforeAnd
               )
             ),
             externalResources = List()
-          )
+          ).unsafe
         )
     }
     requestContents.unsafeCreateConternt()

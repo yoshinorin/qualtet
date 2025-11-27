@@ -31,7 +31,7 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
             robotsAttributes = Attributes("noarchive, noimageindex").unsafe,
             tags = List(Tag(name = TagName("SameTag"), path = TagPath("sametag-path").unsafe)),
             externalResources = List()
-          )
+          ).unsafe
         )
     }
     sameTagNameRequestContents.unsafeCreateConternt()

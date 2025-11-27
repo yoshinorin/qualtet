@@ -67,17 +67,21 @@ object ContentRequestModel {
     htmlContent: String,
     publishedAt: Long = ZonedDateTime.now.toEpochSecond,
     updatedAt: Long = ZonedDateTime.now.toEpochSecond
-  ): ContentRequestModel = {
-    new ContentRequestModel(
+  ): Either[DomainError, ContentRequestModel] = {
+    for {
+      decodedTitle <- title.trimOrError(ContentTitleRequired(detail = "title required."))
+      decodedRawContent <- rawContent.trimOrError(RawContentRequired(detail = "rawContent required."))
+      decodedHtmlContent <- htmlContent.trimOrError(HtmlContentRequired(detail = "htmlContent required."))
+    } yield new ContentRequestModel(
       contentType = contentType,
       robotsAttributes = robotsAttributes,
       externalResources = externalResources,
       tags = tags,
       series = series,
       path = path,
-      title = title.trimOrThrow(ContentTitleRequired(detail = "title required.")),
-      rawContent = rawContent.trimOrThrow(RawContentRequired(detail = "rawContent required.")),
-      htmlContent = htmlContent.trimOrThrow(HtmlContentRequired(detail = "htmlContent required.")),
+      title = decodedTitle,
+      rawContent = decodedRawContent,
+      htmlContent = decodedHtmlContent,
       publishedAt = publishedAt,
       updatedAt = updatedAt
     )
