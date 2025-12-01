@@ -191,7 +191,7 @@ object Fixture {
   val authorId: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754a")
   val authorId2: AuthorId = AuthorId("01febb8az5t42m2h68xj8c754b")
   // NOTE: `pass`
-  val validBCryptPassword: BCryptPassword = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
+  val validBCryptPassword: BCryptPassword = BCryptPassword("$2a$10$XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O").unsafe
 
   val author: Author = Author(
     id = authorId,

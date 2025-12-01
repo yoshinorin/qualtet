@@ -4,7 +4,7 @@ import java.time.ZonedDateTime
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{FromTrustedSource, UlidConvertible, ValueExtender}
-import net.yoshinorin.qualtet.domains.errors.{InvalidAuthorDisplayName, InvalidAuthorName, Unauthorized}
+import net.yoshinorin.qualtet.domains.errors.{DomainError, InvalidAuthorDisplayName, InvalidAuthorName, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
 
 import scala.util.matching.Regex
@@ -56,13 +56,17 @@ object AuthorDisplayName extends ValueExtender[AuthorDisplayName] {
 
 opaque type BCryptPassword = String
 object BCryptPassword extends ValueExtender[BCryptPassword] {
-  def apply(value: String): BCryptPassword = {
+  def apply(value: String): Either[DomainError, BCryptPassword] = {
     // https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage-dpe
     if (!value.startsWith("$2a$")) {
-      // TODO: Throw to Either
-      throw Unauthorized()
+      Left(Unauthorized())
+    } else {
+      Right(value)
     }
-    value
+  }
+
+  given fromTrustedSource: FromTrustedSource[BCryptPassword] with {
+    def fromTrusted(value: String): BCryptPassword = value
   }
 }
 

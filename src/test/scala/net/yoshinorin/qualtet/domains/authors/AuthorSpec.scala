@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import net.yoshinorin.qualtet.fixture.unsafe
+import net.yoshinorin.qualtet.fixture.{error, unsafe}
 import net.yoshinorin.qualtet.domains.authors.{AuthorDisplayName, AuthorId, AuthorName, BCryptPassword}
 import net.yoshinorin.qualtet.domains.errors.{InvalidAuthorDisplayName, InvalidAuthorName, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
@@ -60,12 +60,8 @@ class AuthorSpec extends AnyWordSpec {
       )
     }
     "invalid value" in {
-      assertThrows[Unauthorized] {
-        BCryptPassword("")
-      }
-      assertThrows[Unauthorized] {
-        BCryptPassword("$2a10XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O")
-      }
+      assert(BCryptPassword("").error.isInstanceOf[Unauthorized])
+      assert(BCryptPassword("$2a10XmRiVEV8yV9u8BnsIfSTTuzUvH/.6jutH6QvIX6zRoTcqkuKsxE0O").error.isInstanceOf[Unauthorized])
     }
   }
 

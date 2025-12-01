@@ -78,7 +78,7 @@ object AuthorRepository {
             AuthorId(id),
             AuthorName.fromTrusted(name),
             AuthorDisplayName.fromTrusted(displayName),
-            BCryptPassword(password),
+            BCryptPassword.fromTrusted(password),
             createdAt
           )
         }
@@ -90,7 +90,7 @@ object AuthorRepository {
               AuthorId(id),
               AuthorName.fromTrusted(name),
               AuthorDisplayName.fromTrusted(displayName),
-              BCryptPassword(password),
+              BCryptPassword.fromTrusted(password),
               createdAt
             )
           )

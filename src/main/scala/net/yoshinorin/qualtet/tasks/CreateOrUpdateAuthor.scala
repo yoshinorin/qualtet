@@ -30,8 +30,9 @@ object CreateOrUpdateAuthor extends IOApp {
       (for {
         authorName <- AuthorName(args(0)).liftTo[IO]
         displayName <- AuthorDisplayName(args(1)).liftTo[IO]
+        password <- BCryptPassword(bcryptPasswordEncoder.encode(args(2))).liftTo[IO]
         author <- modules.authorService.create(
-          Author(name = authorName, displayName = displayName, password = BCryptPassword(bcryptPasswordEncoder.encode(args(2))))
+          Author(name = authorName, displayName = displayName, password = password)
         )
         _ <- IO(logger.info(s"author created: ${author.asJson}"))
       } yield author)
