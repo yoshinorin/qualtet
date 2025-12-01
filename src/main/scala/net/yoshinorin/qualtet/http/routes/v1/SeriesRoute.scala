@@ -57,8 +57,10 @@ class SeriesRoute[F[_]: Monad](
       s match {
         case Left(f) => throw f
         case Right(s) =>
-          seriesService.create(s).flatMap { createdSeries =>
-            Created(createdSeries.asJson, `Content-Type`(MediaType.application.json))
+          seriesService.create(s).flatMap { createResult =>
+            createResult.liftTo[IO].flatMap { createdSeries =>
+              Created(createdSeries.asJson, `Content-Type`(MediaType.application.json))
+            }
           }
       }
     }
@@ -75,14 +77,16 @@ class SeriesRoute[F[_]: Monad](
   private[http] def get(name: String): IO[Response[IO]] = {
     (for {
       seriesPath <- SeriesPath(name).liftTo[IO]
-      seriesWithArticles <- seriesService.get(seriesPath)
+      getResult <- seriesService.get(seriesPath)
+      seriesWithArticles <- getResult.liftTo[IO]
       response <- Ok(seriesWithArticles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }
 
   private[http] def delete(nameOrId: String): IO[Response[IO]] = {
     (for {
-      _ <- seriesService.delete(SeriesId(nameOrId))
+      deleteResult <- seriesService.delete(SeriesId(nameOrId))
+      _ <- deleteResult.liftTo[IO]
       _ = logger.info(s"deleted series: ${nameOrId}")
       response <- NoContent()
     } yield response)

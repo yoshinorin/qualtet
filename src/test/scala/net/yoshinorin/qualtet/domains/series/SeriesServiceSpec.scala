@@ -83,8 +83,9 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   "get" in {
     (for {
-      result <- seriesService.get(seriesPath)
+      getResult <- seriesService.get(seriesPath)
     } yield {
+      val result = getResult.unsafe
       assert(result.title === "Series Service Spec")
       assert(result.name.value === seriesName.value)
       assert(result.path.value === seriesPath.value)
@@ -95,7 +96,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   "upsert" in {
     (for {
-      created <- seriesService.create(
+      createResult <- seriesService.create(
         SeriesRequestModel(
           title = "Series Service Spec Created",
           name = upsertSeriesName,
@@ -103,8 +104,9 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           description = Some("series description")
         ).unsafe
       )
+      created = createResult.unsafe
       // update series title
-      updated <- seriesService.create(
+      updateResult <- seriesService.create(
         SeriesRequestModel(
           title = "Series Service Spec Updated",
           name = upsertSeriesName,
@@ -112,6 +114,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           description = Some("series description")
         ).unsafe
       )
+      updated = updateResult.unsafe
     } yield {
       assert(created.id === updated.id)
       assert(created.title != updated.title)

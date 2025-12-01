@@ -7,8 +7,8 @@ import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.contentSerializing.ContentSerializingRepositoryAdapter
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.domains.errors.SeriesNotFound
-import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.domains.errors.{DomainError, SeriesNotFound}
+import net.yoshinorin.qualtet.syntax.toLower
 import wvlet.airframe.ulid.ULID
 
 class SeriesService[F[_]: Monad](
@@ -23,7 +23,7 @@ class SeriesService[F[_]: Monad](
    * @param data Series
    * @return created Series
    */
-  def create(data: SeriesRequestModel): IO[Series] = {
+  def create(data: SeriesRequestModel): IO[Either[DomainError, Series]] = {
     for {
       _ <- this
         .findByName(data.name)
@@ -32,8 +32,11 @@ class SeriesService[F[_]: Monad](
           case None =>
             executer.transact(seriesRepositoryAdapter.upsert(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.path, data.title, data.description)))
         }
-      series <- this.findByName(data.name).errorIfNone(SeriesNotFound(detail = "series not found")).flatMap(_.liftTo[IO])
-    } yield series
+      maybeSeries <- this.findByName(data.name)
+    } yield maybeSeries match {
+      case Some(series) => Right(series)
+      case None => Left(SeriesNotFound(detail = "series not found"))
+    }
   }
 
   def findById(id: SeriesId): IO[Option[Series]] = {
@@ -52,16 +55,18 @@ class SeriesService[F[_]: Monad](
     executer.transact(seriesRepositoryAdapter.findByContentId(id))
   }
 
-  def get(path: SeriesPath): IO[SeriesResponseModel] = {
+  def get(path: SeriesPath): IO[Either[DomainError, SeriesResponseModel]] = {
     for {
-      series <- executer
-        .transact(seriesRepositoryAdapter.findByPath(path))
-        .errorIfNone(SeriesNotFound(detail = s"series not found: ${path.value}"))
-        .flatMap(_.liftTo[IO])
-      seriesWithArticles <- articleService.getBySeriesPath(series.path)
-    } yield {
-      SeriesResponseModel(series.id, series.name, series.path, series.title, series.description, seriesWithArticles.articles)
-    }
+      maybeSeries <- executer.transact(seriesRepositoryAdapter.findByPath(path))
+      result <- maybeSeries match {
+        case Some(series) =>
+          articleService.getBySeriesPath(series.path).map { seriesWithArticles =>
+            Right(SeriesResponseModel(series.id, series.name, series.path, series.title, series.description, seriesWithArticles.articles))
+          }
+        case None =>
+          IO.pure(Left(SeriesNotFound(detail = s"series not found: ${path.value}")))
+      }
+    } yield result
   }
 
   /**
@@ -73,7 +78,7 @@ class SeriesService[F[_]: Monad](
     executer.transact(seriesRepositoryAdapter.fetch)
   }
 
-  def delete(id: SeriesId): IO[Unit] = {
+  def delete(id: SeriesId): IO[Either[DomainError, Unit]] = {
 
     val queries = for {
       contentSerializingDelete <- executer.defer(contentSerializingRepositoryAdapter.deleteBySeriesId(id))
@@ -84,9 +89,14 @@ class SeriesService[F[_]: Monad](
     )
 
     for {
-      _ <- this.findById(id).errorIfNone(SeriesNotFound(detail = s"series not found: ${id}")).flatMap(_.liftTo[IO])
-      _ <- executer.transact2[Unit, Unit](queries)
-    } yield ()
+      maybeSeries <- this.findById(id)
+      result <- maybeSeries match {
+        case Some(_) =>
+          executer.transact2[Unit, Unit](queries).map(_ => Right(()))
+        case None =>
+          IO.pure(Left(SeriesNotFound(detail = s"series not found: ${id}")))
+      }
+    } yield result
   }
 
 }
