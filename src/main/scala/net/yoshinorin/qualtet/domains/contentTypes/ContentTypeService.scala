@@ -2,12 +2,10 @@ package net.yoshinorin.qualtet.domains.contentTypes
 
 import cats.effect.IO
 import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.cache.CacheModule
-import net.yoshinorin.qualtet.domains.errors.UnexpectedException
+import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.syntax.*
 
 class ContentTypeService[F[_]: Monad](
   contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[F],
@@ -21,16 +19,18 @@ class ContentTypeService[F[_]: Monad](
    * @param name String
    * @return
    */
-  def create(data: ContentType): IO[ContentType] = {
+  def create(data: ContentType): IO[Either[DomainError, ContentType]] = {
     this.findByName(data.name).flatMap {
-      case Some(x: ContentType) => IO(x)
+      case Some(x: ContentType) => IO.pure(Right(x))
       case None =>
         for {
           _ <- executer.transact(contentTypeRepositoryAdapter.upsert(data))
-          c <- this.findByName(data.name).errorIfNone(UnexpectedException("contentType not found")).flatMap(_.liftTo[IO])
-        } yield c
+          maybeContentType <- this.findByName(data.name)
+        } yield maybeContentType match {
+          case Some(c) => Right(c)
+          case None => Left(UnexpectedException("contentType not found"))
+        }
     }
-
   }
 
   /**
