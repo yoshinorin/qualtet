@@ -67,7 +67,8 @@ class TagRoute[F[_]: Monad](
 
   private[http] def delete(id: String): IO[Response[IO]] = {
     (for {
-      _ <- tagService.delete(TagId(id))
+      deleteResult <- tagService.delete(TagId(id))
+      _ <- deleteResult.liftTo[IO]
       _ = logger.info(s"deleted tag: ${id}")
       response <- NoContent()
     } yield response)

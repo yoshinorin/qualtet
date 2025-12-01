@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import net.yoshinorin.qualtet.fixture.unsafe
+import net.yoshinorin.qualtet.fixture.{error, unsafe}
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.errors.TagNotFound
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -90,10 +90,9 @@ class TagServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       }).unsafeRunSync()
     }
 
-    "throw TagNotFound exception when delete" in {
-      assertThrows[TagNotFound] {
-        tagService.delete(TagId(generateUlid())).unsafeRunSync()
-      }
+    "return TagNotFound error when delete non-existent tag" in {
+      val result = tagService.delete(TagId(generateUlid())).unsafeRunSync()
+      assert(result.error.isInstanceOf[TagNotFound])
     }
 
     "invalidate" should {

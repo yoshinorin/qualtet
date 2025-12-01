@@ -6,9 +6,8 @@ import cats.implicits.*
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepositoryAdapter
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.domains.errors.TagNotFound
+import net.yoshinorin.qualtet.domains.errors.{DomainError, TagNotFound}
 import net.yoshinorin.qualtet.domains.Cacheable
-import net.yoshinorin.qualtet.syntax.*
 
 class TagService[F[_]: Monad](
   tagRepositoryAdapter: TagRepositoryAdapter[F],
@@ -86,16 +85,21 @@ class TagService[F[_]: Monad](
    *
    * @param id Instance of TagId
    */
-  def delete(id: TagId): IO[Unit] = {
+  def delete(id: TagId): IO[Either[DomainError, Unit]] = {
     val queries = for {
       contentTaggingDelete <- executer.defer(contentTaggingRepositoryAdapter.deleteByTagId(id))
       tagDelete <- executer.defer(tagRepositoryAdapter.delete(id))
     } yield (contentTaggingDelete, tagDelete)
 
     for {
-      _ <- this.findById(id).errorIfNone(TagNotFound(detail = s"tag not found: ${id}")).flatMap(_.liftTo[IO])
-      _ <- executer.transact2(queries)
-    } yield ()
+      maybeTag <- this.findById(id)
+      result <- maybeTag match {
+        case Some(_) =>
+          executer.transact2(queries).map(_ => Right(()))
+        case None =>
+          IO.pure(Left(TagNotFound(detail = s"tag not found: ${id}")))
+      }
+    } yield result
   }
 
   def invalidate(): IO[Unit] = {
