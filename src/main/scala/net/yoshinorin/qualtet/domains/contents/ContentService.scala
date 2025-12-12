@@ -5,10 +5,9 @@ import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contents.ContentPath
-import net.yoshinorin.qualtet.domains.authors.AuthorService
-import net.yoshinorin.qualtet.domains.authors.AuthorName
+import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingRepositoryAdapter}
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeName, ContentTypeService}
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceDeleteModel, ExternalResourceRepositoryAdapter, ExternalResources}
 import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, DomainError, InvalidAuthor, InvalidContentType, InvalidSeries, UnexpectedException}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingRepositoryAdapter}
@@ -34,61 +33,79 @@ class ContentService[F[_]: Monad](
   executer: Executer[F, IO]
 ) {
 
-  def createOrUpdate(authorName: AuthorName, request: ContentRequestModel): IO[ContentResponseModel] = {
-    for {
+  def createOrUpdate(authorName: AuthorName, request: ContentRequestModel): IO[Either[DomainError, ContentResponseModel]] = {
+    val authorAndContentType = for {
+      // TODO: do not use `liftTo`
       contentTypeName <- ContentTypeName(request.contentType).liftTo[IO]
-      a <- authorService.findByName(authorName).errorIfNone(InvalidAuthor(detail = s"user not found: ${request.contentType}")).flatMap(_.liftTo[IO])
-      c <- contentTypeService
+      author <- authorService.findByName(authorName).errorIfNone(InvalidAuthor(detail = s"user not found: ${authorName}"))
+      contentType <- contentTypeService
         .findByName(contentTypeName)
         .errorIfNone(InvalidContentType(detail = s"content-type not found: ${request.contentType}"))
-        .flatMap(_.liftTo[IO])
-      maybeCurrentContent <- this.findByPath(request.path)
-      contentId = maybeCurrentContent match {
-        case None => ContentId.apply()
-        case Some(x) => x.id
-      }
-      maybeTags <- tagService.getTags(Some(request.tags))
-      contentTaggings <- maybeTags match {
-        case None => IO(List())
-        case Some(x) => IO(x.map(t => ContentTagging(contentId, t.id)))
-      }
-      maybeContentSerializing <- request.series match {
-        case None => IO(None)
-        case Some(series) =>
-          seriesService.findByName(series.name).flatMap {
-            case None => IO.raiseError(InvalidSeries(detail = s"series not found: ${series.name}"))
-            case Some(s) => IO(Option(ContentSerializing(s.id, contentId)))
+    } yield (author, contentType)
+
+    authorAndContentType.flatMap {
+      case (Left(error: DomainError), _) => IO.pure(Left(error))
+      case (_, Left(error: DomainError)) => IO.pure(Left(error))
+      case (Right(author), Right(contentType: ContentType)) =>
+        (for {
+          maybeCurrentContent <- this.findByPath(request.path)
+          contentId = maybeCurrentContent match {
+            case None => ContentId.apply()
+            case Some(x) => x.id
           }
-      }
-      createdContent <- this.createOrUpdate(
-        Content(
-          id = contentId,
-          authorId = a.id,
-          contentTypeId = c.id,
-          path = request.path,
-          title = request.title,
-          rawContent = request.rawContent,
-          htmlContent = request.htmlContent,
-          publishedAt = request.publishedAt,
-          updatedAt = request.updatedAt
-        ),
-        request.robotsAttributes,
-        maybeTags,
-        contentTaggings,
-        maybeContentSerializing,
-        request.externalResources
-      )
-    } yield ContentResponseModel(
-      id = createdContent.id,
-      authorId = a.id,
-      contentTypeId = c.id,
-      path = createdContent.path,
-      title = createdContent.title,
-      rawContent = createdContent.rawContent,
-      htmlContent = createdContent.htmlContent,
-      publishedAt = createdContent.publishedAt,
-      updatedAt = createdContent.updatedAt
-    )
+          maybeTags <- tagService.getTags(Some(request.tags))
+          contentTaggings <- maybeTags match {
+            case None => IO(List())
+            case Some(x) => IO(x.map(t => ContentTagging(contentId, t.id)))
+          }
+          contentSerilizingEither <- request.series match {
+            case None => IO(Right(None))
+            case Some(series) =>
+              seriesService.findByName(series.name).flatMap {
+                case None => IO.pure(Left(InvalidSeries(detail = s"series not found: ${series.name}")))
+                case Some(s) => IO.pure(Right(Some(ContentSerializing(s.id, contentId))))
+              }
+          }
+          createdContent <- contentSerilizingEither match {
+            case Left(error) => IO.pure(Left(error))
+            case Right(maybeContentSerializing: Option[ContentSerializing]) =>
+              this.createOrUpdate(
+                Content(
+                  id = contentId,
+                  authorId = author.id,
+                  contentTypeId = contentType.id,
+                  path = request.path,
+                  title = request.title,
+                  rawContent = request.rawContent,
+                  htmlContent = request.htmlContent,
+                  publishedAt = request.publishedAt,
+                  updatedAt = request.updatedAt
+                ),
+                request.robotsAttributes,
+                maybeTags,
+                contentTaggings,
+                maybeContentSerializing,
+                request.externalResources
+              )
+          }
+        } yield createdContent match {
+          case Right(value: Content) =>
+            Right(
+              ContentResponseModel(
+                id = value.id,
+                authorId = author.id,
+                contentTypeId = contentType.id,
+                path = value.path,
+                title = value.title,
+                rawContent = value.rawContent,
+                htmlContent = value.htmlContent,
+                publishedAt = value.publishedAt,
+                updatedAt = value.updatedAt
+              )
+            )
+          case Left(error) => Left(error)
+        })
+    }
   }
 
   private def createOrUpdate(
@@ -98,7 +115,7 @@ class ContentService[F[_]: Monad](
     contentTaggings: List[ContentTagging],
     contentSerializing: Option[ContentSerializing],
     externalResources: List[ExternalResources]
-  ): IO[Content] = {
+  ): IO[Either[DomainError, Content]] = {
 
     val maybeExternalResources = externalResources.flatMap(a => a.values.map(v => ExternalResource(data.id, a.kind, v)))
 
@@ -140,7 +157,7 @@ class ContentService[F[_]: Monad](
 
     for {
       _ <- executer.transact11[Int, Seq[Tag], Unit, Int, Int, Int, Option[Series], Unit, Int, Unit, Int](queries)
-      c <- this.findByPath(data.path).errorIfNone(UnexpectedException("content not found")).flatMap(_.liftTo[IO]) // NOTE: 404 is better?
+      c <- this.findByPath(data.path).errorIfNone(UnexpectedException("content not found")) // NOTE: 404 is better?
     } yield c
   }
 

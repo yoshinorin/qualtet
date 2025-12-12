@@ -571,7 +571,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.GET,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${createdContent.id.value}/adjacent"))
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${createdContent.unsafe.id.value}/adjacent"))
           )
         )
         .use { response =>
@@ -591,7 +591,7 @@ class ContentRouteSpec extends AnyWordSpec {
         .run(
           Request(
             method = Method.GET,
-            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${createdContent.id.value}/adjacent/"))
+            uri = new Uri().withPath(Uri.Path.unsafeFromString(s"/v1/contents/${createdContent.unsafe.id.value}/adjacent/"))
           )
         )
         .use { response =>

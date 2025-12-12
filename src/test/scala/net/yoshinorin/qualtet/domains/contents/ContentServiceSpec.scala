@@ -14,7 +14,6 @@ import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
 import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationRequestModel}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
-import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 
@@ -74,7 +73,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "create content and related data" in {
       (for {
-        craeted <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent1)
+        craeted <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent1).flatMap(_.liftTo[IO])
         maybeFound <- contentService.findByPathWithMeta(craeted.path).flatMap(_.liftTo[IO])
       } yield {
         assert(craeted.id.isInstanceOf[ContentId])
@@ -152,20 +151,20 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
 
       (for {
-        created <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent)
+        created <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent).flatMap(_.liftTo[IO])
         maybeCreatedFound <- contentService.findByPathWithMeta(requestContent.path).flatMap(_.liftTo[IO])
 
         // first time update
-        updated <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent)
+        updated <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent).flatMap(_.liftTo[IO])
         maybeFoundUpdated <- contentService.findByPathWithMeta(requestContent.path).flatMap(_.liftTo[IO])
         updatedSeries <- seriesService.findByContentId(updated.id)
 
         // second time update (delete related tags)
-        _ <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent.copy(tags = List()))
+        _ <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent.copy(tags = List())).flatMap(_.liftTo[IO])
         deletedTags <- contentService.findByPathWithMeta(requestContent.path).flatMap(_.liftTo[IO])
 
         // third time update (delete related series)
-        _ <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent.copy(series = None))
+        _ <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent.copy(series = None)).flatMap(_.liftTo[IO])
         deletedSeries <- seriesService.findByContentId(updated.id)
       } yield {
         assert(created.id === updated.id)
@@ -219,7 +218,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       ).unsafe
 
       (for {
-        created <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContentNoMetas)
+        created <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContentNoMetas).flatMap(_.liftTo[IO])
         maybeFound <- contentService.findByPathWithMeta(created.path).flatMap(_.liftTo[IO])
       } yield {
         assert(maybeFound.nonEmpty)
@@ -237,7 +236,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
 
       (for {
-        createdContent <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, createRequestContent)
+        createdContent <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, createRequestContent).flatMap(_.liftTo[IO])
         maybeContent <- contentService.findById(createdContent.id)
       } yield {
         assert(maybeContent.get.path === createRequestContent.path)
@@ -250,7 +249,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
 
       (for {
-        updated <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updatedRequestContent)
+        updated <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updatedRequestContent).flatMap(_.liftTo[IO])
         maybeFound <- contentService.findByPathWithMeta(requestContent1.path).flatMap(_.liftTo[IO])
       } yield {
         assert(maybeFound.get.content === updatedRequestContent.htmlContent)
@@ -310,8 +309,8 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       (for {
         // create test data
-        shouldeDelete <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, shouldDeleteContent)
-        shouldNotDelete <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, shouldNotDeleteContent)
+        shouldeDelete <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, shouldDeleteContent).flatMap(_.liftTo[IO])
+        shouldNotDelete <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, shouldNotDeleteContent).flatMap(_.liftTo[IO])
 
         // delete one content
         _ <- contentService.delete(shouldeDelete.id).flatMap(_.liftTo[IO])
@@ -338,21 +337,27 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       }).unsafeRunSync()
     }
 
-    "throw Author InvalidAuthor Exception" in {
-      assertThrows[InvalidAuthor] {
-        contentService.createOrUpdate(AuthorName("not_exists_user").unsafe, requestContent1).unsafeRunSync()
-      }
+    "return Left(InvalidAuthor) when author does not exist" in {
+      (for {
+        result <- contentService.createOrUpdate(AuthorName("not_exists_user").unsafe, requestContent1)
+      } yield {
+        assert(result.isLeft)
+        assert(result.left.exists(_.isInstanceOf[InvalidAuthor]))
+      }).unsafeRunSync()
     }
 
-    "throw Content-Type InvalidContentType Exception" in {
-      assertThrows[InvalidContentType] {
-        contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent1.copy(contentType = "not_exists_content-type")).unsafeRunSync()
-      }
+    "return Left(InvalidContentType) when content-type does not exist" in {
+      (for {
+        result <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent1.copy(contentType = "not_exists_content-type"))
+      } yield {
+        assert(result.isLeft)
+        assert(result.left.exists(_.isInstanceOf[InvalidContentType]))
+      }).unsafeRunSync()
     }
 
-    "throw Series UnprocessableEntity Exception" in {
-      assertThrows[InvalidSeries] {
-        contentService
+    "return Left(InvalidSeries) when series does not exist" in {
+      (for {
+        result <- contentService
           .createOrUpdate(
             AuthorName(author.name.value).unsafe,
             requestContent1.copy(series =
@@ -366,8 +371,10 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
               )
             )
           )
-          .unsafeRunSync()
-      }
+      } yield {
+        assert(result.isLeft)
+        assert(result.left.exists(_.isInstanceOf[InvalidSeries]))
+      }).unsafeRunSync()
     }
 
     "find adjacent articles using existing articles" in {
