@@ -2,11 +2,13 @@ package net.yoshinorin.qualtet.domains.contentTaggings
 
 import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
+import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 
@@ -48,12 +50,12 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
       val path: ContentPath = ContentPath("/test/ContentTaggingRepositoryAS-1").unsafe
       (for {
         // find current (before delete) content
-        maybeFound <- contentService.findByPathWithMeta(path)
+        maybeFound <- contentService.findByPathWithMeta(path).flatMap(_.liftTo[IO])
         // delete content tagging
         shouledDeleteContentTaggingsData <- IO(maybeFound.get.id, Seq(maybeFound.get.tags.head.id, maybeFound.get.tags.last.id))
         _ <- doobieExecuterContext.transact(contentTaggingRepositoryAdapter.bulkDelete(shouledDeleteContentTaggingsData))
         // find updated (after delete contentTaggings) content
-        maybeContentTaggingsDeleted <- contentService.findByPathWithMeta(path)
+        maybeContentTaggingsDeleted <- contentService.findByPathWithMeta(path).flatMap(_.liftTo[IO])
       } yield {
         assert(maybeContentTaggingsDeleted.nonEmpty)
         maybeContentTaggingsDeleted.map { contentTaggings =>
@@ -67,7 +69,7 @@ class ContentTaggingRepositoryAdapterSpec extends AnyWordSpec with BeforeAndAfte
       (for {
         before <- contentService.findByPath(ContentPath("/test/ContentTaggingRepositoryAS-2").unsafe)
         _ <- doobieExecuterContext.transact(contentTaggingRepositoryAdapter.bulkDelete(before.get.id, Seq()))
-        result <- contentService.findByPathWithMeta(ContentPath("/test/ContentTaggingRepositoryAS-2").unsafe)
+        result <- contentService.findByPathWithMeta(ContentPath("/test/ContentTaggingRepositoryAS-2").unsafe).flatMap(_.liftTo[IO])
       } yield {
         assert(result.get.tags.size === 3)
       }).unsafeRunSync()

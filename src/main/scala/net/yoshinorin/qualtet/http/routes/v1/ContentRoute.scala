@@ -95,7 +95,8 @@ class ContentRoute[F[_]: Monad](
   def get(path: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
       contentPath <- ContentPath(path).liftTo[IO]
-      maybeContent <- contentService.findByPathWithMeta(contentPath)
+      maybeContentEither <- contentService.findByPathWithMeta(contentPath)
+      maybeContent <- maybeContentEither.liftTo[IO]
     } yield maybeContent)
       .flatMap(_.asResponse)
   }
@@ -103,10 +104,11 @@ class ContentRoute[F[_]: Monad](
   def getAdjacent(id: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
       maybeContent <- contentService.findById(ContentId(id))
-      adjacent <- maybeContent match {
+      adjacentEither <- maybeContent match {
         case Some(content) => contentService.findAdjacent(content.id)
-        case None => IO(None)
+        case None => IO.pure(Right(None))
       }
+      adjacent <- adjacentEither.liftTo[IO]
     } yield adjacent)
       .flatMap(_.asResponse)
   }

@@ -188,7 +188,7 @@ class ContentService[F[_]: Monad](
    * @param path a content path
    * @return ResponseContent instance
    */
-  def findByPathWithMeta(path: ContentPath): IO[Option[ContentDetailResponseModel]] = {
+  def findByPathWithMeta(path: ContentPath): IO[Either[DomainError, Option[ContentDetailResponseModel]]] = {
     this.findBy(path)(contentRepositoryAdapter.findByPathWithMeta)
   }
 
@@ -202,44 +202,46 @@ class ContentService[F[_]: Monad](
     executer.transact(contentRepositoryAdapter.findById(id))
   }
 
-  def findAdjacent(id: ContentId): IO[Option[AdjacentContentResponseModel]] = {
+  def findAdjacent(id: ContentId): IO[Either[DomainError, Option[AdjacentContentResponseModel]]] = {
     executer.transact(contentRepositoryAdapter.findAdjacent(id)).map {
-      case None => None
-      case Some((previous, next)) => Some(AdjacentContentResponseModel(previous, next))
+      case None => Right(None)
+      case Some((previous, next)) => Right(Some(AdjacentContentResponseModel(previous, next)))
     }
   }
 
   def findBy[A](
     data: A
-  )(f: A => ContT[F, Either[DomainError, Option[ContentWithMeta]], Either[DomainError, Option[ContentWithMeta]]]): IO[Option[ContentDetailResponseModel]] = {
-    for {
-      eitherContentWithMeta <- executer.transact(f(data))
-      maybeContentWithMeta <- eitherContentWithMeta.liftTo[IO]
-      result <- maybeContentWithMeta match {
-        case None => IO(None)
-        case Some(x) =>
-          val strippedContent = x.content.stripHtmlTags.replaceAll("\n", "")
-          // TODO: Configurable
-          val descriptionLength = if (strippedContent.length > 50) 50 else strippedContent.length
+  )(
+    f: A => ContT[F, Either[DomainError, Option[ContentWithMeta]], Either[DomainError, Option[ContentWithMeta]]]
+  ): IO[Either[DomainError, Option[ContentDetailResponseModel]]] = {
+    executer.transact(f(data)).map {
+      case Left(error) => Left(error)
+      case Right(maybeContentWithMeta) =>
+        maybeContentWithMeta match {
+          case None => Right(None)
+          case Some(x) =>
+            val strippedContent = x.content.stripHtmlTags.replaceAll("\n", "")
+            // TODO: Configurable
+            val descriptionLength = if (strippedContent.length > 50) 50 else strippedContent.length
 
-          IO(
-            Some(
-              ContentDetailResponseModel(
-                id = x.id,
-                title = x.title,
-                robotsAttributes = x.robotsAttributes,
-                externalResources = x.externalResources,
-                tags = x.tags,
-                description = strippedContent.substring(0, descriptionLength),
-                content = x.content,
-                length = strippedContent.replaceAll(" ", "").length,
-                authorName = x.authorName,
-                publishedAt = x.publishedAt,
-                updatedAt = x.updatedAt
+            Right(
+              Some(
+                ContentDetailResponseModel(
+                  id = x.id,
+                  title = x.title,
+                  robotsAttributes = x.robotsAttributes,
+                  externalResources = x.externalResources,
+                  tags = x.tags,
+                  description = strippedContent.substring(0, descriptionLength),
+                  content = x.content,
+                  length = strippedContent.replaceAll(" ", "").length,
+                  authorName = x.authorName,
+                  publishedAt = x.publishedAt,
+                  updatedAt = x.updatedAt
+                )
               )
             )
-          )
-      }
-    } yield result
+        }
+    }
   }
 }

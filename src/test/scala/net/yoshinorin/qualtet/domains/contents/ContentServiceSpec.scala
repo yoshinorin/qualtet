@@ -75,7 +75,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "create content and related data" in {
       (for {
         craeted <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent1)
-        maybeFound <- contentService.findByPathWithMeta(craeted.path)
+        maybeFound <- contentService.findByPathWithMeta(craeted.path).flatMap(_.liftTo[IO])
       } yield {
         assert(craeted.id.isInstanceOf[ContentId])
         // TODO: assert `AuthorId` and `ContentTypeId`
@@ -153,16 +153,16 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       (for {
         created <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContent)
-        maybeCreatedFound <- contentService.findByPathWithMeta(requestContent.path)
+        maybeCreatedFound <- contentService.findByPathWithMeta(requestContent.path).flatMap(_.liftTo[IO])
 
         // first time update
         updated <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent)
-        maybeFoundUpdated <- contentService.findByPathWithMeta(requestContent.path)
+        maybeFoundUpdated <- contentService.findByPathWithMeta(requestContent.path).flatMap(_.liftTo[IO])
         updatedSeries <- seriesService.findByContentId(updated.id)
 
         // second time update (delete related tags)
         _ <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent.copy(tags = List()))
-        deletedTags <- contentService.findByPathWithMeta(requestContent.path)
+        deletedTags <- contentService.findByPathWithMeta(requestContent.path).flatMap(_.liftTo[IO])
 
         // third time update (delete related series)
         _ <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updateRequestContent.copy(series = None))
@@ -220,7 +220,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       (for {
         created <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, requestContentNoMetas)
-        maybeFound <- contentService.findByPathWithMeta(created.path)
+        maybeFound <- contentService.findByPathWithMeta(created.path).flatMap(_.liftTo[IO])
       } yield {
         assert(maybeFound.nonEmpty)
         maybeFound.map { found =>
@@ -251,7 +251,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       (for {
         updated <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, updatedRequestContent)
-        maybeFound <- contentService.findByPathWithMeta(requestContent1.path)
+        maybeFound <- contentService.findByPathWithMeta(requestContent1.path).flatMap(_.liftTo[IO])
       } yield {
         assert(maybeFound.get.content === updatedRequestContent.htmlContent)
       }).unsafeRunSync()
@@ -375,7 +375,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           .flatMap(_.liftTo[IO])
         firstPaginationArticles = articles.articles
         secondArticle = firstPaginationArticles(1)
-        maybeAdjacentArticle <- contentService.findAdjacent(secondArticle.id)
+        maybeAdjacentArticle <- contentService.findAdjacent(secondArticle.id).flatMap(_.liftTo[IO])
       } yield {
         val adjacentArticles = maybeAdjacentArticle.get
 
@@ -413,7 +413,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       val nonExistentId = ContentId("01arz3ndektsv4rrffq69g5fav")
 
       (for {
-        adjacent <- contentService.findAdjacent(nonExistentId)
+        adjacent <- contentService.findAdjacent(nonExistentId).flatMap(_.liftTo[IO])
       } yield {
         assert(adjacent.isEmpty, "Non-existent article should return None")
       }).unsafeRunSync()
