@@ -86,7 +86,8 @@ class ContentRoute[F[_]: Monad](
 
   private[http] def delete(id: String): IO[Response[IO]] = {
     (for {
-      _ <- contentService.delete(ContentId(id))
+      deleteResult <- contentService.delete(ContentId(id))
+      _ <- deleteResult.liftTo[IO]
       _ = logger.info(s"deleted content: ${id}")
       response <- NoContent()
     } yield response)

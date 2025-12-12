@@ -314,7 +314,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         shouldNotDelete <- contentService.createOrUpdate(AuthorName(author.name.value).unsafe, shouldNotDeleteContent)
 
         // delete one content
-        _ <- contentService.delete(shouldeDelete.id)
+        _ <- contentService.delete(shouldeDelete.id).flatMap(_.liftTo[IO])
         maybeDeleted <- contentService.findByPath(shouldeDelete.path)
         maybeExists <- contentService.findByPath(shouldNotDelete.path)
 
@@ -329,10 +329,13 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       }).unsafeRunSync()
     }
 
-    "throw Content ContentNotFound Exception when not exists content to delete" in {
-      assertThrows[ContentNotFound] {
-        contentService.delete(ContentId(generateUlid())).unsafeRunSync()
-      }
+    "return Left(ContentNotFound) when content to delete does not exist" in {
+      (for {
+        result <- contentService.delete(ContentId(generateUlid()))
+      } yield {
+        assert(result.isLeft)
+        assert(result.left.exists(_.isInstanceOf[ContentNotFound]))
+      }).unsafeRunSync()
     }
 
     "throw Author InvalidAuthor Exception" in {

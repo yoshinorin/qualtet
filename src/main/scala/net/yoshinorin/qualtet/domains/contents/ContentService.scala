@@ -149,7 +149,7 @@ class ContentService[F[_]: Monad](
    *
    * @param id Instance of ContentId
    */
-  def delete(id: ContentId): IO[Unit] = {
+  def delete(id: ContentId): IO[Either[DomainError, Unit]] = {
 
     val queries = for {
       externalResourcesDelete <- executer.defer(externalResourceRepositoryAdapter.delete(id))
@@ -166,10 +166,12 @@ class ContentService[F[_]: Monad](
       contentDelete
     )
 
-    for {
-      _ <- this.findById(id).errorIfNone(ContentNotFound(detail = s"content not found: ${id}")).flatMap(_.liftTo[IO])
-      _ <- executer.transact5[Unit, Unit, Unit, Unit, Unit](queries)
-    } yield ()
+    this.findById(id).flatMap {
+      case Some(_) =>
+        executer.transact5[Unit, Unit, Unit, Unit, Unit](queries).map(_ => Right(()))
+      case None =>
+        IO.pure(Left(ContentNotFound(detail = s"content not found: ${id}")))
+    }
   }
 
   /**
