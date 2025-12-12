@@ -31,16 +31,18 @@ class ArchiveRouteSpec extends AnyWordSpec {
 
   when(mockArchiveService.get).thenReturn(
     IO(
-      Seq(
-        ArchiveResponseModel(
-          path = ContentPath("/test/path1").unsafe,
-          title = "title1",
-          publishedAt = 1567814290
-        ),
-        ArchiveResponseModel(
-          path = ContentPath("/test/path2").unsafe,
-          title = "title2",
-          publishedAt = 1567814391
+      Right(
+        Seq(
+          ArchiveResponseModel(
+            path = ContentPath("/test/path1").unsafe,
+            title = "title1",
+            publishedAt = 1567814290
+          ),
+          ArchiveResponseModel(
+            path = ContentPath("/test/path2").unsafe,
+            title = "title2",
+            publishedAt = 1567814391
+          )
         )
       )
     )

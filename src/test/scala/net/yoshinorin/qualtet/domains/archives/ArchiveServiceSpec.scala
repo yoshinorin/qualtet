@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.domains.archives
 
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -15,7 +16,7 @@ class ArchiveServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   "ArchiveService" should {
     "get" in {
-      val result = archiveService.get.unsafeRunSync()
+      val result = archiveService.get.unsafeRunSync().unsafe
       assert(result.size >= 39)
     }
 

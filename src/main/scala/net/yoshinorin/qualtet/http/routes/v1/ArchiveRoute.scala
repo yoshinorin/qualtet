@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
@@ -26,7 +27,8 @@ class ArchiveRoute[F[_]: Monad](
   // archives
   private[http] def get: IO[Response[IO]] = {
     for {
-      archives <- archiveService.get
+      getResult <- archiveService.get
+      archives <- getResult.liftTo[IO]
       response <- Ok(archives.asJson, `Content-Type`(MediaType.application.json))
     } yield response
   }
