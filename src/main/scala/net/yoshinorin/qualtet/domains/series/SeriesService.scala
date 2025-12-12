@@ -60,8 +60,11 @@ class SeriesService[F[_]: Monad](
       maybeSeries <- executer.transact(seriesRepositoryAdapter.findByPath(path))
       result <- maybeSeries match {
         case Some(series) =>
-          articleService.getBySeriesPath(series.path).map { seriesWithArticles =>
-            Right(SeriesResponseModel(series.id, series.name, series.path, series.title, series.description, seriesWithArticles.articles))
+          articleService.getBySeriesPath(series.path).flatMap {
+            case Right(seriesWithArticles) =>
+              IO.pure(Right(SeriesResponseModel(series.id, series.name, series.path, series.title, series.description, seriesWithArticles.articles)))
+            case Left(error) =>
+              IO.pure(Left(error))
           }
         case None =>
           IO.pure(Left(SeriesNotFound(detail = s"series not found: ${path.value}")))

@@ -60,7 +60,8 @@ class TagRoute[F[_]: Monad](
   private[http] def get(path: String, p: PaginationRequestModel): IO[Response[IO]] = {
     (for {
       tagPath <- TagPath(path).liftTo[IO]
-      articles <- articleService.getByTagPathWithCount(tagPath, p)
+      articlesEither <- articleService.getByTagPathWithCount(tagPath, p)
+      articles <- articlesEither.liftTo[IO]
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }

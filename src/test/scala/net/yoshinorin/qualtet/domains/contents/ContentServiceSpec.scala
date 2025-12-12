@@ -1,5 +1,7 @@
 package net.yoshinorin.qualtet.domains.contents
 
+import cats.effect.IO
+import cats.implicits.*
 import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.ContentPath
@@ -12,6 +14,7 @@ import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
 import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationRequestModel}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
+import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 
@@ -367,7 +370,9 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "find adjacent articles using existing articles" in {
       // NOTE: We only test second article because first/last articles may be affected by data inserted from other tests running in parallel
       (for {
-        articles <- articleService.getWithCount(PaginationRequestModel(page = Some(Page(1)), limit = Some(Limit(10)), order = Some(Order.DESC)))
+        articles <- articleService
+          .getWithCount(PaginationRequestModel(page = Some(Page(1)), limit = Some(Limit(10)), order = Some(Order.DESC)))
+          .flatMap(_.liftTo[IO])
         firstPaginationArticles = articles.articles
         secondArticle = firstPaginationArticles(1)
         maybeAdjacentArticle <- contentService.findAdjacent(secondArticle.id)

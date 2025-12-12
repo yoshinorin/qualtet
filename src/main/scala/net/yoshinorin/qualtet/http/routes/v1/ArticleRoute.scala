@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.catsSyntaxEither
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
@@ -30,7 +31,8 @@ class ArticleRoute[F[_]: Monad](
   // articles?page=n&limit=m
   private[http] def get(p: PaginationRequestModel): IO[Response[IO]] = {
     (for {
-      articles <- articleService.getWithCount(p)
+      articlesEither <- articleService.getWithCount(p)
+      articles <- articlesEither.liftTo[IO]
       response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
     } yield response)
   }

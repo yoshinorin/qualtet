@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
@@ -26,7 +27,8 @@ class FeedRoute[F[_]: Monad](
 
   private[http] def get(name: String): IO[Response[IO]] = {
     for {
-      feeds <- feedService.get(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None))
+      feedsEither <- feedService.get(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None))
+      feeds <- feedsEither.liftTo[IO]
       response <- Ok(feeds.asJson, `Content-Type`(MediaType.application.json))
     } yield response
   }

@@ -2,11 +2,13 @@ package net.yoshinorin.qualtet.domains.articles
 
 import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, PaginationOps, PaginationRequestModel}
+import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import cats.effect.unsafe.implicits.global
@@ -42,10 +44,10 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "getWithCount return ResponseArticleWithCount instances" in {
       (for {
         pagination1 <- IO(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None))
-        response1 <- articleService.getWithCount(pagination1)
+        response1 <- articleService.getWithCount(pagination1).flatMap(_.liftTo[IO])
 
         pagination2 <- IO(PaginationRequestModel(Option(Page(1)), Option(Limit(3)), None))
-        response2 <- articleService.getWithCount(pagination2)
+        response2 <- articleService.getWithCount(pagination2).flatMap(_.liftTo[IO])
       } yield {
         // pagination1 assertion
         assert(response1.count > response1.articles.size)
@@ -64,9 +66,9 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
       (for {
         pagination1 <- IO(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None))
-        response1 <- articleService.getWithCount(articlePagination.make(pagination1))
+        response1 <- articleService.getWithCount(articlePagination.make(pagination1)).flatMap(_.liftTo[IO])
         pagination2 <- IO(PaginationRequestModel(Option(Page(1)), Option(Limit(3)), None))
-        response2 <- articleService.getWithCount(articlePagination.make(pagination2))
+        response2 <- articleService.getWithCount(articlePagination.make(pagination2)).flatMap(_.liftTo[IO])
       } yield {
         // pagination1 assertion
         assert(response1.count > response1.articles.size)
@@ -83,7 +85,7 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     "getByTagNameWithCount return ResponseArticleWithCount instances" in {
       (for {
         pagination <- IO(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None))
-        response <- articleService.getByTagNameWithCount(TagName("SameTag"), pagination)
+        response <- articleService.getByTagNameWithCount(TagName("SameTag"), pagination).flatMap(_.liftTo[IO])
       } yield {
         assert(response.count > response.articles.size)
         assert(response.articles.size === 5)
