@@ -2,13 +2,13 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.38.3"
-  val doobieVersion = "1.0.0-RC10"
+  val jsoniterVersion = "2.38.5"
+  val doobieVersion = "1.0.0-RC11"
   val jwtScalaVersion = "11.0.3"
-  val flywayVersion = "11.14.1"
+  val flywayVersion = "11.19.0"
   val http4sVersion = "1.0.0-M45"
   val log4catsVersion = "2.7.1"
-  val otel = "1.55.0"
+  val otel = "1.57.0"
   val otelInstrumentation = "2.20.1-alpha"
 
   val dependencies = Seq(
@@ -20,8 +20,8 @@ object Dependencies {
     "org.http4s" %% "http4s-dsl" % http4sVersion,
     "org.http4s" %% "http4s-ember-server" % http4sVersion,
     "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
-    "org.typelevel" %% "otel4s-oteljava" % "0.13.1",
-    "org.typelevel" %% "otel4s-instrumentation-metrics" % "0.13.1",
+    "org.typelevel" %% "otel4s-oteljava" % "0.14.0",
+    "org.typelevel" %% "otel4s-instrumentation-metrics" % "0.14.0",
     "io.opentelemetry.instrumentation" % "opentelemetry-runtime-telemetry-java17" % otelInstrumentation,
     "io.opentelemetry.instrumentation" % "opentelemetry-logback-appender-1.0" % otelInstrumentation,
     "io.opentelemetry" % "opentelemetry-exporter-otlp" % otel,
@@ -34,16 +34,16 @@ object Dependencies {
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "2025.1.20",
-    "com.github.ben-manes.caffeine" % "caffeine" % "3.2.2",
+    "org.wvlet.airframe" %% "airframe-ulid" % "2025.1.21",
+    "com.github.ben-manes.caffeine" % "caffeine" % "3.2.3",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
-    "ch.qos.logback" % "logback-classic" % "1.5.19",
-    "net.logstash.logback" % "logstash-logback-encoder" % "8.1",
+    "ch.qos.logback" % "logback-classic" % "1.5.22",
+    "net.logstash.logback" % "logstash-logback-encoder" % "9.0",
     "org.codehaus.janino" % "janino" % "3.1.12",
-    "org.springframework.security" % "spring-security-core" % "6.5.5",
+    "org.springframework.security" % "spring-security-core" % "7.0.0",
     "org.slf4j" % "slf4j-api" % "2.0.17",
     "org.scalatest" %% "scalatest" % "3.2.19" % "test",
-    "org.mockito" % "mockito-core" % "5.20.0" % "test"
+    "org.mockito" % "mockito-core" % "5.21.0" % "test"
   )
 }
