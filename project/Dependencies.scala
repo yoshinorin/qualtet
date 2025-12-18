@@ -2,14 +2,14 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.38.5"
+  val jsoniterVersion = "2.38.6"
   val doobieVersion = "1.0.0-RC11"
   val jwtScalaVersion = "11.0.3"
-  val flywayVersion = "11.19.0"
+  val flywayVersion = "11.19.1"
   val http4sVersion = "1.0.0-M45"
   val log4catsVersion = "2.7.1"
   val otel = "1.57.0"
-  val otelInstrumentation = "2.20.1-alpha"
+  val otelInstrumentation = "2.23.0-alpha"
 
   val dependencies = Seq(
     "com.typesafe" % "config" % "1.4.5",
@@ -30,7 +30,7 @@ object Dependencies {
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "test-internal",
-    "org.mariadb.jdbc" % "mariadb-java-client" % "3.5.6",
+    "org.mariadb.jdbc" % "mariadb-java-client" % "3.5.7",
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
@@ -41,7 +41,7 @@ object Dependencies {
     "ch.qos.logback" % "logback-classic" % "1.5.22",
     "net.logstash.logback" % "logstash-logback-encoder" % "9.0",
     "org.codehaus.janino" % "janino" % "3.1.12",
-    "org.springframework.security" % "spring-security-core" % "7.0.0",
+    "org.springframework.security" % "spring-security-core" % "7.0.2",
     "org.slf4j" % "slf4j-api" % "2.0.17",
     "org.scalatest" %% "scalatest" % "3.2.19" % "test",
     "org.mockito" % "mockito-core" % "5.21.0" % "test"
