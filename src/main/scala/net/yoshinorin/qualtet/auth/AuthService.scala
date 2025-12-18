@@ -43,7 +43,7 @@ class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt[IO])(us
         authorService.findById(AuthorId(jwtClaim.sub))
       case Left(t: Throwable) =>
         logger.error(s"${t.getMessage}") *>
-          IO.pure(throw Unauthorized())
+          IO.raiseError(Unauthorized())
     }
   }
 
