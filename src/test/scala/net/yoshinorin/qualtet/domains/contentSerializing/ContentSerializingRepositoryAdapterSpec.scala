@@ -50,14 +50,7 @@ class ContentSerializingRepositoryAdapterSpec extends AnyWordSpec with BeforeAnd
                 path = TagPath(s"ContentSerializingRepositoryAdapterSpec-path${i}.3").unsafe
               )
             ),
-            series = Option(
-              Series(
-                title = requestSeries.title,
-                name = requestSeries.name,
-                path = requestSeries.path,
-                description = None
-              )
-            ),
+            series = Option(requestSeries.name),
             externalResources = List()
           ).unsafe
         )

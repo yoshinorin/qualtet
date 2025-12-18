@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.domains.series.Series
+import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.tags.Tag
 import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, DomainError, HtmlContentRequired, RawContentRequired}
 import net.yoshinorin.qualtet.syntax.*
@@ -18,7 +18,7 @@ final case class ContentRequestModel(
   robotsAttributes: Attributes, // TODO: Consider to use `Option[Attributes]`
   externalResources: List[ExternalResources] = List(),
   tags: List[Tag] = List(),
-  series: Option[Series] = None,
+  series: Option[SeriesName] = None,
   path: ContentPath,
   title: String,
   rawContent: String,
@@ -31,7 +31,6 @@ final case class ContentRequestModel(
     for {
       decodedPath <- ContentPath(path.value)
       decodedTags <- tags.traverse(_.postDecode)
-      decodedSeries <- series.traverse(_.postDecode)
       decodedTitle <- title.trimOrError(ContentTitleRequired(detail = "title required."))
       decodedRawContent <- rawContent.trimOrError(RawContentRequired(detail = "rawContent required."))
       decodedHtmlContent <- htmlContent.trimOrError(HtmlContentRequired(detail = "htmlContent required."))
@@ -40,7 +39,7 @@ final case class ContentRequestModel(
       robotsAttributes = this.robotsAttributes.sort,
       externalResources = externalResources,
       tags = decodedTags,
-      series = decodedSeries,
+      series = series,
       path = decodedPath,
       title = decodedTitle,
       rawContent = decodedRawContent,
@@ -60,7 +59,7 @@ object ContentRequestModel {
     robotsAttributes: Attributes,
     externalResources: List[ExternalResources] = List(),
     tags: List[Tag] = List(),
-    series: Option[Series] = None,
+    series: Option[SeriesName] = None,
     path: ContentPath,
     title: String,
     rawContent: String,

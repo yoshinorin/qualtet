@@ -111,14 +111,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           Tag(name = TagName("Scala"), path = TagPath("scala-path").unsafe),
           Tag(name = TagName("http4s"), path = TagPath("http4s-path").unsafe)
         ),
-        series = Some(
-          Series(
-            title = "Content Service Spec Series",
-            name = SeriesName("contentservice-series"),
-            path = SeriesPath("contentservice-series-path").unsafe,
-            description = None
-          )
-        ),
+        series = Some(SeriesName("contentservice-series")),
         externalResources = List(
           ExternalResources(
             ExternalResourceKind("js").unsafe,
@@ -133,14 +126,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           Tag(name = TagName("Scala"), path = TagPath("scala-path").unsafe),
           Tag(name = TagName("Scala3"), path = TagPath("scala3-path").unsafe)
         ),
-        series = Some(
-          Series(
-            title = "Content Service Spec Series2",
-            name = SeriesName("contentservice-series2"),
-            path = SeriesPath("contentservice-series2-path").unsafe,
-            description = None
-          )
-        ),
+        series = Some(SeriesName("contentservice-series2")),
         robotsAttributes = Attributes("noarchive").unsafe,
         externalResources = List(
           ExternalResources(
@@ -269,14 +255,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           Tag(name = TagName("WillBeDelete"), path = TagPath("willbedelete-path").unsafe),
           Tag(name = TagName("WillBeDelete2"), path = TagPath("willbedelete2-path").unsafe)
         ),
-        series = Some(
-          Series(
-            title = "Content Service Spec willBeDelete",
-            name = SeriesName("contentservice-willBeDelete"),
-            path = SeriesPath("contentservice-willBeDelete-path").unsafe,
-            description = None
-          )
-        ),
+        series = Some(SeriesName("contentservice-willBeDelete")),
         externalResources = List(
           ExternalResources(
             ExternalResourceKind("js").unsafe,
@@ -291,14 +270,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
           Tag(name = TagName("WillNotDelete"), path = TagPath("willnotdelete-path").unsafe),
           Tag(name = TagName("WillNotDelete2"), path = TagPath("willnotdelete2-path").unsafe)
         ),
-        series = Some(
-          Series(
-            title = "Content Service willNotDelete Series",
-            name = SeriesName("contentservice-willNotDelete"),
-            path = SeriesPath("contentservice-willNotDelete-path").unsafe,
-            description = None
-          )
-        ),
+        series = Some(SeriesName("contentservice-willNotDelete")),
         externalResources = List(
           ExternalResources(
             ExternalResourceKind("js").unsafe,
@@ -360,16 +332,7 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         result <- contentService
           .createOrUpdate(
             AuthorName(author.name.value).unsafe,
-            requestContent1.copy(series =
-              Some(
-                Series(
-                  name = SeriesName("not_exists_series_name"),
-                  path = SeriesPath("not_exists_series_path").unsafe,
-                  title = "Not exists series title",
-                  description = None
-                )
-              )
-            )
+            requestContent1.copy(series = Some(SeriesName("not_exists_series_name")))
           )
       } yield {
         assert(result.isLeft)

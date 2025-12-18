@@ -55,9 +55,9 @@ class ContentService[F[_]: Monad](
       })
       contentSerilizing <- request.series match {
         case None => EitherT.rightT[IO, DomainError](None)
-        case Some(series) =>
-          EitherT(seriesService.findByName(series.name).flatMap {
-            case None => IO.pure(Left(InvalidSeries(detail = s"series not found: ${series.name}")))
+        case Some(seriesName) =>
+          EitherT(seriesService.findByName(seriesName).flatMap {
+            case None => IO.pure(Left(InvalidSeries(detail = s"series not found: ${seriesName}")))
             case Some(s) => IO.pure(Right(Some(ContentSerializing(s.id, contentId))))
           })
       }

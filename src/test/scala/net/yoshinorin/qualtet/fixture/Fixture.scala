@@ -222,7 +222,7 @@ object Fixture {
   def createContentRequestModels(
     numberOfCreateContents: Int,
     specName: String,
-    series: Option[Series] = None,
+    series: Option[SeriesName] = None,
     externalResources: List[ExternalResources] = List()
   ): List[ContentRequestModel] = {
     (0 until numberOfCreateContents).toList

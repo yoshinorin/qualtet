@@ -2,7 +2,7 @@ package net.yoshinorin.qualtet.domains.tags
 
 import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.contents.ContentPath
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesPath, SeriesRequestModel}
+import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath, SeriesRequestModel}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -41,16 +41,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     )
 
     requestSeries.unsafeCreateSeries()
-
-    val series = Option(
-      Series(
-        title = requestSeries.head.title,
-        name = requestSeries.head.name,
-        path = requestSeries.head.path,
-        description = requestSeries.head.description
-      )
-    )
-    createContentRequestModels(5, "SeriesService", series).unsafeCreateConternt()
+    createContentRequestModels(5, "SeriesService", Some(requestSeries.head.name)).unsafeCreateConternt()
   }
 
   "SeriesService" should {

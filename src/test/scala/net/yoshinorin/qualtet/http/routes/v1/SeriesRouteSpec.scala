@@ -44,15 +44,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
   )
 
   requestSeries.unsafeCreateSeries()
-  val series = Option(
-    Series(
-      title = requestSeries.head.title,
-      name = requestSeries.head.name,
-      path = requestSeries.head.path,
-      description = requestSeries.head.description
-    )
-  )
-  createContentRequestModels(5, "SeriesRoute", series).unsafeCreateConternt()
+  createContentRequestModels(5, "SeriesRoute", Option(requestSeries.head.name)).unsafeCreateConternt()
 
   /* TODO: `BeforeAndAfterAll` seems doesn't work on CI this test class.
   override protected def beforeAll(): Unit = {
