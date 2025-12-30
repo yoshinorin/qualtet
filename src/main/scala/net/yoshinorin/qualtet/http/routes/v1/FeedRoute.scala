@@ -1,12 +1,14 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import cats.data.EitherT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
 import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Response}
+import org.http4s.{HttpRoutes, MediaType, Request, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.{Limit, Page, PaginationRequestModel}
+import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
@@ -25,12 +27,13 @@ class FeedRoute[F[_]: Monad](
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
-  private[http] def get(name: String): IO[Response[IO]] = {
-    for {
-      feedsEither <- feedService.get(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None))
-      feeds <- feedsEither.liftTo[IO]
-      response <- Ok(feeds.asJson, `Content-Type`(MediaType.application.json))
-    } yield response
+  private[http] def get(name: String): Request[IO] ?=> IO[Response[IO]] = {
+    (for {
+      feeds <- EitherT(feedService.get(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)))
+    } yield feeds).value.flatMap {
+      case Right(feeds) => Ok(feeds.asJson, `Content-Type`(MediaType.application.json))
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 
 }

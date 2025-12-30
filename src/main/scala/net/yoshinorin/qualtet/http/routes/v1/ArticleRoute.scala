@@ -1,11 +1,13 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import cats.data.EitherT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.catsSyntaxEither
 import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Response}
+import org.http4s.{HttpRoutes, MediaType, Request, Response}
 import org.http4s.dsl.io.*
+import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.PaginationRequestModel
 import net.yoshinorin.qualtet.syntax.*
@@ -29,12 +31,13 @@ class ArticleRoute[F[_]: Monad](
   }
 
   // articles?page=n&limit=m
-  private[http] def get(p: PaginationRequestModel): IO[Response[IO]] = {
+  private[http] def get(p: PaginationRequestModel): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      articlesEither <- articleService.getWithCount(p)
-      articles <- articlesEither.liftTo[IO]
-      response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response)
+      maybeArticles <- EitherT(articleService.getWithCount(p))
+    } yield maybeArticles).value.flatMap {
+      case Right(articles) => Ok(articles.asJson, `Content-Type`(MediaType.application.json))
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 
 }

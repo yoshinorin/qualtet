@@ -1,13 +1,15 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import cats.data.EitherT
 import cats.effect.*
 import cats.Monad
 import cats.implicits.*
 import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
+import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Request, Response}
 import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
+import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesPath, SeriesRequestModel, SeriesService}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
@@ -48,21 +50,13 @@ class SeriesRoute[F[_]: Monad](
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
-  private[http] def post(payload: (AuthorResponseModel, String)): IO[Response[IO]] = {
-    val maybeSeries = for {
-      maybeSeries <- decode[SeriesRequestModel](payload._2)
-    } yield maybeSeries
-
-    maybeSeries.flatMap { s =>
-      s match {
-        case Left(f) => throw f
-        case Right(s) =>
-          seriesService.create(s).flatMap { createResult =>
-            createResult.liftTo[IO].flatMap { createdSeries =>
-              Created(createdSeries.asJson, `Content-Type`(MediaType.application.json))
-            }
-          }
-      }
+  private[http] def post(payload: (AuthorResponseModel, String)): Request[IO] ?=> IO[Response[IO]] = {
+    (for {
+      decodedSeries <- EitherT(decode[SeriesRequestModel](payload._2))
+      createdSeries <- EitherT(seriesService.create(decodedSeries))
+    } yield createdSeries).value.flatMap {
+      case Right(series) => Created(series.asJson, `Content-Type`(MediaType.application.json))
+      case Left(error: DomainError) => error.asResponse
     }
   }
 
@@ -74,22 +68,23 @@ class SeriesRoute[F[_]: Monad](
     } yield response)
   }
 
-  private[http] def get(name: String): IO[Response[IO]] = {
+  private[http] def get(name: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      seriesPath <- SeriesPath(name).liftTo[IO]
-      getResult <- seriesService.get(seriesPath)
-      seriesWithArticles <- getResult.liftTo[IO]
-      response <- Ok(seriesWithArticles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response)
+      seriesPath <- EitherT.fromEither[IO](SeriesPath(name))
+      seriesWithArticles <- EitherT(seriesService.get(seriesPath))
+    } yield seriesWithArticles).value.flatMap {
+      case Right(series) => Ok(series.asJson, `Content-Type`(MediaType.application.json))
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 
-  private[http] def delete(nameOrId: String): IO[Response[IO]] = {
+  private[http] def delete(nameOrId: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      deleteResult <- seriesService.delete(SeriesId(nameOrId))
-      _ <- deleteResult.liftTo[IO]
-      _ = logger.info(s"deleted series: ${nameOrId}")
-      response <- NoContent()
-    } yield response)
+      _ <- EitherT(seriesService.delete(SeriesId(nameOrId)))
+    } yield ()).value.flatMap {
+      case Right(_) => logger.info(s"deleted series: ${nameOrId}") *> NoContent()
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 
 }

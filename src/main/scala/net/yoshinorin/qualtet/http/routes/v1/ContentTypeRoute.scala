@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import cats.data.EitherT
 import cats.effect.IO
 import cats.implicits.*
 import cats.Monad
@@ -8,6 +9,7 @@ import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeName, ContentTypeService}
+import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
@@ -20,8 +22,7 @@ class ContentTypeRoute[F[_]: Monad](
   private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     (r match {
       case request @ GET -> Root => this.get
-      case request @ GET -> Root / name =>
-        ContentTypeName(name).liftTo[IO].flatMap(contentTypeName => this.get(contentTypeName))
+      case request @ GET -> Root / name => this.get(name)
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
@@ -34,9 +35,13 @@ class ContentTypeRoute[F[_]: Monad](
     } yield response
   }
 
-  private[http] def get(name: ContentTypeName): Request[IO] ?=> IO[Response[IO]] = {
+  private[http] def get(name: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      maybeContentType <- contentTypeService.findByName(name)
-    } yield maybeContentType).flatMap(_.asResponse)
+      contentTypeName <- EitherT.fromEither[IO](ContentTypeName(name))
+      maybeContentType <- EitherT.liftF(contentTypeService.findByName(contentTypeName))
+    } yield maybeContentType).value.flatMap {
+      case Right(contentType) => contentType.asResponse
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 }

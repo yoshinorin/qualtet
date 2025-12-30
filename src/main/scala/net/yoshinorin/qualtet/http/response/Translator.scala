@@ -80,6 +80,10 @@ object Translator {
     }
   }
 
+  def toResponse(e: DomainError): Request[IO] ?=> IO[Response[IO]] = {
+    this.failToResponse(fromDomainError(e))
+  }
+
   // NOTE: can't use `using` or `ContextFunctions`.
   //       I don't know why can't use `using`...
   def toResponse[T](a: Option[T])(implicit e: JsonValueCodec[T], req: Request[IO]): IO[Response[IO]] = {

@@ -1,14 +1,16 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import cats.data.EitherT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
 import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
+import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Request, Response}
 import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
+import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagPath, TagService}
 import net.yoshinorin.qualtet.domains.PaginationRequestModel
 import net.yoshinorin.qualtet.http.AuthProvider
@@ -57,21 +59,22 @@ class TagRoute[F[_]: Monad](
     } yield response
   }
 
-  private[http] def get(path: String, p: PaginationRequestModel): IO[Response[IO]] = {
+  private[http] def get(path: String, p: PaginationRequestModel): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      tagPath <- TagPath(path).liftTo[IO]
-      articlesEither <- articleService.getByTagPathWithCount(tagPath, p)
-      articles <- articlesEither.liftTo[IO]
-      response <- Ok(articles.asJson, `Content-Type`(MediaType.application.json))
-    } yield response)
+      tagPath <- EitherT.fromEither[IO](TagPath(path))
+      articles <- EitherT(articleService.getByTagPathWithCount(tagPath, p))
+    } yield articles).value.flatMap {
+      case Right(articles) => Ok(articles.asJson, `Content-Type`(MediaType.application.json))
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 
-  private[http] def delete(id: String): IO[Response[IO]] = {
+  private[http] def delete(id: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      deleteResult <- tagService.delete(TagId(id))
-      _ <- deleteResult.liftTo[IO]
-      _ = logger.info(s"deleted tag: ${id}")
-      response <- NoContent()
-    } yield response)
+      _ <- EitherT(tagService.delete(TagId(id)))
+    } yield ()).value.flatMap {
+      case Right(_) => logger.info(s"deleted tag: ${id}") *> NoContent()
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 }

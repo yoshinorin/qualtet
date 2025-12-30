@@ -1,11 +1,13 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import cats.data.EitherT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
 import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Response}
+import org.http4s.{HttpRoutes, MediaType, Request, Response}
 import org.http4s.dsl.io.*
+import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.archives.ArchiveService
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
@@ -25,11 +27,12 @@ class ArchiveRoute[F[_]: Monad](
   }
 
   // archives
-  private[http] def get: IO[Response[IO]] = {
-    for {
-      getResult <- archiveService.get
-      archives <- getResult.liftTo[IO]
-      response <- Ok(archives.asJson, `Content-Type`(MediaType.application.json))
-    } yield response
+  private[http] def get: Request[IO] ?=> IO[Response[IO]] = {
+    (for {
+      maybeArchives <- EitherT(archiveService.get)
+    } yield maybeArchives).value.flatMap {
+      case Right(archives) => Ok(archives.asJson, `Content-Type`(MediaType.application.json))
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 }

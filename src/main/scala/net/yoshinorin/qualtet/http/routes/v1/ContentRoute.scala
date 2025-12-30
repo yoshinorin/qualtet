@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import cats.data.EitherT
 import cats.Monad
 import cats.implicits.*
 import cats.effect.IO
@@ -17,6 +18,7 @@ import net.yoshinorin.qualtet.domains.contents.{
   ContentResponseModel,
   ContentService
 }
+import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
@@ -70,51 +72,46 @@ class ContentRoute[F[_]: Monad](
     }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
   }
 
-  private[http] def post(payload: (AuthorResponseModel, String)): IO[Response[IO]] = {
+  private[http] def post(payload: (AuthorResponseModel, String)): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      maybeContent <- decode[ContentRequestModel](payload._2)
-    } yield maybeContent).flatMap { c =>
-      c match {
-        case Left(f) => throw f
-        case Right(c) =>
-          (for {
-            createResult <- contentService.createOrUpdate(payload._1.name, c)
-            createdContent <- createResult.liftTo[IO]
-          } yield createdContent).flatMap { content =>
-            Created(content.asJson, `Content-Type`(MediaType.application.json))
-          }
-      }
+      maybeDecodedContent <- EitherT(decode[ContentRequestModel](payload._2))
+      maybeContent <- EitherT(contentService.createOrUpdate(payload._1.name, maybeDecodedContent))
+    } yield maybeContent).value.flatMap {
+      case Right(content) => Created(content.asJson, `Content-Type`(MediaType.application.json))
+      case Left(error: DomainError) => error.asResponse
     }
   }
 
-  private[http] def delete(id: String): IO[Response[IO]] = {
+  private[http] def delete(id: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      deleteResult <- contentService.delete(ContentId(id))
-      _ <- deleteResult.liftTo[IO]
-      _ = logger.info(s"deleted content: ${id}")
-      response <- NoContent()
-    } yield response)
+      result <- EitherT(contentService.delete(ContentId(id)))
+    } yield result).value.flatMap {
+      case Right(_) => logger.info(s"deleted content: ${id}") *> NoContent()
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 
   def get(path: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      contentPath <- ContentPath(path).liftTo[IO]
-      maybeContentEither <- contentService.findByPathWithMeta(contentPath)
-      maybeContent <- maybeContentEither.liftTo[IO]
-    } yield maybeContent)
-      .flatMap(_.asResponse)
+      maybeContentPath <- EitherT.fromEither[IO](ContentPath(path))
+      maybeContent <- EitherT(contentService.findByPathWithMeta(maybeContentPath))
+    } yield maybeContent).value.flatMap {
+      case Right(content) => content.asResponse
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 
   def getAdjacent(id: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
-      maybeContent <- contentService.findById(ContentId(id))
-      adjacentEither <- maybeContent match {
-        case Some(content) => contentService.findAdjacent(content.id)
-        case None => IO.pure(Right(None))
+      maybeContent <- EitherT.liftF(contentService.findById(ContentId(id)))
+      adjacentOpt <- maybeContent match {
+        case Some(content) => EitherT(contentService.findAdjacent(content.id))
+        case None => EitherT.rightT[IO, DomainError](None)
       }
-      adjacent <- adjacentEither.liftTo[IO]
-    } yield adjacent)
-      .flatMap(_.asResponse)
+    } yield adjacentOpt).value.flatMap {
+      case Right(adjacent) => adjacent.asResponse
+      case Left(error: DomainError) => error.asResponse
+    }
   }
 
 }
