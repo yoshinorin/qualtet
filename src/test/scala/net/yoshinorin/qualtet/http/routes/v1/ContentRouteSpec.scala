@@ -32,7 +32,7 @@ import cats.effect.unsafe.implicits.global
 class ContentRouteSpec extends AnyWordSpec {
 
   val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
-  val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).unsafeRunSync().token
+  val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).flatMap(IO.fromEither).unsafeRunSync().token
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
   "ContentRoute" should {

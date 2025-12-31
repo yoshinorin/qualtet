@@ -6,6 +6,7 @@ import org.http4s.headers.{Allow, `WWW-Authenticate`}
 import org.http4s.{Challenge, HttpRoutes, Request, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken}
+import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
@@ -23,7 +24,7 @@ class AuthRoute[F[_]: Monad](authService: AuthService[F])(using loggerFactory: L
   }
 
   // token
-  private[http] def post(request: Request[IO]): IO[Response[IO]] = {
+  private[http] def post(request: Request[IO]): Request[IO] ?=> IO[Response[IO]] = {
     (for {
       stringifyRequest <- request.as[String]
       maybeRequestToken <- decode[RequestToken](stringifyRequest)
@@ -31,7 +32,10 @@ class AuthRoute[F[_]: Monad](authService: AuthService[F])(using loggerFactory: L
       mrt match {
         case Left(_) => Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
         case Right(requestToken) =>
-          authService.generateToken(requestToken).flatMap(_.asResponse(Ok))
+          authService.generateToken(requestToken).flatMap {
+            case Right(token) => token.asResponse(Ok)
+            case Left(error: DomainError) => error.asResponse
+          }
       }
     }
   }

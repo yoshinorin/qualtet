@@ -15,7 +15,8 @@ class AuthServiceSpec extends AnyWordSpec {
 
     "generate token" in {
       (for {
-        response <- authService.generateToken(RequestToken(a.id, "pass"))
+        responseEither <- authService.generateToken(RequestToken(a.id, "pass"))
+        response <- cats.effect.IO.fromEither(responseEither)
         decoded <- jwtInstance.decode(response.token)
       } yield {
         assert(decoded.isRight)
@@ -24,7 +25,8 @@ class AuthServiceSpec extends AnyWordSpec {
 
     "find an author from JWT string" in {
       (for {
-        response <- authService.generateToken(RequestToken(a.id, "pass"))
+        responseEither <- authService.generateToken(RequestToken(a.id, "pass"))
+        response <- cats.effect.IO.fromEither(responseEither)
         author <- authService.findAuthorFromJwtString(response.token)
       } yield {
         assert(author.get.id.value === a.id.value)
@@ -43,16 +45,16 @@ class AuthServiceSpec extends AnyWordSpec {
       }
     }
 
-    "throw exception caused by password is wrong" in {
-      assertThrows[Unauthorized] {
-        authService.generateToken(RequestToken(a.id, "wrongPassword")).unsafeRunSync()
-      }
+    "return Left(Unauthorized) when password is wrong" in {
+      val result = authService.generateToken(RequestToken(a.id, "wrongPassword")).unsafeRunSync()
+      assert(result.isLeft)
+      assert(result.left.exists(_.isInstanceOf[Unauthorized]))
     }
 
-    "throw exception caused by authorName not found" in {
-      assertThrows[AuthorNotFound] {
-        authService.generateToken(RequestToken(authorId2, "password")).unsafeRunSync()
-      }
+    "return Left(AuthorNotFound) when author not found" in {
+      val result = authService.generateToken(RequestToken(authorId2, "password")).unsafeRunSync()
+      assert(result.isLeft)
+      assert(result.left.exists(_.isInstanceOf[AuthorNotFound]))
     }
   }
 
