@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.http.routes.v1
 import cats.data.EitherT
 import cats.effect.IO
 import cats.Monad
-import cats.implicits.*
 import org.http4s.headers.{Allow, `Content-Type`}
 import org.http4s.{HttpRoutes, MediaType, Request, Response}
 import org.http4s.dsl.io.*

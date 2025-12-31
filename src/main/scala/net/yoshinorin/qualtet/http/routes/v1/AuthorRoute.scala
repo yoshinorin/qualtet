@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
-import cats.implicits.*
 import cats.Monad
 import org.http4s.Request
 import org.http4s.headers.{Allow, `Content-Type`}

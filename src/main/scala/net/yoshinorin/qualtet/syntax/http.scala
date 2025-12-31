@@ -4,7 +4,6 @@ import cats.effect.IO
 import org.http4s.{Request, Response}
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationRequestModel}
-import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.http.response.Translator
 
 import scala.util.Try
@@ -26,12 +25,6 @@ trait http {
   extension (e: IO[Throwable]) {
     def andResponse: Request[IO] ?=> IO[Response[IO]] = {
       e.flatMap(_.asResponse)
-    }
-  }
-
-  extension (e: DomainError) {
-    def andResponse: Request[IO] ?=> IO[Response[IO]] = {
-      Translator.toResponse(e)
     }
   }
 
