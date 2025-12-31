@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.*
 import cats.Monad
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Response}
+import org.http4s.headers.Allow
+import org.http4s.{HttpRoutes, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.search.SearchService
 import net.yoshinorin.qualtet.syntax.*
@@ -27,7 +27,7 @@ class SearchRoute[F[_]: Monad](
     (for {
       _ <- logger.info(s"search query: ${query}")
       searchResult <- searchService.search(query)
-      response <- Ok(searchResult.asJson, `Content-Type`(MediaType.application.json))
+      response <- searchResult.asResponse(Ok)
     } yield response)
   }
 

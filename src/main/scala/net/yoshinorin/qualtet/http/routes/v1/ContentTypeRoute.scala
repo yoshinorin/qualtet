@@ -2,11 +2,10 @@ package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.data.EitherT
 import cats.effect.IO
-import cats.implicits.*
 import cats.Monad
 import org.http4s.Request
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Response}
+import org.http4s.headers.Allow
+import org.http4s.{HttpRoutes, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.errors.DomainError
@@ -31,7 +30,7 @@ class ContentTypeRoute[F[_]: Monad](
   private[http] def get: IO[Response[IO]] = {
     for {
       allContentTypes <- contentTypeService.getAll
-      response <- Ok(allContentTypes.asJson, `Content-Type`(MediaType.application.json))
+      response <- allContentTypes.asResponse(Ok)
     } yield response
   }
 

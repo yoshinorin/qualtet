@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import cats.Monad
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Response}
+import org.http4s.headers.Allow
+import org.http4s.{HttpRoutes, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.sitemaps.SitemapService
 import net.yoshinorin.qualtet.syntax.*
@@ -24,7 +24,7 @@ class SitemapRoute[F[_]: Monad](sitemapService: SitemapService[F])(using loggerF
   private[http] def get: IO[Response[IO]] = {
     for {
       sitemaps <- sitemapService.get()
-      response <- Ok(sitemaps.asJson, `Content-Type`(MediaType.application.json))
+      response <- sitemaps.asResponse(Ok)
     } yield response
   }
 

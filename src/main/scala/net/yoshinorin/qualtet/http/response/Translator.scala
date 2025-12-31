@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.http.response
 import cats.effect.IO
 import org.http4s.dsl.io.*
 import org.http4s.MediaType
-import org.http4s.{Request, Response}
+import org.http4s.{Request, Response, Status}
 import org.http4s.Challenge
 import org.http4s.headers.{`Content-Type`, `WWW-Authenticate`}
 import com.github.plokhotnyuk.jsoniter_scala.core.*
@@ -78,6 +78,22 @@ object Translator {
       case f: DomainError => this.failToResponse(fromDomainError(f))
       case _ => org.http4s.dsl.io.InternalServerError("Internal Server Error")
     }
+  }
+
+  def toResponse(status: Status, body: String): IO[Response[IO]] = {
+    IO.pure(
+      Response[IO](status = status)
+        .withEntity(body)
+        .withContentType(`Content-Type`(MediaType.application.json))
+    )
+  }
+
+  def toResponse[T](status: Status, body: T)(implicit e: JsonValueCodec[T]): IO[Response[IO]] = {
+    IO.pure(
+      Response[IO](status = status)
+        .withEntity(body.asJson)
+        .withContentType(`Content-Type`(MediaType.application.json))
+    )
   }
 
   // NOTE: can't use `using` or `ContextFunctions`.

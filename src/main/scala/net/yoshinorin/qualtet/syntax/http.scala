@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import cats.effect.IO
-import org.http4s.{Request, Response}
+import org.http4s.{Request, Response, Status}
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationRequestModel}
 import net.yoshinorin.qualtet.http.response.Translator
@@ -31,6 +31,18 @@ trait http {
   extension [T](a: Option[T]) {
     def asResponse: (JsonValueCodec[T], Request[IO]) ?=> IO[Response[IO]] = {
       Translator.toResponse[T](a)
+    }
+  }
+
+  extension (body: String) {
+    def asResponse(status: Status): IO[Response[IO]] = {
+      Translator.toResponse(status, body)
+    }
+  }
+
+  extension [T](body: T) {
+    def asResponse(status: Status): (JsonValueCodec[T]) ?=> IO[Response[IO]] = {
+      Translator.toResponse[T](status, body)
     }
   }
 

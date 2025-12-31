@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
 import cats.Monad
-import org.http4s.headers.{Allow, `Content-Type`, `WWW-Authenticate`}
-import org.http4s.{Challenge, HttpRoutes, MediaType, Request, Response}
+import org.http4s.headers.{Allow, `WWW-Authenticate`}
+import org.http4s.{Challenge, HttpRoutes, Request, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken}
 import net.yoshinorin.qualtet.http.request.Decoder
@@ -31,9 +31,7 @@ class AuthRoute[F[_]: Monad](authService: AuthService[F])(using loggerFactory: L
       mrt match {
         case Left(_) => Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
         case Right(requestToken) =>
-          authService.generateToken(requestToken).flatMap { t =>
-            Ok(t.asJson, `Content-Type`(MediaType.application.json))
-          }
+          authService.generateToken(requestToken).flatMap(_.asResponse(Ok))
       }
     }
   }

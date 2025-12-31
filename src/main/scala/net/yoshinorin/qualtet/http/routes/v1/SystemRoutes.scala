@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Response}
+import org.http4s.headers.Allow
+import org.http4s.{HttpRoutes, Response}
 import org.http4s.dsl.io.*
 
 import net.yoshinorin.qualtet.ApplicationInfo
@@ -32,8 +32,7 @@ class SystemRoute(config: HttpSystemEndpointConfig)(using loggerFactory: Log4Cat
   // system/metadata
   private[http] def metadata: IO[Response[IO]] = {
     (for {
-      a <- IO(ApplicationInfo.asJson)
-      response <- Ok(a, `Content-Type`(MediaType.application.json))
+      response <- ApplicationInfo.asJson.asResponse(Ok)
     } yield response)
   }
 

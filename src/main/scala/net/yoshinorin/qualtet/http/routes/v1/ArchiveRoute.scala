@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.http.routes.v1
 import cats.data.EitherT
 import cats.effect.IO
 import cats.Monad
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Request, Response}
+import org.http4s.headers.Allow
+import org.http4s.{HttpRoutes, Request, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.archives.ArchiveService
@@ -30,7 +30,7 @@ class ArchiveRoute[F[_]: Monad](
     (for {
       maybeArchives <- EitherT(archiveService.get)
     } yield maybeArchives).value.flatMap {
-      case Right(archives) => Ok(archives.asJson, `Content-Type`(MediaType.application.json))
+      case Right(archives) => archives.asResponse(Ok)
       case Left(error: DomainError) => error.asResponse
     }
   }

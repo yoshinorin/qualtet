@@ -4,8 +4,8 @@ import cats.data.EitherT
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Request, Response}
+import org.http4s.headers.Allow
+import org.http4s.{AuthedRoutes, HttpRoutes, Request, Response}
 import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
@@ -55,7 +55,7 @@ class TagRoute[F[_]: Monad](
   private[http] def get: IO[Response[IO]] = {
     for {
       allTags <- tagService.getAll
-      response <- Ok(allTags.asJson, `Content-Type`(MediaType.application.json))
+      response <- allTags.asResponse(Ok)
     } yield response
   }
 
@@ -64,7 +64,7 @@ class TagRoute[F[_]: Monad](
       tagPath <- EitherT.fromEither[IO](TagPath(path))
       articles <- EitherT(articleService.getByTagPathWithCount(tagPath, p))
     } yield articles).value.flatMap {
-      case Right(articles) => Ok(articles.asJson, `Content-Type`(MediaType.application.json))
+      case Right(articles) => articles.asResponse(Ok)
       case Left(error: DomainError) => error.asResponse
     }
   }

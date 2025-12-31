@@ -4,8 +4,8 @@ import cats.data.EitherT
 import cats.effect.*
 import cats.Monad
 import cats.implicits.*
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Request, Response}
+import org.http4s.headers.Allow
+import org.http4s.{AuthedRoutes, HttpRoutes, Request, Response}
 import org.http4s.dsl.io.*
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
@@ -55,7 +55,7 @@ class SeriesRoute[F[_]: Monad](
       decodedSeries <- EitherT(decode[SeriesRequestModel](payload._2))
       createdSeries <- EitherT(seriesService.create(decodedSeries))
     } yield createdSeries).value.flatMap {
-      case Right(series) => Created(series.asJson, `Content-Type`(MediaType.application.json))
+      case Right(series) => series.asResponse(Created)
       case Left(error: DomainError) => error.asResponse
     }
   }
@@ -64,7 +64,7 @@ class SeriesRoute[F[_]: Monad](
   private[http] def get: IO[Response[IO]] = {
     (for {
       series <- seriesService.getAll
-      response <- Ok(series.asJson, `Content-Type`(MediaType.application.json))
+      response <- series.asResponse(Ok)
     } yield response)
   }
 
@@ -73,7 +73,7 @@ class SeriesRoute[F[_]: Monad](
       seriesPath <- EitherT.fromEither[IO](SeriesPath(name))
       seriesWithArticles <- EitherT(seriesService.get(seriesPath))
     } yield seriesWithArticles).value.flatMap {
-      case Right(series) => Ok(series.asJson, `Content-Type`(MediaType.application.json))
+      case Right(series) => series.asResponse(Ok)
       case Left(error: DomainError) => error.asResponse
     }
   }

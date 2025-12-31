@@ -4,8 +4,8 @@ import cats.data.EitherT
 import cats.Monad
 import cats.implicits.*
 import cats.effect.IO
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{AuthedRoutes, HttpRoutes, MediaType, Response}
+import org.http4s.headers.Allow
+import org.http4s.{AuthedRoutes, HttpRoutes, Response}
 import org.http4s.dsl.io.*
 import org.http4s.{ContextRequest, Request}
 import net.yoshinorin.qualtet.domains.contents.ContentPath
@@ -77,7 +77,7 @@ class ContentRoute[F[_]: Monad](
       maybeDecodedContent <- EitherT(decode[ContentRequestModel](payload._2))
       maybeContent <- EitherT(contentService.createOrUpdate(payload._1.name, maybeDecodedContent))
     } yield maybeContent).value.flatMap {
-      case Right(content) => Created(content.asJson, `Content-Type`(MediaType.application.json))
+      case Right(content) => content.asResponse(Created)
       case Left(error: DomainError) => error.asResponse
     }
   }

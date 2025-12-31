@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.http.routes.v1
 import cats.data.EitherT
 import cats.effect.IO
 import cats.Monad
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Request, Response}
+import org.http4s.headers.Allow
+import org.http4s.{HttpRoutes, Request, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.articles.ArticleService
@@ -34,7 +34,7 @@ class ArticleRoute[F[_]: Monad](
     (for {
       maybeArticles <- EitherT(articleService.getWithCount(p))
     } yield maybeArticles).value.flatMap {
-      case Right(articles) => Ok(articles.asJson, `Content-Type`(MediaType.application.json))
+      case Right(articles) => articles.asResponse(Ok)
       case Left(error: DomainError) => error.asResponse
     }
   }

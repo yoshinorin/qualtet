@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.http.routes.v1
 import cats.effect.IO
 import cats.Monad
 import org.http4s.Request
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Response}
+import org.http4s.headers.Allow
+import org.http4s.{HttpRoutes, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.syntax.*
@@ -29,7 +29,7 @@ class AuthorRoute[F[_]: Monad](
   private[http] def get: IO[Response[IO]] = {
     for {
       authors <- authorService.getAll
-      response <- Ok(authors.asJson, `Content-Type`(MediaType.application.json))
+      response <- authors.asResponse(Ok)
     } yield response
   }
 

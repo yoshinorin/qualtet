@@ -3,8 +3,8 @@ package net.yoshinorin.qualtet.http.routes.v1
 import cats.data.EitherT
 import cats.effect.IO
 import cats.Monad
-import org.http4s.headers.{Allow, `Content-Type`}
-import org.http4s.{HttpRoutes, MediaType, Request, Response}
+import org.http4s.headers.Allow
+import org.http4s.{HttpRoutes, Request, Response}
 import org.http4s.dsl.io.*
 import net.yoshinorin.qualtet.domains.{Limit, Page, PaginationRequestModel}
 import net.yoshinorin.qualtet.domains.errors.DomainError
@@ -30,7 +30,7 @@ class FeedRoute[F[_]: Monad](
     (for {
       feeds <- EitherT(feedService.get(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)))
     } yield feeds).value.flatMap {
-      case Right(feeds) => Ok(feeds.asJson, `Content-Type`(MediaType.application.json))
+      case Right(feeds) => feeds.asResponse(Ok)
       case Left(error: DomainError) => error.asResponse
     }
   }
