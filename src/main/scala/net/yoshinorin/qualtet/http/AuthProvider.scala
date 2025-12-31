@@ -31,8 +31,11 @@ class AuthProvider[F[_]: Monad](
         case Right(a) => {
           (for {
             renderString <- IO(a.credentials.renderString.replace("Bearer ", "").replace("bearer ", ""))
-            maybeAuthor <- authService.findAuthorFromJwtString(renderString)
-            author <- IO(maybeAuthor.asEither[DomainError](AuthorNotFound(detail = "author not found")))
+            authorResult <- authService.findAuthorFromJwtString(renderString)
+            author = authorResult.flatMap {
+              case Some(a) => Right(a)
+              case None => Left(AuthorNotFound(detail = "author not found"))
+            }
             payload <- request.as[String]
           } yield {
             author match {

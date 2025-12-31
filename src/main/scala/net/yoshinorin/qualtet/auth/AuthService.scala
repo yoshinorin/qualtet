@@ -38,13 +38,13 @@ class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt[IO])(us
 
   }
 
-  def findAuthorFromJwtString(jwtString: String): IO[Option[AuthorResponseModel]] = {
+  def findAuthorFromJwtString(jwtString: String): IO[Either[DomainError, Option[AuthorResponseModel]]] = {
     jwt.decode(jwtString).flatMap {
       case Right(jwtClaim: JwtClaim) =>
-        authorService.findById(AuthorId(jwtClaim.sub))
+        authorService.findById(AuthorId(jwtClaim.sub)).map(Right(_))
       case Left(t: Throwable) =>
         logger.error(s"${t.getMessage}") *>
-          IO.raiseError(Unauthorized())
+          IO.pure(Left(Unauthorized()))
     }
   }
 

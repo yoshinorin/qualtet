@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.auth
 
+import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Unauthorized}
 import net.yoshinorin.qualtet.fixture.Fixture.*
@@ -16,7 +17,7 @@ class AuthServiceSpec extends AnyWordSpec {
     "generate token" in {
       (for {
         responseEither <- authService.generateToken(RequestToken(a.id, "pass"))
-        response <- cats.effect.IO.fromEither(responseEither)
+        response <- IO.fromEither(responseEither)
         decoded <- jwtInstance.decode(response.token)
       } yield {
         assert(decoded.isRight)
@@ -26,23 +27,24 @@ class AuthServiceSpec extends AnyWordSpec {
     "find an author from JWT string" in {
       (for {
         responseEither <- authService.generateToken(RequestToken(a.id, "pass"))
-        response <- cats.effect.IO.fromEither(responseEither)
-        author <- authService.findAuthorFromJwtString(response.token)
+        response <- IO.fromEither(responseEither)
+        authorEither <- authService.findAuthorFromJwtString(response.token)
+        author <- IO.fromEither(authorEither)
       } yield {
         assert(author.get.id.value === a.id.value)
       }).unsafeRunSync()
     }
 
-    "throw exception if JWT is expired" in {
-      assertThrows[Unauthorized] {
-        authService.findAuthorFromJwtString(expiredToken).unsafeRunSync()
-      }
+    "return Left(Unauthorized) when JWT is expired" in {
+      val result = authService.findAuthorFromJwtString(expiredToken).unsafeRunSync()
+      assert(result.isLeft)
+      assert(result.left.exists(_.isInstanceOf[Unauthorized]))
     }
 
-    "throw exception if JWT's author not found" in {
-      assertThrows[Unauthorized] {
-        authService.findAuthorFromJwtString(nonExistsUserToken).unsafeRunSync()
-      }
+    "return Left(Unauthorized) when JWT's author not found" in {
+      val result = authService.findAuthorFromJwtString(nonExistsUserToken).unsafeRunSync()
+      assert(result.isLeft)
+      assert(result.left.exists(_.isInstanceOf[Unauthorized]))
     }
 
     "return Left(Unauthorized) when password is wrong" in {
