@@ -19,7 +19,7 @@ class AuthRoute[F[_]: Monad](authService: AuthService[F])(using loggerFactory: L
       case request @ POST -> Root => this.post(request)
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(POST)))
-    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
   // token

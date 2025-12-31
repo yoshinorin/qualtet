@@ -32,10 +32,10 @@ class SeriesRoute[F[_]: Monad](
   private[http] def seriesWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case request @ GET -> Root =>
       implicit val r = request
-      this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
+      this.get.handleErrorWith(_.logWithStackTrace[IO].asResponse)
     case request @ GET -> Root / name =>
       implicit val r = request
-      this.get(name).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+      this.get(name).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
   private[http] def seriesWithAuthed: AuthedRoutes[(AuthorResponseModel, String), IO] = AuthedRoutes.of { ctxRequest =>
@@ -47,7 +47,7 @@ class SeriesRoute[F[_]: Monad](
           case request @ DELETE -> Root / nameOrId => this.delete(nameOrId)
           case request @ _ => MethodNotAllowed(Allow(Set(GET, POST)))
         }
-    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
   private[http] def post(payload: (AuthorResponseModel, String)): Request[IO] ?=> IO[Response[IO]] = {

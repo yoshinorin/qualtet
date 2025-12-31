@@ -22,7 +22,7 @@ class AuthorRoute[F[_]: Monad](
       case request @ GET -> Root / authorName => this.get(authorName)
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
-    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
   // authors

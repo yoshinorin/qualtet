@@ -52,11 +52,11 @@ class ContentRoute[F[_]: Monad](
         val maybeId = removeApiPath(request.path).replace("adjacent", "").replace("/", "")
         this
           .getAdjacent(maybeId)
-          .handleErrorWith(_.logWithStackTrace[IO].andResponse)
+          .handleErrorWith(_.logWithStackTrace[IO].asResponse)
       case request @ GET -> _ =>
         this
           .get(removeApiPath(request.path))
-          .handleErrorWith(_.logWithStackTrace[IO].andResponse)
+          .handleErrorWith(_.logWithStackTrace[IO].asResponse)
     )
   }
 
@@ -69,7 +69,7 @@ class ContentRoute[F[_]: Monad](
           case request @ DELETE -> Root / id => this.delete(id)
           case request @ _ => MethodNotAllowed(Allow(Set(GET, POST, DELETE)))
         }
-    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
   private[http] def post(payload: (AuthorResponseModel, String)): Request[IO] ?=> IO[Response[IO]] = {

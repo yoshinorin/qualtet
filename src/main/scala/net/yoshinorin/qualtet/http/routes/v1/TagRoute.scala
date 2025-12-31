@@ -32,12 +32,12 @@ class TagRoute[F[_]: Monad](
   private[http] def tagsWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
     r match {
       case request @ GET -> Root =>
-        this.get.handleErrorWith(_.logWithStackTrace[IO].andResponse)
+        this.get.handleErrorWith(_.logWithStackTrace[IO].asResponse)
       case request @ OPTIONS -> Root =>
         NoContent()
       case request @ GET -> Root / tagPath =>
         val p = request.uri.query.params.asPagination
-        this.get(tagPath, p).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+        this.get(tagPath, p).handleErrorWith(_.logWithStackTrace[IO].asResponse)
     }
   }
 
@@ -49,7 +49,7 @@ class TagRoute[F[_]: Monad](
           case request @ DELETE -> Root / id => this.delete(id)
           case request @ _ => MethodNotAllowed(Allow(Set(GET, DELETE)))
         }
-    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
   private[http] def get: IO[Response[IO]] = {

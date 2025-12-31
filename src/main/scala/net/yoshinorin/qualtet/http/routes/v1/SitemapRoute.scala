@@ -18,7 +18,7 @@ class SitemapRoute[F[_]: Monad](sitemapService: SitemapService[F])(using loggerF
       case request @ GET -> Root => this.get
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
-    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
   private[http] def get: IO[Response[IO]] = {

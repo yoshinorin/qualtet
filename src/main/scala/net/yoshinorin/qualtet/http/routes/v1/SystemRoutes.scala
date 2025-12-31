@@ -21,7 +21,7 @@ class SystemRoute(config: HttpSystemEndpointConfig)(using loggerFactory: Log4Cat
         if config.metadata.enabled then this.metadata else NotFound()
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
-    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
   // system/health

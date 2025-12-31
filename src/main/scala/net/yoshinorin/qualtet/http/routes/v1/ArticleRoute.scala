@@ -26,7 +26,7 @@ class ArticleRoute[F[_]: Monad](
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ =>
         MethodNotAllowed(Allow(Set(GET)))
-    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
   // articles?page=n&limit=m

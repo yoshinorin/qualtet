@@ -25,7 +25,7 @@ class ContentTypeRoute[F[_]: Monad](
       case request @ GET -> Root / name => this.get(name)
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
-    }).handleErrorWith(_.logWithStackTrace[IO].andResponse)
+    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
   private[http] def get: IO[Response[IO]] = {

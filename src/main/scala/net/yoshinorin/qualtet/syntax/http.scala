@@ -23,7 +23,7 @@ trait http {
   }
 
   extension (e: IO[Throwable]) {
-    def andResponse: Request[IO] ?=> IO[Response[IO]] = {
+    def asResponse: Request[IO] ?=> IO[Response[IO]] = {
       e.flatMap(_.asResponse)
     }
   }
