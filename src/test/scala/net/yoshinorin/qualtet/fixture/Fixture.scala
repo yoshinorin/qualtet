@@ -1,7 +1,10 @@
 package net.yoshinorin.qualtet.fixture
 
-import cats.Monad
+import cats.data.EitherT
+import cats.{Monad, MonadError}
 import cats.effect.IO
+import cats.data.EitherT
+import cats.syntax.flatMap.toFlatMapOps
 import doobie.ConnectionIO
 import doobie.util.transactor.Transactor
 import org.http4s.Uri
@@ -50,10 +53,21 @@ import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import cats.effect.unsafe.implicits.global
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 
+import scala.reflect.ClassTag
+
 // Extension method for test convenience: converts Either to value unsafely
 extension [L, R](either: Either[L, R]) {
   def unsafe: R = either.toOption.get
   def error: L = either.swap.toOption.get
+}
+
+extension [A: ClassTag, B <: Throwable, F[_]: Monad](v: EitherT[F, B, A]) {
+  def andThrow: MonadError[F, Throwable] ?=> F[A] = {
+    v.value.flatMap {
+      case Right(v) => Monad[F].pure(v)
+      case Left(t: Throwable) => MonadError[F, Throwable].raiseError(t)
+    }
+  }
 }
 
 // Just test data

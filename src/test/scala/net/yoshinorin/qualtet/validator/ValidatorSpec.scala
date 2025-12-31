@@ -4,6 +4,7 @@ import cats.implicits.catsSyntaxEq
 import cats.effect.IO
 import net.yoshinorin.qualtet.domains.errors.{Unauthorized, UnexpectedException}
 import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.fixture.andThrow
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
