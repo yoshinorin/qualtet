@@ -58,6 +58,8 @@ jobs:
           COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
   assemble:
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     timeout-minutes: 360
     strategy:
       matrix:
