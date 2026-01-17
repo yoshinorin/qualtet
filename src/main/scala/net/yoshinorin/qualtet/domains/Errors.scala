@@ -3,7 +3,10 @@ package net.yoshinorin.qualtet.domains.errors
 import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
 
-sealed trait DomainError extends Exception
+sealed trait DomainError extends Exception {
+  def detail: String
+  override def getMessage: String = detail
+}
 
 final case class ProblemDetailsError(
   code: String,
