@@ -2,14 +2,14 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.38.6"
+  val jsoniterVersion = "2.38.8"
   val doobieVersion = "1.0.0-RC11"
   val jwtScalaVersion = "11.0.3"
-  val flywayVersion = "11.19.1"
+  val flywayVersion = "11.20.2"
   val http4sVersion = "1.0.0-M45"
   val log4catsVersion = "2.7.1"
-  val otel = "1.57.0"
-  val otelInstrumentation = "2.23.0-alpha"
+  val otel = "1.58.0"
+  val otelInstrumentation = "2.24.0-alpha"
 
   val dependencies = Seq(
     "com.typesafe" % "config" % "1.4.5",
@@ -34,11 +34,11 @@ object Dependencies {
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "2025.1.21",
+    "org.wvlet.airframe" %% "airframe-ulid" % "2025.1.27",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.2.3",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
-    "ch.qos.logback" % "logback-classic" % "1.5.22",
+    "ch.qos.logback" % "logback-classic" % "1.5.25",
     "net.logstash.logback" % "logstash-logback-encoder" % "9.0",
     "org.codehaus.janino" % "janino" % "3.1.12",
     "org.springframework.security" % "spring-security-core" % "7.0.2",
