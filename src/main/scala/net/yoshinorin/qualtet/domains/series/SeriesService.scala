@@ -3,19 +3,22 @@ package net.yoshinorin.qualtet.domains.series
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.contentSerializing.ContentSerializingRepositoryAdapter
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.errors.{DomainError, SeriesNotFound}
-import net.yoshinorin.qualtet.syntax.toLower
+import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID
 
 class SeriesService[F[_]: Monad](
   seriesRepositoryAdapter: SeriesRepositoryAdapter[F],
   contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[F],
   articleService: ArticleService[F]
-)(using executer: Executer[F, IO]) {
+)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO]) {
+
+  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   /**
    * create a series
@@ -33,10 +36,11 @@ class SeriesService[F[_]: Monad](
             executer.transact(seriesRepositoryAdapter.upsert(Series(SeriesId(ULID.newULIDString.toLower), data.name, data.path, data.title, data.description)))
         }
       maybeSeries <- this.findByName(data.name)
-    } yield maybeSeries match {
-      case Some(series) => Right(series)
-      case None => Left(SeriesNotFound(detail = "series not found"))
-    }
+      result <- maybeSeries match {
+        case Some(series) => IO.pure(Right(series))
+        case None => Left(SeriesNotFound(detail = "series not found")).logLeft[IO](Warn)
+      }
+    } yield result
   }
 
   def findById(id: SeriesId): IO[Option[Series]] = {
@@ -64,10 +68,10 @@ class SeriesService[F[_]: Monad](
             case Right(seriesWithArticles) =>
               IO.pure(Right(SeriesResponseModel(series.id, series.name, series.path, series.title, series.description, seriesWithArticles.articles)))
             case Left(error) =>
-              IO.pure(Left(error))
+              Left(error).logLeft[IO](Warn)
           }
         case None =>
-          IO.pure(Left(SeriesNotFound(detail = s"series not found: ${path.value}")))
+          Left(SeriesNotFound(detail = s"series not found: ${path.value}")).logLeft[IO](Warn)
       }
     } yield result
   }
@@ -97,7 +101,7 @@ class SeriesService[F[_]: Monad](
         case Some(_) =>
           executer.transact2[Unit, Unit](queries).map(_ => Right(()))
         case None =>
-          IO.pure(Left(SeriesNotFound(detail = s"series not found: ${id}")))
+          Left(SeriesNotFound(detail = s"series not found: ${id}")).logLeft[IO](Warn)
       }
     } yield result
   }

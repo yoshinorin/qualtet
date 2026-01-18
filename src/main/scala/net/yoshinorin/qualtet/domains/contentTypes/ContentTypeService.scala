@@ -2,16 +2,20 @@ package net.yoshinorin.qualtet.domains.contentTypes
 
 import cats.effect.IO
 import cats.Monad
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.infrastructure.db.Executer
+import net.yoshinorin.qualtet.syntax.*
 
 class ContentTypeService[F[_]: Monad](
   contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[F],
   cache: CacheModule[IO, String, ContentType]
-)(using executer: Executer[F, IO])
+)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO])
     extends Cacheable[IO] {
+
+  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   /**
    * create a contentType
@@ -26,10 +30,11 @@ class ContentTypeService[F[_]: Monad](
         for {
           _ <- executer.transact(contentTypeRepositoryAdapter.upsert(data))
           maybeContentType <- this.findByName(data.name)
-        } yield maybeContentType match {
-          case Some(c) => Right(c)
-          case None => Left(UnexpectedException("contentType not found"))
-        }
+          result <- maybeContentType match {
+            case Some(c) => IO.pure(Right(c))
+            case None => Left(UnexpectedException("contentType not found")).logLeft[IO](Error)
+          }
+        } yield result
     }
   }
 

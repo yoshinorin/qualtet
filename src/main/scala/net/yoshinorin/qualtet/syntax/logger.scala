@@ -29,4 +29,10 @@ trait logger {
     }
   }
 
+  extension [F[_]: Monad, E <: Exception, A](fEither: F[Either[E, A]]) {
+    def logLeftF(level: LogLevel)(using logger: SelfAwareStructuredLogger[F]): F[Either[E, A]] = {
+      Monad[F].flatMap(fEither)(_.logLeft[F](level))
+    }
+  }
+
 }

@@ -4,6 +4,7 @@ import cats.data.ContT
 import cats.effect.IO
 import cats.implicits.*
 import cats.Monad
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound, DomainError}
 import net.yoshinorin.qualtet.domains.tags.TagName
@@ -18,7 +19,9 @@ class ArticleService[F[_]: Monad](
   articlesPagination: PaginationOps[ArticlesPagination],
   tagsPagination: PaginationOps[TagsPagination],
   contentTypeService: ContentTypeService[F]
-)(using executer: Executer[F, IO]) {
+)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO]) {
+
+  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   def get[A](
     data: A = (),
@@ -27,21 +30,21 @@ class ArticleService[F[_]: Monad](
     f: (ContentTypeId, A, Pagination) => ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]]
   ): IO[Either[DomainError, ArticleWithCountResponseModel]] = {
     ContentTypeName("article") match {
-      case Left(error) => IO.pure(Left(error))
+      case Left(error) => Left(error).logLeft[IO](Error)
       case Right(contentTypeName) =>
         for {
           maybeContentType <- contentTypeService.findByName(contentTypeName)
           result <- maybeContentType match {
             case Some(c) =>
-              executer.transact(f(c.id, data, queryParam)).map { articlesWithCount =>
+              executer.transact(f(c.id, data, queryParam)).flatMap { articlesWithCount =>
                 if (articlesWithCount.nonEmpty) {
-                  Right(ArticleWithCountResponseModel(articlesWithCount.map(_._1).headOption.getOrElse(0), articlesWithCount.map(_._2)))
+                  IO.pure(Right(ArticleWithCountResponseModel(articlesWithCount.map(_._1).headOption.getOrElse(0), articlesWithCount.map(_._2))))
                 } else {
-                  Left(ArticleNotFound(detail = "articles not found"))
+                  Left(ArticleNotFound(detail = "articles not found")).logLeft[IO](Warn)
                 }
               }
             case None =>
-              IO.pure(Left(ContentTypeNotFound(detail = "content-type not found: article")))
+              Left(ContentTypeNotFound(detail = "content-type not found: article")).logLeft[IO](Error)
           }
         } yield result
     }

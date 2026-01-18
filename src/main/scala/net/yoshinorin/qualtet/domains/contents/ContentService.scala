@@ -4,6 +4,7 @@ import cats.data.{ContT, EitherT}
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingRepositoryAdapter}
@@ -29,18 +30,24 @@ class ContentService[F[_]: Monad](
   seriesRepositoryAdapter: SeriesRepositoryAdapter[F],
   seriesService: SeriesService[F],
   contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[F]
-)(using
-  executer: Executer[F, IO]
-) {
+)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO]) {
+
+  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   def createOrUpdate(authorName: AuthorName, request: ContentRequestModel): IO[Either[DomainError, ContentResponseModel]] = {
     val authorAndContentType = for {
       contentTypeName <- EitherT.fromEither[IO](ContentTypeName(request.contentType))
-      author <- EitherT(authorService.findByName(authorName).errorIfNone(InvalidAuthor(detail = s"user not found: ${authorName}")))
+      author <- EitherT(
+        authorService
+          .findByName(authorName)
+          .errorIfNone(InvalidAuthor(detail = s"user not found: ${authorName}"))
+          .logLeftF(Warn)
+      )
       contentType <- EitherT(
         contentTypeService
           .findByName(contentTypeName)
           .errorIfNone(InvalidContentType(detail = s"content-type not found: ${request.contentType}"))
+          .logLeftF(Warn)
       )
     } yield (author, contentType)
 
@@ -57,8 +64,8 @@ class ContentService[F[_]: Monad](
         case None => EitherT.rightT[IO, DomainError](None)
         case Some(seriesName) =>
           EitherT(seriesService.findByName(seriesName).flatMap {
-            case None => IO.pure(Left(InvalidSeries(detail = s"series not found: ${seriesName}")))
             case Some(s) => IO.pure(Right(Some(ContentSerializing(s.id, contentId))))
+            case None => Left(InvalidSeries(detail = s"series not found: ${seriesName}")).logLeft[IO](Warn)
           })
       }
       createdContent <- EitherT(
@@ -144,7 +151,10 @@ class ContentService[F[_]: Monad](
 
     for {
       _ <- executer.transact11[Int, Seq[Tag], Unit, Int, Int, Int, Option[Series], Unit, Int, Unit, Int](queries)
-      c <- this.findByPath(data.path).errorIfNone(UnexpectedException("content not found")) // NOTE: 404 is better?
+      c <- this
+        .findByPath(data.path)
+        .errorIfNone(UnexpectedException("content not found"))
+        .logLeftF(Error) // NOTE: 404 is better?
     } yield c
   }
 
@@ -174,7 +184,7 @@ class ContentService[F[_]: Monad](
       case Some(_) =>
         executer.transact5[Unit, Unit, Unit, Unit, Unit](queries).map(_ => Right(()))
       case None =>
-        IO.pure(Left(ContentNotFound(detail = s"content not found: ${id}")))
+        Left(ContentNotFound(detail = s"content not found: ${id}")).logLeft[IO](Warn)
     }
   }
 

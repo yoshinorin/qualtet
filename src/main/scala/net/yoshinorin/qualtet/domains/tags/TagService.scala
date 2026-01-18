@@ -3,19 +3,22 @@ package net.yoshinorin.qualtet.domains.tags
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepositoryAdapter
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.errors.{DomainError, TagNotFound}
 import net.yoshinorin.qualtet.domains.Cacheable
+import net.yoshinorin.qualtet.syntax.*
 
 class TagService[F[_]: Monad](
   tagRepositoryAdapter: TagRepositoryAdapter[F],
   cache: CacheModule[IO, String, Seq[TagResponseModel]],
   contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[F]
-)(using executer: Executer[F, IO])
+)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO])
     extends Cacheable[IO] {
 
+  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
   private val CACHE_KEY = "TAGS_FULL_CACHE"
 
   /**
@@ -97,7 +100,7 @@ class TagService[F[_]: Monad](
         case Some(_) =>
           executer.transact2(queries).map(_ => Right(()))
         case None =>
-          IO.pure(Left(TagNotFound(detail = s"tag not found: ${id}")))
+          Left(TagNotFound(detail = s"tag not found: ${id}")).logLeft[IO](Warn)
       }
     } yield result
   }

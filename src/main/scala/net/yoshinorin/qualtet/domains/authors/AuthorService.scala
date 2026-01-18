@@ -3,13 +3,16 @@ package net.yoshinorin.qualtet.domains.authors
 import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
 class AuthorService[F[_]: Monad](
   authorRepositoryAdapter: AuthorRepositoryAdapter[F]
-)(using executer: Executer[F, IO]) {
+)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO]) {
+
+  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   /**
    * create an authorName
@@ -19,9 +22,9 @@ class AuthorService[F[_]: Monad](
    */
   def create(data: Author): IO[Either[DomainError, AuthorResponseModel]] = {
     executer.transact(authorRepositoryAdapter.upsert(data)) *>
-      this.findByName(data.name).map {
-        case Some(author) => Right(author)
-        case None => Left(UnexpectedException("user not found"))
+      this.findByName(data.name).flatMap {
+        case Some(author) => IO.pure(Right(author))
+        case None => Left(UnexpectedException("user not found")).logLeft[IO](Error)
       }
   }
 
