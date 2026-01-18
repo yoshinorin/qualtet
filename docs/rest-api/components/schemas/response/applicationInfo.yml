@@ -5,7 +5,7 @@ properties:
     example: "qualtet"
   version:
     type: string
-    example: "v2.20.0"
+    example: "v2.21.0"
   repository:
     type: string
     example: "https://github.com/yoshinorin/qualtet"

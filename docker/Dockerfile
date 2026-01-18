@@ -2,7 +2,7 @@
 FROM ghcr.io/yoshinorin/docker-sbt:v1.11.7-scala3.7.4-jdk21 as builder
 
 LABEL maintainer="yoshinorin"
-ENV QUALTET_VERSION="v2.20.0"
+ENV QUALTET_VERSION="v2.21.0"
 
 RUN apt update -y \
   && apt upgrade -y \
