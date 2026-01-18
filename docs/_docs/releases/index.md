@@ -5,7 +5,7 @@ title: Releases
 
 | Version | Code name | Released at |
 | --- | --- | --- |
-| [v2.21.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.21.0)                      | Scarlet Velvet           |                        |
+| [v2.21.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.21.0)                      | Scarlet Velvet           | 2026-01-18T09:03:03Z   |
 | [v2.20.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.20.0)                      | Scarlet Ugui             | 2025-10-20T14:51:03Z   |
 | [v2.19.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.19.0)                      | Scarlet Tshering         | 2025-08-09T15:04:58Z   |
 | [v2.18.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.18.0)                      | Scarlet Soui             | 2025-07-20T14:32:04Z   |
