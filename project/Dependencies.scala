@@ -5,7 +5,7 @@ object Dependencies {
   val jsoniterVersion = "2.38.8"
   val doobieVersion = "1.0.0-RC11"
   val jwtScalaVersion = "11.0.3"
-  val flywayVersion = "11.20.2"
+  val flywayVersion = "12.0.0"
   val http4sVersion = "1.0.0-M45"
   val log4catsVersion = "2.7.1"
   val otel = "1.58.0"
@@ -20,8 +20,8 @@ object Dependencies {
     "org.http4s" %% "http4s-dsl" % http4sVersion,
     "org.http4s" %% "http4s-ember-server" % http4sVersion,
     "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
-    "org.typelevel" %% "otel4s-oteljava" % "0.14.0",
-    "org.typelevel" %% "otel4s-instrumentation-metrics" % "0.14.0",
+    "org.typelevel" %% "otel4s-oteljava" % "0.15.0",
+    "org.typelevel" %% "otel4s-instrumentation-metrics" % "0.15.0",
     "io.opentelemetry.instrumentation" % "opentelemetry-runtime-telemetry-java17" % otelInstrumentation,
     "io.opentelemetry.instrumentation" % "opentelemetry-logback-appender-1.0" % otelInstrumentation,
     "io.opentelemetry" % "opentelemetry-exporter-otlp" % otel,
@@ -38,7 +38,7 @@ object Dependencies {
     "com.github.ben-manes.caffeine" % "caffeine" % "3.2.3",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
-    "ch.qos.logback" % "logback-classic" % "1.5.25",
+    "ch.qos.logback" % "logback-classic" % "1.5.26",
     "net.logstash.logback" % "logstash-logback-encoder" % "9.0",
     "org.codehaus.janino" % "janino" % "3.1.12",
     "org.springframework.security" % "spring-security-core" % "7.0.2",
