@@ -1,5 +1,5 @@
 # Builder image
-FROM ghcr.io/yoshinorin/docker-sbt:v1.11.7-scala3.7.4-jdk25 as builder
+FROM ghcr.io/yoshinorin/docker-sbt:v1.12.1-scala3.7.4-jdk25 as builder
 
 LABEL maintainer="yoshinorin"
 ENV QUALTET_VERSION="v2.21.0"

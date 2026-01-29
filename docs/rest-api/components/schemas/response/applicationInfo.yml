@@ -39,7 +39,7 @@ properties:
         example: "3.7.4"
       sbtVersion:
         type: string
-        example: "1.11.7"
+        example: "1.12.1"
     required:
       - commit
       - url
