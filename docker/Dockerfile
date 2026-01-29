@@ -1,5 +1,5 @@
 # Builder image
-FROM ghcr.io/yoshinorin/docker-sbt:v1.12.1-scala3.7.4-jdk25 as builder
+FROM ghcr.io/yoshinorin/docker-sbt:v1.12.1-scala3.8.1-jdk25 as builder
 
 LABEL maintainer="yoshinorin"
 ENV QUALTET_VERSION="v2.21.0"
@@ -16,7 +16,7 @@ COPY commit-hash.sh commit-hash.sh
 
 RUN sh commit-hash.sh \
   && sbt assembly exit \
-  && cp ./target/scala-3.7.4/qualtet-assembly-${QUALTET_VERSION}.jar qualtet-assembly.jar
+  && cp ./target/scala-3.8.1/qualtet-assembly-${QUALTET_VERSION}.jar qualtet-assembly.jar
 
 
 # Runtime image

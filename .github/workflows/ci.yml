@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04]
         java: [25]
-        scala: [3.7.4]
+        scala: [3.8.1]
       fail-fast: false
     steps:
       - name: Checkout
@@ -65,7 +65,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04]
         java: [25]
-        scala: [3.7.4]
+        scala: [3.8.1]
       fail-fast: false
     steps:
       - name: Checkout
