@@ -40,17 +40,6 @@ object TagRepository {
           )
         }
 
-      given tagOrOptionRead: Read[Option[TagReadModel]] =
-        Read[(String, String, String)].map { case (id, name, path) =>
-          Some(
-            TagReadModel(
-              TagId(id),
-              TagName(name),
-              TagPath.fromTrusted(path)
-            )
-          )
-        }
-
       given tagWrite: Write[TagWriteModel] =
         Write[(String, String, String)].contramap(p => (p.id.value, p.name.value, p.path.value))
 

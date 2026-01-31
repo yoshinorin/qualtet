@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.articles
 
 import cats.data.ContT
 import cats.effect.IO
-import cats.implicits.*
 import cats.Monad
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeName, ContentTypeService}
