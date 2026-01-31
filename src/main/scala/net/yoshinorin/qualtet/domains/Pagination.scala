@@ -17,7 +17,6 @@ object Page {
     def -(b: Page): Page = a - b
     def *(b: Page): Page = a * b
     def /(b: Page): Page = a / b
-    def toString: String = a.toString
     def toInt: Int = a.toInt
   }
 }
@@ -31,7 +30,6 @@ object Limit {
     def -(b: Limit): Limit = a - b
     def *(b: Limit): Limit = a * b
     def /(b: Limit): Limit = a / b
-    def toString: String = a.toString
     def toInt: Int = a.toInt
   }
 }
