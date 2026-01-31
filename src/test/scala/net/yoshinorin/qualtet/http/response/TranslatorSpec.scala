@@ -42,8 +42,8 @@ class TranslatorSpec extends AnyWordSpec {
       } yield assert(response.status.code == 404)).unsafeRunSync()
     }
 
-    "convert UnprocessableEntity HttpError to 422 response" in {
-      val error = UnprocessableEntity("invalid data", "invalid")
+    "convert UnprocessableContent HttpError to 422 response" in {
+      val error = UnprocessableContent("invalid data", "invalid")
       (for {
         response <- Translator.failToResponse(error)
       } yield assert(response.status.code == 422)).unsafeRunSync()

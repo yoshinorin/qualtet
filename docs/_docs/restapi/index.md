@@ -57,7 +57,7 @@ Content-Length: 7815
 
 # NG1
 $ curl -D - -X GET 127.0.0.1:9001/search?q=tes
-HTTP/1.1 422 Unprocessable Entity
+HTTP/1.1 422 Unprocessable Content
 Date: Mon, 02 Jan 2023 13:16:50 GMT
 Connection: keep-alive
 Content-Type: application/json
@@ -67,7 +67,7 @@ Content-Length: 42
 
 # NG2
 $ curl -D - -X GET 127.0.0.1:9001/search
-HTTP/1.1 422 Unprocessable Entity
+HTTP/1.1 422 Unprocessable Content
 Date: Mon, 02 Jan 2023 13:17:32 GMT
 Connection: keep-alive
 Content-Type: application/json
@@ -77,7 +77,7 @@ Content-Length: 35
 
 # NG3
 $ curl -D - -X GET 127.0.0.1:9001/search?q=a.b.c
-HTTP/1.1 422 Unprocessable Entity
+HTTP/1.1 422 Unprocessable Content
 Date: Mon, 02 Jan 2023 13:19:23 GMT
 Connection: keep-alive
 Content-Type: application/json

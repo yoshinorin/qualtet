@@ -72,13 +72,13 @@ post:
                 example: "https://yoshinorin.github.io/qualtet/rest-api/"
               title:
                 type: string
-                example: "Unprocessable Entity"
+                example: "Unprocessable Content"
               status:
                 type: number
                 example: 422
               detail:
                 type: string
-                example: "Unprocessable Entity"
+                example: "Unprocessable Content"
               instance:
                 type: string
                 example: "/v1/contents"

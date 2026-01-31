@@ -30,34 +30,34 @@ class ErrorsSpec extends AnyWordSpec {
       assert(HttpError.fromDomainError(unauthorized) === net.yoshinorin.qualtet.http.errors.Unauthorized(detail = "Unauthorized"))
 
       val invalidAuthorName = InvalidAuthorName(detail = "Invalid author name")
-      assert(HttpError.fromDomainError(invalidAuthorName) === UnprocessableEntity(detail = "Invalid author name"))
+      assert(HttpError.fromDomainError(invalidAuthorName) === UnprocessableContent(detail = "Invalid author name"))
 
       val invalidAuthorDisplayName = InvalidAuthorDisplayName(detail = "Invalid author display name")
-      assert(HttpError.fromDomainError(invalidAuthorDisplayName) === UnprocessableEntity(detail = "Invalid author display name"))
+      assert(HttpError.fromDomainError(invalidAuthorDisplayName) === UnprocessableContent(detail = "Invalid author display name"))
 
       val invalidAttributes = InvalidAttributes(detail = "Invalid attributes")
-      assert(HttpError.fromDomainError(invalidAttributes) === UnprocessableEntity(detail = "Invalid attributes"))
+      assert(HttpError.fromDomainError(invalidAttributes) === UnprocessableContent(detail = "Invalid attributes"))
 
       val invalidAuthor = InvalidAuthor(detail = "Invalid author")
-      assert(HttpError.fromDomainError(invalidAuthor) === UnprocessableEntity(detail = "Invalid author"))
+      assert(HttpError.fromDomainError(invalidAuthor) === UnprocessableContent(detail = "Invalid author"))
 
       val invalidContentType = InvalidContentType(detail = "Invalid content type")
-      assert(HttpError.fromDomainError(invalidContentType) === UnprocessableEntity(detail = "Invalid content type"))
+      assert(HttpError.fromDomainError(invalidContentType) === UnprocessableContent(detail = "Invalid content type"))
 
       val invalidContentTypeName = InvalidContentTypeName(detail = "Invalid content type name")
-      assert(HttpError.fromDomainError(invalidContentTypeName) === UnprocessableEntity(detail = "Invalid content type name"))
+      assert(HttpError.fromDomainError(invalidContentTypeName) === UnprocessableContent(detail = "Invalid content type name"))
 
       val invalidExternalResourceKind = InvalidExternalResourceKind(detail = "Invalid external resource kind")
-      assert(HttpError.fromDomainError(invalidExternalResourceKind) === UnprocessableEntity(detail = "Invalid external resource kind"))
+      assert(HttpError.fromDomainError(invalidExternalResourceKind) === UnprocessableContent(detail = "Invalid external resource kind"))
 
       val invalidPath = InvalidPath(detail = "Invalid path")
-      assert(HttpError.fromDomainError(invalidPath) === UnprocessableEntity(detail = "Invalid path"))
+      assert(HttpError.fromDomainError(invalidPath) === UnprocessableContent(detail = "Invalid path"))
 
       val invalidSearchConditions = InvalidSearchConditions(detail = "Invalid search conditions")
-      assert(HttpError.fromDomainError(invalidSearchConditions) === UnprocessableEntity(detail = "Invalid search conditions"))
+      assert(HttpError.fromDomainError(invalidSearchConditions) === UnprocessableContent(detail = "Invalid search conditions"))
 
       val invalidSeries = InvalidSeries(detail = "Invalid series")
-      assert(HttpError.fromDomainError(invalidSeries) === UnprocessableEntity(detail = "Invalid series"))
+      assert(HttpError.fromDomainError(invalidSeries) === UnprocessableContent(detail = "Invalid series"))
 
       val contentTitleRequired = ContentTitleRequired(detail = "Content title required")
       assert(HttpError.fromDomainError(contentTitleRequired) === BadRequest(detail = "Content title required"))

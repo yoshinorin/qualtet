@@ -53,7 +53,7 @@ get:
         ```json
         {
           "type": "https://yoshinorin.github.io/qualtet/rest-api/",
-          "title": "Unprocessable Entity",
+          "title": "Unprocessable Content",
           "status": 422,
           "detail": "Invalid search conditions. Please see error details.",
           "instance": "/v1/search?q=a.b.c&q=x&q=zzzzzzzzzzzzzzz.zzzzzzzzzz&q=abcde",
@@ -91,13 +91,13 @@ get:
                 example: "https://yoshinorin.github.io/qualtet/rest-api/"
               title:
                 type: string
-                example: "Unprocessable Entity"
+                example: "Unprocessable Content"
               status:
                 type: number
                 example: 422
               detail:
                 type: string
-                example: "Unprocessable Entity"
+                example: "Unprocessable Content"
               instance:
                 type: string
                 example: "/v1/search"

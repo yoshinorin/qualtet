@@ -76,16 +76,16 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "return UnprocessableEntity without query params" in {
+    "return UnprocessableContent without query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/"))
         .use { response =>
           IO {
-            assert(response.status === UnprocessableEntity)
+            assert(response.status === UnprocessableContent)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
             val maybeError = unsafeDecode[ResponseProblemDetails](response)
-            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.title === "Unprocessable Content")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/")
@@ -98,16 +98,16 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "return UnprocessableEntity with query param short value" in {
+    "return UnprocessableContent with query param short value" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?q=abc"))
         .use { response =>
           IO {
-            assert(response.status === UnprocessableEntity)
+            assert(response.status === UnprocessableContent)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
             val maybeError = unsafeDecode[ResponseProblemDetails](response)
-            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.title === "Unprocessable Content")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/?q=abc")
@@ -120,16 +120,16 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "return UnprocessableEntity with invalid query param" in {
+    "return UnprocessableContent with invalid query param" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?invalid=abcd"))
         .use { response =>
           IO {
-            assert(response.status === UnprocessableEntity)
+            assert(response.status === UnprocessableContent)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
             val maybeError = unsafeDecode[ResponseProblemDetails](response)
-            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.title === "Unprocessable Content")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/?invalid=abcd")
@@ -142,16 +142,16 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "return UnprocessableEntity with query param contains invalid values" in {
+    "return UnprocessableContent with query param contains invalid values" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?q=a.b.c"))
         .use { response =>
           IO {
-            assert(response.status === UnprocessableEntity)
+            assert(response.status === UnprocessableContent)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
             val maybeError = unsafeDecode[ResponseProblemDetails](response)
-            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.title === "Unprocessable Content")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/?q=a.b.c")
@@ -164,16 +164,16 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "return UnprocessableEntity with too many query params" in {
+    "return UnprocessableContent with too many query params" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?q=abcd&q=abcd&q=abcd&q=abcd"))
         .use { response =>
           IO {
-            assert(response.status === UnprocessableEntity)
+            assert(response.status === UnprocessableContent)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
             val maybeError = unsafeDecode[ResponseProblemDetails](response)
-            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.title === "Unprocessable Content")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/?q=abcd&q=abcd&q=abcd&q=abcd")
@@ -186,16 +186,16 @@ class SearchRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
         .unsafeRunSync()
     }
 
-    "return UnprocessableEntity with accumulated errors" in {
+    "return UnprocessableContent with accumulated errors" in {
       client
         .run(Request(method = Method.GET, uri = uri"/v1/search/?q=a.b.c&q=x&q=z.zzzzzzzzzzzzzzzzzzz&q=abcd&q=.y"))
         .use { response =>
           IO {
-            assert(response.status === UnprocessableEntity)
+            assert(response.status === UnprocessableContent)
             assert(response.contentType.get === `Content-Type`(MediaType.application.`problem+json`))
 
             val maybeError = unsafeDecode[ResponseProblemDetails](response)
-            assert(maybeError.title === "Unprocessable Entity")
+            assert(maybeError.title === "Unprocessable Content")
             assert(maybeError.status === 422)
             assert(maybeError.detail === "Invalid search conditions. Please see error details.")
             assert(maybeError.instance === "/v1/search/?q=a.b.c&q=x&q=z.zzzzzzzzzzzzzzzzzzz&q=abcd&q=.y")

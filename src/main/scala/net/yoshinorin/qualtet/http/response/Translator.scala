@@ -29,7 +29,7 @@ object Translator {
         )
       case e: Unauthorized =>
         org.http4s.dsl.io.Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
-      case e: UnprocessableEntity =>
+      case e: UnprocessableContent =>
         org.http4s.dsl.io.UnprocessableContent(
           ResponseProblemDetails(
             title = e.title,

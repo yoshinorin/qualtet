@@ -18,8 +18,8 @@ final case class Unauthorized(
 
 // TODO: Migrate to `UnprocessableContent`
 //       https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/422
-final case class UnprocessableEntity(
-  title: String = "Unprocessable Entity",
+final case class UnprocessableContent(
+  title: String = "Unprocessable Content",
   detail: String,
   errors: Option[Seq[ProblemDetailsError]] = None
 ) extends HttpError
@@ -51,17 +51,17 @@ object HttpError {
       case e: SeriesNotFound => NotFound(detail = e.detail, errors = e.errors)
       case e: TagNotFound => NotFound(detail = e.detail, errors = e.errors)
       case e: net.yoshinorin.qualtet.domains.errors.Unauthorized => Unauthorized(detail = e.detail, errors = e.errors)
-      case e: InvalidAuthorName => UnprocessableEntity(detail = e.detail, errors = e.errors)
-      case e: InvalidAuthorDisplayName => UnprocessableEntity(detail = e.detail, errors = e.errors)
-      case e: InvalidAttributes => UnprocessableEntity(detail = e.detail, errors = e.errors)
-      case e: InvalidAuthor => UnprocessableEntity(detail = e.detail, errors = e.errors)
-      case e: InvalidContentType => UnprocessableEntity(detail = e.detail, errors = e.errors)
-      case e: InvalidContentTypeName => UnprocessableEntity(detail = e.detail, errors = e.errors)
-      case e: InvalidExternalResourceKind => UnprocessableEntity(detail = e.detail, errors = e.errors)
-      case e: InvalidLastMod => UnprocessableEntity(detail = e.detail, errors = e.errors)
-      case e: InvalidPath => UnprocessableEntity(detail = e.detail, errors = e.errors)
-      case e: InvalidSearchConditions => UnprocessableEntity(detail = e.detail, errors = e.errors)
-      case e: InvalidSeries => UnprocessableEntity(detail = e.detail, errors = e.errors)
+      case e: InvalidAuthorName => UnprocessableContent(detail = e.detail, errors = e.errors)
+      case e: InvalidAuthorDisplayName => UnprocessableContent(detail = e.detail, errors = e.errors)
+      case e: InvalidAttributes => UnprocessableContent(detail = e.detail, errors = e.errors)
+      case e: InvalidAuthor => UnprocessableContent(detail = e.detail, errors = e.errors)
+      case e: InvalidContentType => UnprocessableContent(detail = e.detail, errors = e.errors)
+      case e: InvalidContentTypeName => UnprocessableContent(detail = e.detail, errors = e.errors)
+      case e: InvalidExternalResourceKind => UnprocessableContent(detail = e.detail, errors = e.errors)
+      case e: InvalidLastMod => UnprocessableContent(detail = e.detail, errors = e.errors)
+      case e: InvalidPath => UnprocessableContent(detail = e.detail, errors = e.errors)
+      case e: InvalidSearchConditions => UnprocessableContent(detail = e.detail, errors = e.errors)
+      case e: InvalidSeries => UnprocessableContent(detail = e.detail, errors = e.errors)
       case e: ContentTitleRequired => BadRequest(detail = e.detail, errors = e.errors)
       case e: RawContentRequired => BadRequest(detail = e.detail, errors = e.errors)
       case e: HtmlContentRequired => BadRequest(detail = e.detail, errors = e.errors)

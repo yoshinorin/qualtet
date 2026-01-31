@@ -6,7 +6,7 @@ object Dependencies {
   val doobieVersion = "1.0.0-RC11"
   val jwtScalaVersion = "11.0.3"
   val flywayVersion = "12.0.0"
-  val http4sVersion = "1.0.0-M45"
+  val http4sVersion = "1.0.0-M46"
   val log4catsVersion = "2.7.1"
   val otel = "1.58.0"
   val otelInstrumentation = "2.24.0-alpha"
