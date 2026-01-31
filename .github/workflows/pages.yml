@@ -21,6 +21,12 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 #6.0.1
+      - name: Set up JDK
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e #5.1.0
+        with:
+          distribution: 'temurin'
+          java-version: 25
+
       - name: Generate website with Scaladoc
         run: sbt doc
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f #6.1.0
