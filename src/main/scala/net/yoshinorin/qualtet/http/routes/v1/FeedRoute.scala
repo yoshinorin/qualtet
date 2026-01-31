@@ -28,7 +28,8 @@ class FeedRoute[F[_]: Monad @nowarn](
     }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
   }
 
-  private[http] def get(name: String): Request[IO] ?=> IO[Response[IO]] = {
+  // TODO: `name`` parameter will be used in future implementation
+  private[http] def get(@nowarn name: String): Request[IO] ?=> IO[Response[IO]] = {
     (for {
       feeds <- EitherT(feedService.get(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)))
     } yield feeds).value.flatMap {
