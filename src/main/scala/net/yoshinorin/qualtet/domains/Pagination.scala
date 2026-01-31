@@ -39,7 +39,7 @@ object Limit {
 trait PaginationOps[T] {
   def make(p: PaginationRequestModel): T
 
-  def make(page: Option[Page], limit: Option[Limit], order: Option[Order]): T
+  def make(page: Option[Page], limit: Option[Limit], order: Option[Order] = None): T
 
   def make(page: Page, limit: Limit, order: Order): T = this.make(Option(page), Option(limit), Option(order))
 
