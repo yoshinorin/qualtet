@@ -9,11 +9,14 @@ import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.http.AuthProvider
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class CacheRoute[F[_]: Monad](
   authProvider: AuthProvider[F],
   cacheService: CacheService[F]
-) {
+)(using loggerFactory: Log4CatsLoggerFactory[IO]) {
+
+  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 
   private[http] def index: HttpRoutes[IO] = authProvider.authenticate(AuthedRoutes.of { ctxRequest =>
     (ctxRequest match
@@ -27,6 +30,7 @@ class CacheRoute[F[_]: Monad](
   // caches
   private[http] def delete(author: AuthorResponseModel): IO[Response[IO]] = {
     for {
+      _ <- logger.info(s"cache invalidation requested by: ${author.name}")
       _ <- cacheService.invalidateAll()
       response <- NoContent()
     } yield response
