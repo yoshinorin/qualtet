@@ -28,11 +28,11 @@ class ContentTypeSpec extends AnyWordSpec {
     "invalid value" in {
       val result1 = ContentTypeName("123AbcDef_-.")
       assert(result1.isLeft)
-      assert(result1.left.get.isInstanceOf[InvalidContentTypeName])
+      assert(result1.left.toOption.get.isInstanceOf[InvalidContentTypeName])
 
       val result2 = ContentTypeName("123AbcDef_-!")
       assert(result2.isLeft)
-      assert(result2.left.get.isInstanceOf[InvalidContentTypeName])
+      assert(result2.left.toOption.get.isInstanceOf[InvalidContentTypeName])
     }
   }
 

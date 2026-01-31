@@ -57,7 +57,7 @@ class JwtSpec extends AnyWordSpec {
       val maybeJwtClaims = jwtInstance.decode(
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
       )
-      assert(maybeJwtClaims.unsafeRunSync().left.getOrElse("").isInstanceOf[JwtValidationException])
+      assert(maybeJwtClaims.unsafeRunSync().left.toOption.getOrElse("").isInstanceOf[JwtValidationException])
     }
 
     "return Right if JWT is correct" in {

@@ -86,7 +86,7 @@ class SeriesSpec extends AnyWordSpec {
       invalidPaths.foreach { path =>
         val result = SeriesPath(path)
         assert(result.isLeft)
-        assert(result.left.get.detail === s"Invalid character contains: ${path}")
+        assert(result.left.toOption.get.detail === s"Invalid character contains: ${path}")
       }
     }
 
@@ -101,7 +101,7 @@ class SeriesSpec extends AnyWordSpec {
       invalidEncodedPaths.foreach { path =>
         val result = SeriesPath(path)
         assert(result.isLeft)
-        assert(result.left.get.detail === s"Invalid percent encoding in path: ${path}")
+        assert(result.left.toOption.get.detail === s"Invalid percent encoding in path: ${path}")
       }
     }
 

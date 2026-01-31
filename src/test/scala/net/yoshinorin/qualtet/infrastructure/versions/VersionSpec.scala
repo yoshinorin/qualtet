@@ -33,35 +33,35 @@ class VersionSpec extends AnyWordSpec {
     "return Left for invalid formats" in {
       val result1 = VersionString("")
       assert(result1.isLeft)
-      assert(result1.left.get.isInstanceOf[InvalidVersion])
+      assert(result1.left.toOption.get.isInstanceOf[InvalidVersion])
 
       val result2 = VersionString("1.0.0a")
       assert(result2.isLeft)
-      assert(result2.left.get.isInstanceOf[InvalidVersion])
+      assert(result2.left.toOption.get.isInstanceOf[InvalidVersion])
 
       val result3 = VersionString(".1.0.0")
       assert(result3.isLeft)
-      assert(result3.left.get.isInstanceOf[InvalidVersion])
+      assert(result3.left.toOption.get.isInstanceOf[InvalidVersion])
 
       val result4 = VersionString("1.0.0.")
       assert(result4.isLeft)
-      assert(result4.left.get.isInstanceOf[InvalidVersion])
+      assert(result4.left.toOption.get.isInstanceOf[InvalidVersion])
 
       val result5 = VersionString("1..0.0")
       assert(result5.isLeft)
-      assert(result5.left.get.isInstanceOf[InvalidVersion])
+      assert(result5.left.toOption.get.isInstanceOf[InvalidVersion])
 
       val result6 = VersionString("1.0.0-beta")
       assert(result6.isLeft)
-      assert(result6.left.get.isInstanceOf[InvalidVersion])
+      assert(result6.left.toOption.get.isInstanceOf[InvalidVersion])
 
       val result7 = VersionString("1 0 0")
       assert(result7.isLeft)
-      assert(result7.left.get.isInstanceOf[InvalidVersion])
+      assert(result7.left.toOption.get.isInstanceOf[InvalidVersion])
 
       val result8 = VersionString("1.2.3.4.5")
       assert(result8.isLeft)
-      assert(result8.left.get.isInstanceOf[InvalidVersion])
+      assert(result8.left.toOption.get.isInstanceOf[InvalidVersion])
     }
 
     "Eq" in {

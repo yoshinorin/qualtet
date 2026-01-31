@@ -29,7 +29,7 @@ class SitemapsSpec extends AnyWordSpec {
     "invalid value (can not toLong)" in {
       val result = LastMod("aaaa")
       assert(result.isLeft)
-      assert(result.left.get.isInstanceOf[InvalidLastMod])
+      assert(result.left.toOption.get.isInstanceOf[InvalidLastMod])
     }
   }
 

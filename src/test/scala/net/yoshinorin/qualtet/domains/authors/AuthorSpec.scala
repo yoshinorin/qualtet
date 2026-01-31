@@ -30,11 +30,11 @@ class AuthorSpec extends AnyWordSpec {
     "invalid value" in {
       val result1 = AuthorName("123AbcDef_-.")
       assert(result1.isLeft)
-      assert(result1.left.get.isInstanceOf[InvalidAuthorName])
+      assert(result1.left.toOption.get.isInstanceOf[InvalidAuthorName])
 
       val result2 = AuthorName("123AbcDef_-!")
       assert(result2.isLeft)
-      assert(result2.left.get.isInstanceOf[InvalidAuthorName])
+      assert(result2.left.toOption.get.isInstanceOf[InvalidAuthorName])
     }
   }
 
@@ -45,11 +45,11 @@ class AuthorSpec extends AnyWordSpec {
     "invalid value" in {
       val result1 = AuthorDisplayName("123AbcDef_-.")
       assert(result1.isLeft)
-      assert(result1.left.get.isInstanceOf[InvalidAuthorDisplayName])
+      assert(result1.left.toOption.get.isInstanceOf[InvalidAuthorDisplayName])
 
       val result2 = AuthorDisplayName("123AbcDef_-!")
       assert(result2.isLeft)
-      assert(result2.left.get.isInstanceOf[InvalidAuthorDisplayName])
+      assert(result2.left.toOption.get.isInstanceOf[InvalidAuthorDisplayName])
     }
   }
 

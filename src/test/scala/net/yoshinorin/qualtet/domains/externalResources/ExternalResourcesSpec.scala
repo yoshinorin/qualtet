@@ -55,7 +55,7 @@ class ExternalResourcesSpec extends AnyWordSpec {
     "can not create instance with invalid value" in {
       val result = ExternalResourceKind("invalid-value")
       assert(result.isLeft)
-      assert(result.left.get.detail === "The field externalResource.kind allowed only js or css.")
+      assert(result.left.toOption.get.detail === "The field externalResource.kind allowed only js or css.")
     }
   }
 

@@ -65,25 +65,25 @@ class RobotsSpec extends AnyWordSpec {
     "can not create instance with invalid attribute" in {
       val result = Attributes("invalid-attribute")
       assert(result.isLeft)
-      assert(result.left.get.isInstanceOf[InvalidAttributes])
+      assert(result.left.toOption.get.isInstanceOf[InvalidAttributes])
     }
 
     "can not create instance with includes invalid attribute" in {
       val result = Attributes("all, noindex, nofollow, invalid, none, noarchive, notranslate")
       assert(result.isLeft)
-      assert(result.left.get.isInstanceOf[InvalidAttributes])
+      assert(result.left.toOption.get.isInstanceOf[InvalidAttributes])
     }
 
     "can not create instance with includes empty attribute start of string" in {
       val result = Attributes(",all, noindex, nofollow, none, noarchive")
       assert(result.isLeft)
-      assert(result.left.get.isInstanceOf[InvalidAttributes])
+      assert(result.left.toOption.get.isInstanceOf[InvalidAttributes])
     }
 
     "can not create instance with includes empty attribute end of string" in {
       val result = Attributes("all, noindex, nofollow, none, noarchive,")
       assert(result.isLeft)
-      assert(result.left.get.isInstanceOf[InvalidAttributes])
+      assert(result.left.toOption.get.isInstanceOf[InvalidAttributes])
     }
   }
 
