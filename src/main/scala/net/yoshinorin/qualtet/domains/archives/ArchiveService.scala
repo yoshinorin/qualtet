@@ -8,7 +8,9 @@ import net.yoshinorin.qualtet.domains.errors.{ContentTypeNotFound, DomainError}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
-class ArchiveService[F[_]: Monad](
+import scala.annotation.nowarn
+
+class ArchiveService[F[_]: Monad @nowarn](
   archiveRepositoryAdapter: ArchiveRepositoryAdapter[F],
   contentTypeService: ContentTypeService[F]
 )(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO]) {

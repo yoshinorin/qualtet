@@ -6,7 +6,9 @@ import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.Cacheable
 
-class SitemapService[F[_]: Monad](
+import scala.annotation.nowarn
+
+class SitemapService[F[_]: Monad @nowarn](
   sitemapRepositoryAdapter: SitemapRepositoryAdapter[F],
   cache: CacheModule[IO, String, Seq[Url]]
 )(using executer: Executer[F, IO])

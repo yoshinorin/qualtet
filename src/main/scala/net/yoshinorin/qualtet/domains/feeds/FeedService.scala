@@ -11,7 +11,9 @@ import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.syntax.*
 
-class FeedService[F[_]: Monad](
+import scala.annotation.nowarn
+
+class FeedService[F[_]: Monad @nowarn](
   feedsPagination: PaginationOps[FeedsPagination],
   cache: CacheModule[IO, String, ArticleWithCountResponseModel],
   articleService: ArticleService[F]

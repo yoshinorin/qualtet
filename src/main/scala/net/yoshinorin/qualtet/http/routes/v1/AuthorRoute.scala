@@ -10,7 +10,9 @@ import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class AuthorRoute[F[_]: Monad](
+import scala.annotation.nowarn
+
+class AuthorRoute[F[_]: Monad @nowarn](
   authorService: AuthorService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 

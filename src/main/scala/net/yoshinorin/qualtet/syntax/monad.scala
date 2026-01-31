@@ -5,9 +5,11 @@ import scala.reflect.ClassTag
 import cats.syntax.flatMap.toFlatMapOps
 import cats.syntax.functor.toFunctorOps
 
+import scala.annotation.nowarn
+
 trait monad {
 
-  extension [F[_]: Monad, A: ClassTag](monad: F[Option[A]]) {
+  extension [F[_]: Monad @nowarn, A: ClassTag @nowarn](monad: F[Option[A]]) {
     def throwIfNone[T <: Throwable](t: T): MonadError[F, Throwable] ?=> F[A] = {
       monad.flatMap {
         case Some(a: A) => Monad[F].pure(a)

@@ -12,7 +12,9 @@ import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, DomainError, Unaut
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class AuthProvider[F[_]: Monad](
+import scala.annotation.nowarn
+
+class AuthProvider[F[_]: Monad @nowarn](
   authService: AuthService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 

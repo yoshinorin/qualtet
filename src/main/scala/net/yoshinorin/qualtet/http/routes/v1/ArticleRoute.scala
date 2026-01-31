@@ -12,7 +12,9 @@ import net.yoshinorin.qualtet.domains.PaginationRequestModel
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class ArticleRoute[F[_]: Monad](
+import scala.annotation.nowarn
+
+class ArticleRoute[F[_]: Monad @nowarn](
   articleService: ArticleService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 

@@ -4,7 +4,9 @@ import cats.data.ContT
 import cats.Monad
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
-class RobotsRepositoryAdapter[F[_]: Monad](
+import scala.annotation.nowarn
+
+class RobotsRepositoryAdapter[F[_]: Monad @nowarn](
   robotsRepository: RobotsRepository[F]
 ) {
   private[domains] def upsert(data: Robots): ContT[F, Int, Int] = {

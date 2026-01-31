@@ -11,7 +11,9 @@ import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class AuthRoute[F[_]: Monad](authService: AuthService[F])(using loggerFactory: Log4CatsLoggerFactory[IO]) extends Decoder[IO] {
+import scala.annotation.nowarn
+
+class AuthRoute[F[_]: Monad @nowarn](authService: AuthService[F])(using loggerFactory: Log4CatsLoggerFactory[IO]) extends Decoder[IO] {
 
   given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 

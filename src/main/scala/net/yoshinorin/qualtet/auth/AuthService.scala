@@ -9,7 +9,9 @@ import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, DomainError, Unaut
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class AuthService[F[_]: Monad](authorService: AuthorService[F], jwt: Jwt[IO])(using loggerFactory: Log4CatsLoggerFactory[IO]) {
+import scala.annotation.nowarn
+
+class AuthService[F[_]: Monad @nowarn](authorService: AuthorService[F], jwt: Jwt[IO])(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 
   private val logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
   private val bcryptPasswordEncoder = new BCryptPasswordEncoder()

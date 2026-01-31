@@ -11,7 +11,9 @@ import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.http.AuthProvider
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class CacheRoute[F[_]: Monad](
+import scala.annotation.nowarn
+
+class CacheRoute[F[_]: Monad @nowarn](
   authProvider: AuthProvider[F],
   cacheService: CacheService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {

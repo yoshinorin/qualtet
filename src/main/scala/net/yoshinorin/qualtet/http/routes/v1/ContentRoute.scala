@@ -24,7 +24,9 @@ import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class ContentRoute[F[_]: Monad](
+import scala.annotation.nowarn
+
+class ContentRoute[F[_]: Monad @nowarn](
   authProvider: AuthProvider[F],
   contentService: ContentService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO])

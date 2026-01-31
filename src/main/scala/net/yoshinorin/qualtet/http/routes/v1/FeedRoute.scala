@@ -12,7 +12,9 @@ import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class FeedRoute[F[_]: Monad](
+import scala.annotation.nowarn
+
+class FeedRoute[F[_]: Monad @nowarn](
   feedService: FeedService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 

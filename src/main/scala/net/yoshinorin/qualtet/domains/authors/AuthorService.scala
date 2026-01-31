@@ -7,7 +7,9 @@ import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
-class AuthorService[F[_]: Monad](
+import scala.annotation.nowarn
+
+class AuthorService[F[_]: Monad @nowarn](
   authorRepositoryAdapter: AuthorRepositoryAdapter[F]
 )(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO]) {
 

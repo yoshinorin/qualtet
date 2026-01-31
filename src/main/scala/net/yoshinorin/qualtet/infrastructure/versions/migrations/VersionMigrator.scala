@@ -3,7 +3,9 @@ package net.yoshinorin.qualtet.infrastructure.versions
 import cats.Monad
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 
-trait VersionMigrator[M[_]: Monad, F[_]: Monad](init: Version) {
+import scala.annotation.nowarn
+
+trait VersionMigrator[M[_]: Monad @nowarn, F[_]: Monad](init: Version) {
   def migrate()(using executer: Executer[M, F]): F[Unit]
   def get(): F[Version]
   def getInit(): F[Version] = Monad[F].pure(init)

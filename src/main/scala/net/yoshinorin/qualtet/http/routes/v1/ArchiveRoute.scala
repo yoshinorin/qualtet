@@ -11,7 +11,9 @@ import net.yoshinorin.qualtet.domains.archives.ArchiveService
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class ArchiveRoute[F[_]: Monad](
+import scala.annotation.nowarn
+
+class ArchiveRoute[F[_]: Monad @nowarn](
   archiveService: ArchiveService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 

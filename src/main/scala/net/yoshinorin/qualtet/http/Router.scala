@@ -19,7 +19,9 @@ import net.yoshinorin.qualtet.http.routes.v1.{
   TagRoute as TagRouteV1
 }
 
-class Router[F[_]: Monad](
+import scala.annotation.nowarn
+
+class Router[F[_]: Monad @nowarn](
   corsProvider: CorsProvider,
   archiveRouteV1: ArchiveRouteV1[F],
   articleRouteV1: ArticleRouteV1[F],

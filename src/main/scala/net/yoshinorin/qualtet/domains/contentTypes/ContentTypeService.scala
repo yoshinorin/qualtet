@@ -9,7 +9,9 @@ import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
-class ContentTypeService[F[_]: Monad](
+import scala.annotation.nowarn
+
+class ContentTypeService[F[_]: Monad @nowarn](
   contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[F],
   cache: CacheModule[IO, String, ContentType]
 )(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO])

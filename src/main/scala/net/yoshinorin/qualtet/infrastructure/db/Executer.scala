@@ -3,7 +3,9 @@ package net.yoshinorin.qualtet.infrastructure.db
 import cats.Monad
 import cats.data.ContT
 
-trait Executer[F[_], G[_]: Monad] {
+import scala.annotation.nowarn
+
+trait Executer[F[_], G[_]: Monad @nowarn] {
   def defer[R](a: ContT[F, R, R]): F[R]
   def transact[R](t: ContT[F, R, R]): G[R]
   def transact[T](t: F[T]): G[T]

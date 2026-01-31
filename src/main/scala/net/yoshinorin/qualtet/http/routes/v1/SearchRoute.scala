@@ -9,7 +9,9 @@ import net.yoshinorin.qualtet.domains.search.SearchService
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class SearchRoute[F[_]: Monad](
+import scala.annotation.nowarn
+
+class SearchRoute[F[_]: Monad @nowarn](
   searchService: SearchService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 

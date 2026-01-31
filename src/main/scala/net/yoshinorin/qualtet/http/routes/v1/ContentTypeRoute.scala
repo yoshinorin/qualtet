@@ -12,7 +12,9 @@ import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class ContentTypeRoute[F[_]: Monad](
+import scala.annotation.nowarn
+
+class ContentTypeRoute[F[_]: Monad @nowarn](
   contentTypeService: ContentTypeService[F]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 

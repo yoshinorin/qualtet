@@ -6,9 +6,10 @@ import cats.effect.IO
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
+import scala.annotation.nowarn
 import java.time.ZonedDateTime
 
-class VersionService[F[_]: Monad](
+class VersionService[F[_]: Monad @nowarn](
   versionRepositoryAdapter: VersionRepositoryAdapter[F]
 )(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO]) {
 

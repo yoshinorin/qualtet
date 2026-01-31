@@ -17,7 +17,9 @@ import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class TagRoute[F[_]: Monad](
+import scala.annotation.nowarn
+
+class TagRoute[F[_]: Monad @nowarn](
   authProvider: AuthProvider[F],
   tagService: TagService[F],
   articleService: ArticleService[F]

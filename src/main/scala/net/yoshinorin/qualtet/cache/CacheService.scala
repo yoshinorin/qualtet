@@ -8,7 +8,9 @@ import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
-class CacheService[F[_]: Monad](
+import scala.annotation.nowarn
+
+class CacheService[F[_]: Monad @nowarn](
   sitemapService: SitemapService[F],
   tagsService: TagService[F],
   contentTypeService: ContentTypeService[F],

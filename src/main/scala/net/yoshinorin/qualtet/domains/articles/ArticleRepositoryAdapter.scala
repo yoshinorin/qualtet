@@ -8,13 +8,15 @@ import net.yoshinorin.qualtet.domains.tags.{TagName, TagPath}
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
 import net.yoshinorin.qualtet.domains.Pagination
 
+import scala.annotation.nowarn
+
 class ArticleRepositoryAdapter[F[_]: Monad](
   articleRepository: ArticleRepository[F]
 ) {
 
   private[domains] def getWithCount(
     contentTypeId: ContentTypeId,
-    none: Unit = (),
+    @nowarn none: Unit = (),
     queryParams: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
@@ -29,7 +31,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
   private[domains] def findByTagNameWithCount(
     contentTypeId: ContentTypeId,
     tagName: TagName,
-    queryParams: Pagination
+    @nowarn queryParams: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams).map { article =>
@@ -43,7 +45,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
   private[domains] def findByTagPathWithCount(
     contentTypeId: ContentTypeId,
     tagPath: TagPath,
-    queryParams: Pagination
+    @nowarn queryParams: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.findByTagPathWithCount(contentTypeId, tagPath, queryParams).map { article =>
@@ -57,7 +59,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
   private[domains] def findBySeriesNameWithCount(
     contentTypeId: ContentTypeId,
     seriesName: SeriesName,
-    queryParams: Pagination // TODO: `Optional`
+    @nowarn queryParams: Pagination // TODO: `Optional`
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName).map { article =>
@@ -71,7 +73,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
   private[domains] def findBySeriesPathWithCount(
     contentTypeId: ContentTypeId,
     seriesPath: SeriesPath,
-    queryParams: Pagination // TODO: `Optional`
+    @nowarn queryParams: Pagination // TODO: `Optional`
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.findBySeriesPathWithCount(contentTypeId, seriesPath).map { article =>
