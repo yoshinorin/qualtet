@@ -6,7 +6,7 @@ import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries}
-import net.yoshinorin.qualtet.domains.series.{Series, SeriesName, SeriesPath, SeriesRequestModel}
+import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath, SeriesRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources

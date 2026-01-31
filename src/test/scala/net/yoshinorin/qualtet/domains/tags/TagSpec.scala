@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.tags
 
 import net.yoshinorin.qualtet.fixture.unsafe
-import net.yoshinorin.qualtet.domains.errors.InvalidPath
 import org.scalatest.wordspec.AnyWordSpec
 import TagPath.*
 

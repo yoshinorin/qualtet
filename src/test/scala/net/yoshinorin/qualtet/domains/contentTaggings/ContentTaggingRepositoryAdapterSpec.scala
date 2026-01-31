@@ -8,7 +8,6 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
-import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 

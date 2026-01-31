@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.feeds
 
 import cats.effect.IO
 import cats.Monad
-import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.articles.ArticleService

@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.series
 
 import net.yoshinorin.qualtet.fixture.unsafe
-import net.yoshinorin.qualtet.domains.errors.InvalidPath
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.series.SeriesSpec

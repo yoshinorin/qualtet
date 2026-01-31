@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.fixture
 
-import cats.data.EitherT
 import cats.{Monad, MonadError}
 import cats.effect.IO
 import cats.data.EitherT

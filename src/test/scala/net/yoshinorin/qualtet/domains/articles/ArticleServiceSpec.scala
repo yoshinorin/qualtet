@@ -8,7 +8,6 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Page, PaginationOps, PaginationRequestModel}
-import net.yoshinorin.qualtet.syntax.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import cats.effect.unsafe.implicits.global

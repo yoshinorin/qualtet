@@ -6,7 +6,6 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.domains.{Limit, Page, PaginationRequestModel}
-import net.yoshinorin.qualtet.syntax.*
 
 import cats.effect.unsafe.implicits.global
 

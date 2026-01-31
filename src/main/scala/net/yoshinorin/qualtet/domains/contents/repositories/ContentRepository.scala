@@ -38,24 +38,6 @@ object ContentRepository {
             )
         }
 
-      given contentOrOptionRead: Read[Option[ContentReadModel]] =
-        Read[(String, String, String, String, String, String, String, Long, Long)].map {
-          case (contentId, authorId, contentTypeId, path, title, rawContent, htmlContent, publishedAt, updatedAt) =>
-            Some(
-              ContentReadModel(
-                ContentId(contentId),
-                AuthorId(authorId),
-                ContentTypeId(contentTypeId),
-                ContentPath.fromTrusted(path),
-                title,
-                rawContent,
-                htmlContent,
-                publishedAt,
-                updatedAt
-              )
-            )
-        }
-
       given contentWithMetaRead: Read[ContentWithMetaReadModel] =
         Read[(String, String, String, Option[String], Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
           case (

@@ -22,9 +22,6 @@ object ContentSerializingRepository {
       given contentSerializingRead: Read[ContentSerializingReadModel] =
         Read[(String, String)].map { case (seriesId, contentId) => ContentSerializingReadModel(SeriesId(seriesId), ContentId(contentId)) }
 
-      given contentSerializingOrOptionRead: Read[Option[ContentSerializing]] =
-        Read[(String, String)].map { case (seriesId, contentId) => Some(ContentSerializing(SeriesId(seriesId), ContentId(contentId))) }
-
       given contentSerializingWrite: Write[ContentSerializingWriteModel] =
         Write[(String, String)].contramap(s => (s.seriesId.value, s.contentId.value))
 

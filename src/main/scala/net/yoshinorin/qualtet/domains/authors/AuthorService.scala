@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.domains.authors
 
 import cats.effect.IO
 import cats.Monad
-import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 import net.yoshinorin.qualtet.infrastructure.db.Executer

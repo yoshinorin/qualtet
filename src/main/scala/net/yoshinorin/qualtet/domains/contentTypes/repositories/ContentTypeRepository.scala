@@ -21,16 +21,6 @@ object ContentTypeRepository {
           )
         }
 
-      given contentTypeOrOptionRead: Read[Option[ContentTypeReadModel]] =
-        Read[(String, String)].map { case (id, name) =>
-          Some(
-            ContentTypeReadModel(
-              ContentTypeId(id),
-              ContentTypeName.fromTrusted(name)
-            )
-          )
-        }
-
       given contentTypeWrite: Write[ContentTypeWriteModel] =
         Write[(String, String)].contramap(c => (c.id.value, c.name.value))
 

@@ -3,7 +3,6 @@ package net.yoshinorin.qualtet.auth
 import cats.data.EitherT
 import cats.effect.IO
 import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorResponseModel, AuthorService, BCryptPassword}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, DomainError, Unauthorized}

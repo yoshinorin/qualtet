@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.syntax
 
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.domains.errors.UnexpectedException
 
 // testOnly net.yoshinorin.qualtet.syntax.StringSpec
 class StringSpec extends AnyWordSpec {
