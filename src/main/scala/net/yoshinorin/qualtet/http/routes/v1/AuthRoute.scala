@@ -13,7 +13,7 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class AuthRoute[F[_]: Monad @nowarn](authService: AuthService[F])(using loggerFactory: Log4CatsLoggerFactory[IO]) extends Decoder[IO] {
+class AuthRoute[G[_]: Monad @nowarn](authService: AuthService[G, IO])(using loggerFactory: Log4CatsLoggerFactory[IO]) extends Decoder[IO] {
 
   given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
 

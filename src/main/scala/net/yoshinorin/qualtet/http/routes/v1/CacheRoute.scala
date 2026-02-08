@@ -13,9 +13,9 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class CacheRoute[F[_]: Monad @nowarn](
-  authProvider: AuthProvider[F],
-  cacheService: CacheService[F]
+class CacheRoute[G[_]: Monad @nowarn](
+  authProvider: AuthProvider[G],
+  cacheService: CacheService[G, IO]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 
   given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)

@@ -26,9 +26,9 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class ContentRoute[F[_]: Monad @nowarn](
-  authProvider: AuthProvider[F],
-  contentService: ContentService[F]
+class ContentRoute[G[_]: Monad @nowarn](
+  authProvider: AuthProvider[G],
+  contentService: ContentService[G, IO]
 )(using loggerFactory: Log4CatsLoggerFactory[IO])
     extends Decoder[IO] {
 

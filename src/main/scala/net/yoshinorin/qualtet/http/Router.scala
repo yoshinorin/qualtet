@@ -21,22 +21,22 @@ import net.yoshinorin.qualtet.http.routes.v1.{
 
 import scala.annotation.nowarn
 
-class Router[F[_]: Monad @nowarn](
+class Router[G[_]: Monad @nowarn](
   corsProvider: CorsProvider,
-  archiveRouteV1: ArchiveRouteV1[F],
-  articleRouteV1: ArticleRouteV1[F],
-  authorRouteV1: AuthorRouteV1[F],
-  authRouteV1: AuthRouteV1[F],
-  cacheRouteV1: CacheRouteV1[F],
-  contentRouteV1: ContentRouteV1[F],
-  contentTypeRouteV1: ContentTypeRouteV1[F],
-  feedRouteV1: FeedRouteV1[F],
+  archiveRouteV1: ArchiveRouteV1[G],
+  articleRouteV1: ArticleRouteV1[G],
+  authorRouteV1: AuthorRouteV1[G],
+  authRouteV1: AuthRouteV1[G],
+  cacheRouteV1: CacheRouteV1[G],
+  contentRouteV1: ContentRouteV1[G],
+  contentTypeRouteV1: ContentTypeRouteV1[G],
+  feedRouteV1: FeedRouteV1[G],
   homeRoute: HomeRoute,
-  searchRouteV1: SearchRouteV1[F],
-  seriesRouteV1: SeriesRouteV1[F],
-  sitemapRouteV1: SitemapRouteV1[F],
+  searchRouteV1: SearchRouteV1[G],
+  seriesRouteV1: SeriesRouteV1[G],
+  sitemapRouteV1: SitemapRouteV1[G],
   systemRouteV1: SystemRouteV1,
-  tagRouteV1: TagRouteV1[F]
+  tagRouteV1: TagRouteV1[G]
 ) {
 
   def withCors = corsProvider.httpRouter(routes)

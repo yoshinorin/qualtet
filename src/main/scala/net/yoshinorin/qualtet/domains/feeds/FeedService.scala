@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.feeds
 
-import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.articles.ArticleService
@@ -13,19 +13,19 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class FeedService[F[_]: Monad @nowarn](
+class FeedService[G[_]: Monad, F[_]: Monad](
   feedsPagination: PaginationOps[FeedsPagination],
-  cache: CacheModule[IO, String, ArticleWithCountResponseModel],
-  articleService: ArticleService[F]
-)(using loggerFactory: Log4CatsLoggerFactory[IO])
-    extends Cacheable[IO] {
+  cache: CacheModule[F, String, ArticleWithCountResponseModel],
+  articleService: ArticleService[G, F]
+)(using loggerFactory: Log4CatsLoggerFactory[F])
+    extends Cacheable[F] {
 
-  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
   private val CACHE_KEY = "FEED_FULL_CACHE"
 
-  def get(p: PaginationRequestModel): IO[Either[DomainError, Seq[FeedResponseModel]]] = {
+  def get(p: PaginationRequestModel): F[Either[DomainError, Seq[FeedResponseModel]]] = {
 
-    def fromDb(): IO[Either[DomainError, ArticleWithCountResponseModel]] = {
+    def fromDb(): F[Either[DomainError, ArticleWithCountResponseModel]] = {
       articleService.getWithCount(feedsPagination.make(p))
     }
 
@@ -45,19 +45,19 @@ class FeedService[F[_]: Monad @nowarn](
     for {
       maybeArticles <- cache.get(CACHE_KEY)
       result <- maybeArticles match {
-        case Some(a: ArticleWithCountResponseModel) => IO.pure(Right(toFeed(a)))
+        case Some(a: ArticleWithCountResponseModel) => Monad[F].pure(Right(toFeed(a)))
         case _ =>
           fromDb().flatMap {
             case Right(dbArticles) =>
               cache.put(CACHE_KEY, dbArticles).map(_ => Right(toFeed(dbArticles)))
             case Left(error) =>
-              Left(error).logLeft[IO](Error)
+              Left(error).logLeft[F](Error)
           }
       }
     } yield result
   }
 
-  def invalidate(): IO[Unit] = {
+  def invalidate(): F[Unit] = {
     cache.invalidate()
   }
 

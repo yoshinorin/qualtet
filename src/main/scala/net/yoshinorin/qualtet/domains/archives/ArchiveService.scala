@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.archives
 
 import cats.Monad
-import cats.effect.IO
+import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.errors.{ContentTypeNotFound, DomainError}
@@ -10,16 +10,16 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class ArchiveService[F[_]: Monad @nowarn](
-  archiveRepositoryAdapter: ArchiveRepositoryAdapter[F],
-  contentTypeService: ContentTypeService[F]
-)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO]) {
+class ArchiveService[G[_]: Monad, F[_]: Monad](
+  archiveRepositoryAdapter: ArchiveRepositoryAdapter[G],
+  contentTypeService: ContentTypeService[G, F]
+)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F]) {
 
-  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 
-  def get: IO[Either[DomainError, Seq[ArchiveResponseModel]]] = {
+  def get: F[Either[DomainError, Seq[ArchiveResponseModel]]] = {
     ContentTypeName("article") match {
-      case Left(error) => Left(error).logLeft[IO](Error)
+      case Left(error) => Left(error).logLeft[F](Error)
       case Right(contentTypeName) =>
         for {
           maybeContentType <- contentTypeService.findByName(contentTypeName)
@@ -27,7 +27,7 @@ class ArchiveService[F[_]: Monad @nowarn](
             case Some(c) =>
               executer.transact(archiveRepositoryAdapter.get(c.id)).map(articles => Right(articles))
             case None =>
-              Left(ContentTypeNotFound(detail = "content-type not found: article")).logLeft[IO](Warn)
+              Left(ContentTypeNotFound(detail = "content-type not found: article")).logLeft[F](Warn)
           }
         } yield result
     }

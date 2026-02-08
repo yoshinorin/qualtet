@@ -12,7 +12,7 @@ class Migrator() {
   /**
    * Do migration
    */
-  def migrate[F[_]: Monad @nowarn](contentTypeService: ContentTypeService[F]): IO[Unit] = {
+  def migrate[G[_]: Monad @nowarn](contentTypeService: ContentTypeService[G, IO]): IO[Unit] = {
     (for {
       // FIXME: avoid using `toOption.get`
       articleResult <- contentTypeService.create(ContentType(name = ContentTypeName("article").toOption.get))

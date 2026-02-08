@@ -1,31 +1,31 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.Cacheable
 
 import scala.annotation.nowarn
 
-class SitemapService[F[_]: Monad @nowarn](
-  sitemapRepositoryAdapter: SitemapRepositoryAdapter[F],
-  cache: CacheModule[IO, String, Seq[Url]]
-)(using executer: Executer[F, IO])
-    extends Cacheable[IO] {
+class SitemapService[G[_]: Monad, F[_]: Monad](
+  sitemapRepositoryAdapter: SitemapRepositoryAdapter[G],
+  cache: CacheModule[F, String, Seq[Url]]
+)(using executer: Executer[G, F])
+    extends Cacheable[F] {
 
   private val CACHE_KEY = "SITEMAPS_FULL_CACHE"
 
-  def get(): IO[Seq[Url]] = {
+  def get(): F[Seq[Url]] = {
 
-    def fromDB(): IO[Seq[Url]] = {
+    def fromDB(): F[Seq[Url]] = {
       executer.transact(sitemapRepositoryAdapter.get)
     }
 
     for {
       maybeSitemaps <- cache.get(CACHE_KEY)
       sitemaps <- maybeSitemaps match {
-        case Some(urls: Seq[Url]) => IO.pure(urls)
+        case Some(urls: Seq[Url]) => Monad[F].pure(urls)
         case _ =>
           for {
             dbSitemaps <- fromDB()
@@ -35,7 +35,7 @@ class SitemapService[F[_]: Monad @nowarn](
     } yield sitemaps
   }
 
-  def invalidate(): IO[Unit] = {
+  def invalidate(): F[Unit] = {
     cache.invalidate()
   }
 

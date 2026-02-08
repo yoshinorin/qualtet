@@ -1,6 +1,5 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
@@ -11,14 +10,14 @@ import net.yoshinorin.qualtet.domains.errors.{DomainError, TagNotFound}
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.syntax.*
 
-class TagService[F[_]: Monad](
-  tagRepositoryAdapter: TagRepositoryAdapter[F],
-  cache: CacheModule[IO, String, Seq[TagResponseModel]],
-  contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[F]
-)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO])
-    extends Cacheable[IO] {
+class TagService[G[_]: Monad, F[_]: Monad](
+  tagRepositoryAdapter: TagRepositoryAdapter[G],
+  cache: CacheModule[F, String, Seq[TagResponseModel]],
+  contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[G]
+)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F])
+    extends Cacheable[F] {
 
-  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
   private val CACHE_KEY = "TAGS_FULL_CACHE"
 
   /**
@@ -26,16 +25,16 @@ class TagService[F[_]: Monad](
    *
    * @return tags
    */
-  def getAll: IO[Seq[TagResponseModel]] = {
+  def getAll: F[Seq[TagResponseModel]] = {
 
-    def fromDB(): IO[Seq[TagResponseModel]] = {
+    def fromDB(): F[Seq[TagResponseModel]] = {
       executer.transact(tagRepositoryAdapter.getAll)
     }
 
     for {
       maybeTags <- cache.get(CACHE_KEY)
       tags <- maybeTags match {
-        case Some(t: Seq[TagResponseModel]) => IO.pure(t)
+        case Some(t: Seq[TagResponseModel]) => Monad[F].pure(t)
         case _ =>
           for {
             dbTags <- fromDB()
@@ -51,7 +50,7 @@ class TagService[F[_]: Monad](
    * @param id
    * @return maybe Tag
    */
-  def findById(id: TagId): IO[Option[Tag]] = {
+  def findById(id: TagId): F[Option[Tag]] = {
     executer.transact(tagRepositoryAdapter.findById(id))
   }
 
@@ -61,25 +60,25 @@ class TagService[F[_]: Monad](
    * @param tagName
    * @return maybe Tag
    */
-  def findByName(tagName: TagName): IO[Option[Tag]] = {
+  def findByName(tagName: TagName): F[Option[Tag]] = {
     executer.transact(tagRepositoryAdapter.findByName(tagName))
   }
 
-  private def findOrCreateNewInstance(tag: Tag): IO[Tag] = {
+  private def findOrCreateNewInstance(tag: Tag): F[Tag] = {
     this.findByName(tag.name).flatMap {
-      case None => IO(Tag(TagId.apply(), tag.name, tag.path))
-      case Some(t) => IO(t)
+      case None => Monad[F].pure(Tag(TagId.apply(), tag.name, tag.path))
+      case Some(t) => Monad[F].pure(t)
     }
   }
 
-  def getTags(tags: Option[List[Tag]]): IO[Option[List[Tag]]] = {
+  def getTags(tags: Option[List[Tag]]): F[Option[List[Tag]]] = {
     tags match {
-      case None => IO(None)
+      case None => Monad[F].pure(None)
       case Some(t) =>
         t.map { t =>
           findOrCreateNewInstance(t)
         }.sequence
-          .option
+          .map(Some(_))
     }
   }
 
@@ -88,7 +87,7 @@ class TagService[F[_]: Monad](
    *
    * @param id Instance of TagId
    */
-  def delete(id: TagId): IO[Either[DomainError, Unit]] = {
+  def delete(id: TagId): F[Either[DomainError, Unit]] = {
     val queries = for {
       contentTaggingDelete <- executer.defer(contentTaggingRepositoryAdapter.deleteByTagId(id))
       tagDelete <- executer.defer(tagRepositoryAdapter.delete(id))
@@ -100,12 +99,12 @@ class TagService[F[_]: Monad](
         case Some(_) =>
           executer.transact2(queries).map(_ => Right(()))
         case None =>
-          Left(TagNotFound(detail = s"tag not found: ${id}")).logLeft[IO](Warn)
+          Left(TagNotFound(detail = s"tag not found: ${id}")).logLeft[F](Warn)
       }
     } yield result
   }
 
-  def invalidate(): IO[Unit] = {
+  def invalidate(): F[Unit] = {
     cache.invalidate()
   }
 }

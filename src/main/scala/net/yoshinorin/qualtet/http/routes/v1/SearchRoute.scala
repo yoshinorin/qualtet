@@ -11,8 +11,8 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class SearchRoute[F[_]: Monad @nowarn](
-  searchService: SearchService[F]
+class SearchRoute[G[_]: Monad @nowarn](
+  searchService: SearchService[G, IO]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 
   given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)

@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
 import cats.data.{ContT, EitherT}
-import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
@@ -18,25 +17,25 @@ import net.yoshinorin.qualtet.domains.series.{Series, SeriesRepositoryAdapter, S
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
-class ContentService[F[_]: Monad](
-  contentRepositoryAdapter: ContentRepositoryAdapter[F],
-  tagRepositoryAdapter: TagRepositoryAdapter[F],
-  tagService: TagService[F],
-  contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[F],
-  robotsRepositoryAdapter: RobotsRepositoryAdapter[F],
-  externalResourceRepositoryAdapter: ExternalResourceRepositoryAdapter[F],
-  authorService: AuthorService[F],
-  contentTypeService: ContentTypeService[F],
-  seriesRepositoryAdapter: SeriesRepositoryAdapter[F],
-  seriesService: SeriesService[F],
-  contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[F]
-)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO]) {
+class ContentService[G[_]: Monad, F[_]: Monad](
+  contentRepositoryAdapter: ContentRepositoryAdapter[G],
+  tagRepositoryAdapter: TagRepositoryAdapter[G],
+  tagService: TagService[G, F],
+  contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[G],
+  robotsRepositoryAdapter: RobotsRepositoryAdapter[G],
+  externalResourceRepositoryAdapter: ExternalResourceRepositoryAdapter[G],
+  authorService: AuthorService[G, F],
+  contentTypeService: ContentTypeService[G, F],
+  seriesRepositoryAdapter: SeriesRepositoryAdapter[G],
+  seriesService: SeriesService[G, F],
+  contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[G]
+)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F]) {
 
-  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 
-  def createOrUpdate(authorName: AuthorName, request: ContentRequestModel): IO[Either[DomainError, ContentResponseModel]] = {
+  def createOrUpdate(authorName: AuthorName, request: ContentRequestModel): F[Either[DomainError, ContentResponseModel]] = {
     val authorAndContentType = for {
-      contentTypeName <- EitherT.fromEither[IO](ContentTypeName(request.contentType))
+      contentTypeName <- EitherT.fromEither[F](ContentTypeName(request.contentType))
       author <- EitherT(
         authorService
           .findByName(authorName)
@@ -51,21 +50,21 @@ class ContentService[F[_]: Monad](
       )
     } yield (author, contentType)
 
-    val created: EitherT[IO, DomainError, ContentResponseModel] = for {
+    val created: EitherT[F, DomainError, ContentResponseModel] = for {
       (author, contentType) <- authorAndContentType
       maybeCurrentContent <- EitherT.liftF(this.findByPath(request.path))
       contentId = maybeCurrentContent.map(_.id).getOrElse(ContentId.apply())
       maybeTags <- EitherT.liftF(tagService.getTags(Some(request.tags)))
       contentTaggings <- EitherT.liftF(maybeTags match {
-        case None => IO(List())
-        case Some(x) => IO(x.map(t => ContentTagging(contentId, t.id)))
+        case None => Monad[F].pure(List())
+        case Some(x) => Monad[F].pure(x.map(t => ContentTagging(contentId, t.id)))
       })
       contentSerilizing <- request.series match {
-        case None => EitherT.rightT[IO, DomainError](None)
+        case None => EitherT.rightT[F, DomainError](None)
         case Some(seriesName) =>
           EitherT(seriesService.findByName(seriesName).flatMap {
-            case Some(s) => IO.pure(Right(Some(ContentSerializing(s.id, contentId))))
-            case None => Left(InvalidSeries(detail = s"series not found: ${seriesName}")).logLeft[IO](Warn)
+            case Some(s) => Monad[F].pure(Right(Some(ContentSerializing(s.id, contentId))))
+            case None => Left(InvalidSeries(detail = s"series not found: ${seriesName}")).logLeft[F](Warn)
           })
       }
       createdContent <- EitherT(
@@ -109,7 +108,7 @@ class ContentService[F[_]: Monad](
     contentTaggings: List[ContentTagging],
     contentSerializing: Option[ContentSerializing],
     externalResources: List[ExternalResources]
-  ): IO[Either[DomainError, Content]] = {
+  ): F[Either[DomainError, Content]] = {
 
     val maybeExternalResources = externalResources.flatMap(a => a.values.map(v => ExternalResource(data.id, a.kind, v)))
 
@@ -125,7 +124,7 @@ class ContentService[F[_]: Monad](
         case Some(cc) if contentSerializing.isEmpty => executer.defer(contentSerializingRepositoryAdapter.deleteByContentId(data.id))
         case Some(cc) if contentSerializing.map(_.seriesId) != cc.id =>
           executer.defer(contentSerializingRepositoryAdapter.deleteByContentId(data.id))
-        case _ => Monad[F].pure(())
+        case _ => Monad[G].pure(())
       }
       contentSerializingUpsert <- executer.defer(contentSerializingRepositoryAdapter.upsert(contentSerializing))
       currentExternalResources <- executer.defer(externalResourceRepositoryAdapter.findByContentId(data.id))
@@ -163,7 +162,7 @@ class ContentService[F[_]: Monad](
    *
    * @param id Instance of ContentId
    */
-  def delete(id: ContentId): IO[Either[DomainError, Unit]] = {
+  def delete(id: ContentId): F[Either[DomainError, Unit]] = {
 
     val queries = for {
       externalResourcesDelete <- executer.defer(externalResourceRepositoryAdapter.delete(id))
@@ -184,7 +183,7 @@ class ContentService[F[_]: Monad](
       case Some(_) =>
         executer.transact5[Unit, Unit, Unit, Unit, Unit](queries).map(_ => Right(()))
       case None =>
-        Left(ContentNotFound(detail = s"content not found: ${id}")).logLeft[IO](Warn)
+        Left(ContentNotFound(detail = s"content not found: ${id}")).logLeft[F](Warn)
     }
   }
 
@@ -194,7 +193,7 @@ class ContentService[F[_]: Monad](
    * @param path a content path
    * @return ResponseContent instance
    */
-  def findByPath(path: ContentPath): IO[Option[Content]] = {
+  def findByPath(path: ContentPath): F[Option[Content]] = {
     executer.transact(contentRepositoryAdapter.findByPath(path))
   }
 
@@ -204,7 +203,7 @@ class ContentService[F[_]: Monad](
    * @param path a content path
    * @return ResponseContent instance
    */
-  def findByPathWithMeta(path: ContentPath): IO[Either[DomainError, Option[ContentDetailResponseModel]]] = {
+  def findByPathWithMeta(path: ContentPath): F[Either[DomainError, Option[ContentDetailResponseModel]]] = {
     this.findBy(path)(contentRepositoryAdapter.findByPathWithMeta)
   }
 
@@ -214,11 +213,11 @@ class ContentService[F[_]: Monad](
    * @param id ContentId
    * @return ResponseContent instance
    */
-  def findById(id: ContentId): IO[Option[Content]] = {
+  def findById(id: ContentId): F[Option[Content]] = {
     executer.transact(contentRepositoryAdapter.findById(id))
   }
 
-  def findAdjacent(id: ContentId): IO[Either[DomainError, Option[AdjacentContentResponseModel]]] = {
+  def findAdjacent(id: ContentId): F[Either[DomainError, Option[AdjacentContentResponseModel]]] = {
     executer.transact(contentRepositoryAdapter.findAdjacent(id)).map {
       case None => Right(None)
       case Some((previous, next)) => Right(Some(AdjacentContentResponseModel(previous, next)))
@@ -228,8 +227,8 @@ class ContentService[F[_]: Monad](
   def findBy[A](
     data: A
   )(
-    f: A => ContT[F, Either[DomainError, Option[ContentWithMeta]], Either[DomainError, Option[ContentWithMeta]]]
-  ): IO[Either[DomainError, Option[ContentDetailResponseModel]]] = {
+    f: A => ContT[G, Either[DomainError, Option[ContentWithMeta]], Either[DomainError, Option[ContentWithMeta]]]
+  ): F[Either[DomainError, Option[ContentDetailResponseModel]]] = {
     executer.transact(f(data)).map {
       case Left(error) => Left(error)
       case Right(maybeContentWithMeta) =>

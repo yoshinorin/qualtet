@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.cache
 
 import cats.Monad
-import cats.effect.IO
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.sitemaps.SitemapService
 import net.yoshinorin.qualtet.domains.tags.TagService
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
@@ -10,16 +10,16 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class CacheService[F[_]: Monad @nowarn](
-  sitemapService: SitemapService[F],
-  tagsService: TagService[F],
-  contentTypeService: ContentTypeService[F],
-  feedService: FeedService[F]
-)(using loggerFactory: Log4CatsLoggerFactory[IO]) {
+class CacheService[G[_]: Monad, F[_]: Monad](
+  sitemapService: SitemapService[G, F],
+  tagsService: TagService[G, F],
+  contentTypeService: ContentTypeService[G, F],
+  feedService: FeedService[G, F]
+)(using loggerFactory: Log4CatsLoggerFactory[F]) {
 
-  private val logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private val logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 
-  def invalidateAll(): IO[Unit] = {
+  def invalidateAll(): F[Unit] = {
     for {
       _ <- sitemapService.invalidate()
       _ <- tagsService.invalidate()

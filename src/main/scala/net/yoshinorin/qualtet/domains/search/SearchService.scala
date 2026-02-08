@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.search
 
 import cats.data.ContT
-import cats.effect.IO
 import cats.Monad
 import cats.implicits.*
 import net.yoshinorin.qualtet.config.SearchConfig
@@ -13,13 +12,13 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.tailrec
 
-class SearchService[F[_]: Monad](
+class SearchService[G[_]: Monad, F[_]: Monad](
   searchConfig: SearchConfig,
-  searchRepository: SearchRepository[F]
-)(using executer: Executer[F, IO]) {
+  searchRepository: SearchRepository[G]
+)(using executer: Executer[G, F]) {
 
-  def cont(query: List[String]): ContT[F, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] = {
-    ContT.apply[F, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] { _ =>
+  def cont(query: List[String]): ContT[G, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] = {
+    ContT.apply[G, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] { _ =>
       searchRepository.search(query).map { x =>
         x.map { case (count, search) =>
           (count, SearchResponseModel(search.path, search.title, search.content, search.publishedAt, search.updatedAt))
@@ -112,11 +111,11 @@ class SearchService[F[_]: Monad](
     }
   }
 
-  def search(query: Map[String, List[String]]): IO[SearchWithCountResponseModel] = {
+  def search(query: Map[String, List[String]]): F[SearchWithCountResponseModel] = {
     val queryStrings = extractQueryStringsFromQuery(query)
     for {
-      accErrors <- IO(accumurateQueryStringsErrors(queryStrings))
-      _ <- IO(if (accErrors.nonEmpty) {
+      accErrors <- Monad[F].pure(accumurateQueryStringsErrors(queryStrings))
+      _ <- Monad[F].pure(if (accErrors.nonEmpty) {
         throw new InvalidSearchConditions(detail = "Invalid search conditions. Please see error details.", errors = Some(accErrors))
       })
       searchResult <- executer.transact(cont(queryStrings))

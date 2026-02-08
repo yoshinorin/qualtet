@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
@@ -11,13 +11,13 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class ContentTypeService[F[_]: Monad @nowarn](
-  contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[F],
-  cache: CacheModule[IO, String, ContentType]
-)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO])
-    extends Cacheable[IO] {
+class ContentTypeService[G[_]: Monad, F[_]: Monad](
+  contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[G],
+  cache: CacheModule[F, String, ContentType]
+)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F])
+    extends Cacheable[F] {
 
-  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 
   /**
    * create a contentType
@@ -25,16 +25,16 @@ class ContentTypeService[F[_]: Monad @nowarn](
    * @param name String
    * @return
    */
-  def create(data: ContentType): IO[Either[DomainError, ContentType]] = {
+  def create(data: ContentType): F[Either[DomainError, ContentType]] = {
     this.findByName(data.name).flatMap {
-      case Some(x: ContentType) => IO.pure(Right(x))
+      case Some(x: ContentType) => Monad[F].pure(Right(x))
       case None =>
         for {
           _ <- executer.transact(contentTypeRepositoryAdapter.upsert(data))
           maybeContentType <- this.findByName(data.name)
           result <- maybeContentType match {
-            case Some(c) => IO.pure(Right(c))
-            case None => Left(UnexpectedException("contentType not found")).logLeft[IO](Error)
+            case Some(c) => Monad[F].pure(Right(c))
+            case None => Left(UnexpectedException("contentType not found")).logLeft[F](Error)
           }
         } yield result
     }
@@ -46,22 +46,22 @@ class ContentTypeService[F[_]: Monad @nowarn](
    * @param name name of ContentType
    * @return ContentType
    */
-  def findByName(name: ContentTypeName): IO[Option[ContentType]] = {
+  def findByName(name: ContentTypeName): F[Option[ContentType]] = {
 
-    def fromDB(name: ContentTypeName): IO[Option[ContentType]] = {
+    def fromDB(name: ContentTypeName): F[Option[ContentType]] = {
       executer.transact(contentTypeRepositoryAdapter.findByName(name))
     }
 
     for {
       maybeContentType <- cache.get(name.value)
       contentType <- maybeContentType match {
-        case Some(c: ContentType) => IO.pure(Some(c))
+        case Some(c: ContentType) => Monad[F].pure(Some(c))
         case _ =>
           for {
             maybeDbContentType <- fromDB(name)
             _ <- maybeDbContentType match {
               case Some(dc: ContentType) => cache.put(name.value, dc)
-              case _ => IO.pure(None)
+              case _ => Monad[F].pure(())
             }
           } yield maybeDbContentType
       }
@@ -73,11 +73,11 @@ class ContentTypeService[F[_]: Monad @nowarn](
    *
    * @return ContentTypes
    */
-  def getAll: IO[Seq[ContentType]] = {
+  def getAll: F[Seq[ContentType]] = {
     executer.transact(contentTypeRepositoryAdapter.getAll)
   }
 
-  def invalidate(): IO[Unit] = {
+  def invalidate(): F[Unit] = {
     cache.invalidate()
   }
 

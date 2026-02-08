@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.auth
 
 import cats.data.EitherT
-import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorResponseModel, AuthorService, BCryptPassword}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, DomainError, Unauthorized}
@@ -11,19 +11,19 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class AuthService[F[_]: Monad @nowarn](authorService: AuthorService[F], jwt: Jwt[IO])(using loggerFactory: Log4CatsLoggerFactory[IO]) {
+class AuthService[G[_]: Monad, F[_]: Monad](authorService: AuthorService[G, F], jwt: Jwt[F])(using loggerFactory: Log4CatsLoggerFactory[F]) {
 
-  private val logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private val logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
   private val bcryptPasswordEncoder = new BCryptPasswordEncoder()
 
-  def generateToken(tokenRequest: RequestToken): IO[Either[DomainError, ResponseToken]] = {
+  def generateToken(tokenRequest: RequestToken): F[Either[DomainError, ResponseToken]] = {
 
-    def verifyPassword(password: BCryptPassword): IO[Either[Unauthorized, Unit]] = {
+    def verifyPassword(password: BCryptPassword): F[Either[Unauthorized, Unit]] = {
       if (bcryptPasswordEncoder.matches(tokenRequest.password, password.value)) {
-        IO.pure(Right(()))
+        Monad[F].pure(Right(()))
       } else {
         logger.error(s"authorId: ${tokenRequest.authorId} - wrong password") *>
-          IO.pure(Left(Unauthorized()))
+          Monad[F].pure(Left(Unauthorized()))
       }
     }
 
@@ -39,13 +39,13 @@ class AuthService[F[_]: Monad @nowarn](authorService: AuthorService[F], jwt: Jwt
 
   }
 
-  def findAuthorFromJwtString(jwtString: String): IO[Either[DomainError, Option[AuthorResponseModel]]] = {
+  def findAuthorFromJwtString(jwtString: String): F[Either[DomainError, Option[AuthorResponseModel]]] = {
     jwt.decode(jwtString).flatMap {
       case Right(jwtClaim: JwtClaim) =>
         authorService.findById(AuthorId(jwtClaim.sub)).map(Right(_))
       case Left(t: Throwable) =>
         logger.error(s"${t.getMessage}") *>
-          IO.pure(Left(Unauthorized()))
+          Monad[F].pure(Left(Unauthorized()))
     }
   }
 

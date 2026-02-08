@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import cats.effect.IO
 import cats.Monad
+import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
@@ -9,23 +9,23 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class AuthorService[F[_]: Monad @nowarn](
-  authorRepositoryAdapter: AuthorRepositoryAdapter[F]
-)(using executer: Executer[F, IO], loggerFactory: Log4CatsLoggerFactory[IO]) {
+class AuthorService[G[_]: Monad, F[_]: Monad](
+  authorRepositoryAdapter: AuthorRepositoryAdapter[G]
+)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F]) {
 
-  private given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 
   /**
    * create an authorName
    *
    * @param data Instance of Author
-   * @return Instance of created Author with IO
+   * @return Instance of created Author
    */
-  def create(data: Author): IO[Either[DomainError, AuthorResponseModel]] = {
+  def create(data: Author): F[Either[DomainError, AuthorResponseModel]] = {
     executer.transact(authorRepositoryAdapter.upsert(data)) *>
       this.findByName(data.name).flatMap {
-        case Some(author) => IO.pure(Right(author))
-        case None => Left(UnexpectedException("user not found")).logLeft[IO](Error)
+        case Some(author) => Monad[F].pure(Right(author))
+        case None => Left(UnexpectedException("user not found")).logLeft[F](Error)
       }
   }
 
@@ -34,7 +34,7 @@ class AuthorService[F[_]: Monad @nowarn](
    *
    * @return Authors
    */
-  def getAll: IO[Seq[AuthorResponseModel]] = {
+  def getAll: F[Seq[AuthorResponseModel]] = {
     executer.transact(authorRepositoryAdapter.fetch)
   }
 
@@ -44,7 +44,7 @@ class AuthorService[F[_]: Monad @nowarn](
    * @param id authorName's id
    * @return Author
    */
-  def findById(id: AuthorId): IO[Option[AuthorResponseModel]] = {
+  def findById(id: AuthorId): F[Option[AuthorResponseModel]] = {
     executer.transact(authorRepositoryAdapter.findById(id))
   }
 
@@ -54,7 +54,7 @@ class AuthorService[F[_]: Monad @nowarn](
    * @param id authorName's id
    * @return Author
    */
-  def findByIdWithPassword(id: AuthorId): IO[Option[Author]] = {
+  def findByIdWithPassword(id: AuthorId): F[Option[Author]] = {
     executer.transact(authorRepositoryAdapter.findByIdWithPassword(id))
   }
 
@@ -64,7 +64,7 @@ class AuthorService[F[_]: Monad @nowarn](
    * @param name authorName's name
    * @return Author
    */
-  def findByName(name: AuthorName): IO[Option[AuthorResponseModel]] = {
+  def findByName(name: AuthorName): F[Option[AuthorResponseModel]] = {
     executer.transact(authorRepositoryAdapter.findByName(name))
   }
 
