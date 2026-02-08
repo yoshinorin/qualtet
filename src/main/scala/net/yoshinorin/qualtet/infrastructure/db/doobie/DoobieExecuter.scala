@@ -10,13 +10,17 @@ import doobie.free.connection.ConnectionIO
 import org.typelevel.otel4s.trace.Tracer
 import net.yoshinorin.qualtet.infrastructure.telemetry.DoobieTracing
 
+/**
+ * Doobie implementation of Executer.
+ * Bridges ConnectionIO (G) to IO (F).
+ */
 class DoobieExecuter(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) extends Executer[ConnectionIO, IO] {
 
-  override def defer[R](c: ContT[doobie.ConnectionIO, R, R]): ConnectionIO[R] = {
+  override def defer[R](c: ContT[ConnectionIO, R, R]): ConnectionIO[R] = {
     c.run { x => x.pure[ConnectionIO] }
   }
 
-  override def transact[R](t: ContT[doobie.ConnectionIO, R, R]): IO[R] = transact(t.run { x => x.pure[ConnectionIO] })
+  override def transact[R](t: ContT[ConnectionIO, R, R]): IO[R] = transact(t.run { x => x.pure[ConnectionIO] })
 
   override def transact[T](connectionIO: ConnectionIO[T]): IO[T] = {
     maybeTracer match {
