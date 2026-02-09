@@ -3,10 +3,10 @@ package net.yoshinorin.qualtet.http.routes.v1
 import cats.data.EitherT
 import cats.Monad
 import cats.implicits.*
-import cats.effect.IO
+import cats.effect.Concurrent
 import org.http4s.headers.Allow
 import org.http4s.{AuthedRoutes, HttpRoutes, Response}
-import org.http4s.dsl.io.*
+import org.http4s.dsl.Http4sDsl
 import org.http4s.{ContextRequest, Request}
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
@@ -26,16 +26,19 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class ContentRoute[G[_]: Monad @nowarn](
-  authProvider: AuthProvider[G],
-  contentService: ContentService[IO, G]
-)(using loggerFactory: Log4CatsLoggerFactory[IO])
-    extends Decoder[IO] {
+class ContentRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
+  authProvider: AuthProvider[F, G],
+  contentService: ContentService[F, G]
+)(using loggerFactory: Log4CatsLoggerFactory[F])
+    extends Decoder[F] {
 
-  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private given dsl: Http4sDsl[F] = Http4sDsl[F]
+  import dsl.*
+
+  given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 
   // NOTE: must be compose `auth route` after `Non auth route`.
-  private[http] def index: HttpRoutes[IO] =
+  private[http] def index: HttpRoutes[F] =
     (contentWithoutAuth <+>
       authProvider.authenticate(contentWithAuthed))
 
@@ -47,22 +50,22 @@ class ContentRoute[G[_]: Monad @nowarn](
     path.endsWith("/adjacent") || path.endsWith("/adjacent/")
   }
 
-  private[http] def contentWithoutAuth: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
+  private[http] def contentWithoutAuth: HttpRoutes[F] = HttpRoutes.of[F] { implicit r =>
     // NOTE: Cannot use `GET -> Root / <path>` here because it would no longer pattern match other composed HTTP methods such as `POST` or `DELETE`.
     (r match
       case request @ GET -> _ if isAdjacentEndpointRequest(request.path) =>
         val maybeId = removeApiPath(request.path).replace("adjacent", "").replace("/", "")
         this
           .getAdjacent(maybeId)
-          .handleErrorWith(_.logWithStackTrace[IO].asResponse)
+          .handleErrorWith(_.logWithStackTrace[F].asResponse)
       case request @ GET -> _ =>
         this
           .get(removeApiPath(request.path))
-          .handleErrorWith(_.logWithStackTrace[IO].asResponse)
+          .handleErrorWith(_.logWithStackTrace[F].asResponse)
     )
   }
 
-  private[http] def contentWithAuthed: AuthedRoutes[(AuthorResponseModel, String), IO] = AuthedRoutes.of { ctxRequest =>
+  private[http] def contentWithAuthed: AuthedRoutes[(AuthorResponseModel, String), F] = AuthedRoutes.of { ctxRequest =>
     implicit val x = ctxRequest.req
     (ctxRequest match {
       case ContextRequest(_, r) =>
@@ -71,10 +74,10 @@ class ContentRoute[G[_]: Monad @nowarn](
           case request @ DELETE -> Root / id => this.delete(id)
           case request @ _ => MethodNotAllowed(Allow(Set(GET, POST, DELETE)))
         }
-    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
+    }).handleErrorWith(_.logWithStackTrace[F].asResponse)
   }
 
-  private[http] def post(payload: (AuthorResponseModel, String)): Request[IO] ?=> IO[Response[IO]] = {
+  private[http] def post(payload: (AuthorResponseModel, String)): Request[F] ?=> F[Response[F]] = {
     (for {
       maybeDecodedContent <- EitherT(decode[ContentRequestModel](payload._2))
       maybeContent <- EitherT(contentService.createOrUpdate(payload._1.name, maybeDecodedContent))
@@ -84,7 +87,7 @@ class ContentRoute[G[_]: Monad @nowarn](
     }
   }
 
-  private[http] def delete(id: String): Request[IO] ?=> IO[Response[IO]] = {
+  private[http] def delete(id: String): Request[F] ?=> F[Response[F]] = {
     (for {
       result <- EitherT(contentService.delete(ContentId(id)))
     } yield result).value.flatMap {
@@ -93,9 +96,9 @@ class ContentRoute[G[_]: Monad @nowarn](
     }
   }
 
-  def get(path: String): Request[IO] ?=> IO[Response[IO]] = {
+  def get(path: String): Request[F] ?=> F[Response[F]] = {
     (for {
-      maybeContentPath <- EitherT.fromEither[IO](ContentPath(path))
+      maybeContentPath <- EitherT.fromEither[F](ContentPath(path))
       maybeContent <- EitherT(contentService.findByPathWithMeta(maybeContentPath))
     } yield maybeContent).value.flatMap {
       case Right(content) => content.asResponse
@@ -103,12 +106,12 @@ class ContentRoute[G[_]: Monad @nowarn](
     }
   }
 
-  def getAdjacent(id: String): Request[IO] ?=> IO[Response[IO]] = {
+  def getAdjacent(id: String): Request[F] ?=> F[Response[F]] = {
     (for {
       maybeContent <- EitherT.liftF(contentService.findById(ContentId(id)))
       adjacentOpt <- maybeContent match {
         case Some(content) => EitherT(contentService.findAdjacent(content.id))
-        case None => EitherT.rightT[IO, DomainError](None)
+        case None => EitherT.rightT[F, DomainError](None)
       }
     } yield adjacentOpt).value.flatMap {
       case Right(adjacent) => adjacent.asResponse

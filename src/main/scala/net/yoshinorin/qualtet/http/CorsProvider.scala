@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.http
 
-import cats.effect.IO
+import cats.effect.Concurrent
 import org.http4s.HttpApp
 import org.http4s.HttpRoutes
 import org.http4s.Uri
@@ -10,9 +10,9 @@ import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
 import net.yoshinorin.qualtet.config.CorsConfig
 import java.net.URI
 
-class CorsProvider(
+class CorsProvider[F[_]: Concurrent](
   corsConfig: CorsConfig
-)(using logger: Log4CatsLoggerFactory[IO]) {
+)(using logger: Log4CatsLoggerFactory[F]) {
 
   private[http] val origins: Set[Origin.Host] = {
     // NOTE: throw `java.net.MalformedURLException` if configs contains invalid URL.
@@ -29,8 +29,8 @@ class CorsProvider(
     if (origins.isEmpty) CORS.policy.withAllowOriginAll else CORS.policy.withAllowOriginHost(origins)
   }
 
-  def httpRouter(route: HttpRoutes[IO]) = policyWithAllowOrigin.httpRoutes(route)
+  def httpRouter(route: HttpRoutes[F]) = policyWithAllowOrigin.httpRoutes(route)
 
-  def httpApp(app: HttpApp[IO]) = policyWithAllowOrigin.httpApp(app)
+  def httpApp(app: HttpApp[F]) = policyWithAllowOrigin.httpApp(app)
 
 }

@@ -42,7 +42,7 @@ object BootStrap extends IOApp {
           _ <- modules.migrator.migrate(modules.contentTypeService)
           _ <- modules.versionService.migrate(Some(modules.v218Migrator))
           routes <- modules.router.withCors.map[Kleisli[IO, Request[IO], Response[IO]]](_.orNotFound)
-          httpApp <- IO(new HttpAppBuilder(routes, maybeTracer).build)
+          httpApp <- IO(new HttpAppBuilder[IO](routes, maybeTracer).build)
           _ <- server(host, port, httpApp).use(_ => IO.never)
         } yield ExitCode.Success
         // TODO: should flush otel telemetries

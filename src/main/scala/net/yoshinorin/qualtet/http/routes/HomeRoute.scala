@@ -1,12 +1,15 @@
 package net.yoshinorin.qualtet.http.routes
 
-import cats.effect.IO
+import cats.effect.Concurrent
 import org.http4s.{HttpRoutes, Response}
-import org.http4s.dsl.io.*
+import org.http4s.dsl.Http4sDsl
 
-class HomeRoute {
+class HomeRoute[F[_]: Concurrent] {
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] {
+  private given dsl: Http4sDsl[F] = Http4sDsl[F]
+  import dsl.*
+
+  private[http] def index: HttpRoutes[F] = HttpRoutes.of[F] {
     case request @ GET -> Root => this.get
     case request @ OPTIONS -> Root => NoContent()
     case request @ _ =>
@@ -14,7 +17,7 @@ class HomeRoute {
   }
 
   // application root
-  private[http] def get: IO[Response[IO]] = {
+  private[http] def get: F[Response[F]] = {
     Ok("Hello Qualtet!!")
   }
 

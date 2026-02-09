@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http
 
 import cats.Monad
+import cats.effect.Concurrent
 import org.http4s.server.Router as Http4sRouter
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
@@ -21,22 +22,22 @@ import net.yoshinorin.qualtet.http.routes.v1.{
 
 import scala.annotation.nowarn
 
-class Router[G[_]: Monad @nowarn](
-  corsProvider: CorsProvider,
-  archiveRouteV1: ArchiveRouteV1[G],
-  articleRouteV1: ArticleRouteV1[G],
-  authorRouteV1: AuthorRouteV1[G],
-  authRouteV1: AuthRouteV1[G],
-  cacheRouteV1: CacheRouteV1[G],
-  contentRouteV1: ContentRouteV1[G],
-  contentTypeRouteV1: ContentTypeRouteV1[G],
-  feedRouteV1: FeedRouteV1[G],
-  homeRoute: HomeRoute,
-  searchRouteV1: SearchRouteV1[G],
-  seriesRouteV1: SeriesRouteV1[G],
-  sitemapRouteV1: SitemapRouteV1[G],
-  systemRouteV1: SystemRouteV1,
-  tagRouteV1: TagRouteV1[G]
+class Router[F[_]: Concurrent, G[_]: Monad @nowarn](
+  corsProvider: CorsProvider[F],
+  archiveRouteV1: ArchiveRouteV1[F, G],
+  articleRouteV1: ArticleRouteV1[F, G],
+  authorRouteV1: AuthorRouteV1[F, G],
+  authRouteV1: AuthRouteV1[F, G],
+  cacheRouteV1: CacheRouteV1[F, G],
+  contentRouteV1: ContentRouteV1[F, G],
+  contentTypeRouteV1: ContentTypeRouteV1[F, G],
+  feedRouteV1: FeedRouteV1[F, G],
+  homeRoute: HomeRoute[F],
+  searchRouteV1: SearchRouteV1[F, G],
+  seriesRouteV1: SeriesRouteV1[F, G],
+  sitemapRouteV1: SitemapRouteV1[F, G],
+  systemRouteV1: SystemRouteV1[F],
+  tagRouteV1: TagRouteV1[F, G]
 ) {
 
   def withCors = corsProvider.httpRouter(routes)

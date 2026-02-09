@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.http.response
 
 import cats.effect.IO
 import org.http4s.{Request, Uri}
+import org.http4s.dsl.Http4sDsl
 import org.http4s.implicits.*
 import net.yoshinorin.qualtet.http.errors.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -11,6 +12,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.response.TranslatorSpec
 class TranslatorSpec extends AnyWordSpec {
 
+  given Http4sDsl[IO] = Http4sDsl[IO]
   given testRoute: Request[IO] = Request[IO](uri = uri"/test")
 
   "failToReponse" should {
@@ -61,7 +63,7 @@ class TranslatorSpec extends AnyWordSpec {
     "convert Not DomainError exceptions to 500 response" in {
       val exception = new RuntimeException("unexpected error")
       (for {
-        response <- Translator.toResponse(exception)
+        response <- Translator.toResponse[IO](exception)
       } yield assert(response.status.code == 500)).unsafeRunSync()
     }
   }

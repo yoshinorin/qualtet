@@ -1,7 +1,9 @@
 package net.yoshinorin.qualtet.syntax
 
-import cats.effect.IO
+import cats.Monad
+import cats.effect.Concurrent
 import org.http4s.{Request, Response, Status}
+import org.http4s.dsl.Http4sDsl
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationRequestModel}
 import net.yoshinorin.qualtet.http.response.Translator
@@ -10,39 +12,39 @@ import scala.util.Try
 
 trait http {
 
-  extension (request: Request[IO]) {
+  extension [F[_]](request: Request[F]) {
     def path: String = {
       request.uri.path.toString()
     }
   }
 
   extension (e: Throwable) {
-    def asResponse: Request[IO] ?=> IO[Response[IO]] = {
-      Translator.toResponse(e)
+    def asResponse[F[_]: Concurrent](using Http4sDsl[F]): Request[F] ?=> F[Response[F]] = {
+      Translator.toResponse[F](e)
     }
   }
 
-  extension (e: IO[Throwable]) {
-    def asResponse: Request[IO] ?=> IO[Response[IO]] = {
-      e.flatMap(_.asResponse)
+  extension [F[_]: Concurrent](e: F[Throwable])(using Http4sDsl[F]) {
+    def asResponse: Request[F] ?=> F[Response[F]] = {
+      Monad[F].flatMap(e)(_.asResponse[F])
     }
   }
 
   extension [T](a: Option[T]) {
-    def asResponse: (JsonValueCodec[T], Request[IO]) ?=> IO[Response[IO]] = {
-      Translator.toResponse[T](a)
+    def asResponse[F[_]: Concurrent](using Http4sDsl[F]): (JsonValueCodec[T], Request[F]) ?=> F[Response[F]] = {
+      Translator.toResponse[F, T](a)
     }
   }
 
   extension (body: String) {
-    def asResponse(status: Status): IO[Response[IO]] = {
-      Translator.toResponse(status, body)
+    def asResponse[F[_]: Concurrent](status: Status)(using Http4sDsl[F]): F[Response[F]] = {
+      Translator.toResponse[F](status, body)
     }
   }
 
   extension [T](body: T) {
-    def asResponse(status: Status): (JsonValueCodec[T]) ?=> IO[Response[IO]] = {
-      Translator.toResponse[T](status, body)
+    def asResponse[F[_]: Concurrent](status: Status)(using Http4sDsl[F]): (JsonValueCodec[T]) ?=> F[Response[F]] = {
+      Translator.toResponse[F, T](status, body)
     }
   }
 

@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
+import doobie.ConnectionIO
 import org.http4s.client.Client
 import org.http4s.*
 import org.http4s.dsl.io.*
@@ -35,7 +36,7 @@ class TagRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).flatMap(IO.fromEither).unsafeRunSync().token
-  val tagRouteV1 = new TagRoute(authProvider, tagService, articleService)
+  val tagRouteV1 = new TagRoute[IO, ConnectionIO](authProvider, tagService, articleService)
   val client: Client[IO] = Client.fromHttpApp(makeRouter(tagRouteV1 = tagRouteV1).routes.orNotFound)
 
   "TagRoute" should {

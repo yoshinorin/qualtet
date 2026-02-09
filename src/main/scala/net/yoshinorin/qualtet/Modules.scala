@@ -180,25 +180,25 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val versionRepositoryAdapter: VersionRepositoryAdapter[ConnectionIO] = new VersionRepositoryAdapter[ConnectionIO](versionRepository)
   val versionService = new VersionService[IO, ConnectionIO](versionRepositoryAdapter)
 
-  val authProvider = new AuthProvider[ConnectionIO](authService)
-  val corsProvider = new CorsProvider(config.cors)
+  val authProvider = new AuthProvider[IO, ConnectionIO](authService)
+  val corsProvider = new CorsProvider[IO](config.cors)
 
-  val archiveRouteV1 = new ArchiveRouteV1[ConnectionIO](archiveService)
-  val articleRouteV1 = new ArticleRouteV1[ConnectionIO](articleService)
-  val authorRouteV1 = new AuthorRouteV1[ConnectionIO](authorService)
-  val authRouteV1 = new AuthRouteV1[ConnectionIO](authService)
-  val cacheRouteV1 = new CacheRouteV1[ConnectionIO](authProvider, cacheService)
-  val contentTypeRouteV1 = new ContentTypeRouteV1[ConnectionIO](contentTypeService)
-  val contentRouteV1 = new ContentRouteV1[ConnectionIO](authProvider, contentService)
-  val feedRouteV1 = new FeedRouteV1[ConnectionIO](feedService)
-  val homeRoute: HomeRoute = new HomeRoute()
-  val searchRouteV1 = new SearchRouteV1[ConnectionIO](searchService)
-  val seriesRouteV1 = new SeriesRouteV1[ConnectionIO](authProvider, seriesService)
-  val sitemapRouteV1 = new SitemapRouteV1[ConnectionIO](sitemapService)
-  val systemRouteV1 = new SystemRouteV1(config.http.endpoints.system)
-  val tagRouteV1 = new TagRouteV1[ConnectionIO](authProvider, tagService, articleService)
+  val archiveRouteV1 = new ArchiveRouteV1[IO, ConnectionIO](archiveService)
+  val articleRouteV1 = new ArticleRouteV1[IO, ConnectionIO](articleService)
+  val authorRouteV1 = new AuthorRouteV1[IO, ConnectionIO](authorService)
+  val authRouteV1 = new AuthRouteV1[IO, ConnectionIO](authService)
+  val cacheRouteV1 = new CacheRouteV1[IO, ConnectionIO](authProvider, cacheService)
+  val contentTypeRouteV1 = new ContentTypeRouteV1[IO, ConnectionIO](contentTypeService)
+  val contentRouteV1 = new ContentRouteV1[IO, ConnectionIO](authProvider, contentService)
+  val feedRouteV1 = new FeedRouteV1[IO, ConnectionIO](feedService)
+  val homeRoute: HomeRoute[IO] = new HomeRoute[IO]()
+  val searchRouteV1 = new SearchRouteV1[IO, ConnectionIO](searchService)
+  val seriesRouteV1 = new SeriesRouteV1[IO, ConnectionIO](authProvider, seriesService)
+  val sitemapRouteV1 = new SitemapRouteV1[IO, ConnectionIO](sitemapService)
+  val systemRouteV1 = new SystemRouteV1[IO](config.http.endpoints.system)
+  val tagRouteV1 = new TagRouteV1[IO, ConnectionIO](authProvider, tagService, articleService)
 
-  val router = new net.yoshinorin.qualtet.http.Router[ConnectionIO](
+  val router = new net.yoshinorin.qualtet.http.Router[IO, ConnectionIO](
     corsProvider,
     archiveRouteV1,
     articleRouteV1,

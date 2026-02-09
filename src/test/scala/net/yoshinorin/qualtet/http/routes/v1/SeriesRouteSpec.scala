@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.http.routes.v1
 
 import net.yoshinorin.qualtet.fixture.unsafe
 import cats.effect.IO
+import doobie.ConnectionIO
 import org.http4s.client.Client
 import org.http4s.*
 import org.http4s.dsl.io.*
@@ -56,7 +57,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).flatMap(IO.fromEither).unsafeRunSync().token
-  val seriesRouteV1 = new SeriesRoute(authProvider, seriesService)
+  val seriesRouteV1 = new SeriesRoute[IO, ConnectionIO](authProvider, seriesService)
   val client: Client[IO] = Client.fromHttpApp(makeRouter(seriesRouteV1 = seriesRouteV1).routes.orNotFound)
 
   "SeriesRoute" should {

@@ -17,11 +17,12 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.v1.SystemRouteSpec
 class SystemRouteSpec extends AnyWordSpec {
 
-  val systemRouteV1: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(enabled = false)))
+  val systemRouteV1: SystemRoute[IO] = new SystemRoute[IO](HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(enabled = false)))
   val router = makeRouter(systemRouteV1 = systemRouteV1)
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
-  val enabledMetadataEndpointSystemRouteV1: SystemRoute = new SystemRoute(HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(enabled = true)))
+  val enabledMetadataEndpointSystemRouteV1: SystemRoute[IO] =
+    new SystemRoute[IO](HttpSystemEndpointConfig(metadata = HttpSystemEndpointMetadata(enabled = true)))
   val enabledMetadataEndpointRouter = makeRouter(systemRouteV1 = enabledMetadataEndpointSystemRouteV1)
   val clientForEnabledMetadataEndpoint: Client[IO] = Client.fromHttpApp(enabledMetadataEndpointRouter.routes.orNotFound)
 

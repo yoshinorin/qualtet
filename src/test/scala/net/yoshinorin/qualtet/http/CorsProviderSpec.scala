@@ -1,5 +1,6 @@
 package net.yoshinorin.qualtet.http
 
+import cats.effect.IO
 import org.http4s.Uri
 import org.http4s.headers.Origin
 import org.scalatest.wordspec.AnyWordSpec
@@ -13,7 +14,7 @@ class CorsProviderSpec extends AnyWordSpec {
 
   "CorsProvider" should {
     "returns origins by config" in {
-      val corsProvider = new CorsProvider(corsConfig =
+      val corsProvider = new CorsProvider[IO](corsConfig =
         CorsConfig(allowOrigins =
           List(
             "http://example.com:8080",
@@ -35,7 +36,7 @@ class CorsProviderSpec extends AnyWordSpec {
     }
 
     "returns default origin if config is empty" in {
-      val corsProvider = new CorsProvider(corsConfig = CorsConfig(allowOrigins = List()))
+      val corsProvider = new CorsProvider[IO](corsConfig = CorsConfig(allowOrigins = List()))
       assert(
         corsProvider.origins === Set()
       )
@@ -43,7 +44,7 @@ class CorsProviderSpec extends AnyWordSpec {
 
     "thrown java.net.MalformedURLException if configs contains invalid URL." in {
       assertThrows[MalformedURLException] {
-        new CorsProvider(corsConfig =
+        new CorsProvider[IO](corsConfig =
           CorsConfig(allowOrigins =
             List(
               "http://example.com:8080",

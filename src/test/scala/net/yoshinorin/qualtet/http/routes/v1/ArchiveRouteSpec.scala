@@ -22,7 +22,7 @@ import cats.effect.unsafe.implicits.global
 class ArchiveRouteSpec extends AnyWordSpec {
 
   val mockArchiveService = Mockito.mock(classOf[ArchiveService[IO, ConnectionIO]])
-  val archiveRouteV1 = new ArchiveRoute(mockArchiveService)
+  val archiveRouteV1 = new ArchiveRoute[IO, ConnectionIO](mockArchiveService)
 
   val router = makeRouter(archiveRouteV1 = archiveRouteV1)
 

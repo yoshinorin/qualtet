@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.http.response
 
-import cats.effect.IO
-import org.http4s.dsl.io.*
+import cats.Applicative
+import cats.effect.Concurrent
+import org.http4s.dsl.Http4sDsl
 import org.http4s.MediaType
 import org.http4s.{Request, Response, Status}
 import org.http4s.Challenge
@@ -15,25 +16,26 @@ import net.yoshinorin.qualtet.syntax.*
 object Translator {
 
   // NOTE: can't use `ContextFunctions`.
-  private[http] def failToResponse(f: HttpError)(using req: Request[IO]): IO[Response[IO]] = {
+  private[http] def failToResponse[F[_]: Concurrent](f: HttpError)(using req: Request[F])(using dsl: Http4sDsl[F]): F[Response[F]] = {
+    import dsl.*
     f match {
       case e: NotFound =>
-        org.http4s.dsl.io.NotFound(
+        dsl.NotFound(
           ResponseProblemDetails(
             title = e.title,
-            status = org.http4s.dsl.io.NotFound.code,
+            status = dsl.NotFound.code,
             detail = e.detail,
             instance = req.uri.toString()
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )
       case e: Unauthorized =>
-        org.http4s.dsl.io.Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
+        dsl.Unauthorized(`WWW-Authenticate`(Challenge("Bearer", "Unauthorized")))
       case e: UnprocessableContent =>
-        org.http4s.dsl.io.UnprocessableContent(
+        dsl.UnprocessableContent(
           ResponseProblemDetails(
             title = e.title,
-            status = org.http4s.dsl.io.UnprocessableContent.code,
+            status = dsl.UnprocessableContent.code,
             detail = e.detail,
             instance = req.uri.toString(),
             errors = e.errors
@@ -41,30 +43,30 @@ object Translator {
           `Content-Type`(MediaType.application.`problem+json`)
         )
       case e: BadRequest =>
-        org.http4s.dsl.io.BadRequest(
+        dsl.BadRequest(
           ResponseProblemDetails(
             title = e.title,
-            status = org.http4s.dsl.io.BadRequest.code,
+            status = dsl.BadRequest.code,
             detail = e.detail,
             instance = req.uri.toString()
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )
       case e: Forbidden =>
-        org.http4s.dsl.io.Forbidden(
+        dsl.Forbidden(
           ResponseProblemDetails(
             title = e.title,
-            status = org.http4s.dsl.io.Forbidden.code,
+            status = dsl.Forbidden.code,
             detail = e.detail,
             instance = req.uri.toString()
           ).asJson,
           `Content-Type`(MediaType.application.`problem+json`)
         )
       case e: InternalServerError =>
-        org.http4s.dsl.io.InternalServerError(
+        dsl.InternalServerError(
           ResponseProblemDetails(
             title = e.title,
-            status = org.http4s.dsl.io.InternalServerError.code,
+            status = dsl.InternalServerError.code,
             detail = e.detail,
             instance = req.uri.toString()
           ).asJson,
@@ -73,24 +75,25 @@ object Translator {
     }
   }
 
-  def toResponse(e: Throwable): Request[IO] ?=> IO[Response[IO]] = {
+  def toResponse[F[_]: Concurrent](e: Throwable)(using dsl: Http4sDsl[F]): Request[F] ?=> F[Response[F]] = {
+    import dsl.*
     e match {
-      case f: DomainError => this.failToResponse(fromDomainError(f))
-      case _ => org.http4s.dsl.io.InternalServerError("Internal Server Error")
+      case f: DomainError => this.failToResponse[F](fromDomainError(f))
+      case _ => dsl.InternalServerError("Internal Server Error")
     }
   }
 
-  def toResponse(status: Status, body: String): IO[Response[IO]] = {
-    IO.pure(
-      Response[IO](status = status)
+  def toResponse[F[_]: Applicative](status: Status, body: String): F[Response[F]] = {
+    Applicative[F].pure(
+      Response[F](status = status)
         .withEntity(body)
         .withContentType(`Content-Type`(MediaType.application.json))
     )
   }
 
-  def toResponse[T](status: Status, body: T)(implicit e: JsonValueCodec[T]): IO[Response[IO]] = {
-    IO.pure(
-      Response[IO](status = status)
+  def toResponse[F[_]: Applicative, T](status: Status, body: T)(implicit e: JsonValueCodec[T]): F[Response[F]] = {
+    Applicative[F].pure(
+      Response[F](status = status)
         .withEntity(body.asJson)
         .withContentType(`Content-Type`(MediaType.application.json))
     )
@@ -98,15 +101,16 @@ object Translator {
 
   // NOTE: can't use `using` or `ContextFunctions`.
   //       I don't know why can't use `using`...
-  def toResponse[T](a: Option[T])(implicit e: JsonValueCodec[T], req: Request[IO]): IO[Response[IO]] = {
+  def toResponse[F[_]: Concurrent, T](a: Option[T])(implicit e: JsonValueCodec[T], req: Request[F], dsl: Http4sDsl[F]): F[Response[F]] = {
+    import dsl.*
     a match {
       case Some(x) =>
         Ok(x.asJson, `Content-Type`(MediaType.application.json))
       case None =>
-        org.http4s.dsl.io.NotFound(
+        dsl.NotFound(
           ResponseProblemDetails(
             title = "Not Found",
-            status = org.http4s.dsl.io.NotFound.code,
+            status = dsl.NotFound.code,
             detail = "Not Found",
             instance = req.uri.toString()
           ).asJson,

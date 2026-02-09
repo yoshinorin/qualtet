@@ -1,11 +1,12 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.data.EitherT
-import cats.effect.IO
+import cats.effect.Concurrent
+import cats.implicits.*
 import cats.Monad
 import org.http4s.headers.Allow
 import org.http4s.{HttpRoutes, Request, Response}
-import org.http4s.dsl.io.*
+import org.http4s.dsl.Http4sDsl
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.PaginationRequestModel
@@ -14,13 +15,16 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class ArticleRoute[G[_]: Monad @nowarn](
-  articleService: ArticleService[IO, G]
-)(using loggerFactory: Log4CatsLoggerFactory[IO]) {
+class ArticleRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
+  articleService: ArticleService[F, G]
+)(using loggerFactory: Log4CatsLoggerFactory[F]) {
 
-  given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private given dsl: Http4sDsl[F] = Http4sDsl[F]
+  import dsl.*
 
-  private[http] def index: HttpRoutes[IO] = HttpRoutes.of[IO] { implicit r =>
+  given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
+
+  private[http] def index: HttpRoutes[F] = HttpRoutes.of[F] { implicit r =>
     (r match {
       case request @ GET -> Root =>
         val p = request.uri.query.params.asPagination
@@ -28,11 +32,11 @@ class ArticleRoute[G[_]: Monad @nowarn](
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ =>
         MethodNotAllowed(Allow(Set(GET)))
-    }).handleErrorWith(_.logWithStackTrace[IO].asResponse)
+    }).handleErrorWith(_.logWithStackTrace[F].asResponse)
   }
 
   // articles?page=n&limit=m
-  private[http] def get(p: PaginationRequestModel): Request[IO] ?=> IO[Response[IO]] = {
+  private[http] def get(p: PaginationRequestModel): Request[F] ?=> F[Response[F]] = {
     (for {
       maybeArticles <- EitherT(articleService.getWithCount(p))
     } yield maybeArticles).value.flatMap {

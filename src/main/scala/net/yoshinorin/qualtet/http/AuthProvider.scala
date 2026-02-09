@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.http
 
-import cats.effect.IO
 import cats.Monad
+import cats.effect.Async
+import cats.implicits.*
 import cats.data.{Kleisli, OptionT}
 import org.http4s.server.AuthMiddleware
 import org.http4s.{AuthedRoutes, Request, Response, Status}
@@ -14,14 +15,14 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class AuthProvider[G[_]: Monad @nowarn](
-  authService: AuthService[IO, G]
-)(using loggerFactory: Log4CatsLoggerFactory[IO]) {
+class AuthProvider[F[_]: Async, G[_]: Monad @nowarn](
+  authService: AuthService[F, G]
+)(using loggerFactory: Log4CatsLoggerFactory[F]) {
 
-  private val logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)
+  private val logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 
   // TODO: cleanup messy code
-  private def authUser: Kleisli[IO, Request[IO], Either[DomainError, (AuthorResponseModel, String)]] =
+  private def authUser: Kleisli[F, Request[F], Either[DomainError, (AuthorResponseModel, String)]] =
     Kleisli({ request =>
       val authorizationHeader = request.headers.get[Authorization].asEither[DomainError](Unauthorized("Authorization header is none")) match {
         case Right(auth: Authorization) => Right(auth)
@@ -29,10 +30,10 @@ class AuthProvider[G[_]: Monad @nowarn](
       }
 
       authorizationHeader match {
-        case Left(e) => IO.pure(Left(e))
+        case Left(e) => Async[F].pure(Left(e))
         case Right(a) => {
           (for {
-            renderString <- IO(a.credentials.renderString.replace("Bearer ", "").replace("bearer ", ""))
+            renderString <- Async[F].delay(a.credentials.renderString.replace("Bearer ", "").replace("bearer ", ""))
             authorResult <- authService.findAuthorFromJwtString(renderString)
             author = authorResult.flatMap {
               case Some(a) => Right(a)
@@ -43,20 +44,20 @@ class AuthProvider[G[_]: Monad @nowarn](
             author match {
               case Left(fail) => {
                 logger.error(fail.getMessage) *>
-                  IO.pure(Left(fail))
+                  Async[F].pure(Left(fail))
               }
               case Right(value) =>
                 logger.info(s"Authorization succeeded: ${value}") *>
-                  IO.pure(Right((value, payload)))
+                  Async[F].pure(Right((value, payload)))
             }
           }).flatMap(identity)
         }
       }
     })
 
-  private def onFailure: AuthedRoutes[DomainError, IO] = Kleisli { _ =>
-    OptionT.pure[IO](Response[IO](status = Status.Unauthorized))
+  private def onFailure: AuthedRoutes[DomainError, F] = Kleisli { _ =>
+    OptionT.pure[F](Response[F](status = Status.Unauthorized))
   }
 
-  def authenticate: AuthMiddleware[IO, (AuthorResponseModel, String)] = AuthMiddleware(authUser, onFailure)
+  def authenticate: AuthMiddleware[F, (AuthorResponseModel, String)] = AuthMiddleware(authUser, onFailure)
 }
