@@ -8,10 +8,10 @@ import net.yoshinorin.qualtet.domains.Cacheable
 
 import scala.annotation.nowarn
 
-class SitemapService[G[_]: Monad, F[_]: Monad](
+class SitemapService[F[_]: Monad, G[_]: Monad](
   sitemapRepositoryAdapter: SitemapRepositoryAdapter[G],
   cache: CacheModule[F, String, Seq[Url]]
-)(using executer: Executer[G, F])
+)(using executer: Executer[F, G])
     extends Cacheable[F] {
 
   private val CACHE_KEY = "SITEMAPS_FULL_CACHE"

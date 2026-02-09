@@ -21,7 +21,7 @@ import cats.effect.unsafe.implicits.global
 // testOnly net.yoshinorin.qualtet.http.routes.v1.ArchiveRouteSpec
 class ArchiveRouteSpec extends AnyWordSpec {
 
-  val mockArchiveService = Mockito.mock(classOf[ArchiveService[ConnectionIO, IO]])
+  val mockArchiveService = Mockito.mock(classOf[ArchiveService[IO, ConnectionIO]])
   val archiveRouteV1 = new ArchiveRoute(mockArchiveService)
 
   val router = makeRouter(archiveRouteV1 = archiveRouteV1)

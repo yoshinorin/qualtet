@@ -15,7 +15,7 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 import scala.annotation.nowarn
 
 class AuthProvider[G[_]: Monad @nowarn](
-  authService: AuthService[G, IO]
+  authService: AuthService[IO, G]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 
   private val logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)

@@ -10,11 +10,11 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class CacheService[G[_]: Monad, F[_]: Monad](
-  sitemapService: SitemapService[G, F],
-  tagsService: TagService[G, F],
-  contentTypeService: ContentTypeService[G, F],
-  feedService: FeedService[G, F]
+class CacheService[F[_]: Monad, G[_]: Monad](
+  sitemapService: SitemapService[F, G],
+  tagsService: TagService[F, G],
+  contentTypeService: ContentTypeService[F, G],
+  feedService: FeedService[F, G]
 )(using loggerFactory: Log4CatsLoggerFactory[F]) {
 
   private val logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)

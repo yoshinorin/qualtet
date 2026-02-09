@@ -11,10 +11,10 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class ContentTypeService[G[_]: Monad, F[_]: Monad](
+class ContentTypeService[F[_]: Monad, G[_]: Monad](
   contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[G],
   cache: CacheModule[F, String, ContentType]
-)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F])
+)(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F])
     extends Cacheable[F] {
 
   private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)

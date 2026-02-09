@@ -13,10 +13,10 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class FeedService[G[_]: Monad, F[_]: Monad](
+class FeedService[F[_]: Monad, G[_]: Monad](
   feedsPagination: PaginationOps[FeedsPagination],
   cache: CacheModule[F, String, ArticleWithCountResponseModel],
-  articleService: ArticleService[G, F]
+  articleService: ArticleService[F, G]
 )(using loggerFactory: Log4CatsLoggerFactory[F])
     extends Cacheable[F] {
 

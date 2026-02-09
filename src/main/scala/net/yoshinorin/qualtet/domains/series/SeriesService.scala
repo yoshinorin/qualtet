@@ -11,11 +11,11 @@ import net.yoshinorin.qualtet.domains.errors.{DomainError, SeriesNotFound}
 import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID
 
-class SeriesService[G[_]: Monad, F[_]: Monad](
+class SeriesService[F[_]: Monad, G[_]: Monad](
   seriesRepositoryAdapter: SeriesRepositoryAdapter[G],
   contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[G],
-  articleService: ArticleService[G, F]
-)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F]) {
+  articleService: ArticleService[F, G]
+)(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F]) {
 
   private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 

@@ -12,10 +12,10 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.tailrec
 
-class SearchService[G[_]: Monad, F[_]: Monad](
+class SearchService[F[_]: Monad, G[_]: Monad](
   searchConfig: SearchConfig,
   searchRepository: SearchRepository[G]
-)(using executer: Executer[G, F]) {
+)(using executer: Executer[F, G]) {
 
   def cont(query: List[String]): ContT[G, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] = {
     ContT.apply[G, Seq[(Int, SearchResponseModel)], Seq[(Int, SearchResponseModel)]] { _ =>

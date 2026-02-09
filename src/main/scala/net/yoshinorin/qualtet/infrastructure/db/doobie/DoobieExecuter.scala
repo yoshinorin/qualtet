@@ -14,7 +14,7 @@ import net.yoshinorin.qualtet.infrastructure.telemetry.DoobieTracing
  * Doobie implementation of Executer.
  * Bridges ConnectionIO (G) to IO (F).
  */
-class DoobieExecuter(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) extends Executer[ConnectionIO, IO] {
+class DoobieExecuter(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) extends Executer[IO, ConnectionIO] {
 
   override def defer[R](c: ContT[ConnectionIO, R, R]): ConnectionIO[R] = {
     c.run { x => x.pure[ConnectionIO] }

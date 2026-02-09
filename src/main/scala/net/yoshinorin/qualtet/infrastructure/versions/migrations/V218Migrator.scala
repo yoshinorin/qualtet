@@ -134,7 +134,7 @@ object V218Migrator {
   private[versions] def runTagMigration(
     tagRepositoryV217: TagRepositoryV217[ConnectionIO],
     logger: SelfAwareStructuredLogger[IO],
-    executer: Executer[ConnectionIO, IO]
+    executer: Executer[IO, ConnectionIO]
   ): IO[Unit] = {
     for {
       currentTags <- executer.transact(tagRepositoryV217.getAll())
@@ -158,7 +158,7 @@ object V218Migrator {
   private[versions] def runSeriesMigration(
     seriesRepositoryV217: SeriesRepositoryV217[ConnectionIO],
     logger: SelfAwareStructuredLogger[IO],
-    executer: Executer[ConnectionIO, IO]
+    executer: Executer[IO, ConnectionIO]
   ): IO[Unit] = {
     for {
       currentSeries <- executer.transact(seriesRepositoryV217.getAll())
@@ -179,18 +179,18 @@ object V218Migrator {
     } yield ()
   }
 
-  given V218(using loggerFactory: Log4CatsLoggerFactory[IO]): VersionMigrator[ConnectionIO, IO] = {
+  given V218(using loggerFactory: Log4CatsLoggerFactory[IO]): VersionMigrator[IO, ConnectionIO] = {
 
     val tagRepositoryV217: TagRepositoryV217[ConnectionIO] = summon[TagRepositoryV217[ConnectionIO]]
     val seriesRepositoryV217: SeriesRepositoryV217[ConnectionIO] = summon[SeriesRepositoryV217[ConnectionIO]]
     val logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(classOf[V218Migrator.type])
 
-    new VersionMigrator[ConnectionIO, IO](init =
+    new VersionMigrator[IO, ConnectionIO](init =
       Version(version = VersionString("2.18.0").toOption.get, migrationStatus = MigrationStatus.UNAPPLIED, deployedAt = 0)
     ) {
       override def get(): IO[Version] = super.getInit()
       override def getInit(): IO[Version] = super.getInit()
-      override def migrate()(using executer: Executer[ConnectionIO, IO]): IO[Unit] = {
+      override def migrate()(using executer: Executer[IO, ConnectionIO]): IO[Unit] = {
         for {
           _ <- runTagMigration(tagRepositoryV217, logger, executer)
           _ <- runSeriesMigration(seriesRepositoryV217, logger, executer)

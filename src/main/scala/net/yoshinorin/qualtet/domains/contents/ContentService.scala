@@ -17,19 +17,19 @@ import net.yoshinorin.qualtet.domains.series.{Series, SeriesRepositoryAdapter, S
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
-class ContentService[G[_]: Monad, F[_]: Monad](
+class ContentService[F[_]: Monad, G[_]: Monad](
   contentRepositoryAdapter: ContentRepositoryAdapter[G],
   tagRepositoryAdapter: TagRepositoryAdapter[G],
-  tagService: TagService[G, F],
+  tagService: TagService[F, G],
   contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[G],
   robotsRepositoryAdapter: RobotsRepositoryAdapter[G],
   externalResourceRepositoryAdapter: ExternalResourceRepositoryAdapter[G],
-  authorService: AuthorService[G, F],
-  contentTypeService: ContentTypeService[G, F],
+  authorService: AuthorService[F, G],
+  contentTypeService: ContentTypeService[F, G],
   seriesRepositoryAdapter: SeriesRepositoryAdapter[G],
-  seriesService: SeriesService[G, F],
+  seriesService: SeriesService[F, G],
   contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[G]
-)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F]) {
+)(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F]) {
 
   private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 

@@ -9,9 +9,9 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class AuthorService[G[_]: Monad, F[_]: Monad](
+class AuthorService[F[_]: Monad, G[_]: Monad](
   authorRepositoryAdapter: AuthorRepositoryAdapter[G]
-)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F]) {
+)(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F]) {
 
   private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 

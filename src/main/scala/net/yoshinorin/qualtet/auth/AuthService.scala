@@ -11,7 +11,7 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class AuthService[G[_]: Monad, F[_]: Monad](authorService: AuthorService[G, F], jwt: Jwt[F])(using loggerFactory: Log4CatsLoggerFactory[F]) {
+class AuthService[F[_]: Monad, G[_]: Monad](authorService: AuthorService[F, G], jwt: Jwt[F])(using loggerFactory: Log4CatsLoggerFactory[F]) {
 
   private val logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
   private val bcryptPasswordEncoder = new BCryptPasswordEncoder()

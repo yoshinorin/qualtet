@@ -28,7 +28,7 @@ import scala.annotation.nowarn
 
 class ContentRoute[G[_]: Monad @nowarn](
   authProvider: AuthProvider[G],
-  contentService: ContentService[G, IO]
+  contentService: ContentService[IO, G]
 )(using loggerFactory: Log4CatsLoggerFactory[IO])
     extends Decoder[IO] {
 

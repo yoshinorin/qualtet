@@ -15,12 +15,12 @@ import net.yoshinorin.qualtet.domains.tags.TagPath
 
 import scala.annotation.nowarn
 
-class ArticleService[G[_]: Monad, F[_]: Monad](
+class ArticleService[F[_]: Monad, G[_]: Monad](
   articleRepositoryAdapter: ArticleRepositoryAdapter[G],
   articlesPagination: PaginationOps[ArticlesPagination],
   tagsPagination: PaginationOps[TagsPagination],
-  contentTypeService: ContentTypeService[G, F]
-)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F]) {
+  contentTypeService: ContentTypeService[F, G]
+)(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F]) {
 
   private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 

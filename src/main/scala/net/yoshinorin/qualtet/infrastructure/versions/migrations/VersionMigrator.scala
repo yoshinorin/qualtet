@@ -5,20 +5,20 @@ import net.yoshinorin.qualtet.infrastructure.db.Executer
 
 import scala.annotation.nowarn
 
-trait VersionMigrator[M[_]: Monad @nowarn, F[_]: Monad](init: Version) {
-  def migrate()(using executer: Executer[M, F]): F[Unit]
+trait VersionMigrator[F[_]: Monad, G[_]: Monad @nowarn](init: Version) {
+  def migrate()(using executer: Executer[F, G]): F[Unit]
   def get(): F[Version]
   def getInit(): F[Version] = Monad[F].pure(init)
 }
 
 object VersionMigrator {
 
-  def instance[M[_]: Monad, F[_]: Monad](
+  def instance[F[_]: Monad, G[_]: Monad](
     initVersion: Version,
     migrateFunc: () => F[Unit]
-  ): VersionMigrator[M, F] = {
-    new VersionMigrator[M, F](init = initVersion) {
-      override def migrate()(using executer: Executer[M, F]): F[Unit] = migrateFunc()
+  ): VersionMigrator[F, G] = {
+    new VersionMigrator[F, G](init = initVersion) {
+      override def migrate()(using executer: Executer[F, G]): F[Unit] = migrateFunc()
       override def get(): F[Version] = super.getInit()
       override def getInit(): F[Version] = super.getInit()
     }

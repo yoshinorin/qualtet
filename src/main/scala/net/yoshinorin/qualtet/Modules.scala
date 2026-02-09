@@ -80,7 +80,7 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
 
   val flywayMigrator: FlywayMigrator = new FlywayMigrator(config.db)
   val migrator: Migrator = new Migrator()
-  val v218Migrator: VersionMigrator[ConnectionIO, IO] = summon[VersionMigrator[ConnectionIO, IO]](using V218Migrator.V218)
+  val v218Migrator: VersionMigrator[IO, ConnectionIO] = summon[VersionMigrator[IO, ConnectionIO]](using V218Migrator.V218)
 
   // NOTE: for generate JWT. They are reset when re-boot application.
   val keyPair: KeyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
@@ -90,16 +90,16 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
 
   val authorRepository: AuthorRepository[ConnectionIO] = summon[AuthorRepository[ConnectionIO]]
   val authorRepositoryAdapter: AuthorRepositoryAdapter[ConnectionIO] = new AuthorRepositoryAdapter[ConnectionIO](authorRepository)
-  val authorService = new AuthorService[ConnectionIO, IO](authorRepositoryAdapter)
+  val authorService = new AuthorService[IO, ConnectionIO](authorRepositoryAdapter)
 
-  val authService = new AuthService[ConnectionIO, IO](authorService, jwtInstance)
+  val authService = new AuthService[IO, ConnectionIO](authorService, jwtInstance)
 
   val contentTypeRepository: ContentTypeRepository[ConnectionIO] = summon[ContentTypeRepository[ConnectionIO]]
   val contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[ConnectionIO] = new ContentTypeRepositoryAdapter(contentTypeRepository)
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.contentType, TimeUnit.SECONDS).build[String, ContentType]
   val contentTypeCache: CacheModule[IO, String, ContentType] = new CacheModule[IO, String, ContentType](contentTypeCaffeinCache)
-  val contentTypeService = new ContentTypeService[ConnectionIO, IO](contentTypeRepositoryAdapter, contentTypeCache)
+  val contentTypeService = new ContentTypeService[IO, ConnectionIO](contentTypeRepositoryAdapter, contentTypeCache)
 
   val robotsRepository: RobotsRepository[ConnectionIO] = summon[RobotsRepository[ConnectionIO]]
   val robotsRepositoryAdapter = new RobotsRepositoryAdapter(robotsRepository)
@@ -115,16 +115,16 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
     Caffeine.newBuilder().expireAfterAccess(config.cache.tags, TimeUnit.SECONDS).build[String, Seq[TagResponseModel]]
   val tagsCache: CacheModule[IO, String, Seq[TagResponseModel]] = new CacheModule[IO, String, Seq[TagResponseModel]](tagsCaffeinCache)
   val tagRepositoryAdapter: TagRepositoryAdapter[ConnectionIO] = new TagRepositoryAdapter[ConnectionIO](tagRepository)
-  val tagService = new TagService[ConnectionIO, IO](tagRepositoryAdapter, tagsCache, contentTaggingRepositoryAdapter)
+  val tagService = new TagService[IO, ConnectionIO](tagRepositoryAdapter, tagsCache, contentTaggingRepositoryAdapter)
 
   val searchRepository: SearchRepository[ConnectionIO] = summon[SearchRepository[ConnectionIO]]
-  val searchService = new SearchService[ConnectionIO, IO](config.search, searchRepository)
+  val searchService = new SearchService[IO, ConnectionIO](config.search, searchRepository)
 
   val articleRepository: ArticleRepository[ConnectionIO] = summon[ArticleRepository[ConnectionIO]]
   val articleRepositoryAdapter: ArticleRepositoryAdapter[ConnectionIO] = new ArticleRepositoryAdapter[ConnectionIO](articleRepository)
   val articlesPagination = summon[PaginationOps[ArticlesPagination]]
   val tagsPagination = summon[PaginationOps[TagsPagination]]
-  val articleService = new ArticleService[ConnectionIO, IO](articleRepositoryAdapter, articlesPagination, tagsPagination, contentTypeService)
+  val articleService = new ArticleService[IO, ConnectionIO](articleRepositoryAdapter, articlesPagination, tagsPagination, contentTypeService)
 
   val contentSerializingRepository: ContentSerializingRepository[ConnectionIO] = summon[ContentSerializingRepository[ConnectionIO]]
   val contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[ConnectionIO] = new ContentSerializingRepositoryAdapter(
@@ -133,12 +133,12 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
 
   val seriesRepository: SeriesRepository[ConnectionIO] = summon[SeriesRepository[ConnectionIO]]
   val seriesRepositoryAdapter: SeriesRepositoryAdapter[ConnectionIO] = new SeriesRepositoryAdapter[ConnectionIO](seriesRepository)
-  val seriesService = new SeriesService[ConnectionIO, IO](seriesRepositoryAdapter, contentSerializingRepositoryAdapter, articleService)
+  val seriesService = new SeriesService[IO, ConnectionIO](seriesRepositoryAdapter, contentSerializingRepositoryAdapter, articleService)
 
   val contentRepository: ContentRepository[ConnectionIO] = summon[ContentRepository[ConnectionIO]]
   val contentRepositoryAdapter: ContentRepositoryAdapter[ConnectionIO] = new ContentRepositoryAdapter[ConnectionIO](contentRepository)
   val contentService =
-    new ContentService[ConnectionIO, IO](
+    new ContentService[IO, ConnectionIO](
       contentRepositoryAdapter,
       tagRepositoryAdapter,
       tagService,
@@ -154,22 +154,22 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
 
   val archiveRepository: ArchiveRepository[ConnectionIO] = summon[ArchiveRepository[ConnectionIO]]
   val archiveRepositoryAdapter: ArchiveRepositoryAdapter[ConnectionIO] = new ArchiveRepositoryAdapter[ConnectionIO](archiveRepository)
-  val archiveService = new ArchiveService[ConnectionIO, IO](archiveRepositoryAdapter, contentTypeService)
+  val archiveService = new ArchiveService[IO, ConnectionIO](archiveRepositoryAdapter, contentTypeService)
 
   val sitemapRepository: SitemapsRepository[ConnectionIO] = summon[SitemapsRepository[ConnectionIO]]
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.sitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
   val sitemapCache: CacheModule[IO, String, Seq[Url]] = new CacheModule[IO, String, Seq[Url]](sitemapCaffeinCache)
   val sitemapRepositoryAdapter: SitemapRepositoryAdapter[ConnectionIO] = new SitemapRepositoryAdapter[ConnectionIO](sitemapRepository)
-  val sitemapService = new SitemapService[ConnectionIO, IO](sitemapRepositoryAdapter, sitemapCache)
+  val sitemapService = new SitemapService[IO, ConnectionIO](sitemapRepositoryAdapter, sitemapCache)
 
   val feedsPagination = summon[PaginationOps[FeedsPagination]]
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.feed, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
   val feedCache: CacheModule[IO, String, ArticleWithCountResponseModel] = new CacheModule[IO, String, ArticleWithCountResponseModel](feedCaffeinCache)
-  val feedService = new FeedService[ConnectionIO, IO](feedsPagination, feedCache, articleService)
+  val feedService = new FeedService[IO, ConnectionIO](feedsPagination, feedCache, articleService)
 
-  val cacheService = new CacheService[ConnectionIO, IO](
+  val cacheService = new CacheService[IO, ConnectionIO](
     sitemapService,
     tagService,
     contentTypeService,
@@ -178,7 +178,7 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
 
   val versionRepository: VersionRepository[ConnectionIO] = summon[VersionRepository[ConnectionIO]]
   val versionRepositoryAdapter: VersionRepositoryAdapter[ConnectionIO] = new VersionRepositoryAdapter[ConnectionIO](versionRepository)
-  val versionService = new VersionService[ConnectionIO, IO](versionRepositoryAdapter)
+  val versionService = new VersionService[IO, ConnectionIO](versionRepositoryAdapter)
 
   val authProvider = new AuthProvider[ConnectionIO](authService)
   val corsProvider = new CorsProvider(config.cors)

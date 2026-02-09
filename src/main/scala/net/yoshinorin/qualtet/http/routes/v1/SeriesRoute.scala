@@ -20,7 +20,7 @@ import scala.annotation.nowarn
 
 class SeriesRoute[G[_]: Monad @nowarn](
   authProvider: AuthProvider[G],
-  seriesService: SeriesService[G, IO]
+  seriesService: SeriesService[IO, G]
 )(using loggerFactory: Log4CatsLoggerFactory[IO])
     extends Decoder[IO] {
 

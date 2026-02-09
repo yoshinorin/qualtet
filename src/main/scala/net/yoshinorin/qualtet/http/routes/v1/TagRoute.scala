@@ -21,8 +21,8 @@ import scala.annotation.nowarn
 
 class TagRoute[G[_]: Monad @nowarn](
   authProvider: AuthProvider[G],
-  tagService: TagService[G, IO],
-  articleService: ArticleService[G, IO]
+  tagService: TagService[IO, G],
+  articleService: ArticleService[IO, G]
 )(using loggerFactory: Log4CatsLoggerFactory[IO]) {
 
   given logger: SelfAwareStructuredLogger[IO] = loggerFactory.getLoggerFromClass(this.getClass)

@@ -8,10 +8,10 @@ import scala.annotation.nowarn
 /**
  * Executer bridges database transaction effects (G) to application effects (F).
  *
- * @tparam G Database transaction effect (e.g., ConnectionIO)
  * @tparam F Application effect (e.g., IO)
+ * @tparam G Database transaction effect (e.g., ConnectionIO)
  */
-trait Executer[G[_], F[_]: Monad @nowarn] {
+trait Executer[F[_]: Monad @nowarn, G[_]] {
   def defer[R](a: ContT[G, R, R]): G[R]
   def transact[R](t: ContT[G, R, R]): F[R]
   def transact[T](t: G[T]): F[T]

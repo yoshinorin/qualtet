@@ -10,11 +10,11 @@ import net.yoshinorin.qualtet.domains.errors.{DomainError, TagNotFound}
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.syntax.*
 
-class TagService[G[_]: Monad, F[_]: Monad](
+class TagService[F[_]: Monad, G[_]: Monad](
   tagRepositoryAdapter: TagRepositoryAdapter[G],
   cache: CacheModule[F, String, Seq[TagResponseModel]],
   contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[G]
-)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F])
+)(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F])
     extends Cacheable[F] {
 
   private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)

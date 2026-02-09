@@ -9,9 +9,9 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 import scala.annotation.nowarn
 import java.time.ZonedDateTime
 
-class VersionService[G[_]: Monad, F[_]: Monad](
+class VersionService[F[_]: Monad, G[_]: Monad](
   versionRepositoryAdapter: VersionRepositoryAdapter[G]
-)(using executer: Executer[G, F], loggerFactory: Log4CatsLoggerFactory[F], me: MonadError[F, Throwable]) {
+)(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F], me: MonadError[F, Throwable]) {
 
   private val logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 
@@ -26,7 +26,7 @@ class VersionService[G[_]: Monad, F[_]: Monad](
     } yield (versions.filter(v => v.version === data.version).head)
   }
 
-  private[versions] def migrateIfNeed(versionMigrator: VersionMigrator[G, F]): F[Version] = {
+  private[versions] def migrateIfNeed(versionMigrator: VersionMigrator[F, G]): F[Version] = {
     for {
       data <- versionMigrator.get()
       _ <- logger.info(s"Starting migration check for version: ${data.version.value}")
@@ -69,7 +69,7 @@ class VersionService[G[_]: Monad, F[_]: Monad](
     } yield (result)
   }
 
-  def migrate(versionMigrator: Option[VersionMigrator[G, F]] = None): F[Version] = {
+  def migrate(versionMigrator: Option[VersionMigrator[F, G]] = None): F[Version] = {
     this.migrateIfNeed(versionMigrator.get)
   }
 
