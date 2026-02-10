@@ -71,7 +71,7 @@ lazy val root = (project in file("."))
       "-project-version",
       version.value,
       "-project-footer",
-      "Copyright (c) 2025 @yoshinorin",
+      "Copyright (c) 2026 @yoshinorin",
       "-groups",
       "-default-template",
       "static-site-main",
