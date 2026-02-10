@@ -9,7 +9,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class AuthorService[F[_]: Monad, G[_]: Monad](
+class AuthorService[F[_]: Monad, G[_]: Monad @nowarn](
   authorRepositoryAdapter: AuthorRepositoryAdapter[G]
 )(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F]) {
 

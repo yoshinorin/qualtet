@@ -15,7 +15,7 @@ import net.yoshinorin.qualtet.domains.tags.TagPath
 
 import scala.annotation.nowarn
 
-class ArticleService[F[_]: Monad, G[_]: Monad](
+class ArticleService[F[_]: Monad, G[_]: Monad @nowarn](
   articleRepositoryAdapter: ArticleRepositoryAdapter[G],
   articlesPagination: PaginationOps[ArticlesPagination],
   tagsPagination: PaginationOps[TagsPagination],

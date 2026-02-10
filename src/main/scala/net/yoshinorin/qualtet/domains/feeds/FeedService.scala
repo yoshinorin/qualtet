@@ -13,7 +13,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class FeedService[F[_]: Monad, G[_]: Monad](
+class FeedService[F[_]: Monad, G[_]: Monad @nowarn](
   feedsPagination: PaginationOps[FeedsPagination],
   cache: CacheModule[F, String, ArticleWithCountResponseModel],
   articleService: ArticleService[F, G]

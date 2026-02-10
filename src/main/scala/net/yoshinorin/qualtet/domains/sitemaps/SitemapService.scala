@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.Cacheable
 
 import scala.annotation.nowarn
 
-class SitemapService[F[_]: Monad, G[_]: Monad](
+class SitemapService[F[_]: Monad, G[_]: Monad @nowarn](
   sitemapRepositoryAdapter: SitemapRepositoryAdapter[G],
   cache: CacheModule[F, String, Seq[Url]]
 )(using executer: Executer[F, G])

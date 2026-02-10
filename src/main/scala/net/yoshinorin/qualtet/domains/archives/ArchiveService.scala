@@ -10,7 +10,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class ArchiveService[F[_]: Monad, G[_]: Monad](
+class ArchiveService[F[_]: Monad, G[_]: Monad @nowarn](
   archiveRepositoryAdapter: ArchiveRepositoryAdapter[G],
   contentTypeService: ContentTypeService[F, G]
 )(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F]) {

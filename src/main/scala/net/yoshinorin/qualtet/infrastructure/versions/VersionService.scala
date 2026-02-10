@@ -9,7 +9,7 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 import scala.annotation.nowarn
 import java.time.ZonedDateTime
 
-class VersionService[F[_]: Monad, G[_]: Monad](
+class VersionService[F[_]: Monad, G[_]: Monad @nowarn](
   versionRepositoryAdapter: VersionRepositoryAdapter[G]
 )(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F], me: MonadError[F, Throwable]) {
 

@@ -10,7 +10,7 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 
 import scala.annotation.nowarn
 
-class CacheService[F[_]: Monad, G[_]: Monad](
+class CacheService[F[_]: Monad, G[_]: Monad @nowarn](
   sitemapService: SitemapService[F, G],
   tagsService: TagService[F, G],
   contentTypeService: ContentTypeService[F, G],

@@ -9,6 +9,7 @@ import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationRequestMode
 import net.yoshinorin.qualtet.http.response.Translator
 
 import scala.util.Try
+import scala.annotation.nowarn
 
 trait http {
 
@@ -37,13 +38,13 @@ trait http {
   }
 
   extension (body: String) {
-    def asResponse[F[_]: Concurrent](status: Status)(using Http4sDsl[F]): F[Response[F]] = {
+    def asResponse[F[_]: Concurrent](status: Status)(using Http4sDsl[F] @nowarn): F[Response[F]] = {
       Translator.toResponse[F](status, body)
     }
   }
 
   extension [T](body: T) {
-    def asResponse[F[_]: Concurrent](status: Status)(using Http4sDsl[F]): (JsonValueCodec[T]) ?=> F[Response[F]] = {
+    def asResponse[F[_]: Concurrent](status: Status)(using Http4sDsl[F] @nowarn): (JsonValueCodec[T]) ?=> F[Response[F]] = {
       Translator.toResponse[F, T](status, body)
     }
   }

@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
 
-class ContentTypeService[F[_]: Monad, G[_]: Monad](
+class ContentTypeService[F[_]: Monad, G[_]: Monad @nowarn](
   contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[G],
   cache: CacheModule[F, String, ContentType]
 )(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F])
