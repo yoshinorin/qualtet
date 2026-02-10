@@ -8,7 +8,7 @@ object Dependencies {
   val flywayVersion = "12.0.0"
   val http4sVersion = "1.0.0-M46"
   val log4catsVersion = "2.7.1"
-  val otel = "1.58.0"
+  val otel = "1.59.0"
   val otelInstrumentation = "2.24.0-alpha"
 
   val dependencies = Seq(
@@ -20,8 +20,8 @@ object Dependencies {
     "org.http4s" %% "http4s-dsl" % http4sVersion,
     "org.http4s" %% "http4s-ember-server" % http4sVersion,
     "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
-    "org.typelevel" %% "otel4s-oteljava" % "0.15.0",
-    "org.typelevel" %% "otel4s-instrumentation-metrics" % "0.15.0",
+    "org.typelevel" %% "otel4s-oteljava" % "0.15.1",
+    "org.typelevel" %% "otel4s-instrumentation-metrics" % "0.15.1",
     "io.opentelemetry.instrumentation" % "opentelemetry-runtime-telemetry-java17" % otelInstrumentation,
     "io.opentelemetry.instrumentation" % "opentelemetry-logback-appender-1.0" % otelInstrumentation,
     "io.opentelemetry" % "opentelemetry-exporter-otlp" % otel,
@@ -34,11 +34,11 @@ object Dependencies {
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "2025.1.27",
+    "org.wvlet.airframe" %% "airframe-ulid" % "2026.1.0",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.2.3",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
-    "ch.qos.logback" % "logback-classic" % "1.5.26",
+    "ch.qos.logback" % "logback-classic" % "1.5.29",
     "net.logstash.logback" % "logstash-logback-encoder" % "9.0",
     "org.codehaus.janino" % "janino" % "3.1.12",
     "org.springframework.security" % "spring-security-core" % "7.0.2",
