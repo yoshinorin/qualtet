@@ -23,8 +23,8 @@ class HttpAppBuilder[F[_]: Async](routes: Kleisli[F, Request[F], Response[F]], t
       HttpTracing(tracerInstance)(withResponseTimingHeader)
     }
 
-    // TODO: filter & format log
-    Logger.httpApp(logHeaders = true, logBody = false)(withOtelMiddleware)
+    val log = logger.getLogger
+    Logger.httpApp[F](logHeaders = true, logBody = false, logAction = Some(msg => log.info(msg)))(withOtelMiddleware)
   }
 
 }
