@@ -5,7 +5,7 @@ title: Releases
 
 | Version | Code name | Released at |
 | --- | --- | --- |
-| [v3.1.0](https://github.com/yoshinorin/qualtet/releases/tag/v3.1.0)                        | Bounded Begonia          | -                      |
+| [v3.1.0](https://github.com/yoshinorin/qualtet/releases/tag/v3.1.0)                        | Bounded Begonia          | 2026-02-11T02:23:19Z   |
 | [v3.0.0](https://github.com/yoshinorin/qualtet/releases/tag/v3.0.0)                        | Algebraic Azalea         | 2026-01-31T23:56:00Z   |
 | [v2.21.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.21.0)                      | Scarlet Velvet           | 2026-01-18T09:03:03Z   |
 | [v2.20.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.20.0)                      | Scarlet Ugui             | 2025-10-20T14:51:03Z   |
