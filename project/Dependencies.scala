@@ -2,17 +2,17 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.38.8"
-  val doobieVersion = "1.0.0-RC11"
+  val jsoniterVersion = "2.38.9"
+  val doobieVersion = "1.0.0-RC12"
   val jwtScalaVersion = "11.0.3"
-  val flywayVersion = "12.0.0"
+  val flywayVersion = "12.0.2"
   val http4sVersion = "1.0.0-M46"
   val log4catsVersion = "2.7.1"
   val otel = "1.59.0"
-  val otelInstrumentation = "2.24.0-alpha"
+  val otelInstrumentation = "2.25.0-alpha"
 
   val dependencies = Seq(
-    "com.typesafe" % "config" % "1.4.5",
+    "com.typesafe" % "config" % "1.4.6",
     // NOTE: doobie 1.0.0-RC4 and http4s 1.0.0-M40 dependes on cats-effect 3.5.1
     "org.typelevel" %% "cats-effect" % "3.6.3",
     "org.typelevel" %% "log4cats-core" % log4catsVersion,
@@ -34,14 +34,14 @@ object Dependencies {
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "2026.1.0",
+    "org.wvlet.airframe" %% "airframe-ulid" % "2026.1.4",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.2.3",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
-    "ch.qos.logback" % "logback-classic" % "1.5.29",
+    "ch.qos.logback" % "logback-classic" % "1.5.32",
     "net.logstash.logback" % "logstash-logback-encoder" % "9.0",
     "org.codehaus.janino" % "janino" % "3.1.12",
-    "org.springframework.security" % "spring-security-core" % "7.0.2",
+    "org.springframework.security" % "spring-security-core" % "7.0.3",
     "org.slf4j" % "slf4j-api" % "2.0.17",
     "org.scalatest" %% "scalatest" % "3.2.19" % "test",
     "org.mockito" % "mockito-core" % "5.21.0" % "test"
