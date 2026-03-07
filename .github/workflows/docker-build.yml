@@ -1,0 +1,27 @@
+name: Build Docker image
+
+on:
+  push:
+    paths:
+      - 'docker/Dockerfile'
+  pull_request:
+    paths:
+      - 'docker/Dockerfile'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Docker image
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    steps:
+      -
+        name: Check out the repo
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 #6.0.1
+      -
+        name: Build Docker image
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 #6.18.0
+        with:
+          context: ./docker
+          push: false
