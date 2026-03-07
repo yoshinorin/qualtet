@@ -1,6 +1,6 @@
 organization := "net.yoshinorin"
 name := "qualtet"
-version := "v3.1.0"
+version := "v3.2.0"
 scalaVersion := "3.8.2"
 val repository = "https://github.com/yoshinorin/qualtet"
 
