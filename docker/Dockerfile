@@ -1,8 +1,8 @@
 # Builder image
-FROM ghcr.io/yoshinorin/docker-sbt:v1.12.1-scala3.8.1-jdk25 as builder
+FROM ghcr.io/yoshinorin/docker-sbt:v1.12.5-scala3.8.2jdk25 as builder
 
 LABEL maintainer="yoshinorin"
-ENV QUALTET_VERSION="v3.1.0"
+ENV QUALTET_VERSION="v3.2.0"
 
 RUN apt update -y \
   && apt upgrade -y \
@@ -21,7 +21,7 @@ RUN sh commit-hash.sh \
 
 # Runtime image
 # NOTE: need jdk image for inspect heapdump (e.g: need jstat etc)
-FROM eclipse-temurin:25.0.1_8-jdk-noble
+FROM eclipse-temurin:25.0.2_10-jdk-noble
 
 WORKDIR /usr/opt/qualtet
 
