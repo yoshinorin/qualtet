@@ -79,6 +79,12 @@ Some of endpoint has in-memory cache.
 |`QUALTET_CACHE_FEED `|feed cache (sec)|`int`|`7200`|-|
 |`QUALTET_CACHE_TAGS `|tags cache (sec)|`int`|`7200`|-|
 
+### Feed
+
+|Property|Description|Type|Default|Example|
+|---|---|---|---|---|
+|`QUALTET_FEED_LIMIT `|Number of articles to include in the feed|`int`|`5`|-|
+
 ### Search
 
 Qualtet using `full-text-search`. So, please specify `--innodb-ft-min-token-size=<n>` on your MariaDB.
