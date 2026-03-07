@@ -5,10 +5,10 @@ object Dependencies {
   val jsoniterVersion = "2.38.9"
   val doobieVersion = "1.0.0-RC12"
   val jwtScalaVersion = "11.0.3"
-  val flywayVersion = "12.0.2"
+  val flywayVersion = "12.0.3"
   val http4sVersion = "1.0.0-M46"
   val log4catsVersion = "2.7.1"
-  val otel = "1.59.0"
+  val otel = "1.60.0"
   val otelInstrumentation = "2.25.0-alpha"
 
   val dependencies = Seq(
@@ -20,8 +20,8 @@ object Dependencies {
     "org.http4s" %% "http4s-dsl" % http4sVersion,
     "org.http4s" %% "http4s-ember-server" % http4sVersion,
     "org.http4s" %% "http4s-ember-client" % http4sVersion % Test,
-    "org.typelevel" %% "otel4s-oteljava" % "0.15.1",
-    "org.typelevel" %% "otel4s-instrumentation-metrics" % "0.15.1",
+    "org.typelevel" %% "otel4s-oteljava" % "0.15.2",
+    "org.typelevel" %% "otel4s-instrumentation-metrics" % "0.15.2",
     "io.opentelemetry.instrumentation" % "opentelemetry-runtime-telemetry-java17" % otelInstrumentation,
     "io.opentelemetry.instrumentation" % "opentelemetry-logback-appender-1.0" % otelInstrumentation,
     "io.opentelemetry" % "opentelemetry-exporter-otlp" % otel,
@@ -44,6 +44,6 @@ object Dependencies {
     "org.springframework.security" % "spring-security-core" % "7.0.3",
     "org.slf4j" % "slf4j-api" % "2.0.17",
     "org.scalatest" %% "scalatest" % "3.2.19" % "test",
-    "org.mockito" % "mockito-core" % "5.21.0" % "test"
+    "org.mockito" % "mockito-core" % "5.22.0" % "test"
   )
 }
