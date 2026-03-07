@@ -13,7 +13,7 @@ import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
 import net.yoshinorin.qualtet.cache.CacheModule
 import net.yoshinorin.qualtet.config.ApplicationConfig
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, FeedsPagination, PaginationOps, TagsPagination}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, FeedsPagination, Limit, Page, PaginationOps, PaginationRequestModel, TagsPagination}
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveRepositoryAdapter, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleRepositoryAdapter, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorRepositoryAdapter, AuthorService}
@@ -163,11 +163,15 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val sitemapRepositoryAdapter: SitemapRepositoryAdapter[ConnectionIO] = new SitemapRepositoryAdapter[ConnectionIO](sitemapRepository)
   val sitemapService = new SitemapService[IO, ConnectionIO](sitemapRepositoryAdapter, sitemapCache)
 
-  val feedsPagination = summon[PaginationOps[FeedsPagination]]
+  val feedsPaginationOps = summon[PaginationOps[FeedsPagination]]
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.feed, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
   val feedCache: CacheModule[IO, String, ArticleWithCountResponseModel] = new CacheModule[IO, String, ArticleWithCountResponseModel](feedCaffeinCache)
-  val feedService = new FeedService[IO, ConnectionIO](feedsPagination, feedCache, articleService)
+  val feedService = new FeedService[IO, ConnectionIO](
+    feedsPaginationOps.make(PaginationRequestModel(Option(Page(1)), Option(Limit(config.feed.limit)), None)),
+    feedCache,
+    articleService
+  )
 
   val cacheService = new CacheService[IO, ConnectionIO](
     sitemapService,

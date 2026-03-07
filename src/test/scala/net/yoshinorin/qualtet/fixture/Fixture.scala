@@ -44,6 +44,7 @@ import net.yoshinorin.qualtet.http.routes.v1.{
 }
 import java.util.concurrent.TimeUnit
 import wvlet.airframe.ulid.ULID
+import net.yoshinorin.qualtet.domains.{FeedsPagination, Limit, Page, PaginationOps, PaginationRequestModel}
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.domains.tags.{TagResponseModel, TagService}
 import net.yoshinorin.qualtet.Modules
@@ -125,7 +126,11 @@ object Fixture {
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
   val feedCache: CacheModule[IO, String, ArticleWithCountResponseModel] = new CacheModule[IO, String, ArticleWithCountResponseModel](feedCaffeinCache)
-  val feedService = new FeedService(modules.feedsPagination, feedCache, modules.articleService)
+  val feedService = new FeedService(
+    summon[PaginationOps[FeedsPagination]].make(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)),
+    feedCache,
+    modules.articleService
+  )
 
   val tagsCaffeinCache: CaffeineCache[String, Seq[TagResponseModel]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[TagResponseModel]]

@@ -14,6 +14,7 @@ final case class HttpSystemEndpointConfig(metadata: HttpSystemEndpointMetadata)
 final case class CorsConfig(allowOrigins: List[String])
 final case class JwtConfig(iss: String, aud: String, expiration: Long)
 final case class CacheConfig(contentType: Long, sitemap: Long, feed: Long, tags: Long)
+final case class FeedConfig(limit: Int)
 final case class SearchConfig(maxWords: Int, minWordLength: Int, maxWordLength: Int)
 final case class OtelServiceConfig(name: Option[String], namespace: Option[String])
 final case class OtelExporterConfig(endpoint: Option[String], headers: Option[String], protocol: Option[String])
@@ -24,6 +25,7 @@ final case class ApplicationConfig(
   cors: CorsConfig,
   jwt: JwtConfig,
   cache: CacheConfig,
+  feed: FeedConfig,
   search: SearchConfig,
   otel: OtelConfig
 )
@@ -54,6 +56,8 @@ object ApplicationConfig {
   private val cacheFeed: Long = config.getLong("cache.feed")
   private val cacheTags: Long = config.getLong("cache.tags")
 
+  private val feedLimit: Int = config.getInt("feed.limit")
+
   private val searchMaxWords: Int = config.getInt("search.max-words")
   private val searchMinWordLength: Int = config.getInt("search.min-word-length")
   private val searchMaxWordLength: Int = config.getInt("search.max-word-length")
@@ -78,6 +82,7 @@ object ApplicationConfig {
     cors = CorsConfig(corsAllowOrigins),
     jwt = JwtConfig(jwtIss, jwtAud, jwtExpiration),
     cache = CacheConfig(cacheContentType, cacheSitemap, cacheFeed, cacheTags),
+    feed = FeedConfig(feedLimit),
     search = SearchConfig(searchMaxWords, searchMinWordLength, searchMaxWordLength),
     otel = OtelConfig(
       enabled = otelEnabled,

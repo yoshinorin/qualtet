@@ -7,7 +7,6 @@ import cats.Monad
 import org.http4s.headers.Allow
 import org.http4s.{HttpRoutes, Request, Response}
 import org.http4s.dsl.Http4sDsl
-import net.yoshinorin.qualtet.domains.{Limit, Page, PaginationRequestModel}
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.syntax.*
@@ -35,7 +34,7 @@ class FeedRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
   // TODO: `name`` parameter will be used in future implementation
   private[http] def get(@nowarn name: String): Request[F] ?=> F[Response[F]] = {
     (for {
-      feeds <- EitherT(feedService.get(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)))
+      feeds <- EitherT(feedService.get())
     } yield feeds).value.flatMap {
       case Right(feeds) => feeds.asResponse(Ok)
       case Left(error: DomainError) => error.asResponse

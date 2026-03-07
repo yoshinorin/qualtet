@@ -141,20 +141,18 @@ object Pagination {
   given FeedsPagination: PaginationOps[FeedsPagination] = {
     new PaginationOps[FeedsPagination] {
       override def make(p: PaginationRequestModel): FeedsPagination = {
-        // TODO: Throw an exception instead of using a fixed value.
         new FeedsPagination(
           page = Page(1),
-          limit = Limit(5),
+          limit = p.limit.getOrElse(Limit(5)),
           offset = 0,
           order = Order.DESC
         )
       }
 
       override def make(page: Option[Page], limit: Option[Limit], order: Option[Order] = None): FeedsPagination = {
-        // TODO: Throw an exception instead of using a fixed value.
         new FeedsPagination(
           page = Page(1),
-          limit = Limit(5),
+          limit = limit.getOrElse(Limit(5)),
           offset = 0,
           order = Order.DESC
         )

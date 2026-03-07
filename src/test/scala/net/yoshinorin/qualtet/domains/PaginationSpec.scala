@@ -168,9 +168,9 @@ class PaginationSpec extends AnyWordSpec {
       val requestModel = PaginationRequestModel(Option(Page(10)), Option(Limit(10)), Option(Order.DESC))
       val instance = pagination.make(requestModel)
 
-      // NOTE: FeedsPagination overwrites any value passed during instance creation with its default value.
+      // NOTE: FeedsPagination always uses page=1 and offset=0, but respects the passed limit.
       assert(instance.page.toInt === 1)
-      assert(instance.limit.toInt === 5)
+      assert(instance.limit.toInt === 10)
       assert(instance.offset.toInt === 0)
       assert(instance.order === Order.DESC)
     }
@@ -178,9 +178,9 @@ class PaginationSpec extends AnyWordSpec {
     "instance makeable with Option args" in {
       val instance = pagination.make(Option(Page(10)), Option(Limit(10)), Option(Order.ASC))
 
-      // NOTE: FeedsPagination overwrites any value passed during instance creation with its default value.
+      // NOTE: FeedsPagination always uses page=1 and offset=0, but respects the passed limit.
       assert(instance.page.toInt === 1)
-      assert(instance.limit.toInt === 5)
+      assert(instance.limit.toInt === 10)
       assert(instance.offset.toInt === 0)
       assert(instance.order === Order.DESC)
     }
@@ -188,9 +188,9 @@ class PaginationSpec extends AnyWordSpec {
     "instance makeable with args" in {
       val instance = pagination.make(Page(10), Limit(10), Order.ASC)
 
-      // NOTE: FeedsPagination overwrites any value passed during instance creation with its default value.
+      // NOTE: FeedsPagination always uses page=1 and offset=0, but respects the passed limit.
       assert(instance.page.toInt === 1)
-      assert(instance.limit.toInt === 5)
+      assert(instance.limit.toInt === 10)
       assert(instance.offset.toInt === 0)
       assert(instance.order === Order.DESC)
     }
@@ -198,7 +198,26 @@ class PaginationSpec extends AnyWordSpec {
     "instance makeable with default args" in {
       val instance = pagination.make(Option(Page(10)), Option(Limit(10)), None)
 
-      // NOTE: FeedsPagination overwrites any value passed during instance creation with its default value.
+      // NOTE: FeedsPagination always uses page=1 and offset=0, but respects the passed limit.
+      assert(instance.page.toInt === 1)
+      assert(instance.limit.toInt === 10)
+      assert(instance.offset.toInt === 0)
+      assert(instance.order === Order.DESC)
+    }
+
+    "instance makeable with None limit in PaginationRequestModel" in {
+      val requestModel = PaginationRequestModel(None, None, None)
+      val instance = pagination.make(requestModel)
+
+      assert(instance.page.toInt === 1)
+      assert(instance.limit.toInt === 5)
+      assert(instance.offset.toInt === 0)
+      assert(instance.order === Order.DESC)
+    }
+
+    "instance makeable with None limit in Option args" in {
+      val instance = pagination.make(None, None, None)
+
       assert(instance.page.toInt === 1)
       assert(instance.limit.toInt === 5)
       assert(instance.offset.toInt === 0)

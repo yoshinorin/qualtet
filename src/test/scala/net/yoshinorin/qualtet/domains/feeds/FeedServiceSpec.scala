@@ -5,8 +5,6 @@ import cats.implicits.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.domains.{Limit, Page, PaginationRequestModel}
-
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.feeds.FeedServiceSpec
@@ -20,7 +18,7 @@ class FeedServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
   "getFeeds return ResponseFeed instances" in {
     (for {
       _ <- net.yoshinorin.qualtet.fixture.Fixture.feedService.invalidate()
-      feed <- net.yoshinorin.qualtet.fixture.Fixture.feedService.get(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)).flatMap(_.liftTo[IO])
+      feed <- net.yoshinorin.qualtet.fixture.Fixture.feedService.get().flatMap(_.liftTo[IO])
     } yield {
       assert(feed.size === 5)
       assert(feed === feed.sortWith((x, y) => x.published > y.published))
