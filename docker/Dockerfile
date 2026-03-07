@@ -16,7 +16,7 @@ COPY commit-hash.sh commit-hash.sh
 
 RUN sh commit-hash.sh \
   && sbt assembly exit \
-  && cp ./target/scala-3.8.1/qualtet-assembly-${QUALTET_VERSION}.jar qualtet-assembly.jar
+  && cp ./target/scala-3.8.2/qualtet-assembly-${QUALTET_VERSION}.jar qualtet-assembly.jar
 
 
 # Runtime image
