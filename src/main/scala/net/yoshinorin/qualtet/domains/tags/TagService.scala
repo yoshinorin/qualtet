@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.tags
 import cats.Monad
 import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
-import net.yoshinorin.qualtet.cache.CacheModule
+import net.yoshinorin.qualtet.cache.CacheRepository
 import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepositoryAdapter
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.domains.errors.{DomainError, TagNotFound}
@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.syntax.*
 
 class TagService[F[_]: Monad, G[_]: Monad](
   tagRepositoryAdapter: TagRepositoryAdapter[G],
-  cache: CacheModule[F, String, Seq[TagResponseModel]],
+  cache: CacheRepository[F, String, Seq[TagResponseModel]],
   contentTaggingRepositoryAdapter: ContentTaggingRepositoryAdapter[G]
 )(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F])
     extends Cacheable[F] {

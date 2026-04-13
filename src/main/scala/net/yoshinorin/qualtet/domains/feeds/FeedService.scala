@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.feeds
 import cats.Monad
 import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
-import net.yoshinorin.qualtet.cache.CacheModule
+import net.yoshinorin.qualtet.cache.CacheRepository
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.FeedsPagination
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
@@ -15,7 +15,7 @@ import scala.annotation.nowarn
 
 class FeedService[F[_]: Monad, G[_]: Monad @nowarn](
   pagination: FeedsPagination,
-  cache: CacheModule[F, String, ArticleWithCountResponseModel],
+  cache: CacheRepository[F, String, ArticleWithCountResponseModel],
   articleService: ArticleService[F, G]
 )(using loggerFactory: Log4CatsLoggerFactory[F])
     extends Cacheable[F] {

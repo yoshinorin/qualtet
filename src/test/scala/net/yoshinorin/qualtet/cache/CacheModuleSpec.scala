@@ -15,7 +15,7 @@ class CacheModuleSpec extends AnyWordSpec {
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
 
-  val contentTypeCache = new CacheModule[IO, String, ContentType](contentTypeCaffeinCache)
+  val contentTypeCache = new InMemoryCache[IO, String, ContentType](contentTypeCaffeinCache)
   contentTypeCache.put(articleContentType.name.value, articleContentType)
 
   val caffeinCache: CaffeineCache[Int, String] =
@@ -39,7 +39,7 @@ class CacheModuleSpec extends AnyWordSpec {
     }
 
     "hit optional" in {
-      val cache = new CacheModule[IO, Int, String](caffeinCache)
+      val cache = new InMemoryCache[IO, Int, String](caffeinCache)
       (for {
         _ <- cache.put(1, Option("foo"))
         cached <- cache.get(1)
@@ -49,7 +49,7 @@ class CacheModuleSpec extends AnyWordSpec {
     }
 
     "miss optional" in {
-      val cache = new CacheModule[IO, Int, String](caffeinCache)
+      val cache = new InMemoryCache[IO, Int, String](caffeinCache)
       (for {
         _ <- cache.put(2, None)
         cached <- cache.get(2)
@@ -59,7 +59,7 @@ class CacheModuleSpec extends AnyWordSpec {
     }
 
     "miss after expire" in {
-      val cache = new CacheModule[IO, Int, String](caffeinCache)
+      val cache = new InMemoryCache[IO, Int, String](caffeinCache)
       (for {
         _ <- cache.put(3, "foo")
         cached <- cache.get(1)
@@ -72,7 +72,7 @@ class CacheModuleSpec extends AnyWordSpec {
     }
 
     "flush" in {
-      val cache = new CacheModule[IO, Int, String](caffeinCache)
+      val cache = new InMemoryCache[IO, Int, String](caffeinCache)
       (for {
         _ <- cache.put(4, "bar")
         _ <- cache.put(5, "baz")

@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.domains.contentTypes
 import cats.Monad
 import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
-import net.yoshinorin.qualtet.cache.CacheModule
+import net.yoshinorin.qualtet.cache.CacheRepository
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.infrastructure.db.Executer
@@ -13,7 +13,7 @@ import scala.annotation.nowarn
 
 class ContentTypeService[F[_]: Monad, G[_]: Monad @nowarn](
   contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[G],
-  cache: CacheModule[F, String, ContentType]
+  cache: CacheRepository[F, String, ContentType]
 )(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F])
     extends Cacheable[F] {
 
