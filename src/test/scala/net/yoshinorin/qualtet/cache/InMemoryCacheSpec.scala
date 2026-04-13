@@ -9,8 +9,8 @@ import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 import java.util.concurrent.TimeUnit
 
-// testOnly net.yoshinorin.qualtet.cache.CacheModuleSpec
-class CacheModuleSpec extends AnyWordSpec {
+// testOnly net.yoshinorin.qualtet.cache.InMemoryCacheSpec
+class InMemoryCacheSpec extends AnyWordSpec {
 
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
