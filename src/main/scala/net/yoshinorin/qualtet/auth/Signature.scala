@@ -3,7 +3,7 @@ package net.yoshinorin.qualtet.auth
 import org.slf4j.LoggerFactory
 import java.security.{PrivateKey, Signature as JavaSignature}
 
-class Signature(algorithm: String, message: Array[Byte], key: KeyPair) {
+class Signature(algorithm: String, message: Array[Byte], key: KeyPairRepository) {
 
   // NOTE: DO NOT USE `log4cats`
   private val logger = LoggerFactory.getLogger(this.getClass)

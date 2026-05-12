@@ -10,7 +10,7 @@ import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
 import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
 import org.typelevel.otel4s.trace.Tracer
 import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
-import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
+import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPairRepository}
 import net.yoshinorin.qualtet.cache.CacheRepository
 import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.domains.{ArticlesPagination, FeedsPagination, Limit, Page, PaginationOps, PaginationRequestModel, TagsPagination}
@@ -83,7 +83,7 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val v218Migrator: VersionMigrator[IO, ConnectionIO] = summon[VersionMigrator[IO, ConnectionIO]](using V218Migrator.V218)
 
   // NOTE: for generate JWT. They are reset when re-boot application.
-  val keyPair: KeyPair = new KeyPair("RSA", 2048, SecureRandom.getInstanceStrong)
+  val keyPair: KeyPairRepository = new KeyPairRepository("RSA", 2048, SecureRandom.getInstanceStrong)
   val message: Array[Byte] = SecureRandom.getInstanceStrong.toString.getBytes("UTF-8")
   val signature: Signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
   val jwtInstance: Jwt[IO] = new Jwt[IO](config.jwt, JwtAlgorithm.RS256, keyPair, signature)

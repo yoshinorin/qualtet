@@ -14,7 +14,7 @@ import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAware
 import java.time.Instant
 import scala.util.Try
 
-class Jwt[F[_]: Monad](config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPair, signature: Signature)(using
+class Jwt[F[_]: Monad](config: JwtConfig, algorithm: JwtAsymmetricAlgorithm, keyPair: KeyPairRepository, signature: Signature)(using
   loggerFactory: Log4CatsLoggerFactory[F]
 ) {
 
