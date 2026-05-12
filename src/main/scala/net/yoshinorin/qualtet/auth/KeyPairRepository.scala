@@ -5,13 +5,19 @@ import org.slf4j.LoggerFactory
 import java.security
 import java.security.{KeyPairGenerator, PrivateKey, PublicKey, SecureRandom}
 
-class KeyPairRepository(algorithm: String, length: Int, secureRandom: SecureRandom) {
+final case class InMemoryKeyPairConfig(
+  algorithm: String,
+  length: Int,
+  secureRandom: SecureRandom
+)
+
+class KeyPairRepository(config: InMemoryKeyPairConfig) {
 
   // NOTE: DO NOT USE `log4cats`
   private val logger = LoggerFactory.getLogger(this.getClass)
-  private val keyPairGenerator = KeyPairGenerator.getInstance(algorithm)
+  private val keyPairGenerator = KeyPairGenerator.getInstance(config.algorithm)
 
-  keyPairGenerator.initialize(length, secureRandom)
+  keyPairGenerator.initialize(config.length, config.secureRandom)
 
   logger.info("created: keyPair generator")
 
