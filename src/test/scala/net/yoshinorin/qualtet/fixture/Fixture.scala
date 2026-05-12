@@ -16,7 +16,7 @@ import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.CorsProvider
-import net.yoshinorin.qualtet.cache.{CacheRepository, InMemoryCache}
+import net.yoshinorin.qualtet.cache.CacheRepository
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.articles.*
 import net.yoshinorin.qualtet.domains.authors.*
@@ -113,19 +113,28 @@ object Fixture {
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
-  val contentTypeCache = new InMemoryCache[IO, String, ContentType](contentTypeCaffeinCache)
+  val contentTypeCache: CacheRepository[IO, String, ContentType] = {
+    given CaffeineCache[String, ContentType] = contentTypeCaffeinCache
+    summon[CacheRepository[IO, String, ContentType]]
+  }
   val contentTypeService = new ContentTypeService(modules.contentTypeRepositoryAdapter, contentTypeCache)
 
   val sitemapRepository: SitemapsRepository[ConnectionIO] = summon[SitemapsRepository[ConnectionIO]]
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[Url]]
-  val sitemapCache = new InMemoryCache[IO, String, Seq[Url]](sitemapCaffeinCache)
+  val sitemapCache: CacheRepository[IO, String, Seq[Url]] = {
+    given CaffeineCache[String, Seq[Url]] = sitemapCaffeinCache
+    summon[CacheRepository[IO, String, Seq[Url]]]
+  }
   val sitemapRepositoryAdapter: SitemapRepositoryAdapter[ConnectionIO] = new SitemapRepositoryAdapter[ConnectionIO](sitemapRepository)
   val sitemapService = new SitemapService(sitemapRepositoryAdapter, sitemapCache)
 
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
-  val feedCache: CacheRepository[IO, String, ArticleWithCountResponseModel] = new InMemoryCache[IO, String, ArticleWithCountResponseModel](feedCaffeinCache)
+  val feedCache: CacheRepository[IO, String, ArticleWithCountResponseModel] = {
+    given CaffeineCache[String, ArticleWithCountResponseModel] = feedCaffeinCache
+    summon[CacheRepository[IO, String, ArticleWithCountResponseModel]]
+  }
   val feedService = new FeedService(
     summon[PaginationOps[FeedsPagination]].make(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)),
     feedCache,
@@ -134,7 +143,10 @@ object Fixture {
 
   val tagsCaffeinCache: CaffeineCache[String, Seq[TagResponseModel]] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, Seq[TagResponseModel]]
-  val tagsCache: CacheRepository[IO, String, Seq[TagResponseModel]] = new InMemoryCache[IO, String, Seq[TagResponseModel]](tagsCaffeinCache)
+  val tagsCache: CacheRepository[IO, String, Seq[TagResponseModel]] = {
+    given CaffeineCache[String, Seq[TagResponseModel]] = tagsCaffeinCache
+    summon[CacheRepository[IO, String, Seq[TagResponseModel]]]
+  }
   val tagService = new TagService(tagRepositoryAdapter, tagsCache, contentTaggingRepositoryAdapter)
 
   val authProvider = new AuthProvider[IO, ConnectionIO](modules.authService)

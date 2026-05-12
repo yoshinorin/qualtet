@@ -15,7 +15,10 @@ class InMemoryCacheSpec extends AnyWordSpec {
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build[String, ContentType]
 
-  val contentTypeCache = new InMemoryCache[IO, String, ContentType](contentTypeCaffeinCache)
+  val contentTypeCache: CacheRepository[IO, String, ContentType] = {
+    given CaffeineCache[String, ContentType] = contentTypeCaffeinCache
+    summon[CacheRepository[IO, String, ContentType]]
+  }
   contentTypeCache.put(articleContentType.name.value, articleContentType)
 
   val caffeinCache: CaffeineCache[Int, String] =
@@ -39,7 +42,10 @@ class InMemoryCacheSpec extends AnyWordSpec {
     }
 
     "hit optional" in {
-      val cache = new InMemoryCache[IO, Int, String](caffeinCache)
+      val cache: CacheRepository[IO, Int, String] = {
+        given CaffeineCache[Int, String] = caffeinCache
+        summon[CacheRepository[IO, Int, String]]
+      }
       (for {
         _ <- cache.put(1, Option("foo"))
         cached <- cache.get(1)
@@ -49,7 +55,10 @@ class InMemoryCacheSpec extends AnyWordSpec {
     }
 
     "miss optional" in {
-      val cache = new InMemoryCache[IO, Int, String](caffeinCache)
+      val cache: CacheRepository[IO, Int, String] = {
+        given CaffeineCache[Int, String] = caffeinCache
+        summon[CacheRepository[IO, Int, String]]
+      }
       (for {
         _ <- cache.put(2, None)
         cached <- cache.get(2)
@@ -59,7 +68,10 @@ class InMemoryCacheSpec extends AnyWordSpec {
     }
 
     "miss after expire" in {
-      val cache = new InMemoryCache[IO, Int, String](caffeinCache)
+      val cache: CacheRepository[IO, Int, String] = {
+        given CaffeineCache[Int, String] = caffeinCache
+        summon[CacheRepository[IO, Int, String]]
+      }
       (for {
         _ <- cache.put(3, "foo")
         cached <- cache.get(1)
@@ -72,7 +84,10 @@ class InMemoryCacheSpec extends AnyWordSpec {
     }
 
     "flush" in {
-      val cache = new InMemoryCache[IO, Int, String](caffeinCache)
+      val cache: CacheRepository[IO, Int, String] = {
+        given CaffeineCache[Int, String] = caffeinCache
+        summon[CacheRepository[IO, Int, String]]
+      }
       (for {
         _ <- cache.put(4, "bar")
         _ <- cache.put(5, "baz")

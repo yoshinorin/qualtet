@@ -11,7 +11,7 @@ import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
 import org.typelevel.otel4s.trace.Tracer
 import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, Jwt, KeyPair}
-import net.yoshinorin.qualtet.cache.{CacheRepository, InMemoryCache}
+import net.yoshinorin.qualtet.cache.CacheRepository
 import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.domains.{ArticlesPagination, FeedsPagination, Limit, Page, PaginationOps, PaginationRequestModel, TagsPagination}
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveRepositoryAdapter, ArchiveService}
@@ -98,7 +98,10 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val contentTypeRepositoryAdapter: ContentTypeRepositoryAdapter[ConnectionIO] = new ContentTypeRepositoryAdapter(contentTypeRepository)
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.contentType, TimeUnit.SECONDS).build[String, ContentType]
-  val contentTypeCache: CacheRepository[IO, String, ContentType] = new InMemoryCache[IO, String, ContentType](contentTypeCaffeinCache)
+  val contentTypeCache: CacheRepository[IO, String, ContentType] = {
+    given CaffeineCache[String, ContentType] = contentTypeCaffeinCache
+    summon[CacheRepository[IO, String, ContentType]]
+  }
   val contentTypeService = new ContentTypeService[IO, ConnectionIO](contentTypeRepositoryAdapter, contentTypeCache)
 
   val robotsRepository: RobotsRepository[ConnectionIO] = summon[RobotsRepository[ConnectionIO]]
@@ -113,7 +116,10 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val tagRepository: TagRepository[ConnectionIO] = summon[TagRepository[ConnectionIO]]
   val tagsCaffeinCache: CaffeineCache[String, Seq[TagResponseModel]] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.tags, TimeUnit.SECONDS).build[String, Seq[TagResponseModel]]
-  val tagsCache: CacheRepository[IO, String, Seq[TagResponseModel]] = new InMemoryCache[IO, String, Seq[TagResponseModel]](tagsCaffeinCache)
+  val tagsCache: CacheRepository[IO, String, Seq[TagResponseModel]] = {
+    given CaffeineCache[String, Seq[TagResponseModel]] = tagsCaffeinCache
+    summon[CacheRepository[IO, String, Seq[TagResponseModel]]]
+  }
   val tagRepositoryAdapter: TagRepositoryAdapter[ConnectionIO] = new TagRepositoryAdapter[ConnectionIO](tagRepository)
   val tagService = new TagService[IO, ConnectionIO](tagRepositoryAdapter, tagsCache, contentTaggingRepositoryAdapter)
 
@@ -159,14 +165,20 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val sitemapRepository: SitemapsRepository[ConnectionIO] = summon[SitemapsRepository[ConnectionIO]]
   val sitemapCaffeinCache: CaffeineCache[String, Seq[Url]] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.sitemap, TimeUnit.SECONDS).build[String, Seq[Url]]
-  val sitemapCache: CacheRepository[IO, String, Seq[Url]] = new InMemoryCache[IO, String, Seq[Url]](sitemapCaffeinCache)
+  val sitemapCache: CacheRepository[IO, String, Seq[Url]] = {
+    given CaffeineCache[String, Seq[Url]] = sitemapCaffeinCache
+    summon[CacheRepository[IO, String, Seq[Url]]]
+  }
   val sitemapRepositoryAdapter: SitemapRepositoryAdapter[ConnectionIO] = new SitemapRepositoryAdapter[ConnectionIO](sitemapRepository)
   val sitemapService = new SitemapService[IO, ConnectionIO](sitemapRepositoryAdapter, sitemapCache)
 
   val feedsPaginationOps = summon[PaginationOps[FeedsPagination]]
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.feed, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
-  val feedCache: CacheRepository[IO, String, ArticleWithCountResponseModel] = new InMemoryCache[IO, String, ArticleWithCountResponseModel](feedCaffeinCache)
+  val feedCache: CacheRepository[IO, String, ArticleWithCountResponseModel] = {
+    given CaffeineCache[String, ArticleWithCountResponseModel] = feedCaffeinCache
+    summon[CacheRepository[IO, String, ArticleWithCountResponseModel]]
+  }
   val feedService = new FeedService[IO, ConnectionIO](
     feedsPaginationOps.make(PaginationRequestModel(Option(Page(1)), Option(Limit(config.feed.limit)), None)),
     feedCache,
