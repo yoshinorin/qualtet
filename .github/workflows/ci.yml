@@ -39,6 +39,29 @@ jobs:
       - name: Caching
         uses: coursier/cache-action@bebeeb0e6f48ebad66d3783946588ecf43114433 #7.0.0
 
+      - name: Cache test DB image
+        id: dbimage
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae #5.0.5
+        with:
+          path: ~/.docker-image-cache/db.tar
+          key: docker-image-test-db-${{ hashFiles('src/test/resources/docker-compose.yml') }}
+
+      - name: Load cached image
+        if: steps.dbimage.outputs.cache-hit == 'true'
+        run: docker load -i ~/.docker-image-cache/db.tar
+
+      - name: Pull image (non-master)
+        if: steps.dbimage.outputs.cache-hit != 'true' && github.ref != 'refs/heads/master'
+        run: docker compose -f src/test/resources/docker-compose.yml pull
+
+      - name: Pull & save image (master)
+        if: steps.dbimage.outputs.cache-hit != 'true' && github.ref == 'refs/heads/master'
+        run: |
+          mkdir -p ~/.docker-image-cache
+          docker compose -f src/test/resources/docker-compose.yml pull
+          docker save $(docker compose -f src/test/resources/docker-compose.yml config --images) \
+            -o ~/.docker-image-cache/db.tar
+
       - name: Create log file
         working-directory: .
         # Workaround for suddenly happen permission denied
