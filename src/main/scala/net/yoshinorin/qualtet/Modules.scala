@@ -82,8 +82,11 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val migrator: Migrator = new Migrator()
   val v218Migrator: VersionMigrator[IO, ConnectionIO] = summon[VersionMigrator[IO, ConnectionIO]](using V218Migrator.V218)
 
-  // NOTE: for generate JWT. They are reset when re-boot application.
-  val keyPair: KeyPairRepository = new KeyPairRepository(InMemoryKeyPairConfig("RSA", 2048, SecureRandom.getInstanceStrong))
+  // NOTE: for generate JWT. They are reset when re-boot application if using InMemory mode.
+  val keyPair: KeyPairRepository = {
+    given InMemoryKeyPairConfig = InMemoryKeyPairConfig("RSA", 2048, SecureRandom.getInstanceStrong)
+    summon[KeyPairRepository]
+  }
   val message: Array[Byte] = SecureRandom.getInstanceStrong.toString.getBytes("UTF-8")
   val signature: Signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
   val jwtInstance: Jwt[IO] = new Jwt[IO](config.jwt, JwtAlgorithm.RS256, keyPair, signature)

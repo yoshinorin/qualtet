@@ -10,7 +10,8 @@ class KeyPairRepositorySpec extends AnyWordSpec {
 
     "generate keypair" in {
 
-      val keyPair = new KeyPairRepository(InMemoryKeyPairConfig("RSA", 2048, SecureRandom.getInstanceStrong))
+      given InMemoryKeyPairConfig = InMemoryKeyPairConfig("RSA", 2048, SecureRandom.getInstanceStrong)
+      val keyPair = summon[KeyPairRepository]
       assert(keyPair.publicKey.getAlgorithm === "RSA")
       assert(keyPair.publicKey.getFormat === "X.509")
       assert(keyPair.privateKey.getAlgorithm === "RSA")

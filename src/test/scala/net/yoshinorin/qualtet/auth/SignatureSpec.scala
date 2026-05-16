@@ -8,7 +8,8 @@ class SignatureSpec extends AnyWordSpec {
 
   "Signature" should {
 
-    val keyPair = new KeyPairRepository(InMemoryKeyPairConfig("RSA", 2048, SecureRandom.getInstanceStrong))
+    given InMemoryKeyPairConfig = InMemoryKeyPairConfig("RSA", 2048, SecureRandom.getInstanceStrong)
+    val keyPair = summon[KeyPairRepository]
     val message = SecureRandom.getInstanceStrong.toString.getBytes
     val signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)
 
