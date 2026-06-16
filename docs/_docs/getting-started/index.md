@@ -68,6 +68,56 @@ Qualtet uses JWT for auth endpoint. You have to set `ISS` and `AUD` for generati
 |`QUALTET_JWT_AUD `|jwt aud|`string`|-|-|
 |`QUALTET_JWT_EXPIRATION `|jwt expiration time (sec)|`int`|`3600`|-|
 
+### KeyPair (JWT signing)
+
+Qualtet signs / verifies JWT with an asymmetric keypair. The keypair source is configurable.
+
+|Property|Description|Type|Default|Example|
+|---|---|---|---|---|
+|`QUALTET_KEYPAIR_SOURCE`|Source of the keypair: `IN-MEMORY`, `FILE`, or `PEM`|`string`|`IN-MEMORY`|`FILE`|
+|`QUALTET_KEYPAIR_ALGORITHM`|Key algorithm|`string`|`RSA`|`RSA`|
+|`QUALTET_KEYPAIR_LENGTH`|Key length in bits (`IN-MEMORY` only)|`int`|`2048`|`2048`|
+|`QUALTET_KEYPAIR_SECURE_RANDOM`|`SecureRandom` algorithm name (`IN-MEMORY` only). Uses `SecureRandom.getInstanceStrong` when unset.|`string`|-|`NativePRNGNonBlocking`|
+|`QUALTET_KEYPAIR_PUBLIC_KEY_PATH`|Path to public key PEM (`FILE` only). X.509 / SubjectPublicKeyInfo (`-----BEGIN PUBLIC KEY-----`)|`string`|-|`/etc/qualtet/keys/public.pem`|
+|`QUALTET_KEYPAIR_PRIVATE_KEY_PATH`|Path to private key PEM (`FILE` only). PKCS#8 (`-----BEGIN PRIVATE KEY-----`)|`string`|-|`/etc/qualtet/keys/private.pem`|
+|`QUALTET_KEYPAIR_PUBLIC_KEY_PEM`|Public key PEM as a string (`PEM` only)|`string`|-|`-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----`|
+|`QUALTET_KEYPAIR_PRIVATE_KEY_PEM`|Private key PEM as a string (`PEM` only)|`string`|-|`-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----`|
+
+#### `IN-MEMORY` (default)
+
+The keypair is generated on boot with `KeyPairGenerator` and lost on restart. Existing JWTs become invalid after restart. Convenient for development.
+
+#### `FILE`
+
+The keypair is loaded from PEM files at boot. The public key must be X.509 / SubjectPublicKeyInfo and the private key must be PKCS#8.
+
+```sh
+# Generate a keypair (one-off)
+openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out private.pem
+openssl pkey -in private.pem -pubout -out public.pem
+
+# Configure
+env QUALTET_KEYPAIR_SOURCE=FILE \
+    QUALTET_KEYPAIR_PUBLIC_KEY_PATH=/etc/qualtet/keys/public.pem \
+    QUALTET_KEYPAIR_PRIVATE_KEY_PATH=/etc/qualtet/keys/private.pem
+```
+
+If you have a PKCS#1 (`-----BEGIN RSA PRIVATE KEY-----`) key, convert it to PKCS#8 first:
+
+```sh
+openssl pkcs8 -topk8 -nocrypt -in pkcs1.pem -out pkcs8.pem
+```
+
+#### `PEM`
+
+The keypair is passed as PEM strings (typically injected via environment variable). Useful for environments that don't have a persistent filesystem (e.g. some container platforms).
+
+```sh
+env QUALTET_KEYPAIR_SOURCE=PEM \
+    QUALTET_KEYPAIR_PUBLIC_KEY_PEM="$(cat public.pem)" \
+    QUALTET_KEYPAIR_PRIVATE_KEY_PEM="$(cat private.pem)"
+```
+
 ### Cacheing
 
 Some of endpoint has in-memory cache.

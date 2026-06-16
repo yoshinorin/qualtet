@@ -10,9 +10,9 @@ import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
 import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
 import org.typelevel.otel4s.trace.Tracer
 import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
-import net.yoshinorin.qualtet.auth.{AuthService, InMemoryKeyPairConfig, Jwt, KeyPairRepository}
+import net.yoshinorin.qualtet.auth.{AuthService, FileKeyPairConfig, InMemoryKeyPairConfig, Jwt, KeyPairRepository, PemKeyPairConfig}
 import net.yoshinorin.qualtet.cache.CacheRepository
-import net.yoshinorin.qualtet.config.ApplicationConfig
+import net.yoshinorin.qualtet.config.{ApplicationConfig, KeyPairSourceConfig}
 import net.yoshinorin.qualtet.domains.{ArticlesPagination, FeedsPagination, Limit, Page, PaginationOps, PaginationRequestModel, TagsPagination}
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveRepositoryAdapter, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleRepositoryAdapter, ArticleService}
@@ -83,9 +83,20 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val v218Migrator: VersionMigrator[IO, ConnectionIO] = summon[VersionMigrator[IO, ConnectionIO]](using V218Migrator.V218)
 
   // NOTE: for generate JWT. They are reset when re-boot application if using InMemory mode.
-  val keyPair: KeyPairRepository = {
-    given InMemoryKeyPairConfig = InMemoryKeyPairConfig("RSA", 2048, SecureRandom.getInstanceStrong)
-    summon[KeyPairRepository]
+  val keyPair: KeyPairRepository = config.keypair match {
+    case c: KeyPairSourceConfig.InMemory =>
+      val secureRandom = c.secureRandomAlgorithm match {
+        case Some(name) => SecureRandom.getInstance(name)
+        case None => SecureRandom.getInstanceStrong
+      }
+      given InMemoryKeyPairConfig = InMemoryKeyPairConfig(c.algorithm, c.length, secureRandom)
+      summon[KeyPairRepository]
+    case c: KeyPairSourceConfig.File =>
+      given FileKeyPairConfig = FileKeyPairConfig(c.algorithm, c.publicKeyPath, c.privateKeyPath)
+      summon[KeyPairRepository]
+    case c: KeyPairSourceConfig.Pem =>
+      given PemKeyPairConfig = PemKeyPairConfig(c.algorithm, c.publicKeyPem, c.privateKeyPem)
+      summon[KeyPairRepository]
   }
   val message: Array[Byte] = SecureRandom.getInstanceStrong.toString.getBytes("UTF-8")
   val signature: Signature = new net.yoshinorin.qualtet.auth.Signature("SHA256withRSA", message, keyPair)

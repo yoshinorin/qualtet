@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.config
 import com.typesafe.config.{Config as TypeSafeConfig, ConfigFactory}
 import scala.jdk.CollectionConverters.*
 
+import java.nio.file.{Path, Paths}
 import java.util.ArrayList
 
 final case class DBConfig(url: String, user: String, password: String, connectionPool: DBConnectionPool)
@@ -19,6 +20,14 @@ final case class SearchConfig(maxWords: Int, minWordLength: Int, maxWordLength: 
 final case class OtelServiceConfig(name: Option[String], namespace: Option[String])
 final case class OtelExporterConfig(endpoint: Option[String], headers: Option[String], protocol: Option[String])
 final case class OtelConfig(enabled: Option[Boolean], service: OtelServiceConfig, exporter: OtelExporterConfig, propagator: Option[String])
+
+sealed trait KeyPairSourceConfig
+object KeyPairSourceConfig {
+  final case class InMemory(algorithm: String, length: Int, secureRandomAlgorithm: Option[String]) extends KeyPairSourceConfig
+  final case class File(algorithm: String, publicKeyPath: Path, privateKeyPath: Path) extends KeyPairSourceConfig
+  final case class Pem(algorithm: String, publicKeyPem: String, privateKeyPem: String) extends KeyPairSourceConfig
+}
+
 final case class ApplicationConfig(
   db: DBConfig,
   http: HttpConfig,
@@ -27,7 +36,8 @@ final case class ApplicationConfig(
   cache: CacheConfig,
   feed: FeedConfig,
   search: SearchConfig,
-  otel: OtelConfig
+  otel: OtelConfig,
+  keypair: KeyPairSourceConfig
 )
 
 object ApplicationConfig {
@@ -76,6 +86,31 @@ object ApplicationConfig {
   private val otelExporterProtocol: Option[String] = getOptionalString("otel.exporter.protocol")
   private val otelPropagator: Option[String] = getOptionalString("otel.propagator")
 
+  private def loadKeyPair: KeyPairSourceConfig = {
+    val source = if (config.hasPath("keypair.source")) config.getString("keypair.source") else "IN-MEMORY"
+    val algorithm = if (config.hasPath("keypair.algorithm")) config.getString("keypair.algorithm") else "RSA"
+
+    source match {
+      case "IN-MEMORY" =>
+        val length = if (config.hasPath("keypair.length")) config.getInt("keypair.length") else 2048
+        KeyPairSourceConfig.InMemory(algorithm, length, getOptionalString("keypair.secure-random"))
+      case "FILE" =>
+        KeyPairSourceConfig.File(
+          algorithm,
+          Paths.get(config.getString("keypair.public-key-path")),
+          Paths.get(config.getString("keypair.private-key-path"))
+        )
+      case "PEM" =>
+        KeyPairSourceConfig.Pem(
+          algorithm,
+          config.getString("keypair.public-key-pem"),
+          config.getString("keypair.private-key-pem")
+        )
+      case other =>
+        throw new IllegalArgumentException(s"unknown keypair.source: '$other' (expected: 'IN-MEMORY' | 'FILE' | 'PEM')")
+    }
+  }
+
   def load: ApplicationConfig = ApplicationConfig(
     db = DBConfig(dbUrl, dbUser, dbPassword, dbConnectionPool),
     http = HttpConfig(httpHost, httpPort, httpEndpoints),
@@ -89,7 +124,8 @@ object ApplicationConfig {
       service = OtelServiceConfig(otelServiceName, otelServiceNamespace),
       exporter = OtelExporterConfig(otelExporterEndpoint, otelExporterHeaders, otelExporterProtocol),
       propagator = otelPropagator
-    )
+    ),
+    keypair = loadKeyPair
   )
 
 }
