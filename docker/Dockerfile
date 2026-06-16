@@ -1,5 +1,6 @@
 # Builder image
-FROM ghcr.io/yoshinorin/docker-sbt:v1.12.9-scala3.8.3jdk25 as builder
+# docker buildx imagetools inspect ghcr.io/yoshinorin/docker-sbt:v1.12.12-scala3.8.4jdk25
+FROM ghcr.io/yoshinorin/docker-sbt:v1.12.12-scala3.8.4jdk25@sha256:9380f87ae654468e7b95259a024f67d3b0662dc725aa76d78a4cb85b9220b4f1 as builder
 
 LABEL maintainer="yoshinorin"
 ENV QUALTET_VERSION="v3.2.0"
@@ -16,12 +17,13 @@ COPY commit-hash.sh commit-hash.sh
 
 RUN sh commit-hash.sh \
   && sbt assembly exit \
-  && cp ./target/scala-3.8.3/qualtet-assembly-${QUALTET_VERSION}.jar qualtet-assembly.jar
+  && cp ./target/scala-3.8.4/qualtet-assembly-${QUALTET_VERSION}.jar qualtet-assembly.jar
 
 
 # Runtime image
 # NOTE: need jdk image for inspect heapdump (e.g: need jstat etc)
-FROM eclipse-temurin:25.0.2_10-jdk-noble
+# docker buildx imagetools inspect eclipse-temurin:25.0.3_9-jdk-noble
+FROM eclipse-temurin:25.0.3_9-jdk-noble@sha256:02aba7518e48cfed96403ac9634e357a40329d6ec9418feb0b32636e43b245a1
 
 WORKDIR /usr/opt/qualtet
 
