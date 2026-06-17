@@ -3,7 +3,7 @@
 FROM ghcr.io/yoshinorin/docker-sbt:v1.12.12-scala3.8.4jdk25@sha256:9380f87ae654468e7b95259a024f67d3b0662dc725aa76d78a4cb85b9220b4f1 as builder
 
 LABEL maintainer="yoshinorin"
-ENV QUALTET_VERSION="v3.2.0"
+ENV QUALTET_VERSION="v3.3.0"
 
 RUN apt update -y \
   && apt upgrade -y \

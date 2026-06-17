@@ -5,7 +5,8 @@ title: Releases
 
 | Version | Code name | Released at |
 | --- | --- | --- |
-| [v3.2.0](https://github.com/yoshinorin/qualtet/releases/tag/v3.2.0)                        | Composable Campanula     | -                      |
+| [v3.3.0](https://github.com/yoshinorin/qualtet/releases/tag/v3.3.0)                        | Deterministic Dahlia     | -                      |
+| [v3.2.0](https://github.com/yoshinorin/qualtet/releases/tag/v3.2.0)                        | Composable Campanula     | 2026-03-07T22:45:19Z   |
 | [v3.1.0](https://github.com/yoshinorin/qualtet/releases/tag/v3.1.0)                        | Bounded Begonia          | 2026-02-11T02:23:19Z   |
 | [v3.0.0](https://github.com/yoshinorin/qualtet/releases/tag/v3.0.0)                        | Algebraic Azalea         | 2026-01-31T23:56:00Z   |
 | [v2.21.0](https://github.com/yoshinorin/qualtet/releases/tag/v2.21.0)                      | Scarlet Velvet           | 2026-01-18T09:03:03Z   |

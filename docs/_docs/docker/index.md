@@ -19,8 +19,8 @@ The following are representative environment variables.
 
 | Key | Value (Example) |
 | --- | --- |
-| `JAVA_VERSION` | `jdk-17.0.7+7` |
-| `SBT_VERSION` | `1.9.0` |
-| `QUALTET_VERSION` | `v3.2.0` |
+| `JAVA_VERSION` | `jdk-25.0.3+9` |
+| `SBT_VERSION` | `1.12.12` |
+| `QUALTET_VERSION` | `v3.3.0` |
 
 If you want to see more details, please execute `docker inspect <image_id>`.
