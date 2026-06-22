@@ -71,14 +71,18 @@ jobs:
         working-directory: .
         run: cp .env.example .env && sbt clean coverage testWithDb
 
-      - name: Send Coverage Report
+      # NOTE: sbt-coveralls is not published for sbt 2.x, so we only generate the
+      #       Cobertura report with sbt-scoverage and upload it via the Coveralls action.
+      - name: Generate Coverage Report
         working-directory: .
-        run: cp .env.example .env && sbt coverageReport coveralls
-        env:
-          # NOTE: send coverage report failed caused by `Couldn't find a repository matching this job.`
-          # COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
+        run: cp .env.example .env && sbt coverageReport
+
+      - name: Send Coverage Report
+        uses: coverallsapp/github-action@648a8eb78e6d50909eff900e4ec85cab4524a45b # v2.3.6
+        with:
+          format: cobertura
+          file: target/scala-${{ matrix.scala }}/coverage-report/cobertura.xml
+          flag-name: Scala ${{ matrix.scala }}
   assemble:
     runs-on: ${{ matrix.os }}
     permissions:
