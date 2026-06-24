@@ -9,8 +9,8 @@ import cats.Monad
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import doobie.ConnectionIO
-import doobie.implicits.*
+import org.typelevel.doobie.ConnectionIO
+import org.typelevel.doobie.implicits.*
 import org.mockito.Mockito.*
 import org.mockito.ArgumentMatchers.*
 

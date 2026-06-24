@@ -2,10 +2,10 @@ package net.yoshinorin.qualtet.infrastructure.versions
 
 object V218Migrator {
 
-  import doobie.{Read, Write}
-  import doobie.ConnectionIO
-  import doobie.syntax.all.toSqlInterpolator
-  import doobie.util.update.Update
+  import org.typelevel.doobie.{Read, Write}
+  import org.typelevel.doobie.ConnectionIO
+  import org.typelevel.doobie.syntax.all.toSqlInterpolator
+  import org.typelevel.doobie.util.update.Update
   import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagPath}
   import net.yoshinorin.qualtet.domains.series.{SeriesId, SeriesName, SeriesPath}
 

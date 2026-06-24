@@ -1,10 +1,10 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
 import cats.data.NonEmptyList
-import doobie.{Read, Write}
-import doobie.syntax.all.toSqlInterpolator
-import doobie.util.update.{Update, Update0}
-import doobie.util.{fragments, query}
+import org.typelevel.doobie.{Read, Write}
+import org.typelevel.doobie.syntax.all.toSqlInterpolator
+import org.typelevel.doobie.util.update.{Update, Update0}
+import org.typelevel.doobie.util.{fragments, query}
 import net.yoshinorin.qualtet.domains.tags.TagId
 import net.yoshinorin.qualtet.domains.contents.ContentId
 

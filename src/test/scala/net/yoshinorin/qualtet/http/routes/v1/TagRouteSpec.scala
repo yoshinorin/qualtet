@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
 import cats.effect.IO
-import doobie.ConnectionIO
+import org.typelevel.doobie.ConnectionIO
 import org.http4s.client.Client
 import org.http4s.*
 import org.http4s.dsl.io.*

@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.infrastructure.telemetry
 
 import cats.effect.IO
-import doobie.util.log.LogHandler
+import org.typelevel.doobie.util.log.LogHandler
 import org.typelevel.otel4s.Attribute
 import org.typelevel.otel4s.trace.{SpanKind, Tracer}
 
@@ -24,10 +24,10 @@ object DoobieTracing {
         }
       }
 
-      override def run(logEvent: doobie.util.log.LogEvent): IO[Unit] = logEvent match {
-        case doobie.util.log.Success(sql, _, _, _, _) => logSqlEvent(sql)
-        case doobie.util.log.ProcessingFailure(sql, _, _, _, _, _) => logSqlEvent(sql)
-        case doobie.util.log.ExecFailure(sql, _, _, _, _) => logSqlEvent(sql)
+      override def run(logEvent: org.typelevel.doobie.util.log.LogEvent): IO[Unit] = logEvent match {
+        case org.typelevel.doobie.util.log.Success(sql, _, _, _, _) => logSqlEvent(sql)
+        case org.typelevel.doobie.util.log.ProcessingFailure(sql, _, _, _, _, _) => logSqlEvent(sql)
+        case org.typelevel.doobie.util.log.ExecFailure(sql, _, _, _, _) => logSqlEvent(sql)
       }
     }
   }

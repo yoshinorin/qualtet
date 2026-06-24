@@ -2,11 +2,11 @@ package net.yoshinorin.qualtet.infrastructure.db.doobie
 
 import cats.data.ContT
 import cats.implicits.catsSyntaxApplicativeId
-import doobie.*
-import doobie.syntax.all.*
+import org.typelevel.doobie.*
+import org.typelevel.doobie.syntax.all.*
 import cats.effect.*
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import doobie.free.connection.ConnectionIO
+import org.typelevel.doobie.free.connection.ConnectionIO
 import org.typelevel.otel4s.trace.Tracer
 import net.yoshinorin.qualtet.infrastructure.telemetry.DoobieTracing
 

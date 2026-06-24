@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.domains.articles
 
-import doobie.Read
-import doobie.syntax.all.*
-import doobie.util.query.Query0
+import org.typelevel.doobie.Read
+import org.typelevel.doobie.syntax.all.*
+import org.typelevel.doobie.util.query.Query0
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.{TagName, TagPath}
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
 import net.yoshinorin.qualtet.domains.{Order, Pagination}
-import doobie.util.fragment.Fragment
+import org.typelevel.doobie.util.fragment.Fragment
 
 object ArticleQuery {
 

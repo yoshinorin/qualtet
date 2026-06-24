@@ -4,8 +4,8 @@ import cats.{Monad, MonadError}
 import cats.effect.IO
 import cats.data.EitherT
 import cats.syntax.flatMap.toFlatMapOps
-import doobie.ConnectionIO
-import doobie.util.transactor.Transactor
+import org.typelevel.doobie.ConnectionIO
+import org.typelevel.doobie.util.transactor.Transactor
 import org.http4s.Uri
 import org.http4s.Response
 import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory

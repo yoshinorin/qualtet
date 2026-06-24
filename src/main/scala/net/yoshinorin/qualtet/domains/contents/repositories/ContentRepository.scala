@@ -14,8 +14,8 @@ trait ContentRepository[F[_]] {
 
 object ContentRepository {
 
-  import doobie.{Read, Write}
-  import doobie.ConnectionIO
+  import org.typelevel.doobie.{Read, Write}
+  import org.typelevel.doobie.ConnectionIO
   import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
   import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
   import net.yoshinorin.qualtet.domains.robots.Attributes

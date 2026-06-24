@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.domains.search
 
-import doobie.Read
-import doobie.syntax.all.*
-import doobie.util.query.Query0
+import org.typelevel.doobie.Read
+import org.typelevel.doobie.syntax.all.*
+import org.typelevel.doobie.util.query.Query0
 
 object SearchQuery {
   // https://tpolecat.github.io/doobie/docs/08-Fragments.html

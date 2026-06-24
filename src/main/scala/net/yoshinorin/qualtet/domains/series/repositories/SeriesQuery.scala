@@ -1,14 +1,14 @@
 package net.yoshinorin.qualtet.domains.series
 
-import doobie.Read
-import doobie.syntax.all.toSqlInterpolator
-import doobie.util.query.Query0
-import doobie.util.update.{Update, Update0}
+import org.typelevel.doobie.Read
+import org.typelevel.doobie.syntax.all.toSqlInterpolator
+import org.typelevel.doobie.util.query.Query0
+import org.typelevel.doobie.util.update.{Update, Update0}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object SeriesQuery {
 
-  def upsert: doobie.Write[SeriesWriteModel] ?=> doobie.Update[SeriesWriteModel] = {
+  def upsert: org.typelevel.doobie.Write[SeriesWriteModel] ?=> org.typelevel.doobie.Update[SeriesWriteModel] = {
     val q = s"""
           INSERT INTO series (id, name, path, title, description)
             VALUES (?, ?, ?, ?, ?)

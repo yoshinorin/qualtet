@@ -1,10 +1,10 @@
 package net.yoshinorin.qualtet.infrastructure.db.doobie
 
 import cats.effect.{IO, Resource}
-import doobie.util.transactor.Transactor
-import doobie.util.transactor.Transactor.Aux
-import doobie.util.log.LogHandler
-import doobie.hikari.*
+import org.typelevel.doobie.util.transactor.Transactor
+import org.typelevel.doobie.util.transactor.Transactor.Aux
+import org.typelevel.doobie.util.log.LogHandler
+import org.typelevel.doobie.hikari.*
 import org.typelevel.otel4s.trace.Tracer
 import com.zaxxer.hikari.HikariConfig
 import net.yoshinorin.qualtet.config.DBConfig

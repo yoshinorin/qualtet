@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-import doobie.Read
-import doobie.syntax.all.toSqlInterpolator
-import doobie.util.query.Query0
+import org.typelevel.doobie.Read
+import org.typelevel.doobie.syntax.all.toSqlInterpolator
+import org.typelevel.doobie.util.query.Query0
 
 object SitemapsQuery {
 

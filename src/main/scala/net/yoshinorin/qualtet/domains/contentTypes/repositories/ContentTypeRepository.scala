@@ -8,8 +8,8 @@ trait ContentTypeRepository[F[_]] {
 
 object ContentTypeRepository {
 
-  import doobie.{Read, Write}
-  import doobie.ConnectionIO
+  import org.typelevel.doobie.{Read, Write}
+  import org.typelevel.doobie.ConnectionIO
 
   given ContentTypeRepository: ContentTypeRepository[ConnectionIO] = {
     new ContentTypeRepository[ConnectionIO] {

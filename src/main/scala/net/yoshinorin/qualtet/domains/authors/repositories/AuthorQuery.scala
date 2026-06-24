@@ -1,9 +1,9 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import doobie.{Read, Write}
-import doobie.syntax.all.toSqlInterpolator
-import doobie.util.query.Query0
-import doobie.util.update.Update
+import org.typelevel.doobie.{Read, Write}
+import org.typelevel.doobie.syntax.all.toSqlInterpolator
+import org.typelevel.doobie.util.query.Query0
+import org.typelevel.doobie.util.update.Update
 
 object AuthorQuery {
 

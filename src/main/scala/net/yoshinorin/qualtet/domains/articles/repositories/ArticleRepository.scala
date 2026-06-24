@@ -18,8 +18,8 @@ trait ArticleRepository[F[_]] {
 
 object ArticleRepository {
 
-  import doobie.Read
-  import doobie.ConnectionIO
+  import org.typelevel.doobie.Read
+  import org.typelevel.doobie.ConnectionIO
   import net.yoshinorin.qualtet.domains.contents.ContentId
 
   given ArticleRepository: ArticleRepository[ConnectionIO] = {

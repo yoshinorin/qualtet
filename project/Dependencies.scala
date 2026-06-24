@@ -3,7 +3,7 @@ import sbt.*
 object Dependencies {
 
   val jsoniterVersion = "2.38.16"
-  val doobieVersion = "1.0.0-RC12"
+  val doobieVersion = "1.0.0-RC13"
   val jwtScalaVersion = "11.0.4"
   val flywayVersion = "12.9.0"
   val http4sVersion = "1.0.0-M46"
@@ -32,8 +32,8 @@ object Dependencies {
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "test-internal",
     "org.mariadb.jdbc" % "mariadb-java-client" % "3.5.9",
-    "org.tpolecat" %% "doobie-core" % doobieVersion,
-    "org.tpolecat" %% "doobie-hikari" % doobieVersion,
+    "org.typelevel" %% "doobie-core" % doobieVersion,
+    "org.typelevel" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
     "org.wvlet.airframe" %% "airframe-ulid" % "2026.1.7",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.2.4",

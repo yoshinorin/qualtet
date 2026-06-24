@@ -46,7 +46,7 @@ class VersionServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
   "migrate" should {
 
     import cats.effect.IO
-    import doobie.ConnectionIO
+    import org.typelevel.doobie.ConnectionIO
     import net.yoshinorin.qualtet.infrastructure.versions.VersionMigrator.*
 
     val now = ZonedDateTime.now.toEpochSecond

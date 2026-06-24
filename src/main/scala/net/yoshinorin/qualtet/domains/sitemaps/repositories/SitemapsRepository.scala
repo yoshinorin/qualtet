@@ -6,8 +6,8 @@ trait SitemapsRepository[F[_]] {
 
 object SitemapsRepository {
 
-  import doobie.Read
-  import doobie.ConnectionIO
+  import org.typelevel.doobie.Read
+  import org.typelevel.doobie.ConnectionIO
 
   given SitemapsRepository: SitemapsRepository[ConnectionIO] = {
     new SitemapsRepository[ConnectionIO] {

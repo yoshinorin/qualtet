@@ -8,8 +8,8 @@ trait ArchiveRepository[F[_]] {
 
 object ArchiveRepository {
 
-  import doobie.Read
-  import doobie.ConnectionIO
+  import org.typelevel.doobie.Read
+  import org.typelevel.doobie.ConnectionIO
   import net.yoshinorin.qualtet.domains.contents.ContentPath
 
   given ArchiveRepository: ArchiveRepository[ConnectionIO] = {
