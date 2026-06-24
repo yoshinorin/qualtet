@@ -15,6 +15,6 @@
     "node": ">=24"
   },
   "dependencies": {
-    "@redocly/cli": "2.30.3"
+    "@redocly/cli": "2.34.0"
   }
 }
