@@ -7,7 +7,7 @@ services:
       MARIADB_PASSWORD: pass
       MARIADB_DATABASE: qualtet
     volumes:
-      - ./data:/var/lib/mysql
+      - ./examples/data:/var/lib/mysql
     hostname: qualtet-mariadb
     networks:
       - qualtet
@@ -46,8 +46,8 @@ services:
       QUALTET_OTEL_PROPAGATOR: tracecontext
       JAVA_OPTS: "-Xms512M -Xmx768M -Xss2M -Xlog:gc*=info:file=/usr/opt/qualtet/logs/gc.log -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/opt/qualtet/dumps/heapdump.bin -Dcats.effect.trackFiberContext=true"
     volumes:
-      - ./logs:/usr/opt/qualtet/logs
-      - ./dumps:/usr/opt/qualtet/dumps
+      - ./examples/logs:/usr/opt/qualtet/logs
+      - ./examples/dumps:/usr/opt/qualtet/dumps
     hostname: qualtet
     networks:
       - qualtet

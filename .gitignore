@@ -37,6 +37,8 @@ docs/dist/*
 docker/data
 docker/config
 docker/dumps/
+docker/logs/
+docker/examples/
 tmpdata
 
 # Test
