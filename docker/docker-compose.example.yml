@@ -40,7 +40,7 @@ services:
       QUALTET_OTEL_ENABLED: true
       QUALTET_OTEL_SERVICE_NAME: qualtet
       QUALTET_OTEL_SERVICE_NAMESPACE: qualtet
-      QUALTET_OTEL_EXPORTER_ENDPOINT: http://localhost:4317
+      QUALTET_OTEL_EXPORTER_ENDPOINT: http://qualtet_otel_example:4317
       QUALTET_OTEL_EXPORTER_PROTOCOL: grpc
       QUALTET_OTEL_EXPORTER_HEADERS: "Authorization=Basic example"
       QUALTET_OTEL_PROPAGATOR: tracecontext
@@ -55,6 +55,24 @@ services:
     ports:
       - "9001:9001"
     depends_on:
-      - qualtet_mariadb
+      qualtet_mariadb:
+        condition: service_started
+      qualtet_otel_example:
+        condition: service_healthy
+  qualtet_otel_example:
+    image: grafana/otel-lgtm:0.16.0
+    networks:
+      - qualtet
+    ports:
+      - "3403:3000"
+      - "4417:4317"
+      - "4418:4318"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:3000/api/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
 networks:
   qualtet:
