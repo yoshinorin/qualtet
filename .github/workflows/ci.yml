@@ -69,7 +69,7 @@ jobs:
 
       - name: Run tests
         working-directory: .
-        run: cp .env.example .env && sbt clean coverage testWithDb
+        run: cp .env.example .env && sbt "clean; coverage; testWithDb"
 
       # NOTE: sbt-coveralls is not published for sbt 2.x, so we only generate the
       #       Cobertura report with sbt-scoverage and upload it via the Coveralls action.

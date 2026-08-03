@@ -152,7 +152,7 @@ $ sbt coverageReport
 
 or
 
-$ sbt clean coverage testWithDb coverageReport
+$ sbt "clean; coverage; testWithDb; coverageReport"
 ```
 
 ## Check Dependency updates
