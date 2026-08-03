@@ -1,5 +1,5 @@
 services:
-  qualtet_mariadb:
+  qualtet_mariadb_example:
     image: ghcr.io/yoshinorin/docker-mariadb:v11.8.8@sha256:dd49ac5f9127b39f853495fda1ff50ea8ad770f02a0be3614b95d4e8b5fc08ca
     environment:
       MARIADB_ROOT_PASSWORD: pass
@@ -8,10 +8,10 @@ services:
       MARIADB_DATABASE: qualtet
     volumes:
       - ./examples/data:/var/lib/mysql
-    hostname: qualtet-mariadb
+    hostname: qualtet_mariadb_example
     networks:
-      - qualtet
-    container_name: qualtet-mariadb
+      - qualtet_example
+    container_name: qualtet_mariadb_example
     expose:
       - "3306"
     ports:
@@ -22,12 +22,12 @@ services:
         mariadbd --character-set-server=utf8mb4 --general_log=1 --general_log_file=/var/log/mysql/general.log --innodb-ft-min-token-size=2 &&
         mariadb-upgrade
     restart: unless-stopped
-  qualtet:
+  qualtet_example:
     # build: .
     image: ghcr.io/yoshinorin/docker-qualtet:latest
     # NOTE: these values are examples. Please fill by yourself.
     environment:
-      QUALTET_DB_DATASOURCE_URL: jdbc:mariadb://qualtet-mariadb:3306/qualtet?useUnicode=true&characterEncoding=utf8mb4
+      QUALTET_DB_DATASOURCE_URL: jdbc:mariadb://qualtet_mariadb_example:3306/qualtet?useUnicode=true&characterEncoding=utf8mb4
       QUALTET_DB_USER: exampleUser
       QUALTET_DB_PASSWORD: pass
       QUALTET_FEED_LIMIT: 5
@@ -38,8 +38,8 @@ services:
       QUALTET_JWT_AUD: "qualtet_dev_1111"
       # OpenTelemetry settings (optional)
       QUALTET_OTEL_ENABLED: true
-      QUALTET_OTEL_SERVICE_NAME: qualtet
-      QUALTET_OTEL_SERVICE_NAMESPACE: qualtet
+      QUALTET_OTEL_SERVICE_NAME: qualtet-example
+      QUALTET_OTEL_SERVICE_NAMESPACE: qualtet-example
       QUALTET_OTEL_EXPORTER_ENDPOINT: http://qualtet_otel_example:4317
       QUALTET_OTEL_EXPORTER_PROTOCOL: grpc
       QUALTET_OTEL_EXPORTER_HEADERS: "Authorization=Basic example"
@@ -48,21 +48,23 @@ services:
     volumes:
       - ./examples/logs:/usr/opt/qualtet/logs
       - ./examples/dumps:/usr/opt/qualtet/dumps
-    hostname: qualtet
+    hostname: qualtet_example
     networks:
-      - qualtet
-    container_name: qualtet
+      - qualtet_example
+    container_name: qualtet_example
     ports:
       - "9001:9001"
     depends_on:
-      qualtet_mariadb:
+      qualtet_mariadb_example:
         condition: service_started
       qualtet_otel_example:
         condition: service_healthy
   qualtet_otel_example:
     image: grafana/otel-lgtm:0.16.0
+    hostname: qualtet_otel_example
     networks:
-      - qualtet
+      - qualtet_example
+    container_name: qualtet_otel_example
     ports:
       - "3403:3000"
       - "4417:4317"
@@ -75,4 +77,4 @@ services:
       retries: 20
       start_period: 20s
 networks:
-  qualtet:
+  qualtet_example:
