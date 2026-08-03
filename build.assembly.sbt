@@ -1,5 +1,7 @@
 // skip test when create assembly (because sometimes test fails)
-assembly / test := {}
+assembly / test := {
+  TestResult.Passed
+}
 
 // https://github.com/sbt/sbt-assembly#merge-strategy
 // https://github.com/sbt/sbt-assembly/issues/146#issuecomment-601134577

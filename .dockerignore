@@ -1,0 +1,75 @@
+# NOTE: kept in sync with .gitignore.
+# Exceptions:
+#   - .env is excluded here too (must never end up baked into an image layer)
+#   - .git is intentionally NOT excluded (docker/commit-hash.sh needs it)
+
+# General
+*.class
+*.log
+**/logs/**
+*.gz
+**/node_modules/*
+.env
+.bloop
+.metals
+metals.sbt
+
+# sbt specific
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+.bsp/
+
+# Scala-IDE specific
+.scala_dependencies
+.classpath
+.project
+.cache
+.settings
+.vscode
+
+# IntelliJ specific
+.idea/
+.idea_modules/
+
+# Documentation
+docs/dist/*
+
+# Docker
+docker/data
+docker/config
+docker/dumps/
+docker/logs/
+tmpdata
+
+# Test
+test-out-data/
+
+# Artifacts
+*.jar
+
+# Others
+memo/
+sandbox/
+null/
+
+# AI
+.github/copilot-instructions.md
+.github/copilot/*.md
+.github/copilot/**/*.md
+.claude
+
+# Docker-only: tracked in git but not needed to build/run the app,
+# so unlike the sections above these have no equivalent in .gitignore.
+.github/
+.devcontainer/
+docs/
+scripts/
+tools/
+LICENSE
+.editorconfig
+.env.example
+*.md

@@ -47,7 +47,7 @@ object LocalProcesses {
   lazy val kill = taskKey[Unit]("kill current local server process")
 
   val tasks = Seq(
-    kill := killLocalServer(getLocalServerPID(javaProcesses()))
+    kill := Def.uncached { killLocalServer(getLocalServerPID(javaProcesses())) }
   )
 
   object Commands {

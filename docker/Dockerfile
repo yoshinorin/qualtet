@@ -1,6 +1,6 @@
 # Builder image
-# docker buildx imagetools inspect ghcr.io/yoshinorin/docker-sbt:v1.12.12-scala3.8.4jdk25
-FROM ghcr.io/yoshinorin/docker-sbt:v1.12.12-scala3.8.4jdk25@sha256:9380f87ae654468e7b95259a024f67d3b0662dc725aa76d78a4cb85b9220b4f1 as builder
+# docker buildx imagetools inspect ghcr.io/yoshinorin/docker-sbt:v2.0.2-scala3.8.4jdk25
+FROM ghcr.io/yoshinorin/docker-sbt:v2.0.2-scala3.8.4jdk25@sha256:a4411574203cec3c97aa9b18b557ebbe1300ac7621aafecf959ef58a24def49c as builder
 
 LABEL maintainer="yoshinorin"
 ENV QUALTET_VERSION="v3.3.0"
@@ -9,15 +9,14 @@ RUN apt update -y \
   && apt upgrade -y \
   && apt install --no-install-recommends -y git \
   && apt autoremove \
-  && apt clean \
-  && git clone --depth 1 --branch ${QUALTET_VERSION} https://github.com/yoshinorin/qualtet.git /usr/opt/qualtet
+  && apt clean
 
 WORKDIR /usr/opt/qualtet
-COPY commit-hash.sh commit-hash.sh
+COPY . .
 
-RUN sh commit-hash.sh \
+RUN sh docker/commit-hash.sh \
   && sbt assembly exit \
-  && cp ./target/scala-3.8.4/qualtet-assembly-${QUALTET_VERSION}.jar qualtet-assembly.jar
+  && cp ./target/out/jvm/scala-3.8.4/qualtet/qualtet-assembly-${QUALTET_VERSION}.jar qualtet-assembly.jar
 
 
 # Runtime image
@@ -31,7 +30,7 @@ LABEL maintainer="yoshinorin"
 
 COPY --from=builder /usr/opt/qualtet/qualtet-assembly.jar .
 COPY --from=builder /usr/opt/qualtet/qualtet.build_hash .
-COPY entry-point.sh entry-point.sh
+COPY docker/entry-point.sh entry-point.sh
 
 RUN apt update -y \
   && apt upgrade -y \

@@ -30,8 +30,8 @@ class LocalDb extends Docker {
   val downLocalDb = taskKey[Unit]("shutdown db container for local development")
 
   val tasks = Seq(
-    upLocalDb := up_("db", dockerComposeFilePath),
-    downLocalDb := down_("db", dockerComposeFilePath)
+    upLocalDb := Def.uncached { up_("db", dockerComposeFilePath) },
+    downLocalDb := Def.uncached { down_("db", dockerComposeFilePath) }
   )
 
   object Commands {
@@ -50,8 +50,8 @@ class LocalOtel extends Docker {
   val downLocalOtel = taskKey[Unit]("shutdown otel container for local development")
 
   val tasks = Seq(
-    upLocalOtel := up_("otel", dockerComposeFilePath),
-    downLocalOtel := down_("otel", dockerComposeFilePath)
+    upLocalOtel := Def.uncached { up_("otel", dockerComposeFilePath) },
+    downLocalOtel := Def.uncached { down_("otel", dockerComposeFilePath) }
   )
 
   object Commands {

@@ -10,8 +10,8 @@ class Testing extends Docker {
   val downTesting = taskKey[Unit]("shutdown db container for testing")
 
   val tasks = Seq(
-    upTesting := up_("db", dockerComposeFilePath),
-    downTesting := down_("db", dockerComposeFilePath)
+    upTesting := Def.uncached { up_("db", dockerComposeFilePath) },
+    downTesting := Def.uncached { down_("db", dockerComposeFilePath) }
   )
 
   object Commands {
@@ -23,7 +23,7 @@ class Testing extends Docker {
         |;runTestDbContainer
         |;testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec
         |;testOnly net.yoshinorin.qualtet.tasks.CreateOrUpdateAuthorSpec
-        |;test
+        |;testFull
         |;shutDownTestDbContainer
         |""".stripMargin
     }
