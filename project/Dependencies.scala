@@ -2,13 +2,13 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.38.16"
+  val jsoniterVersion = "2.39.1"
   val doobieVersion = "1.0.0-RC13"
   val jwtScalaVersion = "11.0.4"
-  val flywayVersion = "12.9.0"
-  val http4sVersion = "1.0.0-M46"
+  val flywayVersion = "13.1.0"
+  val http4sVersion = "1.0.0-M47"
   val log4catsVersion = "2.8.0"
-  val otel = "1.63.0"
+  val otel = "1.64.0"
   val otel4s = "1.0.1"
   val otelInstrumentation = "2.26.1-alpha"
 
@@ -31,15 +31,15 @@ object Dependencies {
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % jsoniterVersion,
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "compile-internal",
     "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % jsoniterVersion % "test-internal",
-    "org.mariadb.jdbc" % "mariadb-java-client" % "3.5.9",
+    "org.mariadb.jdbc" % "mariadb-java-client" % "3.5.10",
     "org.typelevel" %% "doobie-core" % doobieVersion,
     "org.typelevel" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
-    "org.wvlet.airframe" %% "airframe-ulid" % "2026.1.7",
+    "org.wvlet.airframe" %% "airframe-ulid" % "2026.2.2",
     "com.github.ben-manes.caffeine" % "caffeine" % "3.2.4",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
-    "ch.qos.logback" % "logback-classic" % "1.5.35",
+    "ch.qos.logback" % "logback-classic" % "1.6.1",
     "net.logstash.logback" % "logstash-logback-encoder" % "9.0",
     "org.codehaus.janino" % "janino" % "3.1.12",
     "org.springframework.security" % "spring-security-core" % "7.1.0",
