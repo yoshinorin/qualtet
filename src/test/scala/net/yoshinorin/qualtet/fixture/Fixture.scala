@@ -44,7 +44,7 @@ import net.yoshinorin.qualtet.http.routes.v1.{
 }
 import java.util.concurrent.TimeUnit
 import wvlet.airframe.ulid.ULID
-import net.yoshinorin.qualtet.domains.{FeedsPagination, Limit, Page, PaginationOps, PaginationRequestModel}
+import net.yoshinorin.qualtet.domains.{FeedsPagination, Limit, Page, PaginationQueryParametersModel, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.domains.feeds.FeedService
 import net.yoshinorin.qualtet.domains.tags.{TagResponseModel, TagService}
 import net.yoshinorin.qualtet.Modules
@@ -136,7 +136,7 @@ object Fixture {
     summon[CacheRepository[IO, String, ArticleWithCountResponseModel]]
   }
   val feedService = new FeedService(
-    summon[PaginationOps[FeedsPagination]].make(PaginationRequestModel(Option(Page(1)), Option(Limit(5)), None)),
+    summon[PaginationQueryParametersOps[FeedsPagination]].make(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(5)), None)),
     feedCache,
     modules.articleService
   )

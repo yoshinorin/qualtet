@@ -7,7 +7,7 @@ class PaginationSpec extends AnyWordSpec {
 
   "ArticlesPagination" should {
 
-    val pagination = summon[PaginationOps[ArticlesPagination]]
+    val pagination = summon[PaginationQueryParametersOps[ArticlesPagination]]
 
     "default instance" in {
       val pagination = ArticlesPagination()
@@ -17,8 +17,8 @@ class PaginationSpec extends AnyWordSpec {
       assert(pagination.offset === 0)
     }
 
-    "instance makeable with PaginationRequestModel" in {
-      val requestModel = PaginationRequestModel(Option(Page(10)), Option(Limit(10)), Option(Order.DESC))
+    "instance makeable with PaginationQueryParametersModel" in {
+      val requestModel = PaginationQueryParametersModel(Option(Page(10)), Option(Limit(10)), Option(Order.DESC))
       val instance = pagination.make(requestModel)
 
       assert(instance.page.toInt === 9)
@@ -88,7 +88,7 @@ class PaginationSpec extends AnyWordSpec {
 
   "TagsPagination" should {
 
-    val pagination = summon[PaginationOps[TagsPagination]]
+    val pagination = summon[PaginationQueryParametersOps[TagsPagination]]
 
     "default instance" in {
       val pagination = TagsPagination()
@@ -98,8 +98,8 @@ class PaginationSpec extends AnyWordSpec {
       assert(pagination.offset === 0)
     }
 
-    "instance makeable with PaginationRequestModel" in {
-      val requestModel = PaginationRequestModel(Option(Page(10)), Option(Limit(10)), Option(Order.DESC))
+    "instance makeable with PaginationQueryParametersModel" in {
+      val requestModel = PaginationQueryParametersModel(Option(Page(10)), Option(Limit(10)), Option(Order.DESC))
       val instance = pagination.make(requestModel)
 
       assert(instance.page.toInt === 9)
@@ -154,7 +154,7 @@ class PaginationSpec extends AnyWordSpec {
 
   "FeedsPagination" should {
 
-    val pagination = summon[PaginationOps[FeedsPagination]]
+    val pagination = summon[PaginationQueryParametersOps[FeedsPagination]]
 
     "default instance" in {
       val pagination = FeedsPagination()
@@ -164,8 +164,8 @@ class PaginationSpec extends AnyWordSpec {
       assert(pagination.offset === 0)
     }
 
-    "instance makeable with PaginationRequestModel" in {
-      val requestModel = PaginationRequestModel(Option(Page(10)), Option(Limit(10)), Option(Order.DESC))
+    "instance makeable with PaginationQueryParametersModel" in {
+      val requestModel = PaginationQueryParametersModel(Option(Page(10)), Option(Limit(10)), Option(Order.DESC))
       val instance = pagination.make(requestModel)
 
       // NOTE: FeedsPagination always uses page=1 and offset=0, but respects the passed limit.
@@ -205,8 +205,8 @@ class PaginationSpec extends AnyWordSpec {
       assert(instance.order === Order.DESC)
     }
 
-    "instance makeable with None limit in PaginationRequestModel" in {
-      val requestModel = PaginationRequestModel(None, None, None)
+    "instance makeable with None limit in PaginationQueryParametersModel" in {
+      val requestModel = PaginationQueryParametersModel(None, None, None)
       val instance = pagination.make(requestModel)
 
       assert(instance.page.toInt === 1)

@@ -34,8 +34,8 @@ object Limit {
   }
 }
 
-trait PaginationOps[T] {
-  def make(p: PaginationRequestModel): T
+trait PaginationQueryParametersOps[T] {
+  def make(p: PaginationQueryParametersModel): T
 
   def make(page: Option[Page], limit: Option[Limit], order: Option[Order] = None): T
 
@@ -54,7 +54,7 @@ trait PaginationOps[T] {
   }
 }
 
-final case class PaginationRequestModel(
+final case class PaginationQueryParametersModel(
   page: Option[Page],
   limit: Option[Limit],
   order: Option[Order]
@@ -90,9 +90,9 @@ final case class FeedsPagination(
 
 object Pagination {
 
-  given ArticlesPagination: PaginationOps[ArticlesPagination] = {
-    new PaginationOps[ArticlesPagination] {
-      override def make(p: PaginationRequestModel): ArticlesPagination = {
+  given ArticlesPagination: PaginationQueryParametersOps[ArticlesPagination] = {
+    new PaginationQueryParametersOps[ArticlesPagination] {
+      override def make(p: PaginationQueryParametersModel): ArticlesPagination = {
         new ArticlesPagination(
           page = calcPage(p.page),
           limit = calcLimit(p.limit),
@@ -114,9 +114,9 @@ object Pagination {
     }
   }
 
-  given TagsPagination: PaginationOps[TagsPagination] = {
-    new PaginationOps[TagsPagination] {
-      override def make(p: PaginationRequestModel): TagsPagination = {
+  given TagsPagination: PaginationQueryParametersOps[TagsPagination] = {
+    new PaginationQueryParametersOps[TagsPagination] {
+      override def make(p: PaginationQueryParametersModel): TagsPagination = {
         new TagsPagination(
           page = calcPage(p.page),
           limit = calcLimit(p.limit),
@@ -138,9 +138,9 @@ object Pagination {
     }
   }
 
-  given FeedsPagination: PaginationOps[FeedsPagination] = {
-    new PaginationOps[FeedsPagination] {
-      override def make(p: PaginationRequestModel): FeedsPagination = {
+  given FeedsPagination: PaginationQueryParametersOps[FeedsPagination] = {
+    new PaginationQueryParametersOps[FeedsPagination] {
+      override def make(p: PaginationQueryParametersModel): FeedsPagination = {
         new FeedsPagination(
           page = Page(1),
           limit = p.limit.getOrElse(Limit(5)),

@@ -5,7 +5,7 @@ import cats.effect.Concurrent
 import org.http4s.{Request, Response, Status}
 import org.http4s.dsl.Http4sDsl
 import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
-import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationRequestModel}
+import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationQueryParametersModel}
 import net.yoshinorin.qualtet.http.response.Translator
 
 import scala.util.Try
@@ -50,12 +50,12 @@ trait http {
   }
 
   extension (q: Map[String, String]) {
-    def asPagination: PaginationRequestModel = {
+    def asPagination: PaginationQueryParametersModel = {
       val a = Try(q.getOrElse("page", 1).toString.trim.toInt)
       val b = Try(q.getOrElse("limit", 10).toString.trim.toInt)
       val o = Try(Order.valueOf(q.getOrElse("order", "desc").toUpperCase()))
 
-      PaginationRequestModel(Some(Page(a.getOrElse(1))), Some(Limit(b.getOrElse(10))), Some(o.getOrElse(Order.DESC)))
+      PaginationQueryParametersModel(Some(Page(a.getOrElse(1))), Some(Limit(b.getOrElse(10))), Some(o.getOrElse(Order.DESC)))
     }
   }
 

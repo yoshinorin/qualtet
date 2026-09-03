@@ -13,7 +13,15 @@ import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, FileKeyPairConfig, InMemoryKeyPairConfig, Jwt, KeyPairRepository, PemKeyPairConfig}
 import net.yoshinorin.qualtet.cache.CacheRepository
 import net.yoshinorin.qualtet.config.{ApplicationConfig, KeyPairSourceConfig}
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, FeedsPagination, Limit, Page, PaginationOps, PaginationRequestModel, TagsPagination}
+import net.yoshinorin.qualtet.domains.{
+  ArticlesPagination,
+  FeedsPagination,
+  Limit,
+  Page,
+  PaginationQueryParametersModel,
+  PaginationQueryParametersOps,
+  TagsPagination
+}
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveRepositoryAdapter, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleRepositoryAdapter, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorRepositoryAdapter, AuthorService}
@@ -142,8 +150,8 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
 
   val articleRepository: ArticleRepository[ConnectionIO] = summon[ArticleRepository[ConnectionIO]]
   val articleRepositoryAdapter: ArticleRepositoryAdapter[ConnectionIO] = new ArticleRepositoryAdapter[ConnectionIO](articleRepository)
-  val articlesPagination = summon[PaginationOps[ArticlesPagination]]
-  val tagsPagination = summon[PaginationOps[TagsPagination]]
+  val articlesPagination = summon[PaginationQueryParametersOps[ArticlesPagination]]
+  val tagsPagination = summon[PaginationQueryParametersOps[TagsPagination]]
   val articleService = new ArticleService[IO, ConnectionIO](articleRepositoryAdapter, articlesPagination, tagsPagination, contentTypeService)
 
   val contentSerializingRepository: ContentSerializingRepository[ConnectionIO] = summon[ContentSerializingRepository[ConnectionIO]]
@@ -186,7 +194,7 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val sitemapRepositoryAdapter: SitemapRepositoryAdapter[ConnectionIO] = new SitemapRepositoryAdapter[ConnectionIO](sitemapRepository)
   val sitemapService = new SitemapService[IO, ConnectionIO](sitemapRepositoryAdapter, sitemapCache)
 
-  val feedsPaginationOps = summon[PaginationOps[FeedsPagination]]
+  val feedsPaginationOps = summon[PaginationQueryParametersOps[FeedsPagination]]
   val feedCaffeinCache: CaffeineCache[String, ArticleWithCountResponseModel] =
     Caffeine.newBuilder().expireAfterAccess(config.cache.feed, TimeUnit.SECONDS).build[String, ArticleWithCountResponseModel]
   val feedCache: CacheRepository[IO, String, ArticleWithCountResponseModel] = {
@@ -194,7 +202,7 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
     summon[CacheRepository[IO, String, ArticleWithCountResponseModel]]
   }
   val feedService = new FeedService[IO, ConnectionIO](
-    feedsPaginationOps.make(PaginationRequestModel(Option(Page(1)), Option(Limit(config.feed.limit)), None)),
+    feedsPaginationOps.make(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(config.feed.limit)), None)),
     feedCache,
     articleService
   )

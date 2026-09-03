@@ -9,7 +9,7 @@ import org.http4s.{HttpRoutes, Request, Response}
 import org.http4s.dsl.Http4sDsl
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.domains.PaginationRequestModel
+import net.yoshinorin.qualtet.domains.PaginationQueryParametersModel
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
@@ -36,7 +36,7 @@ class ArticleRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
   }
 
   // articles?page=n&limit=m
-  private[http] def get(p: PaginationRequestModel): Request[F] ?=> F[Response[F]] = {
+  private[http] def get(p: PaginationQueryParametersModel): Request[F] ?=> F[Response[F]] = {
     (for {
       maybeArticles <- EitherT(articleService.getWithCount(p))
     } yield maybeArticles).value.flatMap {

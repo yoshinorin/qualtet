@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagPath, TagService}
-import net.yoshinorin.qualtet.domains.PaginationRequestModel
+import net.yoshinorin.qualtet.domains.PaginationQueryParametersModel
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
@@ -64,7 +64,7 @@ class TagRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
     } yield response
   }
 
-  private[http] def get(path: String, p: PaginationRequestModel): Request[F] ?=> F[Response[F]] = {
+  private[http] def get(path: String, p: PaginationQueryParametersModel): Request[F] ?=> F[Response[F]] = {
     (for {
       tagPath <- EitherT.fromEither[F](TagPath(path))
       articles <- EitherT(articleService.getByTagPathWithCount(tagPath, p))
