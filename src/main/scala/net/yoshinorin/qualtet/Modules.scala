@@ -150,9 +150,9 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
 
   val articleRepository: ArticleRepository[ConnectionIO] = summon[ArticleRepository[ConnectionIO]]
   val articleRepositoryAdapter: ArticleRepositoryAdapter[ConnectionIO] = new ArticleRepositoryAdapter[ConnectionIO](articleRepository)
-  val articlesPagination = summon[PaginationQueryParametersOps[ArticlesPagination]]
-  val tagsPagination = summon[PaginationQueryParametersOps[TagsPagination]]
-  val articleService = new ArticleService[IO, ConnectionIO](articleRepositoryAdapter, articlesPagination, tagsPagination, contentTypeService)
+  val articlesPaginationOps = summon[PaginationQueryParametersOps[ArticlesPagination]]
+  val tagsPaginationOps = summon[PaginationQueryParametersOps[TagsPagination]]
+  val articleService = new ArticleService[IO, ConnectionIO](articleRepositoryAdapter, articlesPaginationOps, tagsPaginationOps, contentTypeService)
 
   val contentSerializingRepository: ContentSerializingRepository[ConnectionIO] = summon[ContentSerializingRepository[ConnectionIO]]
   val contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[ConnectionIO] = new ContentSerializingRepositoryAdapter(

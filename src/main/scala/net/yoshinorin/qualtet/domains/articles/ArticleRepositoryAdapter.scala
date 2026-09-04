@@ -17,10 +17,10 @@ class ArticleRepositoryAdapter[F[_]: Monad](
   private[domains] def getWithCount(
     contentTypeId: ContentTypeId,
     @nowarn none: Unit = (),
-    queryParams: Pagination
+    pagination: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
-      articleRepository.getWithCount(contentTypeId, queryParams).map { article =>
+      articleRepository.getWithCount(contentTypeId, pagination).map { article =>
         article.map { case (count, article) =>
           (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
         }
@@ -31,10 +31,10 @@ class ArticleRepositoryAdapter[F[_]: Monad](
   private[domains] def findByTagNameWithCount(
     contentTypeId: ContentTypeId,
     tagName: TagName,
-    @nowarn queryParams: Pagination
+    @nowarn pagination: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
-      articleRepository.findByTagNameWithCount(contentTypeId, tagName, queryParams).map { article =>
+      articleRepository.findByTagNameWithCount(contentTypeId, tagName, pagination).map { article =>
         article.map { case (count, article) =>
           (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
         }
@@ -45,10 +45,10 @@ class ArticleRepositoryAdapter[F[_]: Monad](
   private[domains] def findByTagPathWithCount(
     contentTypeId: ContentTypeId,
     tagPath: TagPath,
-    @nowarn queryParams: Pagination
+    @nowarn pagination: Pagination
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
-      articleRepository.findByTagPathWithCount(contentTypeId, tagPath, queryParams).map { article =>
+      articleRepository.findByTagPathWithCount(contentTypeId, tagPath, pagination).map { article =>
         article.map { case (count, article) =>
           (count, ArticleResponseModel(article.id, article.path, article.title, article.content, article.publishedAt, article.updatedAt))
         }
@@ -59,7 +59,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
   private[domains] def findBySeriesNameWithCount(
     contentTypeId: ContentTypeId,
     seriesName: SeriesName,
-    @nowarn queryParams: Pagination // TODO: `Optional`
+    @nowarn pagination: Pagination // TODO: `Optional`
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.findBySeriesNameWithCount(contentTypeId, seriesName).map { article =>
@@ -73,7 +73,7 @@ class ArticleRepositoryAdapter[F[_]: Monad](
   private[domains] def findBySeriesPathWithCount(
     contentTypeId: ContentTypeId,
     seriesPath: SeriesPath,
-    @nowarn queryParams: Pagination // TODO: `Optional`
+    @nowarn pagination: Pagination // TODO: `Optional`
   ): ContT[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] = {
     ContT.apply[F, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]] { _ =>
       articleRepository.findBySeriesPathWithCount(contentTypeId, seriesPath).map { article =>

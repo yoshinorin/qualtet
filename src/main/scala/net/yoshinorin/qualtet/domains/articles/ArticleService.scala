@@ -35,7 +35,7 @@ class ArticleService[F[_]: Monad, G[_]: Monad @nowarn](
 
   def get[A](
     data: A = (),
-    queryParam: Pagination
+    pagination: Pagination
   )(
     f: (ContentTypeId, A, Pagination) => ContT[G, Seq[(Int, ArticleResponseModel)], Seq[(Int, ArticleResponseModel)]]
   ): F[Either[DomainError, ArticleWithCountResponseModel]] = {
@@ -46,7 +46,7 @@ class ArticleService[F[_]: Monad, G[_]: Monad @nowarn](
           maybeContentType <- contentTypeService.findByName(contentTypeName)
           result <- maybeContentType match {
             case Some(c) =>
-              executer.transact(f(c.id, data, queryParam)).flatMap { articlesWithCount =>
+              executer.transact(f(c.id, data, pagination)).flatMap { articlesWithCount =>
                 if (articlesWithCount.nonEmpty) {
                   Monad[F].pure(Right(ArticleWithCountResponseModel(articlesWithCount.map(_._1).headOption.getOrElse(0), articlesWithCount.map(_._2))))
                 } else {
@@ -61,11 +61,11 @@ class ArticleService[F[_]: Monad, G[_]: Monad @nowarn](
   }
 
   def getWithCount(p: PaginationQueryParametersModel): F[Either[DomainError, ArticleWithCountResponseModel]] = {
-    this.get(queryParam = articlesPagination.make(p))(articleRepositoryAdapter.getWithCount)
+    this.get(pagination = articlesPagination.make(p))(articleRepositoryAdapter.getWithCount)
   }
 
   def getWithCount(p: Pagination): F[Either[DomainError, ArticleWithCountResponseModel]] = {
-    this.get(queryParam = p)(articleRepositoryAdapter.getWithCount)
+    this.get(pagination = p)(articleRepositoryAdapter.getWithCount)
   }
 
   def getByTagNameWithCount(tagName: TagName, p: PaginationQueryParametersModel): F[Either[DomainError, ArticleWithCountResponseModel]] = {
