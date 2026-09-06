@@ -38,14 +38,18 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     sameTagNameRequestContents.unsafeCreateConternt()
   }
 
+  private val articlePaginationOps = summon[PaginationQueryParametersOps[ArticlesPagination]]
+
   "ArticleService" should {
 
     "getWithCount return ResponseArticleWithCount instances" in {
       (for {
-        pagination1 <- IO(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(5)), None))
+        pagination1model <- IO(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(5)), None))
+        pagination1 <- IO(articlePaginationOps.make(pagination1model))
         response1 <- articleService.getWithCount(pagination1).flatMap(_.liftTo[IO])
 
-        pagination2 <- IO(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(3)), None))
+        pagination2model <- IO(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(3)), None))
+        pagination2 <- IO(articlePaginationOps.make(pagination2model))
         response2 <- articleService.getWithCount(pagination2).flatMap(_.liftTo[IO])
       } yield {
         // pagination1 assertion
@@ -61,13 +65,13 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     }
 
     "getWithCount with pagination instance returns ResponseArticleWithCount instances" in {
-      val articlePagination = summon[PaginationQueryParametersOps[ArticlesPagination]]
 
       (for {
-        pagination1 <- IO(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(5)), None))
-        response1 <- articleService.getWithCount(articlePagination.make(pagination1)).flatMap(_.liftTo[IO])
+        pagination1model <- IO(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(5)), None))
+        pagination1 <- IO(articlePaginationOps.make(pagination1model))
+        response1 <- articleService.getWithCount(pagination1).flatMap(_.liftTo[IO])
         pagination2 <- IO(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(3)), None))
-        response2 <- articleService.getWithCount(articlePagination.make(pagination2)).flatMap(_.liftTo[IO])
+        response2 <- articleService.getWithCount(articlePaginationOps.make(pagination2)).flatMap(_.liftTo[IO])
       } yield {
         // pagination1 assertion
         assert(response1.count > response1.articles.size)
@@ -83,8 +87,9 @@ class ArticleServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
     "getByTagNameWithCount return ResponseArticleWithCount instances" in {
       (for {
-        pagination <- IO(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(5)), None))
-        response <- articleService.getByTagNameWithCount(TagName("SameTag"), pagination).flatMap(_.liftTo[IO])
+        pagination1model <- IO(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(5)), None))
+        pagination1 <- IO(articlePaginationOps.make(pagination1model))
+        response <- articleService.getByTagNameWithCount(TagName("SameTag"), pagination1).flatMap(_.liftTo[IO])
       } yield {
         assert(response.count > response.articles.size)
         assert(response.articles.size === 5)

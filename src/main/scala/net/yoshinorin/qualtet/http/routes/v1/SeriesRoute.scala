@@ -13,6 +13,7 @@ import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesPath, SeriesRequestModel, SeriesService}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Order, Page, Pagination, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
@@ -20,7 +21,8 @@ import scala.annotation.nowarn
 
 class SeriesRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
   authProvider: AuthProvider[F, G],
-  seriesService: SeriesService[F, G]
+  seriesService: SeriesService[F, G],
+  articlesPaginationOps: PaginationQueryParametersOps[ArticlesPagination]
 )(using loggerFactory: Log4CatsLoggerFactory[F])
     extends Decoder[F] {
 
@@ -28,6 +30,8 @@ class SeriesRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
   import dsl.*
 
   given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
+
+  private val pagination = articlesPaginationOps.make(Page(0), Limit(100), Order.DESC)
 
   // NOTE: must be compose `auth route` after `Non auth route`.
   private[http] def index: HttpRoutes[F] =
@@ -40,7 +44,7 @@ class SeriesRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
       this.get.handleErrorWith(_.logWithStackTrace[F].asResponse)
     case request @ GET -> Root / name =>
       implicit val r = request
-      this.get(name).handleErrorWith(_.logWithStackTrace[F].asResponse)
+      this.get(name, pagination).handleErrorWith(_.logWithStackTrace[F].asResponse)
   }
 
   private[http] def seriesWithAuthed: AuthedRoutes[(AuthorResponseModel, String), F] = AuthedRoutes.of { ctxRequest =>
@@ -73,10 +77,10 @@ class SeriesRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
     } yield response)
   }
 
-  private[http] def get(name: String): Request[F] ?=> F[Response[F]] = {
+  private[http] def get(name: String, pagination: Pagination): Request[F] ?=> F[Response[F]] = {
     (for {
       seriesPath <- EitherT.fromEither[F](SeriesPath(name))
-      seriesWithArticles <- EitherT(seriesService.get(seriesPath))
+      seriesWithArticles <- EitherT(seriesService.get(seriesPath, pagination))
     } yield seriesWithArticles).value.flatMap {
       case Right(series) => series.asResponse(Ok)
       case Left(error: DomainError) => error.asResponse

@@ -8,16 +8,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeNa
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound, DomainError}
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
-import net.yoshinorin.qualtet.domains.{
-  ArticlesPagination,
-  Limit,
-  Order,
-  Page,
-  Pagination,
-  PaginationQueryParametersModel,
-  PaginationQueryParametersOps,
-  TagsPagination
-}
+import net.yoshinorin.qualtet.domains.Pagination
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.domains.tags.TagPath
@@ -26,8 +17,6 @@ import scala.annotation.nowarn
 
 class ArticleService[F[_]: Monad, G[_]: Monad @nowarn](
   articleRepositoryAdapter: ArticleRepositoryAdapter[G],
-  articlesPagination: PaginationQueryParametersOps[ArticlesPagination],
-  tagsPagination: PaginationQueryParametersOps[TagsPagination],
   contentTypeService: ContentTypeService[F, G]
 )(using executer: Executer[F, G], loggerFactory: Log4CatsLoggerFactory[F]) {
 
@@ -60,28 +49,24 @@ class ArticleService[F[_]: Monad, G[_]: Monad @nowarn](
     }
   }
 
-  def getWithCount(p: PaginationQueryParametersModel): F[Either[DomainError, ArticleWithCountResponseModel]] = {
-    this.get(pagination = articlesPagination.make(p))(articleRepositoryAdapter.getWithCount)
-  }
-
   def getWithCount(p: Pagination): F[Either[DomainError, ArticleWithCountResponseModel]] = {
     this.get(pagination = p)(articleRepositoryAdapter.getWithCount)
   }
 
-  def getByTagNameWithCount(tagName: TagName, p: PaginationQueryParametersModel): F[Either[DomainError, ArticleWithCountResponseModel]] = {
-    this.get(tagName, tagsPagination.make(p))(articleRepositoryAdapter.findByTagNameWithCount)
+  def getByTagNameWithCount(tagName: TagName, p: Pagination): F[Either[DomainError, ArticleWithCountResponseModel]] = {
+    this.get(tagName, p)(articleRepositoryAdapter.findByTagNameWithCount)
   }
 
-  def getByTagPathWithCount(tagPath: TagPath, p: PaginationQueryParametersModel): F[Either[DomainError, ArticleWithCountResponseModel]] = {
-    this.get(tagPath, tagsPagination.make(p))(articleRepositoryAdapter.findByTagPathWithCount)
+  def getByTagPathWithCount(tagPath: TagPath, p: Pagination): F[Either[DomainError, ArticleWithCountResponseModel]] = {
+    this.get(tagPath, p)(articleRepositoryAdapter.findByTagPathWithCount)
   }
 
-  def getBySeriesName(seriesName: SeriesName): F[Either[DomainError, ArticleWithCountResponseModel]] = {
-    this.get(seriesName, articlesPagination.make(Page(0), Limit(100), Order.DESC))(articleRepositoryAdapter.findBySeriesNameWithCount)
+  def getBySeriesName(seriesName: SeriesName, p: Pagination): F[Either[DomainError, ArticleWithCountResponseModel]] = {
+    this.get(seriesName, p: Pagination)(articleRepositoryAdapter.findBySeriesNameWithCount)
   }
 
-  def getBySeriesPath(seriesPath: SeriesPath): F[Either[DomainError, ArticleWithCountResponseModel]] = {
-    this.get(seriesPath, articlesPagination.make(Page(0), Limit(100), Order.DESC))(articleRepositoryAdapter.findBySeriesPathWithCount)
+  def getBySeriesPath(seriesPath: SeriesPath, p: Pagination): F[Either[DomainError, ArticleWithCountResponseModel]] = {
+    this.get(seriesPath, p: Pagination)(articleRepositoryAdapter.findBySeriesPathWithCount)
   }
 
 }

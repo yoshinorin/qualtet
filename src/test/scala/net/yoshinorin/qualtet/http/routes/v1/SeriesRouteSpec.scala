@@ -57,7 +57,7 @@ class SeriesRouteSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   val validAuthor: AuthorResponseModel = authorService.findByName(author.name).unsafeRunSync().get
   val validToken: String = authService.generateToken(RequestToken(validAuthor.id, "pass")).flatMap(IO.fromEither).unsafeRunSync().token
-  val seriesRouteV1 = new SeriesRoute[IO, ConnectionIO](authProvider, seriesService)
+  val seriesRouteV1 = new SeriesRoute[IO, ConnectionIO](authProvider, seriesService, articlesPaginationOps)
   val client: Client[IO] = Client.fromHttpApp(makeRouter(seriesRouteV1 = seriesRouteV1).routes.orNotFound)
 
   "SeriesRoute" should {

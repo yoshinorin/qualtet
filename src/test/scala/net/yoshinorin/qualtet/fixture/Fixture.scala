@@ -109,6 +109,9 @@ object Fixture {
   val tagRepositoryAdapter = modules.tagRepositoryAdapter
   val versionRepositoryAdapter = modules.versionRepositoryAdapter
   val versionService = modules.versionService
+  val articlesPaginationOps = modules.articlesPaginationOps
+  val tagsPaginationOps = modules.tagsPaginationOps
+  val feedsPaginationOps = summon[PaginationQueryParametersOps[FeedsPagination]]
 
   // TODO: from config for cache options
   val contentTypeCaffeinCache: CaffeineCache[String, ContentType] =
@@ -136,7 +139,6 @@ object Fixture {
     summon[CacheRepository[IO, String, ArticleWithCountResponseModel]]
   }
   val feedService = new FeedService(
-    summon[PaginationQueryParametersOps[FeedsPagination]].make(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(5)), None)),
     feedCache,
     modules.articleService
   )
@@ -153,19 +155,19 @@ object Fixture {
   val corsProvider = new CorsProvider[IO](modules.config.cors)
 
   val archiveRouteV1 = new ArchiveRouteV1[IO, ConnectionIO](modules.archiveService)
-  val articleRouteV1 = new ArticleRouteV1[IO, ConnectionIO](modules.articleService)
+  val articleRouteV1 = new ArticleRouteV1[IO, ConnectionIO](modules.articleService, articlesPaginationOps)
   val authorRouteV1 = new AuthorRouteV1[IO, ConnectionIO](modules.authorService)
   val authRouteV1 = new AuthRouteV1[IO, ConnectionIO](modules.authService)
   val cacheRouteV1 = new CacheRouteV1[IO, ConnectionIO](authProvider, modules.cacheService)
   val contentTypeRouteV1 = new ContentTypeRouteV1[IO, ConnectionIO](modules.contentTypeService)
   val contentRouteV1 = new ContentRouteV1[IO, ConnectionIO](authProvider, modules.contentService)
-  val feedRouteV1 = new FeedRouteV1[IO, ConnectionIO](modules.feedService)
+  val feedRouteV1 = new FeedRouteV1[IO, ConnectionIO](modules.feedService, feedsPaginationOps, modules.config.feed)
   val homeRoute: HomeRoute[IO] = new HomeRoute[IO]()
   val searchRouteV1 = new SearchRouteV1[IO, ConnectionIO](modules.searchService)
-  val seriesRouteV1 = new SeriesRouteV1[IO, ConnectionIO](authProvider, modules.seriesService)
+  val seriesRouteV1 = new SeriesRouteV1[IO, ConnectionIO](authProvider, modules.seriesService, articlesPaginationOps)
   val sitemapRouteV1 = new SitemapRouteV1[IO, ConnectionIO](modules.sitemapService)
   val systemRouteV1 = new SystemRouteV1[IO](modules.config.http.endpoints.system)
-  val tagRouteV1 = new TagRouteV1[IO, ConnectionIO](authProvider, tagService, modules.articleService)
+  val tagRouteV1 = new TagRouteV1[IO, ConnectionIO](authProvider, tagService, modules.articleService, tagsPaginationOps)
 
   val router = new net.yoshinorin.qualtet.http.Router[IO, ConnectionIO](
     corsProvider,

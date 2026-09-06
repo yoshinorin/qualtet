@@ -12,7 +12,7 @@ import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagPath, TagService}
-import net.yoshinorin.qualtet.domains.PaginationQueryParametersModel
+import net.yoshinorin.qualtet.domains.{Pagination, PaginationQueryParametersOps, TagsPagination}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
@@ -22,7 +22,8 @@ import scala.annotation.nowarn
 class TagRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
   authProvider: AuthProvider[F, G],
   tagService: TagService[F, G],
-  articleService: ArticleService[F, G]
+  articleService: ArticleService[F, G],
+  tagPaginationOps: PaginationQueryParametersOps[TagsPagination]
 )(using loggerFactory: Log4CatsLoggerFactory[F]) {
 
   private given dsl: Http4sDsl[F] = Http4sDsl[F]
@@ -41,8 +42,8 @@ class TagRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
       case request @ OPTIONS -> Root =>
         NoContent()
       case request @ GET -> Root / tagPath =>
-        val p = request.uri.query.params.asPagination
-        this.get(tagPath, p).handleErrorWith(_.logWithStackTrace[F].asResponse)
+        val pagination = tagPaginationOps.make(request.uri.query.params.asPagination)
+        this.get(tagPath, pagination).handleErrorWith(_.logWithStackTrace[F].asResponse)
     }
   }
 
@@ -64,10 +65,10 @@ class TagRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
     } yield response
   }
 
-  private[http] def get(path: String, p: PaginationQueryParametersModel): Request[F] ?=> F[Response[F]] = {
+  private[http] def get(path: String, pagination: Pagination): Request[F] ?=> F[Response[F]] = {
     (for {
       tagPath <- EitherT.fromEither[F](TagPath(path))
-      articles <- EitherT(articleService.getByTagPathWithCount(tagPath, p))
+      articles <- EitherT(articleService.getByTagPathWithCount(tagPath, pagination))
     } yield articles).value.flatMap {
       case Right(articles) => articles.asResponse(Ok)
       case Left(error: DomainError) => error.asResponse

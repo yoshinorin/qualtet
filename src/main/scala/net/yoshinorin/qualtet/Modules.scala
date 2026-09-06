@@ -13,15 +13,7 @@ import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, FileKeyPairConfig, InMemoryKeyPairConfig, Jwt, KeyPairRepository, PemKeyPairConfig}
 import net.yoshinorin.qualtet.cache.CacheRepository
 import net.yoshinorin.qualtet.config.{ApplicationConfig, KeyPairSourceConfig}
-import net.yoshinorin.qualtet.domains.{
-  ArticlesPagination,
-  FeedsPagination,
-  Limit,
-  Page,
-  PaginationQueryParametersModel,
-  PaginationQueryParametersOps,
-  TagsPagination
-}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, FeedsPagination, PaginationQueryParametersOps, TagsPagination}
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveRepositoryAdapter, ArchiveService}
 import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleRepositoryAdapter, ArticleService}
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorRepositoryAdapter, AuthorService}
@@ -152,7 +144,7 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val articleRepositoryAdapter: ArticleRepositoryAdapter[ConnectionIO] = new ArticleRepositoryAdapter[ConnectionIO](articleRepository)
   val articlesPaginationOps = summon[PaginationQueryParametersOps[ArticlesPagination]]
   val tagsPaginationOps = summon[PaginationQueryParametersOps[TagsPagination]]
-  val articleService = new ArticleService[IO, ConnectionIO](articleRepositoryAdapter, articlesPaginationOps, tagsPaginationOps, contentTypeService)
+  val articleService = new ArticleService[IO, ConnectionIO](articleRepositoryAdapter, contentTypeService)
 
   val contentSerializingRepository: ContentSerializingRepository[ConnectionIO] = summon[ContentSerializingRepository[ConnectionIO]]
   val contentSerializingRepositoryAdapter: ContentSerializingRepositoryAdapter[ConnectionIO] = new ContentSerializingRepositoryAdapter(
@@ -202,7 +194,6 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
     summon[CacheRepository[IO, String, ArticleWithCountResponseModel]]
   }
   val feedService = new FeedService[IO, ConnectionIO](
-    feedsPaginationOps.make(PaginationQueryParametersModel(Option(Page(1)), Option(Limit(config.feed.limit)), None)),
     feedCache,
     articleService
   )
@@ -222,19 +213,19 @@ class Modules(tx: Transactor[IO], maybeTracer: Option[Tracer[IO]] = None) {
   val corsProvider = new CorsProvider[IO](config.cors)
 
   val archiveRouteV1 = new ArchiveRouteV1[IO, ConnectionIO](archiveService)
-  val articleRouteV1 = new ArticleRouteV1[IO, ConnectionIO](articleService)
+  val articleRouteV1 = new ArticleRouteV1[IO, ConnectionIO](articleService, articlesPaginationOps)
   val authorRouteV1 = new AuthorRouteV1[IO, ConnectionIO](authorService)
   val authRouteV1 = new AuthRouteV1[IO, ConnectionIO](authService)
   val cacheRouteV1 = new CacheRouteV1[IO, ConnectionIO](authProvider, cacheService)
   val contentTypeRouteV1 = new ContentTypeRouteV1[IO, ConnectionIO](contentTypeService)
   val contentRouteV1 = new ContentRouteV1[IO, ConnectionIO](authProvider, contentService)
-  val feedRouteV1 = new FeedRouteV1[IO, ConnectionIO](feedService)
+  val feedRouteV1 = new FeedRouteV1[IO, ConnectionIO](feedService, feedsPaginationOps, config.feed)
   val homeRoute: HomeRoute[IO] = new HomeRoute[IO]()
   val searchRouteV1 = new SearchRouteV1[IO, ConnectionIO](searchService)
-  val seriesRouteV1 = new SeriesRouteV1[IO, ConnectionIO](authProvider, seriesService)
+  val seriesRouteV1 = new SeriesRouteV1[IO, ConnectionIO](authProvider, seriesService, articlesPaginationOps)
   val sitemapRouteV1 = new SitemapRouteV1[IO, ConnectionIO](sitemapService)
   val systemRouteV1 = new SystemRouteV1[IO](config.http.endpoints.system)
-  val tagRouteV1 = new TagRouteV1[IO, ConnectionIO](authProvider, tagService, articleService)
+  val tagRouteV1 = new TagRouteV1[IO, ConnectionIO](authProvider, tagService, articleService, tagsPaginationOps)
 
   val router = new net.yoshinorin.qualtet.http.Router[IO, ConnectionIO](
     corsProvider,

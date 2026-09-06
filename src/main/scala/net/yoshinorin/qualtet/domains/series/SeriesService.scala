@@ -7,6 +7,7 @@ import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.contentSerializing.ContentSerializingRepositoryAdapter
 import net.yoshinorin.qualtet.infrastructure.db.Executer
+import net.yoshinorin.qualtet.domains.Pagination
 import net.yoshinorin.qualtet.domains.errors.{DomainError, SeriesNotFound}
 import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID
@@ -58,12 +59,12 @@ class SeriesService[F[_]: Monad, G[_]: Monad](
     executer.transact(seriesRepositoryAdapter.findByContentId(id))
   }
 
-  def get(path: SeriesPath): F[Either[DomainError, SeriesResponseModel]] = {
+  def get(path: SeriesPath, p: Pagination): F[Either[DomainError, SeriesResponseModel]] = {
     for {
       maybeSeries <- executer.transact(seriesRepositoryAdapter.findByPath(path))
       result <- maybeSeries match {
         case Some(series) =>
-          articleService.getBySeriesPath(series.path).flatMap {
+          articleService.getBySeriesPath(series.path, p: Pagination).flatMap {
             case Right(seriesWithArticles) =>
               Monad[F].pure(Right(SeriesResponseModel(series.id, series.name, series.path, series.title, series.description, seriesWithArticles.articles)))
             case Left(error) =>

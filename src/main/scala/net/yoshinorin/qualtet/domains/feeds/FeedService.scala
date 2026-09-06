@@ -5,16 +5,15 @@ import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.cache.CacheRepository
 import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.domains.FeedsPagination
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.Cacheable
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.syntax.*
 
 import scala.annotation.nowarn
+import net.yoshinorin.qualtet.domains.Pagination
 
 class FeedService[F[_]: Monad, G[_]: Monad @nowarn](
-  pagination: FeedsPagination,
   cache: CacheRepository[F, String, ArticleWithCountResponseModel],
   articleService: ArticleService[F, G]
 )(using loggerFactory: Log4CatsLoggerFactory[F])
@@ -23,7 +22,7 @@ class FeedService[F[_]: Monad, G[_]: Monad @nowarn](
   private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
   private val CACHE_KEY = "FEED_FULL_CACHE"
 
-  def get(): F[Either[DomainError, Seq[FeedResponseModel]]] = {
+  def get(pagination: Pagination): F[Either[DomainError, Seq[FeedResponseModel]]] = {
 
     def fromDb(): F[Either[DomainError, ArticleWithCountResponseModel]] = {
       articleService.getWithCount(pagination)

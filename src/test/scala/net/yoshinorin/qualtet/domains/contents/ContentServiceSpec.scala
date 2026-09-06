@@ -11,7 +11,7 @@ import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
-import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationQueryParametersModel}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Order, Page, PaginationQueryParametersModel, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import org.scalatest.wordspec.AnyWordSpec
@@ -68,6 +68,8 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
       )
     )
   ).unsafe
+
+  private val articlePaginationOps = summon[PaginationQueryParametersOps[ArticlesPagination]]
 
   "ContentServiceSpec" should {
 
@@ -341,10 +343,13 @@ class ContentServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     }
 
     "find adjacent articles using existing articles" in {
+
+      val articlePagination = articlePaginationOps.make(PaginationQueryParametersModel(page = Some(Page(1)), limit = Some(Limit(10)), order = Some(Order.DESC)))
+
       // NOTE: We only test second article because first/last articles may be affected by data inserted from other tests running in parallel
       (for {
         articles <- articleService
-          .getWithCount(PaginationQueryParametersModel(page = Some(Page(1)), limit = Some(Limit(10)), order = Some(Order.DESC)))
+          .getWithCount(articlePagination)
           .flatMap(_.liftTo[IO])
         firstPaginationArticles = articles.articles
         secondArticle = firstPaginationArticles(1)

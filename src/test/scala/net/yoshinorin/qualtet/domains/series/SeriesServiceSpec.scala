@@ -3,6 +3,7 @@ package net.yoshinorin.qualtet.domains.tags
 import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath, SeriesRequestModel}
+import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Order, Page, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
@@ -44,6 +45,8 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
     createContentRequestModels(5, "SeriesService", Some(requestSeries.head.name)).unsafeCreateConternt()
   }
 
+  private val articlePaginationOps = summon[PaginationQueryParametersOps[ArticlesPagination]]
+
   "SeriesService" should {
     "get all series" in {
       (for {
@@ -74,7 +77,7 @@ class SeriesServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
 
   "get" in {
     (for {
-      getResult <- seriesService.get(seriesPath)
+      getResult <- seriesService.get(seriesPath, articlePaginationOps.make(Page(0), Limit(100), Order.DESC))
     } yield {
       val result = getResult.unsafe
       assert(result.title === "Series Service Spec")
