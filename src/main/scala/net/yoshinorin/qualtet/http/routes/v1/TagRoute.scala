@@ -11,8 +11,8 @@ import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.errors.DomainError
-import net.yoshinorin.qualtet.domains.tags.{TagId, TagPath, TagService}
-import net.yoshinorin.qualtet.domains.{Pagination, PaginationQueryParametersOps, TagsPagination}
+import net.yoshinorin.qualtet.domains.tags.{TagId, TagPath, TagService, TagsPagination}
+import net.yoshinorin.qualtet.domains.pagination.{Pagination, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}

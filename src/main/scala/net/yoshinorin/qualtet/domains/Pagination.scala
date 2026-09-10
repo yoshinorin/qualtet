@@ -1,4 +1,4 @@
-package net.yoshinorin.qualtet.domains
+package net.yoshinorin.qualtet.domains.pagination
 
 import cats.implicits.catsSyntaxEq
 
@@ -60,106 +60,9 @@ final case class PaginationQueryParametersModel(
   order: Option[Order]
 )
 
-sealed trait Pagination {
+trait Pagination {
   def page: Page
   def limit: Limit
   def offset: Int
   def order: Order
-}
-
-final case class ArticlesPagination(
-  page: Page = Page(1),
-  limit: Limit = Limit(10),
-  offset: Int = 0,
-  order: Order = Order.DESC
-) extends Pagination
-
-final case class TagsPagination(
-  page: Page = Page(1),
-  limit: Limit = Limit(10),
-  offset: Int = 0,
-  order: Order = Order.DESC
-) extends Pagination
-
-final case class FeedsPagination(
-  page: Page = Page(1),
-  limit: Limit = Limit(5),
-  offset: Int = 0,
-  order: Order = Order.DESC
-) extends Pagination
-
-object Pagination {
-
-  given ArticlesPagination: PaginationQueryParametersOps[ArticlesPagination] = {
-    new PaginationQueryParametersOps[ArticlesPagination] {
-      override def make(p: PaginationQueryParametersModel): ArticlesPagination = {
-        new ArticlesPagination(
-          page = calcPage(p.page),
-          limit = calcLimit(p.limit),
-          offset = calcOffset(p.page),
-          order = p.order.getOrElse(Order.DESC)
-        )
-      }
-
-      override def make(page: Option[Page], limit: Option[Limit], order: Option[Order] = None): ArticlesPagination = {
-        new ArticlesPagination(
-          page = calcPage(page),
-          limit = calcLimit(limit),
-          offset = calcOffset(page),
-          order = order.getOrElse(Order.DESC)
-        )
-      }
-
-      override def make(page: Page, limit: Limit, order: Order): ArticlesPagination = this.make(Option(page), Option(limit), Option(order))
-    }
-  }
-
-  given TagsPagination: PaginationQueryParametersOps[TagsPagination] = {
-    new PaginationQueryParametersOps[TagsPagination] {
-      override def make(p: PaginationQueryParametersModel): TagsPagination = {
-        new TagsPagination(
-          page = calcPage(p.page),
-          limit = calcLimit(p.limit),
-          offset = calcOffset(p.page),
-          order = p.order.getOrElse(Order.DESC)
-        )
-      }
-
-      override def make(page: Option[Page], limit: Option[Limit], order: Option[Order] = None): TagsPagination = {
-        new TagsPagination(
-          page = calcPage(page),
-          limit = calcLimit(limit),
-          offset = calcOffset(page),
-          order = order.getOrElse(Order.DESC)
-        )
-      }
-
-      override def make(page: Page, limit: Limit, order: Order): TagsPagination = this.make(Option(page), Option(limit), Option(order))
-    }
-  }
-
-  given FeedsPagination: PaginationQueryParametersOps[FeedsPagination] = {
-    new PaginationQueryParametersOps[FeedsPagination] {
-      override def make(p: PaginationQueryParametersModel): FeedsPagination = {
-        new FeedsPagination(
-          page = Page(1),
-          limit = p.limit.getOrElse(Limit(5)),
-          offset = 0,
-          order = Order.DESC
-        )
-      }
-
-      override def make(page: Option[Page], limit: Option[Limit], order: Option[Order] = None): FeedsPagination = {
-        new FeedsPagination(
-          page = Page(1),
-          limit = limit.getOrElse(Limit(5)),
-          offset = 0,
-          order = Order.DESC
-        )
-      }
-
-      override def make(page: Page, limit: Limit, order: Order): FeedsPagination = this.make(Option(page), Option(limit), Option(order))
-    }
-  }
-
 }

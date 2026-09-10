@@ -5,13 +5,14 @@ import cats.implicits.*
 import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.ContentPath
+import net.yoshinorin.qualtet.domains.articles.ArticlesPagination
 import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, InvalidAuthor, InvalidContentType, InvalidSeries}
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath, SeriesRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResourceKind
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Order, Page, PaginationQueryParametersModel, PaginationQueryParametersOps}
+import net.yoshinorin.qualtet.domains.pagination.{Limit, Order, Page, PaginationQueryParametersModel, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import org.scalatest.wordspec.AnyWordSpec

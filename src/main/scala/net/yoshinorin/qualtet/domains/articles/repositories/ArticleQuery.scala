@@ -6,7 +6,7 @@ import org.typelevel.doobie.util.query.Query0
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.{TagName, TagPath}
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
-import net.yoshinorin.qualtet.domains.{Order, Pagination}
+import net.yoshinorin.qualtet.domains.pagination.{Order, Pagination}
 import org.typelevel.doobie.util.fragment.Fragment
 
 object ArticleQuery {

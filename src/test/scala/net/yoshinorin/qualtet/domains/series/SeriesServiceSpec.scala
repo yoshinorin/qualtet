@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.tags
 
 import net.yoshinorin.qualtet.fixture.unsafe
+import net.yoshinorin.qualtet.domains.articles.ArticlesPagination
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath, SeriesRequestModel}
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Order, Page, PaginationQueryParametersOps}
+import net.yoshinorin.qualtet.domains.pagination.{Limit, Order, Page, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll

@@ -8,7 +8,7 @@ import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeNa
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound, DomainError}
 import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
-import net.yoshinorin.qualtet.domains.Pagination
+import net.yoshinorin.qualtet.domains.pagination.Pagination
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.domains.tags.TagPath

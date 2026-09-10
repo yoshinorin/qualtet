@@ -4,7 +4,7 @@ import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
 import net.yoshinorin.qualtet.domains.tags.TagName
-import net.yoshinorin.qualtet.domains.Pagination
+import net.yoshinorin.qualtet.domains.pagination.Pagination
 import net.yoshinorin.qualtet.domains.tags.TagPath
 
 trait ArticleRepository[F[_]] {

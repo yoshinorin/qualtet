@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.domains.articles.ArticleService
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.contentSerializing.ContentSerializingRepositoryAdapter
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.domains.Pagination
+import net.yoshinorin.qualtet.domains.pagination.Pagination
 import net.yoshinorin.qualtet.domains.errors.{DomainError, SeriesNotFound}
 import net.yoshinorin.qualtet.syntax.*
 import wvlet.airframe.ulid.ULID

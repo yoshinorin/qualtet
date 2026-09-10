@@ -10,10 +10,11 @@ import org.http4s.dsl.Http4sDsl
 import org.http4s.ContextRequest
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.errors.DomainError
+import net.yoshinorin.qualtet.domains.articles.ArticlesPagination
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesPath, SeriesRequestModel, SeriesService}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, Limit, Order, Page, Pagination, PaginationQueryParametersOps}
+import net.yoshinorin.qualtet.domains.pagination.{Limit, Order, Page, Pagination, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.syntax.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 

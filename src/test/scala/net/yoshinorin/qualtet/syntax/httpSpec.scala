@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.domains.{Limit, Order, Page, PaginationQueryParametersModel}
+import net.yoshinorin.qualtet.domains.pagination.{Limit, Order, Page, PaginationQueryParametersModel}
 
 // testOnly net.yoshinorin.qualtet.syntax.HttpSpec
 class HttpSpec extends AnyWordSpec {

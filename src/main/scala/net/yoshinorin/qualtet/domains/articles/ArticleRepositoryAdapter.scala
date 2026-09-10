@@ -6,7 +6,7 @@ import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.tags.{TagName, TagPath}
 import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
-import net.yoshinorin.qualtet.domains.Pagination
+import net.yoshinorin.qualtet.domains.pagination.Pagination
 
 import scala.annotation.nowarn
 

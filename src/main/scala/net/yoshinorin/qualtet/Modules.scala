@@ -13,9 +13,9 @@ import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.auth.{AuthService, FileKeyPairConfig, InMemoryKeyPairConfig, Jwt, KeyPairRepository, PemKeyPairConfig}
 import net.yoshinorin.qualtet.cache.CacheRepository
 import net.yoshinorin.qualtet.config.{ApplicationConfig, KeyPairSourceConfig}
-import net.yoshinorin.qualtet.domains.{ArticlesPagination, FeedsPagination, PaginationQueryParametersOps, TagsPagination}
+import net.yoshinorin.qualtet.domains.pagination.PaginationQueryParametersOps
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveRepositoryAdapter, ArchiveService}
-import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleRepositoryAdapter, ArticleService}
+import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleRepositoryAdapter, ArticleService, ArticlesPagination}
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorRepositoryAdapter, AuthorService}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.contentTypes.ContentType
@@ -28,9 +28,9 @@ import net.yoshinorin.qualtet.domains.robots.{RobotsRepository, RobotsRepository
 import net.yoshinorin.qualtet.domains.search.{SearchRepository, SearchService}
 import net.yoshinorin.qualtet.domains.series.{SeriesRepository, SeriesRepositoryAdapter, SeriesService}
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapRepositoryAdapter, SitemapService, SitemapsRepository, Url}
-import net.yoshinorin.qualtet.domains.tags.{TagRepository, TagRepositoryAdapter, TagResponseModel, TagService}
+import net.yoshinorin.qualtet.domains.tags.{TagRepository, TagRepositoryAdapter, TagResponseModel, TagService, TagsPagination}
 import net.yoshinorin.qualtet.auth.Signature
-import net.yoshinorin.qualtet.domains.feeds.FeedService
+import net.yoshinorin.qualtet.domains.feeds.{FeedService, FeedsPagination}
 import net.yoshinorin.qualtet.cache.CacheService
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
@@ -59,6 +59,7 @@ import net.yoshinorin.qualtet.infrastructure.telemetry.Otel
 import pdi.jwt.JwtAlgorithm
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
+import net.yoshinorin.qualtet as TagsPaginationTagRepository
 
 object Modules {
   private val config = ApplicationConfig.load
