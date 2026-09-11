@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.tasks.db
 
-import cats.effect.{ExitCode, IO, IOApp}
 import net.yoshinorin.qualtet.Modules
 
+import cats.effect.{ExitCode, IO, IOApp}
 import cats.effect.unsafe.implicits.global
 
 object Recreate extends IOApp {

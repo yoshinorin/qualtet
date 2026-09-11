@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.syntax
 
-import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagPath}
+import net.yoshinorin.qualtet.fixture.unsafe
+
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.syntax.Tuple3Spec

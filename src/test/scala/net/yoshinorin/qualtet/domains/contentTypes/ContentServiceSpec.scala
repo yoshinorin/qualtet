@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.fixture.Fixture.*
 
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.contentTypes.ContentTypeServiceSpec

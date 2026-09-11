@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.domains.series
 
 import net.yoshinorin.qualtet.fixture.unsafe
+
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.series.SeriesSpec

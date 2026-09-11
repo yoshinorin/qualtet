@@ -1,10 +1,11 @@
 package net.yoshinorin.qualtet.domains.robots
 
-import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.errors.InvalidAttributes
 import net.yoshinorin.qualtet.domains.robots.Attributes
-import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.fixture.Fixture.*
+import net.yoshinorin.qualtet.fixture.unsafe
+import net.yoshinorin.qualtet.syntax.*
+
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.robots.RobotsSpec

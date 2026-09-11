@@ -1,14 +1,15 @@
 package net.yoshinorin.qualtet.domains.tags
 
+import net.yoshinorin.qualtet.cache.CacheRepository
+import net.yoshinorin.qualtet.domains.Cacheable
+import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepositoryAdapter
+import net.yoshinorin.qualtet.domains.errors.{DomainError, TagNotFound}
+import net.yoshinorin.qualtet.infrastructure.db.Executer
+import net.yoshinorin.qualtet.syntax.*
+
 import cats.Monad
 import cats.implicits.*
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
-import net.yoshinorin.qualtet.cache.CacheRepository
-import net.yoshinorin.qualtet.domains.contentTaggings.ContentTaggingRepositoryAdapter
-import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.domains.errors.{DomainError, TagNotFound}
-import net.yoshinorin.qualtet.domains.Cacheable
-import net.yoshinorin.qualtet.syntax.*
 
 class TagService[F[_]: Monad, G[_]: Monad](
   tagRepositoryAdapter: TagRepositoryAdapter[G],

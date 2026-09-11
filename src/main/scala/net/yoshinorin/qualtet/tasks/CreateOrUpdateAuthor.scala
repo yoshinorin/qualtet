@@ -1,16 +1,14 @@
 package net.yoshinorin.qualtet.tasks
 
-import cats.implicits.*
+import net.yoshinorin.qualtet.Modules
+import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorName, AuthorResponseModel, BCryptPassword}
+import net.yoshinorin.qualtet.syntax.*
+
 import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.unsafe.implicits.global
+import cats.implicits.*
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import net.yoshinorin.qualtet.domains.authors.{AuthorDisplayName, AuthorName, BCryptPassword}
-import net.yoshinorin.qualtet.domains.authors.Author
-import net.yoshinorin.qualtet.Modules
-import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-
-import cats.effect.unsafe.implicits.global
 
 object CreateOrUpdateAuthor extends IOApp {
 

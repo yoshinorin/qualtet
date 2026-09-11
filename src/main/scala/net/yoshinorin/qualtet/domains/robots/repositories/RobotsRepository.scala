@@ -9,8 +9,7 @@ trait RobotsRepository[F[_]] {
 
 object RobotsRepository {
 
-  import org.typelevel.doobie.Write
-  import org.typelevel.doobie.ConnectionIO
+  import org.typelevel.doobie.{ConnectionIO, Write}
 
   given RobotsRepository: RobotsRepository[ConnectionIO] = {
     new RobotsRepository[ConnectionIO] {

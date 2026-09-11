@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.series
 
-import cats.data.ContT
-import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contents.ContentId
+
+import cats.Monad
+import cats.data.ContT
+import cats.implicits.*
 
 class SeriesRepositoryAdapter[F[_]: Monad](
   seriesRepository: SeriesRepository[F]

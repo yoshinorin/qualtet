@@ -2,10 +2,9 @@ package net.yoshinorin.qualtet.domains.articles
 
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
-import net.yoshinorin.qualtet.domains.tags.TagName
 import net.yoshinorin.qualtet.domains.pagination.Pagination
-import net.yoshinorin.qualtet.domains.tags.TagPath
+import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
+import net.yoshinorin.qualtet.domains.tags.{TagName, TagPath}
 
 trait ArticleRepository[F[_]] {
   def getWithCount(contentTypeId: ContentTypeId, pagination: Pagination): F[Seq[(Int, ArticleReadModel)]]
@@ -18,9 +17,9 @@ trait ArticleRepository[F[_]] {
 
 object ArticleRepository {
 
-  import org.typelevel.doobie.Read
-  import org.typelevel.doobie.ConnectionIO
   import net.yoshinorin.qualtet.domains.contents.ContentId
+
+  import org.typelevel.doobie.{ConnectionIO, Read}
 
   given ArticleRepository: ArticleRepository[ConnectionIO] = {
     new ArticleRepository[ConnectionIO] {

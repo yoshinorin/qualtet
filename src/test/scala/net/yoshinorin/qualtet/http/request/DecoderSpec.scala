@@ -1,15 +1,15 @@
 package net.yoshinorin.qualtet.http.request
 
-import net.yoshinorin.qualtet.fixture.unsafe
-import cats.effect.IO
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.ContentRequestModel
 import net.yoshinorin.qualtet.domains.errors.UnexpectedJsonFormat
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
-import org.scalatest.wordspec.AnyWordSpec
+import net.yoshinorin.qualtet.fixture.unsafe
 
+import cats.effect.IO
+import org.scalatest.wordspec.AnyWordSpec
 import java.time.ZonedDateTime
 import cats.effect.unsafe.implicits.global
 

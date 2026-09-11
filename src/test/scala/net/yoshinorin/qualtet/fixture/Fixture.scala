@@ -1,37 +1,26 @@
 package net.yoshinorin.qualtet.fixture
 
-import cats.{Monad, MonadError}
-import cats.effect.IO
-import cats.data.EitherT
-import cats.syntax.flatMap.toFlatMapOps
-import org.typelevel.doobie.ConnectionIO
-import org.typelevel.doobie.util.transactor.Transactor
-import org.http4s.Uri
-import org.http4s.Response
-import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
-import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
-import com.github.benmanes.caffeine.cache.Caffeine
-import com.github.benmanes.caffeine.cache.Cache as CaffeineCache
-import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
-import net.yoshinorin.qualtet.config.ApplicationConfig
-import net.yoshinorin.qualtet.http.AuthProvider
-import net.yoshinorin.qualtet.http.CorsProvider
+import net.yoshinorin.qualtet.Modules
 import net.yoshinorin.qualtet.cache.CacheRepository
-import net.yoshinorin.qualtet.domains.contents.ContentPath
+import net.yoshinorin.qualtet.config.ApplicationConfig
 import net.yoshinorin.qualtet.domains.articles.*
 import net.yoshinorin.qualtet.domains.authors.*
-import net.yoshinorin.qualtet.domains.contents.*
+import net.yoshinorin.qualtet.domains.contents.{ContentPath, *}
 import net.yoshinorin.qualtet.domains.contentTypes.*
+import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
+import net.yoshinorin.qualtet.domains.feeds.{FeedService, FeedsPagination}
+import net.yoshinorin.qualtet.domains.pagination.PaginationQueryParametersOps
 import net.yoshinorin.qualtet.domains.robots.*
 import net.yoshinorin.qualtet.domains.series.*
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapRepositoryAdapter, SitemapService, SitemapsRepository, Url}
-import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath, TagResponseModel, TagService}
+import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
   ArchiveRoute as ArchiveRouteV1,
   ArticleRoute as ArticleRouteV1,
-  AuthRoute as AuthRouteV1,
   AuthorRoute as AuthorRouteV1,
+  AuthRoute as AuthRouteV1,
   CacheRoute as CacheRouteV1,
   ContentRoute as ContentRouteV1,
   ContentTypeRoute as ContentTypeRouteV1,
@@ -42,17 +31,23 @@ import net.yoshinorin.qualtet.http.routes.v1.{
   SystemRoute as SystemRouteV1,
   TagRoute as TagRouteV1
 }
+import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
+import net.yoshinorin.qualtet.syntax.*
+
+import cats.{Monad, MonadError}
+import cats.data.EitherT
+import cats.effect.IO
+import cats.syntax.flatMap.toFlatMapOps
+import org.http4s.{Response, Uri}
+import org.typelevel.doobie.ConnectionIO
+import org.typelevel.doobie.util.transactor.Transactor
+import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
+import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
+import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
+import com.github.plokhotnyuk.jsoniter_scala.core.JsonValueCodec
 import java.util.concurrent.TimeUnit
 import wvlet.airframe.ulid.ULID
-import net.yoshinorin.qualtet.domains.pagination.PaginationQueryParametersOps
-import net.yoshinorin.qualtet.domains.feeds.{FeedService, FeedsPagination}
-import net.yoshinorin.qualtet.domains.tags.{TagResponseModel, TagService}
-import net.yoshinorin.qualtet.Modules
-import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
 import cats.effect.unsafe.implicits.global
-import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
-
 import scala.reflect.ClassTag
 
 // Extension method for test convenience: converts Either to value unsafely

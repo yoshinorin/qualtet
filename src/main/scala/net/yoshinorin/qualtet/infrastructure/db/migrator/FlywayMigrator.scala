@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.infrastructure.db.migrator
 
-import org.flywaydb.core.Flyway
 import net.yoshinorin.qualtet.config.DBConfig
+
+import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.FluentConfiguration
 
 class FlywayMigrator(config: DBConfig) {

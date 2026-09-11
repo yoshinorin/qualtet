@@ -1,12 +1,12 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import java.time.ZonedDateTime
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{FromTrustedSource, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.{DomainError, InvalidAuthorDisplayName, InvalidAuthorName, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
 
+import java.time.ZonedDateTime
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import scala.util.matching.Regex
 
 opaque type AuthorId = String

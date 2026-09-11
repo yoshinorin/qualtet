@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.config
 
 import com.typesafe.config.{Config as TypeSafeConfig, ConfigFactory}
 import scala.jdk.CollectionConverters.*
-
 import java.nio.file.{Path, Paths}
 import java.util.ArrayList
 

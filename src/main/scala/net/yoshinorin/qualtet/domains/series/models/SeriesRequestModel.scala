@@ -1,10 +1,11 @@
 package net.yoshinorin.qualtet.domains.series
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.domains.errors.{DomainError, SeriesNameRequired, SeriesPathRequired, SeriesTitleRequired}
 import net.yoshinorin.qualtet.syntax.*
+
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 final case class SeriesRequestModel(
   name: SeriesName,

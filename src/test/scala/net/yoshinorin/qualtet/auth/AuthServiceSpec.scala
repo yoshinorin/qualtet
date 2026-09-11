@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.auth
 
-import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, Unauthorized}
 import net.yoshinorin.qualtet.fixture.Fixture.*
+
+import cats.effect.IO
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 

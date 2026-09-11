@@ -1,17 +1,17 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
-import cats.effect.IO
-import org.http4s.client.Client
-import org.http4s.*
-import org.http4s.dsl.io.*
-import org.http4s.headers.`Content-Type`
-import org.http4s.implicits.*
-import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.ApplicationInfo
 import net.yoshinorin.qualtet.buildinfo.BuildInfo
 import net.yoshinorin.qualtet.config.{HttpSystemEndpointConfig, HttpSystemEndpointMetadata}
 import net.yoshinorin.qualtet.fixture.Fixture.{log4catsLogger, makeRouter, unsafeDecode}
 
+import cats.effect.IO
+import org.http4s.*
+import org.http4s.client.Client
+import org.http4s.dsl.io.*
+import org.http4s.headers.`Content-Type`
+import org.http4s.implicits.*
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.SystemRouteSpec

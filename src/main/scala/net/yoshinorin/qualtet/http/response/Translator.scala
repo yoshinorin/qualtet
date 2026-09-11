@@ -1,17 +1,16 @@
 package net.yoshinorin.qualtet.http.response
 
-import cats.Applicative
-import cats.effect.Concurrent
-import org.http4s.dsl.Http4sDsl
-import org.http4s.MediaType
-import org.http4s.{Request, Response, Status}
-import org.http4s.Challenge
-import org.http4s.headers.{`Content-Type`, `WWW-Authenticate`}
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.http.errors.*
 import net.yoshinorin.qualtet.http.errors.HttpError.*
 import net.yoshinorin.qualtet.syntax.*
+
+import cats.Applicative
+import cats.effect.Concurrent
+import org.http4s.{Challenge, MediaType, Request, Response, Status}
+import org.http4s.dsl.Http4sDsl
+import org.http4s.headers.{`Content-Type`, `WWW-Authenticate`}
+import com.github.plokhotnyuk.jsoniter_scala.core.*
 
 object Translator {
 

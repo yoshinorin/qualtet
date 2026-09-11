@@ -1,18 +1,17 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
-import cats.data.EitherT
-import cats.effect.Concurrent
-import cats.implicits.*
-import cats.Monad
-import org.http4s.Request
-import org.http4s.headers.Allow
-import org.http4s.{HttpRoutes, Response}
-import org.http4s.dsl.Http4sDsl
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
+import cats.Monad
+import cats.data.EitherT
+import cats.effect.Concurrent
+import cats.implicits.*
+import org.http4s.{HttpRoutes, Request, Response}
+import org.http4s.dsl.Http4sDsl
+import org.http4s.headers.Allow
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class ContentTypeRoute[F[_]: Concurrent, G[_]: Monad @nowarn](

@@ -1,11 +1,12 @@
 package net.yoshinorin.qualtet.validator
 
-import cats.implicits.catsSyntaxEq
-import cats.effect.IO
 import net.yoshinorin.qualtet.domains.errors.{Unauthorized, UnexpectedException}
 import net.yoshinorin.qualtet.fixture.andThrow
-import org.scalatest.wordspec.AnyWordSpec
+
+import cats.effect.IO
 import cats.effect.unsafe.implicits.global
+import cats.implicits.catsSyntaxEq
+import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.validator.ValidatorSpec
 class ValidatorSpec extends AnyWordSpec {

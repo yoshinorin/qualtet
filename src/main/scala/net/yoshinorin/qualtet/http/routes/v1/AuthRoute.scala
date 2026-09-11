@@ -1,17 +1,17 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
-import cats.effect.Concurrent
-import cats.implicits.*
-import cats.Monad
-import org.http4s.headers.{Allow, `WWW-Authenticate`}
-import org.http4s.{Challenge, HttpRoutes, Request, Response}
-import org.http4s.dsl.Http4sDsl
 import net.yoshinorin.qualtet.auth.{AuthService, RequestToken}
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.http.request.Decoder
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
+import cats.Monad
+import cats.effect.Concurrent
+import cats.implicits.*
+import org.http4s.{Challenge, HttpRoutes, Request, Response}
+import org.http4s.dsl.Http4sDsl
+import org.http4s.headers.{`WWW-Authenticate`, Allow}
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class AuthRoute[F[_]: Concurrent, G[_]: Monad @nowarn](authService: AuthService[F, G])(using loggerFactory: Log4CatsLoggerFactory[F]) extends Decoder[F] {

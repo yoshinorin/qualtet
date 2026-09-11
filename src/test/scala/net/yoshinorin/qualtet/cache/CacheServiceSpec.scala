@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.cache
 
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import org.scalatest.wordspec.AnyWordSpec
 
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.cache.CacheServiceModuleSpec

@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import net.yoshinorin.qualtet.fixture.{error, unsafe}
 import net.yoshinorin.qualtet.domains.authors.{AuthorDisplayName, AuthorId, AuthorName, BCryptPassword}
 import net.yoshinorin.qualtet.domains.errors.{InvalidAuthorDisplayName, InvalidAuthorName, Unauthorized}
-import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.fixture.{error, unsafe}
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import org.scalatest.wordspec.AnyWordSpec
+import net.yoshinorin.qualtet.syntax.*
 
-import java.time.{Instant, ZoneOffset, ZonedDateTime}
+import org.scalatest.wordspec.AnyWordSpec
+import java.time.{Instant, ZonedDateTime, ZoneOffset}
 
 // testOnly net.yoshinorin.qualtet.domains.author.AuthorSpec
 class AuthorSpec extends AnyWordSpec {

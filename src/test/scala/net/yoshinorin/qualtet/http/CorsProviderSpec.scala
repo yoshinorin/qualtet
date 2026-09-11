@@ -1,10 +1,11 @@
 package net.yoshinorin.qualtet.http
 
+import net.yoshinorin.qualtet.config.CorsConfig
+
 import cats.effect.IO
 import org.http4s.Uri
 import org.http4s.headers.Origin
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.config.CorsConfig
 import java.net.MalformedURLException
 
 // testOnly net.yoshinorin.qualtet.http.CorsProviderSpec

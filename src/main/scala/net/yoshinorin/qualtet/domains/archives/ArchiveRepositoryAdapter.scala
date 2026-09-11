@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.archives
 
+import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
+
 import cats.Monad
 import cats.data.ContT
 import cats.implicits.*
-import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 
 class ArchiveRepositoryAdapter[F[_]: Monad](
   archiveRepository: ArchiveRepository[F]

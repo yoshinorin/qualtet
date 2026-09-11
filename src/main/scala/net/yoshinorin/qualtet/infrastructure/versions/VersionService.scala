@@ -1,11 +1,10 @@
 package net.yoshinorin.qualtet.infrastructure.versions
 
-import cats.Monad
-import cats.implicits.*
-import cats.MonadError
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
+import cats.{Monad, MonadError}
+import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 import java.time.ZonedDateTime
 

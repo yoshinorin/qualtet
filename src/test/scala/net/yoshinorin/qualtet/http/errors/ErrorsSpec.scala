@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.http.errors
 
-import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.errors.*
+
+import org.scalatest.wordspec.AnyWordSpec
 
 class ErrorsSpec extends AnyWordSpec {
 

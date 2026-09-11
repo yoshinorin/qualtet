@@ -44,8 +44,7 @@ trait AuthorRepository[F[_]] {
 
 object AuthorRepository {
 
-  import org.typelevel.doobie.{Read, Write}
-  import org.typelevel.doobie.ConnectionIO
+  import org.typelevel.doobie.{ConnectionIO, Read, Write}
 
   given AuthorRepository: AuthorRepository[ConnectionIO] = {
     new AuthorRepository[ConnectionIO] {

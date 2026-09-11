@@ -1,17 +1,17 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import net.yoshinorin.qualtet.fixture.{error, unsafe}
 import net.yoshinorin.qualtet.domains.authors.AuthorId
 import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentPath}
+import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, RawContentRequired}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagPath}
-import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.fixture.{error, unsafe}
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, HtmlContentRequired, RawContentRequired}
-import org.scalatest.wordspec.AnyWordSpec
+import net.yoshinorin.qualtet.syntax.*
 
-import java.time.{Instant, ZoneOffset, ZonedDateTime}
+import org.scalatest.wordspec.AnyWordSpec
+import java.time.{Instant, ZonedDateTime, ZoneOffset}
 
 // testOnly net.yoshinorin.qualtet.domains.contents.ContentSpec
 class ContentSpec extends AnyWordSpec {

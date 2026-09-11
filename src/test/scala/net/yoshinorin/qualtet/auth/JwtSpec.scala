@@ -1,19 +1,17 @@
 package net.yoshinorin.qualtet.auth
 
-import net.yoshinorin.qualtet.fixture.unsafe
-import cats.effect.IO
 import net.yoshinorin.qualtet.domains.authors.{Author, AuthorDisplayName, AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.errors.Unauthorized
 import net.yoshinorin.qualtet.fixture.Fixture.*
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.validator.Validator
 
+import cats.effect.IO
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.exceptions.JwtValidationException
 import wvlet.airframe.ulid.ULID
-
 import cats.effect.unsafe.implicits.global
-
 import java.time.Instant
 
 // testOnly net.yoshinorin.qualtet.auth.JwtSpec

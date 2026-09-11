@@ -1,17 +1,18 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import java.time.ZonedDateTime
-import cats.implicits.*
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.Request
+import net.yoshinorin.qualtet.domains.contents.ContentPath
+import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, DomainError, HtmlContentRequired, RawContentRequired}
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.SeriesName
 import net.yoshinorin.qualtet.domains.tags.Tag
-import net.yoshinorin.qualtet.domains.errors.{ContentTitleRequired, DomainError, HtmlContentRequired, RawContentRequired}
 import net.yoshinorin.qualtet.syntax.*
+
+import java.time.ZonedDateTime
+import cats.implicits.*
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 final case class ContentRequestModel(
   contentType: String,

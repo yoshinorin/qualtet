@@ -1,15 +1,16 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import java.time.ZonedDateTime
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{FromTrustedSource, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.errors.InvalidPath
 import net.yoshinorin.qualtet.domains.externalResources.ExternalResources
+import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.Tag
+
+import java.time.ZonedDateTime
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 opaque type ContentId = String
 object ContentId extends ValueExtender[ContentId] with UlidConvertible[ContentId] {

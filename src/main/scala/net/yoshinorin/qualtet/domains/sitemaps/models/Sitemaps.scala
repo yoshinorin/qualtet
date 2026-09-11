@@ -1,12 +1,12 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{FromTrustedSource, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.InvalidLastMod
 
-import java.time.format.DateTimeFormatter
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import java.time.{Instant, ZoneId}
+import java.time.format.DateTimeFormatter
 import scala.util.{Failure, Success, Try}
 
 // https://www.sitemaps.org/index.html

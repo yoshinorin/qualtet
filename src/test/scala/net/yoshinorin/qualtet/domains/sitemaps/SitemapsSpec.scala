@@ -1,10 +1,11 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-import net.yoshinorin.qualtet.domains.sitemaps.{LastMod, Loc}
 import net.yoshinorin.qualtet.domains.errors.InvalidLastMod
-import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.domains.sitemaps.{LastMod, Loc}
 import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.unsafe
+import net.yoshinorin.qualtet.syntax.*
+
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.sitemaps.SitemapsSpec

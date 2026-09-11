@@ -1,11 +1,12 @@
 package net.yoshinorin.qualtet.syntax
 
+import net.yoshinorin.qualtet.syntax.*
+
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
 import org.scalatest.wordspec.AnyWordSpec
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jFactory
-import net.yoshinorin.qualtet.syntax.*
 
 // testOnly net.yoshinorin.qualtet.syntax.LoggerSpec
 class LoggerSpec extends AnyWordSpec with logger {

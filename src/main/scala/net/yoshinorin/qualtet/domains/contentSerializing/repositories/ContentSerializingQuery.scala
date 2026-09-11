@@ -1,12 +1,13 @@
 package net.yoshinorin.qualtet.domains.contentSerializing
 
+import net.yoshinorin.qualtet.domains.contents.ContentId
+import net.yoshinorin.qualtet.domains.series.SeriesId
+
 import cats.data.NonEmptyList
 import org.typelevel.doobie.{Read, Write}
 import org.typelevel.doobie.syntax.all.toSqlInterpolator
-import org.typelevel.doobie.util.update.{Update, Update0}
 import org.typelevel.doobie.util.{fragments, query}
-import net.yoshinorin.qualtet.domains.contents.ContentId
-import net.yoshinorin.qualtet.domains.series.SeriesId
+import org.typelevel.doobie.util.update.{Update, Update0}
 
 object ContentSerializingQuery {
 

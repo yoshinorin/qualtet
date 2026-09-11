@@ -1,19 +1,19 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
-import cats.data.EitherT
-import cats.effect.Concurrent
-import cats.implicits.*
-import cats.Monad
-import org.http4s.headers.Allow
-import org.http4s.{HttpRoutes, Request, Response}
-import org.http4s.dsl.Http4sDsl
+import net.yoshinorin.qualtet.config.FeedConfig
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.feeds.{FeedService, FeedsPagination}
 import net.yoshinorin.qualtet.domains.pagination.{Limit, Page, Pagination, PaginationQueryParametersModel, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.config.FeedConfig
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
+import cats.Monad
+import cats.data.EitherT
+import cats.effect.Concurrent
+import cats.implicits.*
+import org.http4s.{HttpRoutes, Request, Response}
+import org.http4s.dsl.Http4sDsl
+import org.http4s.headers.Allow
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class FeedRoute[F[_]: Concurrent, G[_]: Monad @nowarn](

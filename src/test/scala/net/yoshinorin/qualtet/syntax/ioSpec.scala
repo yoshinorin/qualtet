@@ -1,8 +1,9 @@
 package net.yoshinorin.qualtet.syntax
 
+import net.yoshinorin.qualtet.domains.errors.UnexpectedException
+
 import cats.effect.IO
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.domains.errors.UnexpectedException
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.syntax.IoSpec

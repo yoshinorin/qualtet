@@ -1,11 +1,12 @@
 package net.yoshinorin.qualtet.domains.feeds
 
-import cats.effect.IO
-import cats.implicits.*
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.BeforeAndAfterAll
 import net.yoshinorin.qualtet.domains.pagination.{Limit, Page, PaginationQueryParametersModel}
 import net.yoshinorin.qualtet.fixture.Fixture.*
+
+import cats.effect.IO
+import cats.implicits.*
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.feeds.FeedServiceSpec

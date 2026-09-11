@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import net.yoshinorin.qualtet.domains.contents.ContentPath
-import net.yoshinorin.qualtet.domains.contents.ContentId
+import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentPath}
 
 trait ContentRepository[F[_]] {
   def upsert(data: ContentWriteModel): F[Int]
@@ -14,11 +13,11 @@ trait ContentRepository[F[_]] {
 
 object ContentRepository {
 
-  import org.typelevel.doobie.{Read, Write}
-  import org.typelevel.doobie.ConnectionIO
-  import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
   import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
+  import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
   import net.yoshinorin.qualtet.domains.robots.Attributes
+
+  import org.typelevel.doobie.{ConnectionIO, Read, Write}
 
   given ContentRepository: ContentRepository[ConnectionIO] = {
     new ContentRepository[ConnectionIO] {

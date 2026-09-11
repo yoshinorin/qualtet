@@ -3,12 +3,11 @@ package net.yoshinorin.qualtet
 import cats.data.Kleisli
 import cats.effect.{ExitCode, IO, IOApp}
 import cats.effect.kernel.Resource
-import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.http4s.*
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Server
+import org.typelevel.log4cats.SelfAwareStructuredLogger
 import com.comcast.ip4s.*
-
 import scala.concurrent.duration.*
 
 object BootStrap extends IOApp {

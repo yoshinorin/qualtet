@@ -1,8 +1,8 @@
 package net.yoshinorin.qualtet.infrastructure.versions
 
-import cats.Monad
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 
+import cats.Monad
 import scala.annotation.nowarn
 
 trait VersionMigrator[F[_]: Monad, G[_]: Monad @nowarn](init: Version) {

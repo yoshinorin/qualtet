@@ -1,21 +1,20 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import net.yoshinorin.qualtet.domains.archives.{ArchiveResponseModel, ArchiveService}
+import net.yoshinorin.qualtet.domains.contents.ContentPath
+import net.yoshinorin.qualtet.fixture.Fixture.{log4catsLogger, *}
 import net.yoshinorin.qualtet.fixture.unsafe
+
 import cats.effect.IO
-import org.typelevel.doobie.ConnectionIO
-import org.http4s.client.Client
 import org.http4s.*
+import org.http4s.client.Client
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
-import net.yoshinorin.qualtet.domains.archives.{ArchiveResponseModel, ArchiveService}
-import net.yoshinorin.qualtet.domains.contents.ContentPath
-import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.wordspec.AnyWordSpec
-
+import org.typelevel.doobie.ConnectionIO
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.ArchiveRouteSpec

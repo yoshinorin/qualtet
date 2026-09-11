@@ -1,16 +1,15 @@
 package net.yoshinorin.qualtet.domains.feeds
 
-import cats.Monad
-import cats.implicits.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.cache.CacheRepository
-import net.yoshinorin.qualtet.domains.articles.ArticleService
-import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.Cacheable
+import net.yoshinorin.qualtet.domains.articles.{ArticleService, ArticleWithCountResponseModel}
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.pagination.Pagination
 import net.yoshinorin.qualtet.syntax.*
 
+import cats.Monad
+import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class FeedService[F[_]: Monad, G[_]: Monad @nowarn](

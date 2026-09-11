@@ -1,19 +1,19 @@
 package net.yoshinorin.qualtet.infrastructure.telemetry
 
-import cats.effect.{IO, Resource, Sync}
+import net.yoshinorin.qualtet.buildinfo.BuildInfo
+import net.yoshinorin.qualtet.config.OtelConfig
+
+import cats.effect.{IO, Resource, Sync, *}
 import cats.effect.unsafe.IORuntime
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
-import cats.effect.*
 import io.opentelemetry.api.OpenTelemetry
+import io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender
 import io.opentelemetry.instrumentation.runtimemetrics.java17.*
-import io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender;
-import org.typelevel.otel4s.oteljava.OtelJava
-import org.typelevel.otel4s.trace.Tracer
 import org.typelevel.otel4s.instrumentation.ce.IORuntimeMetrics
 import org.typelevel.otel4s.metrics.MeterProvider
-import net.yoshinorin.qualtet.config.OtelConfig
-import net.yoshinorin.qualtet.buildinfo.BuildInfo
+import org.typelevel.otel4s.oteljava.OtelJava
+import org.typelevel.otel4s.trace.Tracer
 
 object Otel {
 

@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.http.routes
 
+import net.yoshinorin.qualtet.fixture.Fixture.router
+
 import cats.effect.IO
-import org.http4s.client.Client
 import org.http4s.*
+import org.http4s.client.Client
 import org.http4s.dsl.io.*
 import org.http4s.implicits.*
-import net.yoshinorin.qualtet.fixture.Fixture.router
 import org.scalatest.wordspec.AnyWordSpec
-
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.HomeRouteSpec

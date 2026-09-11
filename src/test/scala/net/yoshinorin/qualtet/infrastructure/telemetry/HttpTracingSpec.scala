@@ -1,15 +1,15 @@
 package net.yoshinorin.qualtet.infrastructure.telemetry
 
 import cats.effect.IO
-import org.http4s.client.Client
 import org.http4s.*
+import org.http4s.client.Client
 import org.http4s.implicits.*
-import org.typelevel.ci.*
-import org.typelevel.otel4s.trace.Tracer
-import org.typelevel.otel4s.context.propagation.TextMapGetter
 import org.scalatest.wordspec.AnyWordSpec
-import cats.effect.unsafe.implicits.global
+import org.typelevel.ci.*
+import org.typelevel.otel4s.context.propagation.TextMapGetter
+import org.typelevel.otel4s.trace.Tracer
 import cats.data.Kleisli
+import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.infrastructure.telemetry.HttpTracingSpec
 class HttpTracingSpec extends AnyWordSpec {

@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.InvalidContentTypeName
 import net.yoshinorin.qualtet.fixture.Fixture.contentTypeId
+import net.yoshinorin.qualtet.fixture.unsafe
+
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.contentTypes.ContentTypeSpec

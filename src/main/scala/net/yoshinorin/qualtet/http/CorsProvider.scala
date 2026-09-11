@@ -1,13 +1,12 @@
 package net.yoshinorin.qualtet.http
 
-import cats.effect.Concurrent
-import org.http4s.HttpApp
-import org.http4s.HttpRoutes
-import org.http4s.Uri
-import org.http4s.server.middleware.*
-import org.http4s.headers.Origin
-import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
 import net.yoshinorin.qualtet.config.CorsConfig
+
+import cats.effect.Concurrent
+import org.http4s.{HttpApp, HttpRoutes, Uri}
+import org.http4s.headers.Origin
+import org.http4s.server.middleware.*
+import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
 import java.net.URI
 
 class CorsProvider[F[_]: Concurrent](

@@ -13,8 +13,7 @@ trait ContentTaggingRepository[F[_]] {
 
 object ContentTaggingRepository {
 
-  import org.typelevel.doobie.{Read, Write}
-  import org.typelevel.doobie.ConnectionIO
+  import org.typelevel.doobie.{ConnectionIO, Read, Write}
 
   given ContentTaggingRepository: ContentTaggingRepository[ConnectionIO] = {
     new ContentTaggingRepository[ConnectionIO] {

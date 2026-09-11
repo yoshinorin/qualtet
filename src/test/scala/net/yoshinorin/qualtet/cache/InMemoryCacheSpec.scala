@@ -1,11 +1,11 @@
 package net.yoshinorin.qualtet.cache
 
-import cats.effect.IO
-import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentType
 import net.yoshinorin.qualtet.fixture.Fixture.{articleContentType, contentTypeId}
-import org.scalatest.wordspec.AnyWordSpec
 
+import cats.effect.IO
+import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 import java.util.concurrent.TimeUnit
 

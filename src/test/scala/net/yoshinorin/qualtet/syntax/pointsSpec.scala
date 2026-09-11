@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import net.yoshinorin.qualtet.types.Points
+
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.syntax.PointsSpec

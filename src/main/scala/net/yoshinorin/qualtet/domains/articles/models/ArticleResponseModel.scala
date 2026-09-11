@@ -1,11 +1,10 @@
 package net.yoshinorin.qualtet.domains.articles
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
-import net.yoshinorin.qualtet.domains.contents.ContentPath
-import net.yoshinorin.qualtet.domains.contents.ContentId
+import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentPath}
 import net.yoshinorin.qualtet.syntax.*
 
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import scala.util.Random
 
 final case class ArticleResponseModel(

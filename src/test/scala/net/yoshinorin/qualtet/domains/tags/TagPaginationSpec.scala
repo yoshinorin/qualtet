@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.pagination.*
+
+import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.tags.TagPaginationSpec
 class TagPaginationSpec extends AnyWordSpec {

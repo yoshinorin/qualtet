@@ -1,23 +1,22 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
-import cats.data.EitherT
-import cats.effect.Concurrent
-import cats.Monad
-import cats.implicits.*
-import org.http4s.headers.Allow
-import org.http4s.{AuthedRoutes, HttpRoutes, Request, Response}
-import org.http4s.dsl.Http4sDsl
-import org.http4s.ContextRequest
+import net.yoshinorin.qualtet.domains.articles.ArticlesPagination
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.errors.DomainError
-import net.yoshinorin.qualtet.domains.articles.ArticlesPagination
+import net.yoshinorin.qualtet.domains.pagination.{Limit, Order, Page, Pagination, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesId, SeriesPath, SeriesRequestModel, SeriesService}
 import net.yoshinorin.qualtet.http.AuthProvider
 import net.yoshinorin.qualtet.http.request.Decoder
-import net.yoshinorin.qualtet.domains.pagination.{Limit, Order, Page, Pagination, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
+import cats.Monad
+import cats.data.EitherT
+import cats.effect.Concurrent
+import cats.implicits.*
+import org.http4s.{AuthedRoutes, ContextRequest, HttpRoutes, Request, Response}
+import org.http4s.dsl.Http4sDsl
+import org.http4s.headers.Allow
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class SeriesRoute[F[_]: Concurrent, G[_]: Monad @nowarn](

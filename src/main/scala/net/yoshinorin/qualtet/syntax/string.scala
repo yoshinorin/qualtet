@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.syntax
 
-import java.util.Locale
 import net.yoshinorin.qualtet.types.Points
+
+import java.util.Locale
 
 trait string {
 

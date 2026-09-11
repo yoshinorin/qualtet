@@ -6,9 +6,9 @@ trait SearchRepository[F[_]] {
 
 object SearchRepository {
 
-  import org.typelevel.doobie.Read
-  import org.typelevel.doobie.ConnectionIO
   import net.yoshinorin.qualtet.domains.contents.ContentPath
+
+  import org.typelevel.doobie.{ConnectionIO, Read}
 
   given SearchRepository: SearchRepository[ConnectionIO] = {
     new SearchRepository[ConnectionIO] {

@@ -1,10 +1,11 @@
 package net.yoshinorin.qualtet.domains.series
 
+import net.yoshinorin.qualtet.domains.contents.ContentId
+
 import org.typelevel.doobie.Read
 import org.typelevel.doobie.syntax.all.toSqlInterpolator
 import org.typelevel.doobie.util.query.Query0
 import org.typelevel.doobie.util.update.{Update, Update0}
-import net.yoshinorin.qualtet.domains.contents.ContentId
 
 object SeriesQuery {
 

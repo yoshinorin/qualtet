@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.auth
 
 import org.slf4j.LoggerFactory
-
 import java.nio.file.*
 import java.security
 import java.security.{KeyPairGenerator, PrivateKey, PublicKey, SecureRandom}

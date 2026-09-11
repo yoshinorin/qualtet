@@ -1,14 +1,14 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-import cats.Monad
-import cats.implicits.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.cache.CacheRepository
-import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 import net.yoshinorin.qualtet.domains.Cacheable
+import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
+import cats.Monad
+import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class ContentTypeService[F[_]: Monad, G[_]: Monad @nowarn](

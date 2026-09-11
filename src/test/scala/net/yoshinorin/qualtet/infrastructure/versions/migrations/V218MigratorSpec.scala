@@ -1,18 +1,19 @@
 package net.yoshinorin.qualtet.infrastructure.versions.migrations
 
-import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.domains.tags.{TagId, TagName}
 import net.yoshinorin.qualtet.domains.series.{SeriesId, SeriesName}
-import net.yoshinorin.qualtet.infrastructure.versions.V218Migrator.*
+import net.yoshinorin.qualtet.domains.tags.{TagId, TagName}
 import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
+import net.yoshinorin.qualtet.infrastructure.db.Executer
+import net.yoshinorin.qualtet.infrastructure.versions.V218Migrator.*
+
+import org.scalatest.wordspec.AnyWordSpec
 import cats.Monad
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
-import net.yoshinorin.qualtet.infrastructure.db.Executer
+import org.mockito.ArgumentMatchers.*
+import org.mockito.Mockito.*
 import org.typelevel.doobie.ConnectionIO
 import org.typelevel.doobie.implicits.*
-import org.mockito.Mockito.*
-import org.mockito.ArgumentMatchers.*
 
 // testOnly net.yoshinorin.qualtet.infrastructure.versions.migrations.V218MigratorSpec
 class V218MigratorSpec extends AnyWordSpec {

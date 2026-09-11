@@ -13,8 +13,7 @@ trait TagRepository[F[_]] {
 
 object TagRepository {
 
-  import org.typelevel.doobie.{Read, Write}
-  import org.typelevel.doobie.ConnectionIO
+  import org.typelevel.doobie.{ConnectionIO, Read, Write}
 
   given TagRepository: TagRepository[ConnectionIO] = {
     new TagRepository[ConnectionIO] {

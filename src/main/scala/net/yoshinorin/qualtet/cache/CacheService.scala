@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.cache
 
-import cats.Monad
-import cats.implicits.*
-import net.yoshinorin.qualtet.domains.sitemaps.SitemapService
-import net.yoshinorin.qualtet.domains.tags.TagService
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
 import net.yoshinorin.qualtet.domains.feeds.FeedService
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
+import net.yoshinorin.qualtet.domains.sitemaps.SitemapService
+import net.yoshinorin.qualtet.domains.tags.TagService
 
+import cats.Monad
+import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class CacheService[F[_]: Monad, G[_]: Monad @nowarn](

@@ -4,7 +4,6 @@ import cats.{Monad, MonadError}
 import scala.reflect.ClassTag
 import cats.syntax.flatMap.toFlatMapOps
 import cats.syntax.functor.toFunctorOps
-
 import scala.annotation.nowarn
 
 trait monad {

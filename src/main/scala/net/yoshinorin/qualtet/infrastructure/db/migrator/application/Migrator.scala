@@ -1,10 +1,10 @@
 package net.yoshinorin.qualtet.infrastructure.db.migrator.application
 
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeName, ContentTypeService}
+
 import cats.Monad
 import cats.effect.IO
 import cats.implicits.*
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeName, ContentTypeService}
-
 import scala.annotation.nowarn
 
 class Migrator() {

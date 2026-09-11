@@ -1,10 +1,11 @@
 package net.yoshinorin.qualtet.domains.archives
 
+import net.yoshinorin.qualtet.domains.contents.ContentPath
+import net.yoshinorin.qualtet.fixture.Fixture.*
 import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.fixture.Fixture.*
+
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.domains.contents.ContentPath
 
 // testOnly net.yoshinorin.qualtet.domains.archives.ArchiveSpec
 class ArchiveSpec extends AnyWordSpec {

@@ -1,12 +1,13 @@
 package net.yoshinorin.qualtet
 
-import cats.effect.Async
+import net.yoshinorin.qualtet.infrastructure.telemetry.HttpTracing
+
 import cats.data.Kleisli
+import cats.effect.Async
 import org.http4s.{HttpApp, Request, Response}
 import org.http4s.server.middleware.{Logger, RequestId, ResponseTiming}
-import org.typelevel.otel4s.trace.Tracer
 import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
-import net.yoshinorin.qualtet.infrastructure.telemetry.HttpTracing
+import org.typelevel.otel4s.trace.Tracer
 
 class HttpAppBuilder[F[_]: Async](routes: Kleisli[F, Request[F], Response[F]], tracer: Option[Tracer[F]] = None)(using logger: Log4CatsLoggerFactory[F]) {
 

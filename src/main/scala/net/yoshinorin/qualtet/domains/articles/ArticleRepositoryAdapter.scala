@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.domains.articles
 
-import cats.data.ContT
-import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
-import net.yoshinorin.qualtet.domains.tags.{TagName, TagPath}
-import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
 import net.yoshinorin.qualtet.domains.pagination.Pagination
+import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
+import net.yoshinorin.qualtet.domains.tags.{TagName, TagPath}
 
+import cats.Monad
+import cats.data.ContT
+import cats.implicits.*
 import scala.annotation.nowarn
 
 class ArticleRepositoryAdapter[F[_]: Monad](

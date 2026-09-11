@@ -1,22 +1,22 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
-import net.yoshinorin.qualtet.fixture.unsafe
-import cats.effect.IO
-import org.http4s.client.Client
-import org.http4s.*
-import org.http4s.dsl.io.*
-import org.http4s.headers.`Content-Type`
-import org.http4s.implicits.*
-import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.authors.AuthorName
 import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
-import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 import net.yoshinorin.qualtet.fixture.Fixture.{author, contentService, router, unsafeDecode}
-import org.scalatest.wordspec.AnyWordSpec
+import net.yoshinorin.qualtet.fixture.unsafe
+import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
 
+import cats.effect.IO
+import org.http4s.*
+import org.http4s.client.Client
+import org.http4s.dsl.io.*
+import org.http4s.headers.`Content-Type`
+import org.http4s.implicits.*
+import wvlet.airframe.ulid.ULID
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.ArticleRouteSpec

@@ -1,7 +1,6 @@
 package net.yoshinorin.qualtet.domains.articles
 
-import net.yoshinorin.qualtet.domains.contents.ContentPath
-import net.yoshinorin.qualtet.domains.contents.ContentId
+import net.yoshinorin.qualtet.domains.contents.{ContentId, ContentPath}
 
 final case class ArticleReadModel(
   id: ContentId,

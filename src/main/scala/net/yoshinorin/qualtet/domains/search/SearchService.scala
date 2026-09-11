@@ -1,15 +1,14 @@
 package net.yoshinorin.qualtet.domains.search
 
-import cats.data.ContT
-import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.config.SearchConfig
+import net.yoshinorin.qualtet.domains.errors.{InvalidSearchConditions, ProblemDetailsError}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.domains.errors.InvalidSearchConditions
-import net.yoshinorin.qualtet.domains.errors.ProblemDetailsError
-import net.yoshinorin.qualtet.types.Points
 import net.yoshinorin.qualtet.syntax.*
+import net.yoshinorin.qualtet.types.Points
 
+import cats.Monad
+import cats.data.ContT
+import cats.implicits.*
 import scala.annotation.tailrec
 
 class SearchService[F[_]: Monad, G[_]: Monad](

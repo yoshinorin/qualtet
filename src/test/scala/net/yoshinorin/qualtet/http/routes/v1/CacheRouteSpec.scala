@@ -1,16 +1,16 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import net.yoshinorin.qualtet.auth.RequestToken
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
+import net.yoshinorin.qualtet.fixture.Fixture.{author, authorService, authService, expiredToken, nonExistsUserToken, router}
+
 import cats.effect.IO
-import org.http4s.client.Client
 import org.http4s.*
+import org.http4s.client.Client
 import org.http4s.dsl.io.*
 import org.http4s.implicits.*
-import org.typelevel.ci.*
 import org.scalatest.wordspec.AnyWordSpec
-import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.fixture.Fixture.{authService, author, authorService, expiredToken, nonExistsUserToken, router}
-import net.yoshinorin.qualtet.auth.RequestToken
-
+import org.typelevel.ci.*
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.CacheRouteSpec

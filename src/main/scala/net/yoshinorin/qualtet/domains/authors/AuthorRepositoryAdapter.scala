@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import cats.data.ContT
 import cats.Monad
+import cats.data.ContT
 import cats.implicits.*
 
 class AuthorRepositoryAdapter[F[_]: Monad](

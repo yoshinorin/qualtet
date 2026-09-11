@@ -1,8 +1,9 @@
 package net.yoshinorin.qualtet.syntax
 
-import net.yoshinorin.qualtet.fixture.unsafe
-import org.scalatest.wordspec.AnyWordSpec
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
+import net.yoshinorin.qualtet.fixture.unsafe
+
+import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.syntax.OptionSpec
 class OptionSpec extends AnyWordSpec {

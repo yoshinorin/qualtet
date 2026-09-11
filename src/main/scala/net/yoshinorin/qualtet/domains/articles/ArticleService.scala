@@ -1,18 +1,17 @@
 package net.yoshinorin.qualtet.domains.articles
 
-import cats.data.ContT
-import cats.Monad
-import cats.implicits.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeId, ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.errors.{ArticleNotFound, ContentTypeNotFound, DomainError}
-import net.yoshinorin.qualtet.domains.tags.TagName
-import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
 import net.yoshinorin.qualtet.domains.pagination.Pagination
+import net.yoshinorin.qualtet.domains.series.{SeriesName, SeriesPath}
+import net.yoshinorin.qualtet.domains.tags.{TagName, TagPath}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.domains.tags.TagPath
 
+import cats.Monad
+import cats.data.ContT
+import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class ArticleService[F[_]: Monad, G[_]: Monad @nowarn](

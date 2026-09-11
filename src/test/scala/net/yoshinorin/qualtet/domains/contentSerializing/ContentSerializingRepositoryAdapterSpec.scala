@@ -1,15 +1,14 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
-import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.series.*
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.BeforeAndAfterAll
+import net.yoshinorin.qualtet.fixture.unsafe
 
-import org.scalatest.Ignore
+import org.scalatest.{BeforeAndAfterAll, Ignore}
+import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.domains.contentTaggings.ContentSerializingRepositoryAdapterSpec
 @Ignore // TODO: write testcode when implement delete feature

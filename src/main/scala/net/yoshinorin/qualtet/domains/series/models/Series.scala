@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.series
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{FromTrustedSource, Request, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.{DomainError, InvalidPath}
+
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 opaque type SeriesId = String
 object SeriesId extends ValueExtender[SeriesId] with UlidConvertible[SeriesId] {

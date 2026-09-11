@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-import cats.data.ContT
 import cats.Monad
+import cats.data.ContT
 import cats.implicits.*
 
 class SitemapRepositoryAdapter[F[_]: Monad](

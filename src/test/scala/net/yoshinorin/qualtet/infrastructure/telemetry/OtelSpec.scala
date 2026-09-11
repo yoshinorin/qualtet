@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.infrastructure.telemetry
 
-import cats.effect.unsafe.IORuntime
 import net.yoshinorin.qualtet.config.{OtelConfig, OtelExporterConfig, OtelServiceConfig}
+
+import cats.effect.unsafe.IORuntime
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.infrastructure.telemetry.OtelSpec

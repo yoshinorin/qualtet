@@ -1,16 +1,16 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import net.yoshinorin.qualtet.domains.feeds.FeedResponseModel
+import net.yoshinorin.qualtet.fixture.Fixture.*
+
 import cats.effect.IO
-import org.http4s.client.Client
 import org.http4s.*
+import org.http4s.client.Client
 import org.http4s.dsl.io.*
 import org.http4s.headers.`Content-Type`
 import org.http4s.implicits.*
-import net.yoshinorin.qualtet.domains.feeds.FeedResponseModel
-import net.yoshinorin.qualtet.fixture.Fixture.*
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.BeforeAndAfterAll
-
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.FeedRouteSpec

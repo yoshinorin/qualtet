@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
+import net.yoshinorin.qualtet.domains.contents.ContentId
+
+import cats.Monad
 import cats.data.ContT
 import cats.implicits.*
-import cats.Monad
-import net.yoshinorin.qualtet.domains.contents.ContentId
 
 class ExternalResourceRepositoryAdapter[F[_]: Monad](
   externalResourceRepository: ExternalResourceRepository[F]

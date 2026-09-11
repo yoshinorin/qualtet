@@ -1,14 +1,14 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import net.yoshinorin.qualtet.ApplicationInfo
+import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
+import net.yoshinorin.qualtet.syntax.*
+
 import cats.effect.Concurrent
 import cats.implicits.*
-import org.http4s.headers.Allow
 import org.http4s.{HttpRoutes, Response}
 import org.http4s.dsl.Http4sDsl
-
-import net.yoshinorin.qualtet.ApplicationInfo
-import net.yoshinorin.qualtet.syntax.*
-import net.yoshinorin.qualtet.config.HttpSystemEndpointConfig
+import org.http4s.headers.Allow
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class SystemRoute[F[_]: Concurrent](config: HttpSystemEndpointConfig)(using loggerFactory: Log4CatsLoggerFactory[F]) {

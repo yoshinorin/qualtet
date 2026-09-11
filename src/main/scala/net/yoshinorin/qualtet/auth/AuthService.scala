@@ -1,14 +1,14 @@
 package net.yoshinorin.qualtet.auth
 
-import cats.data.EitherT
-import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorResponseModel, AuthorService, BCryptPassword}
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import net.yoshinorin.qualtet.domains.errors.{AuthorNotFound, DomainError, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
+import cats.Monad
+import cats.data.EitherT
+import cats.implicits.*
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class AuthService[F[_]: Monad, G[_]: Monad @nowarn](authorService: AuthorService[F, G], jwt: Jwt[F])(using loggerFactory: Log4CatsLoggerFactory[F]) {

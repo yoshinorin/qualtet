@@ -1,10 +1,11 @@
 package net.yoshinorin.qualtet.domains.contentSerializing
 
-import cats.data.ContT
-import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.series.SeriesId
+
+import cats.Monad
+import cats.data.ContT
+import cats.implicits.*
 
 class ContentSerializingRepositoryAdapter[F[_]: Monad](
   contentSerializingRepository: ContentSerializingRepository[F]

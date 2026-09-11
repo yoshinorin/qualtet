@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.domains.archives
 
-import cats.Monad
-import cats.implicits.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.errors.{ContentTypeNotFound, DomainError}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
+import cats.Monad
+import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class ArchiveService[F[_]: Monad, G[_]: Monad @nowarn](

@@ -1,12 +1,13 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import cats.data.ContT
-import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.errors.DomainError
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceKind, ExternalResources}
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagId, TagName, TagPath}
+
+import cats.Monad
+import cats.data.ContT
+import cats.implicits.*
 
 class ContentRepositoryAdapter[F[_]: Monad](
   contentRepository: ContentRepository[F]

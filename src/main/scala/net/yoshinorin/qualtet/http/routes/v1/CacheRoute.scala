@@ -1,17 +1,16 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
+import net.yoshinorin.qualtet.cache.CacheService
+import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
+import net.yoshinorin.qualtet.http.AuthProvider
+
+import cats.Monad
 import cats.effect.Concurrent
 import cats.implicits.*
-import cats.Monad
-import org.http4s.headers.Allow
-import org.http4s.{AuthedRoutes, HttpRoutes, Response}
+import org.http4s.{AuthedRoutes, ContextRequest, HttpRoutes, Response}
 import org.http4s.dsl.Http4sDsl
-import org.http4s.ContextRequest
-import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
-import net.yoshinorin.qualtet.cache.CacheService
-import net.yoshinorin.qualtet.http.AuthProvider
+import org.http4s.headers.Allow
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
-
 import scala.annotation.nowarn
 
 class CacheRoute[F[_]: Concurrent, G[_]: Monad @nowarn](

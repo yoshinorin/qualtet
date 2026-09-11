@@ -1,9 +1,9 @@
 package net.yoshinorin.qualtet.domains.robots
 
-import cats.data.ContT
-import cats.Monad
 import net.yoshinorin.qualtet.domains.contents.ContentId
 
+import cats.Monad
+import cats.data.ContT
 import scala.annotation.nowarn
 
 class RobotsRepositoryAdapter[F[_]: Monad @nowarn](

@@ -1,11 +1,11 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{FromTrustedSource, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.InvalidContentTypeName
 import net.yoshinorin.qualtet.syntax.*
 
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import scala.util.matching.Regex
 
 opaque type ContentTypeId = String

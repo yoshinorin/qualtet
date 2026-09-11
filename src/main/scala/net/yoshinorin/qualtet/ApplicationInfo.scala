@@ -1,8 +1,9 @@
 package net.yoshinorin.qualtet
 
 import net.yoshinorin.qualtet.buildinfo.BuildInfo
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
+
 import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 lazy val jvmVendor = System.getProperty("java.vendor")
 lazy val runtimeVersion = System.getProperty("java.version")

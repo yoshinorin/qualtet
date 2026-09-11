@@ -1,14 +1,15 @@
 package net.yoshinorin.qualtet.infrastructure.db.doobie
 
+import net.yoshinorin.qualtet.infrastructure.db.Executer
+import net.yoshinorin.qualtet.infrastructure.telemetry.DoobieTracing
+
 import cats.data.ContT
 import cats.implicits.catsSyntaxApplicativeId
 import org.typelevel.doobie.*
 import org.typelevel.doobie.syntax.all.*
 import cats.effect.*
-import net.yoshinorin.qualtet.infrastructure.db.Executer
 import org.typelevel.doobie.free.connection.ConnectionIO
 import org.typelevel.otel4s.trace.Tracer
-import net.yoshinorin.qualtet.infrastructure.telemetry.DoobieTracing
 
 /**
  * Doobie implementation of Executer.

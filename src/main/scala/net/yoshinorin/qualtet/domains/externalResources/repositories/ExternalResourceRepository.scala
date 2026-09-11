@@ -11,8 +11,7 @@ trait ExternalResourceRepository[F[_]] {
 
 object ExternalResourceRepository {
 
-  import org.typelevel.doobie.ConnectionIO
-  import org.typelevel.doobie.{Read, Write}
+  import org.typelevel.doobie.{ConnectionIO, Read, Write}
 
   given ExternalResourceRepository: ExternalResourceRepository[ConnectionIO] = {
     new ExternalResourceRepository[ConnectionIO] {

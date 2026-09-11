@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.http.request
 
-import cats.Monad
-import cats.implicits.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.Request
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException, UnexpectedJsonFormat}
 import net.yoshinorin.qualtet.syntax.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
+import cats.Monad
+import cats.implicits.*
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.util.control.NonFatal
 
 trait Decoder[F[_]: Monad](using loggerFactory: Log4CatsLoggerFactory[F]) {

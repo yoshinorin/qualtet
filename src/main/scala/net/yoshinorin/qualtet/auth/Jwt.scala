@@ -1,16 +1,16 @@
 package net.yoshinorin.qualtet.auth
 
-import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.config.JwtConfig
 import net.yoshinorin.qualtet.domains.authors.Author
 import net.yoshinorin.qualtet.domains.errors.Unauthorized
 import net.yoshinorin.qualtet.syntax.*
-import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
+
+import cats.Monad
+import cats.implicits.*
 import pdi.jwt.JwtOptions
+import pdi.jwt.algorithms.JwtAsymmetricAlgorithm
 import wvlet.airframe.ulid.ULID
 import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
-
 import java.time.Instant
 import scala.util.Try
 

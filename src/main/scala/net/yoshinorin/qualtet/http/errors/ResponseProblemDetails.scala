@@ -2,8 +2,8 @@ package net.yoshinorin.qualtet.http.errors
 
 import net.yoshinorin.qualtet.domains.errors.ProblemDetailsError
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 // https://datatracker.ietf.org/doc/html/rfc7807
 final case class ResponseProblemDetails(

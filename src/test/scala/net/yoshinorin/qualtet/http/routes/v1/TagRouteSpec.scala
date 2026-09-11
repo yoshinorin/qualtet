@@ -1,24 +1,23 @@
 package net.yoshinorin.qualtet.http.routes.v1
 
-import cats.effect.IO
-import org.typelevel.doobie.ConnectionIO
-import org.http4s.client.Client
-import org.http4s.*
-import org.http4s.dsl.io.*
-import org.http4s.headers.`Content-Type`
-import org.http4s.implicits.*
-import org.typelevel.ci.*
-import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.auth.RequestToken
 import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.domains.authors.AuthorResponseModel
 import net.yoshinorin.qualtet.domains.tags.{TagId, TagResponseModel}
+import net.yoshinorin.qualtet.fixture.Fixture.{log4catsLogger, *}
 import net.yoshinorin.qualtet.http.errors.ResponseProblemDetails
-import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.fixture.Fixture.log4catsLogger
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.BeforeAndAfterAll
 
+import cats.effect.IO
+import org.http4s.*
+import org.http4s.client.Client
+import org.http4s.dsl.io.*
+import org.http4s.headers.`Content-Type`
+import org.http4s.implicits.*
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.wordspec.AnyWordSpec
+import org.typelevel.ci.*
+import org.typelevel.doobie.ConnectionIO
+import wvlet.airframe.ulid.ULID
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.routes.v1.TagRouteSpec

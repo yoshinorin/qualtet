@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 final case class TagResponseModel(
   id: TagId,

@@ -2,12 +2,12 @@ package net.yoshinorin.qualtet.infrastructure.versions
 
 object V218Migrator {
 
-  import org.typelevel.doobie.{Read, Write}
-  import org.typelevel.doobie.ConnectionIO
+  import net.yoshinorin.qualtet.domains.series.{SeriesId, SeriesName, SeriesPath}
+  import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagPath}
+
+  import org.typelevel.doobie.{ConnectionIO, Read, Write}
   import org.typelevel.doobie.syntax.all.toSqlInterpolator
   import org.typelevel.doobie.util.update.Update
-  import net.yoshinorin.qualtet.domains.tags.{TagId, TagName, TagPath}
-  import net.yoshinorin.qualtet.domains.series.{SeriesId, SeriesName, SeriesPath}
 
   final case class TagUnsafeV218(
     id: TagId = TagId.apply(),
@@ -99,8 +99,9 @@ object V218Migrator {
     }
   }
 
-  import cats.effect.IO
   import net.yoshinorin.qualtet.infrastructure.db.Executer
+
+  import cats.effect.IO
   import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
   private[versions] def convertTags(tags: Seq[TagUnsafeV218]): Seq[(TagUnsafeV218, Boolean)] = {

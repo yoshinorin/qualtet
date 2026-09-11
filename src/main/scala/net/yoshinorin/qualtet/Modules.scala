@@ -1,45 +1,30 @@
 package net.yoshinorin.qualtet
 
-import cats.effect.IO
-import cats.effect.unsafe.IORuntime
-import cats.effect.kernel.Resource
-import org.typelevel.doobie.ConnectionIO
-import org.typelevel.doobie.util.transactor.Transactor
-import org.typelevel.doobie.util.transactor.Transactor.Aux
-import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
-import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
-import org.typelevel.otel4s.trace.Tracer
-import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
-import net.yoshinorin.qualtet.auth.{AuthService, FileKeyPairConfig, InMemoryKeyPairConfig, Jwt, KeyPairRepository, PemKeyPairConfig}
-import net.yoshinorin.qualtet.cache.CacheRepository
+import net.yoshinorin.qualtet.auth.{AuthService, FileKeyPairConfig, InMemoryKeyPairConfig, Jwt, KeyPairRepository, PemKeyPairConfig, Signature}
+import net.yoshinorin.qualtet.cache.{CacheRepository, CacheService}
 import net.yoshinorin.qualtet.config.{ApplicationConfig, KeyPairSourceConfig}
-import net.yoshinorin.qualtet.domains.pagination.PaginationQueryParametersOps
 import net.yoshinorin.qualtet.domains.archives.{ArchiveRepository, ArchiveRepositoryAdapter, ArchiveService}
-import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleRepositoryAdapter, ArticleService, ArticlesPagination}
+import net.yoshinorin.qualtet.domains.articles.{ArticleRepository, ArticleRepositoryAdapter, ArticleService, ArticlesPagination, ArticleWithCountResponseModel}
 import net.yoshinorin.qualtet.domains.authors.{AuthorRepository, AuthorRepositoryAdapter, AuthorService}
-import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeService
-import net.yoshinorin.qualtet.domains.contentTypes.ContentType
-import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepository, ContentTaggingRepositoryAdapter}
 import net.yoshinorin.qualtet.domains.contents.{ContentRepository, ContentRepositoryAdapter, ContentService}
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializingRepository, ContentSerializingRepositoryAdapter}
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeRepository, ContentTypeRepositoryAdapter}
+import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTaggingRepository, ContentTaggingRepositoryAdapter}
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeRepository, ContentTypeRepositoryAdapter, ContentTypeService}
 import net.yoshinorin.qualtet.domains.externalResources.{ExternalResourceRepository, ExternalResourceRepositoryAdapter}
+import net.yoshinorin.qualtet.domains.feeds.{FeedService, FeedsPagination}
+import net.yoshinorin.qualtet.domains.pagination.PaginationQueryParametersOps
 import net.yoshinorin.qualtet.domains.robots.{RobotsRepository, RobotsRepositoryAdapter}
 import net.yoshinorin.qualtet.domains.search.{SearchRepository, SearchService}
 import net.yoshinorin.qualtet.domains.series.{SeriesRepository, SeriesRepositoryAdapter, SeriesService}
 import net.yoshinorin.qualtet.domains.sitemaps.{SitemapRepositoryAdapter, SitemapService, SitemapsRepository, Url}
 import net.yoshinorin.qualtet.domains.tags.{TagRepository, TagRepositoryAdapter, TagResponseModel, TagService, TagsPagination}
-import net.yoshinorin.qualtet.auth.Signature
-import net.yoshinorin.qualtet.domains.feeds.{FeedService, FeedsPagination}
-import net.yoshinorin.qualtet.cache.CacheService
-import net.yoshinorin.qualtet.domains.articles.ArticleWithCountResponseModel
 import net.yoshinorin.qualtet.http.{AuthProvider, CorsProvider}
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
   ArchiveRoute as ArchiveRouteV1,
   ArticleRoute as ArticleRouteV1,
-  AuthRoute as AuthRouteV1,
   AuthorRoute as AuthorRouteV1,
+  AuthRoute as AuthRouteV1,
   CacheRoute as CacheRouteV1,
   ContentRoute as ContentRouteV1,
   ContentTypeRoute as ContentTypeRouteV1,
@@ -50,16 +35,26 @@ import net.yoshinorin.qualtet.http.routes.v1.{
   SystemRoute as SystemRouteV1,
   TagRoute as TagRouteV1
 }
+import net.yoshinorin.qualtet.infrastructure.db.doobie.{DoobieExecuter, DoobieTransactor}
 import net.yoshinorin.qualtet.infrastructure.db.migrator.FlywayMigrator
 import net.yoshinorin.qualtet.infrastructure.db.migrator.application.Migrator
-import net.yoshinorin.qualtet.infrastructure.db.doobie.{DoobieExecuter, DoobieTransactor}
-import net.yoshinorin.qualtet.infrastructure.versions.{V218Migrator, VersionMigrator, VersionRepository, VersionRepositoryAdapter, VersionService}
 import net.yoshinorin.qualtet.infrastructure.telemetry.Otel
+import net.yoshinorin.qualtet.infrastructure.versions.{V218Migrator, VersionMigrator, VersionRepository, VersionRepositoryAdapter, VersionService}
+import net.yoshinorin.qualtet as TagsPaginationTagRepository
 
+import cats.effect.IO
+import cats.effect.kernel.Resource
+import cats.effect.unsafe.IORuntime
+import org.typelevel.doobie.ConnectionIO
+import org.typelevel.doobie.util.transactor.Transactor
+import org.typelevel.doobie.util.transactor.Transactor.Aux
+import org.typelevel.log4cats.LoggerFactory as Log4CatsLoggerFactory
+import org.typelevel.log4cats.slf4j.Slf4jFactory as Log4CatsSlf4jFactory
+import org.typelevel.otel4s.trace.Tracer
+import com.github.benmanes.caffeine.cache.{Cache as CaffeineCache, Caffeine}
 import pdi.jwt.JwtAlgorithm
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
-import net.yoshinorin.qualtet as TagsPaginationTagRepository
 
 object Modules {
   private val config = ApplicationConfig.load

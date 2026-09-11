@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.errors
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
 import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 sealed trait DomainError extends Exception {
   def detail: String

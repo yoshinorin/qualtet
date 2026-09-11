@@ -1,10 +1,11 @@
 package net.yoshinorin.qualtet.domains.contentTaggings
 
-import cats.data.ContT
-import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.tags.TagId
+
+import cats.Monad
+import cats.data.ContT
+import cats.implicits.*
 
 class ContentTaggingRepositoryAdapter[F[_]: Monad](
   contentTaggingRepository: ContentTaggingRepository[F]

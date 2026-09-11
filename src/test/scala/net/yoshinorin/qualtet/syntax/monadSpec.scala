@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.syntax
 
+import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, UnexpectedException}
+import net.yoshinorin.qualtet.fixture.{error, unsafe}
+
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
-import net.yoshinorin.qualtet.fixture.{error, unsafe}
-import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, UnexpectedException}
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.syntax.MonadSpec

@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import cats.data.ContT
-import cats.Monad
-import cats.implicits.*
 import net.yoshinorin.qualtet.domains.contents.ContentId
+
+import cats.Monad
+import cats.data.ContT
+import cats.implicits.*
 
 class TagRepositoryAdapter[F[_]: Monad](
   tagRepository: TagRepository[F]

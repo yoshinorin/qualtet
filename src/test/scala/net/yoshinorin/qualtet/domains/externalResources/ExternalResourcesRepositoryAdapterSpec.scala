@@ -1,13 +1,13 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
-import net.yoshinorin.qualtet.fixture.unsafe
-import cats.effect.IO
 import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.fixture.Fixture.*
+import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.infrastructure.db.doobie.DoobieExecuter
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.BeforeAndAfterAll
 
+import cats.effect.IO
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.externalResources.ExternalResourcesRepositoryAdapterSpec

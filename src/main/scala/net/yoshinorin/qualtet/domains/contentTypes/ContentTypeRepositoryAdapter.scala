@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-import cats.data.ContT
 import cats.Monad
+import cats.data.ContT
 import cats.implicits.*
 
 class ContentTypeRepositoryAdapter[F[_]: Monad](

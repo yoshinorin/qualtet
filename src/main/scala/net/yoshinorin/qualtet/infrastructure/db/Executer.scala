@@ -2,7 +2,6 @@ package net.yoshinorin.qualtet.infrastructure.db
 
 import cats.Monad
 import cats.data.ContT
-
 import scala.annotation.nowarn
 
 /**

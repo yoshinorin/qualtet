@@ -8,9 +8,9 @@ trait ArchiveRepository[F[_]] {
 
 object ArchiveRepository {
 
-  import org.typelevel.doobie.Read
-  import org.typelevel.doobie.ConnectionIO
   import net.yoshinorin.qualtet.domains.contents.ContentPath
+
+  import org.typelevel.doobie.{ConnectionIO, Read}
 
   given ArchiveRepository: ArchiveRepository[ConnectionIO] = {
     new ArchiveRepository[ConnectionIO] {

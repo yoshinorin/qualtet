@@ -1,8 +1,9 @@
 package net.yoshinorin.qualtet.syntax
 
+import net.yoshinorin.qualtet.validator.Validator
+
 import cats.Monad
 import cats.data.EitherT
-import net.yoshinorin.qualtet.validator.Validator
 
 trait validator {
 

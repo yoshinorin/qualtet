@@ -1,21 +1,22 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import cats.data.{ContT, EitherT}
-import cats.Monad
-import cats.implicits.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
-import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.authors.{AuthorName, AuthorService}
+import net.yoshinorin.qualtet.domains.contents.ContentPath
 import net.yoshinorin.qualtet.domains.contentSerializing.{ContentSerializing, ContentSerializingRepositoryAdapter}
-import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeName, ContentTypeService}
-import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceDeleteModel, ExternalResourceRepositoryAdapter, ExternalResources}
-import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, DomainError, InvalidAuthor, InvalidContentType, InvalidSeries, UnexpectedException}
 import net.yoshinorin.qualtet.domains.contentTaggings.{ContentTagging, ContentTaggingRepositoryAdapter}
+import net.yoshinorin.qualtet.domains.contentTypes.{ContentType, ContentTypeName, ContentTypeService}
+import net.yoshinorin.qualtet.domains.errors.{ContentNotFound, DomainError, InvalidAuthor, InvalidContentType, InvalidSeries, UnexpectedException}
+import net.yoshinorin.qualtet.domains.externalResources.{ExternalResource, ExternalResourceDeleteModel, ExternalResourceRepositoryAdapter, ExternalResources}
 import net.yoshinorin.qualtet.domains.robots.{Attributes, Robots, RobotsRepositoryAdapter}
-import net.yoshinorin.qualtet.domains.tags.{Tag, TagRepositoryAdapter, TagService}
 import net.yoshinorin.qualtet.domains.series.{Series, SeriesRepositoryAdapter, SeriesService}
+import net.yoshinorin.qualtet.domains.tags.{Tag, TagRepositoryAdapter, TagService}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
+
+import cats.Monad
+import cats.data.{ContT, EitherT}
+import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 
 class ContentService[F[_]: Monad, G[_]: Monad](
   contentRepositoryAdapter: ContentRepositoryAdapter[G],

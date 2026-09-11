@@ -7,9 +7,9 @@ trait VersionRepository[F[_]] {
 
 object VersionRepository {
 
-  import org.typelevel.doobie.{Read, Write}
-  import org.typelevel.doobie.ConnectionIO
   import net.yoshinorin.qualtet.syntax.*
+
+  import org.typelevel.doobie.{ConnectionIO, Read, Write}
 
   given VersionRepository: VersionRepository[ConnectionIO] = {
     new VersionRepository[ConnectionIO] {

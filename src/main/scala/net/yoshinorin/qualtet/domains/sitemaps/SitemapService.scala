@@ -1,11 +1,11 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
+import net.yoshinorin.qualtet.cache.CacheRepository
+import net.yoshinorin.qualtet.domains.Cacheable
+import net.yoshinorin.qualtet.infrastructure.db.Executer
+
 import cats.Monad
 import cats.implicits.*
-import net.yoshinorin.qualtet.cache.CacheRepository
-import net.yoshinorin.qualtet.infrastructure.db.Executer
-import net.yoshinorin.qualtet.domains.Cacheable
-
 import scala.annotation.nowarn
 
 class SitemapService[F[_]: Monad, G[_]: Monad @nowarn](

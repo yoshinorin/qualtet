@@ -1,7 +1,8 @@
 package net.yoshinorin.qualtet.domains
 
-import wvlet.airframe.ulid.ULID
 import net.yoshinorin.qualtet.syntax.*
+
+import wvlet.airframe.ulid.ULID
 
 // TODO: rename and consider move somewhere
 trait UlidConvertible[T >: String] {

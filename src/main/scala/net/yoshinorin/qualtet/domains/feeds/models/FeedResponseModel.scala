@@ -1,8 +1,9 @@
 package net.yoshinorin.qualtet.domains.feeds
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.contents.ContentPath
+
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 // https://validator.w3.org/feed/docs/atom.html
 final case class FeedResponseModel(

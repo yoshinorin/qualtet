@@ -15,8 +15,7 @@ trait SeriesRepository[F[_]] {
 
 object SeriesRepository {
 
-  import org.typelevel.doobie.ConnectionIO
-  import org.typelevel.doobie.{Read, Write}
+  import org.typelevel.doobie.{ConnectionIO, Read, Write}
 
   given SeriesRepository: SeriesRepository[ConnectionIO] = {
     new SeriesRepository[ConnectionIO] {

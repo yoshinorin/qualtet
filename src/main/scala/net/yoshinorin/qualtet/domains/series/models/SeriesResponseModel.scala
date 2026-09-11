@@ -1,8 +1,9 @@
 package net.yoshinorin.qualtet.domains.series
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.articles.ArticleResponseModel
+
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 final case class SeriesResponseModel(
   id: SeriesId,

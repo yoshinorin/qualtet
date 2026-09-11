@@ -1,14 +1,14 @@
 package net.yoshinorin.qualtet.domains.search
 
-import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
+import net.yoshinorin.qualtet.domains.errors.{InvalidSearchConditions, ProblemDetailsError}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.domains.errors.{InvalidSearchConditions, ProblemDetailsError}
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.BeforeAndAfterAll
+import net.yoshinorin.qualtet.fixture.unsafe
 
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.search.SearchServiceSpec

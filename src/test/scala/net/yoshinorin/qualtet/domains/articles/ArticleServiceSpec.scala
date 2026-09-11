@@ -1,16 +1,17 @@
 package net.yoshinorin.qualtet.domains.articles
 
-import net.yoshinorin.qualtet.fixture.unsafe
-import cats.effect.IO
-import cats.implicits.*
-import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
 import net.yoshinorin.qualtet.domains.articles.ArticlesPagination
+import net.yoshinorin.qualtet.domains.contents.{ContentPath, ContentRequestModel}
+import net.yoshinorin.qualtet.domains.pagination.{Limit, Page, PaginationQueryParametersModel, PaginationQueryParametersOps}
 import net.yoshinorin.qualtet.domains.robots.Attributes
 import net.yoshinorin.qualtet.domains.tags.{Tag, TagName, TagPath}
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import net.yoshinorin.qualtet.domains.pagination.{Limit, Page, PaginationQueryParametersModel, PaginationQueryParametersOps}
-import org.scalatest.wordspec.AnyWordSpec
+import net.yoshinorin.qualtet.fixture.unsafe
+
+import cats.effect.IO
+import cats.implicits.*
 import org.scalatest.BeforeAndAfterAll
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.articles.ArticleServiceSpec

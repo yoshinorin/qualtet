@@ -1,11 +1,11 @@
 package net.yoshinorin.qualtet.infrastructure.db
 
-import net.yoshinorin.qualtet.fixture.unsafe
-import cats.effect.IO
-import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeService, flywayMigrator, migrator}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeName
-import org.scalatest.wordspec.AnyWordSpec
+import net.yoshinorin.qualtet.fixture.Fixture.{contentTypeService, flywayMigrator, migrator}
+import net.yoshinorin.qualtet.fixture.unsafe
 
+import cats.effect.IO
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.infrastructure.db.MigratorSpec

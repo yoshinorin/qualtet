@@ -1,8 +1,9 @@
 package net.yoshinorin.qualtet.infrastructure.versions
 
-import cats.syntax.eq.*
-import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.domains.errors.InvalidVersion
+import net.yoshinorin.qualtet.fixture.unsafe
+
+import cats.syntax.eq.*
 import org.scalatest.wordspec.AnyWordSpec
 
 // testOnly net.yoshinorin.qualtet.infrastructure.versions.VersionSpec

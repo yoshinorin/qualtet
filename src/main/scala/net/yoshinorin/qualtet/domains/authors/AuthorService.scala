@@ -1,12 +1,12 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import cats.Monad
-import cats.implicits.*
-import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import net.yoshinorin.qualtet.domains.errors.{DomainError, UnexpectedException}
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
+import cats.Monad
+import cats.implicits.*
+import org.typelevel.log4cats.{LoggerFactory as Log4CatsLoggerFactory, SelfAwareStructuredLogger}
 import scala.annotation.nowarn
 
 class AuthorService[F[_]: Monad, G[_]: Monad @nowarn](

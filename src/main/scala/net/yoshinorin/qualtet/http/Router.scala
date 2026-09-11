@@ -1,14 +1,11 @@
 package net.yoshinorin.qualtet.http
 
-import cats.Monad
-import cats.effect.Concurrent
-import org.http4s.server.Router as Http4sRouter
 import net.yoshinorin.qualtet.http.routes.HomeRoute
 import net.yoshinorin.qualtet.http.routes.v1.{
   ArchiveRoute as ArchiveRouteV1,
   ArticleRoute as ArticleRouteV1,
-  AuthRoute as AuthRouteV1,
   AuthorRoute as AuthorRouteV1,
+  AuthRoute as AuthRouteV1,
   CacheRoute as CacheRouteV1,
   ContentRoute as ContentRouteV1,
   ContentTypeRoute as ContentTypeRouteV1,
@@ -20,6 +17,9 @@ import net.yoshinorin.qualtet.http.routes.v1.{
   TagRoute as TagRouteV1
 }
 
+import cats.Monad
+import cats.effect.Concurrent
+import org.http4s.server.Router as Http4sRouter
 import scala.annotation.nowarn
 
 class Router[F[_]: Concurrent, G[_]: Monad @nowarn](

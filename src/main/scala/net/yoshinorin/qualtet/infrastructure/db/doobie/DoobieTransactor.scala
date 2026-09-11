@@ -1,14 +1,15 @@
 package net.yoshinorin.qualtet.infrastructure.db.doobie
 
-import cats.effect.{IO, Resource}
-import org.typelevel.doobie.util.transactor.Transactor
-import org.typelevel.doobie.util.transactor.Transactor.Aux
-import org.typelevel.doobie.util.log.LogHandler
-import org.typelevel.doobie.hikari.*
-import org.typelevel.otel4s.trace.Tracer
-import com.zaxxer.hikari.HikariConfig
 import net.yoshinorin.qualtet.config.DBConfig
 import net.yoshinorin.qualtet.infrastructure.telemetry.DoobieTracing
+
+import cats.effect.{IO, Resource}
+import org.typelevel.doobie.hikari.*
+import org.typelevel.doobie.util.log.LogHandler
+import org.typelevel.doobie.util.transactor.Transactor
+import org.typelevel.doobie.util.transactor.Transactor.Aux
+import org.typelevel.otel4s.trace.Tracer
+import com.zaxxer.hikari.HikariConfig
 
 trait DoobieTransactor[F[G[_], _]] {
   def make(config: DBConfig, tracer: Option[Tracer[IO]]): Resource[IO, Transactor[IO]]

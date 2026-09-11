@@ -1,9 +1,10 @@
 package net.yoshinorin.qualtet.domains.archives
 
-import net.yoshinorin.qualtet.fixture.unsafe
 import net.yoshinorin.qualtet.fixture.Fixture.*
-import org.scalatest.wordspec.AnyWordSpec
+import net.yoshinorin.qualtet.fixture.unsafe
+
 import org.scalatest.BeforeAndAfterAll
+import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.domains.ArchiveServiceSpec

@@ -1,12 +1,12 @@
 package net.yoshinorin.qualtet.http.response
 
+import net.yoshinorin.qualtet.http.errors.*
+
 import cats.effect.IO
 import org.http4s.{Request, Uri}
 import org.http4s.dsl.Http4sDsl
 import org.http4s.implicits.*
-import net.yoshinorin.qualtet.http.errors.*
 import org.scalatest.wordspec.AnyWordSpec
-
 import cats.effect.unsafe.implicits.global
 
 // testOnly net.yoshinorin.qualtet.http.response.TranslatorSpec

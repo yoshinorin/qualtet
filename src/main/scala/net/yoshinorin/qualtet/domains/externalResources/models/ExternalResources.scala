@@ -1,10 +1,11 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
-import com.github.plokhotnyuk.jsoniter_scala.macros.*
-import com.github.plokhotnyuk.jsoniter_scala.core.*
 import net.yoshinorin.qualtet.domains.{FromTrustedSource, ValueExtender}
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.errors.InvalidExternalResourceKind
+
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
 
 opaque type ExternalResourceKind = String
 object ExternalResourceKind extends ValueExtender[ExternalResourceKind] {
