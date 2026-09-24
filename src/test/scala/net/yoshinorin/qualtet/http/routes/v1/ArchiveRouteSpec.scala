@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.http.routes.v1
 
 import net.yoshinorin.qualtet.domains.archives.{ArchiveResponseModel, ArchiveService}
 import net.yoshinorin.qualtet.domains.contents.ContentPath
+import net.yoshinorin.qualtet.domains.period.{From, Period, To}
 import net.yoshinorin.qualtet.fixture.Fixture.{log4catsLogger, *}
 import net.yoshinorin.qualtet.fixture.unsafe
 
@@ -28,43 +29,47 @@ class ArchiveRouteSpec extends AnyWordSpec {
   val request: Request[IO] = Request(method = Method.GET, uri = uri"/v1/archives")
   val client: Client[IO] = Client.fromHttpApp(router.routes.orNotFound)
 
-  when(mockArchiveService.get).thenReturn(
-    IO(
-      Right(
-        Seq(
-          ArchiveResponseModel(
-            path = ContentPath("/test/path1").unsafe,
-            title = "title1",
-            publishedAt = 1567814290
-          ),
-          ArchiveResponseModel(
-            path = ContentPath("/test/path2").unsafe,
-            title = "title2",
-            publishedAt = 1567814391
-          )
-        )
-      )
+  val archives: Seq[ArchiveResponseModel] = Seq(
+    ArchiveResponseModel(
+      path = ContentPath("/test/path1").unsafe,
+      title = "title1",
+      publishedAt = 1567814290
+    ),
+    ArchiveResponseModel(
+      path = ContentPath("/test/path2").unsafe,
+      title = "title2",
+      publishedAt = 1567814391
     )
   )
 
+  val expectJson: String =
+    """
+      |[
+      |  {
+      |    "path" : "/test/path1",
+      |    "title" : "title1",
+      |    "publishedAt" : 1567814290
+      |  },
+      |  {
+      |    "path" : "/test/path2",
+      |    "title" : "title2",
+      |    "publishedAt" : 1567814391
+      |  }
+      |]
+    """.stripMargin.replaceNewlineAndSpace
+
+  when(mockArchiveService.get(Seq())).thenReturn(IO(Right(archives)))
+
+  when(
+    mockArchiveService.get(Seq(Period.Published(Some(From(1567814290)), Some(To(1567814391)))))
+  ).thenReturn(IO(Right(archives.take(1))))
+
+  when(
+    mockArchiveService.get(Seq(Period.Updated(Some(From(1567814290)), None)))
+  ).thenReturn(IO(Right(archives.take(1))))
+
   "ArchiveRoute" should {
     "return all archives" in {
-      val expectJson =
-        """
-          |[
-          |  {
-          |    "path" : "/test/path1",
-          |    "title" : "title1",
-          |    "publishedAt" : 1567814290
-          |  },
-          |  {
-          |    "path" : "/test/path2",
-          |    "title" : "title2",
-          |    "publishedAt" : 1567814391
-          |  }
-          |]
-      """.stripMargin.replaceNewlineAndSpace
-
       client
         .run(request)
         .use { response =>
@@ -72,6 +77,34 @@ class ArchiveRouteSpec extends AnyWordSpec {
             assert(response.status === Ok)
             assert(response.contentType.get === `Content-Type`(MediaType.application.json))
             assert(response.as[String].unsafeRunSync().replaceNewlineAndSpace === expectJson)
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "pass a published period to the service" in {
+      client
+        .run(Request(method = Method.GET, uri = uri"/v1/archives?published_from=1567814290&published_to=1567814391"))
+        .use { response =>
+          IO {
+            val body = response.as[String].unsafeRunSync().replaceNewlineAndSpace
+            assert(response.status === Ok)
+            assert(body.contains("/test/path1"))
+            assert(!body.contains("/test/path2"))
+          }
+        }
+        .unsafeRunSync()
+    }
+
+    "pass an open ended updated period to the service" in {
+      client
+        .run(Request(method = Method.GET, uri = uri"/v1/archives?updated_from=1567814290"))
+        .use { response =>
+          IO {
+            val body = response.as[String].unsafeRunSync().replaceNewlineAndSpace
+            assert(response.status === Ok)
+            assert(body.contains("/test/path1"))
+            assert(!body.contains("/test/path2"))
           }
         }
         .unsafeRunSync()

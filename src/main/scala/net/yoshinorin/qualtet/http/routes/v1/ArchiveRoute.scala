@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.http.routes.v1
 
 import net.yoshinorin.qualtet.domains.archives.ArchiveService
 import net.yoshinorin.qualtet.domains.errors.DomainError
+import net.yoshinorin.qualtet.domains.period.Period
 import net.yoshinorin.qualtet.syntax.*
 
 import cats.Monad
@@ -25,16 +26,18 @@ class ArchiveRoute[F[_]: Concurrent, G[_]: Monad @nowarn](
 
   private[http] def index: HttpRoutes[F] = HttpRoutes.of[F] { implicit r =>
     (r match {
-      case request @ GET -> Root => this.get
+      case request @ GET -> Root =>
+        val periods = request.uri.query.params.asPeriod
+        this.get(periods)
       case request @ OPTIONS -> Root => NoContent()
       case request @ _ => MethodNotAllowed(Allow(Set(GET)))
     }).handleErrorWith(_.logWithStackTrace[F].asResponse)
   }
 
   // archives
-  private[http] def get: Request[F] ?=> F[Response[F]] = {
+  private[http] def get(periods: Seq[Period]): Request[F] ?=> F[Response[F]] = {
     (for {
-      maybeArchives <- EitherT(archiveService.get)
+      maybeArchives <- EitherT(archiveService.get(periods))
     } yield maybeArchives).value.flatMap {
       case Right(archives) => archives.asResponse(Ok)
       case Left(error: DomainError) => error.asResponse

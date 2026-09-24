@@ -2,6 +2,7 @@ package net.yoshinorin.qualtet.domains.archives
 
 import net.yoshinorin.qualtet.domains.contentTypes.{ContentTypeName, ContentTypeService}
 import net.yoshinorin.qualtet.domains.errors.{ContentTypeNotFound, DomainError}
+import net.yoshinorin.qualtet.domains.period.Period
 import net.yoshinorin.qualtet.infrastructure.db.Executer
 import net.yoshinorin.qualtet.syntax.*
 
@@ -17,7 +18,7 @@ class ArchiveService[F[_]: Monad, G[_]: Monad @nowarn](
 
   private given logger: SelfAwareStructuredLogger[F] = loggerFactory.getLoggerFromClass(this.getClass)
 
-  def get: F[Either[DomainError, Seq[ArchiveResponseModel]]] = {
+  def get(periods: Seq[Period]): F[Either[DomainError, Seq[ArchiveResponseModel]]] = {
     ContentTypeName("article") match {
       case Left(error) => Left(error).logLeft[F](Error)
       case Right(contentTypeName) =>
@@ -25,7 +26,7 @@ class ArchiveService[F[_]: Monad, G[_]: Monad @nowarn](
           maybeContentType <- contentTypeService.findByName(contentTypeName)
           result <- maybeContentType match {
             case Some(c) =>
-              executer.transact(archiveRepositoryAdapter.get(c.id)).map(articles => Right(articles))
+              executer.transact(archiveRepositoryAdapter.get(c.id, periods)).map(articles => Right(articles))
             case None =>
               Left(ContentTypeNotFound(detail = "content-type not found: article")).logLeft[F](Warn)
           }

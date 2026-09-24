@@ -2,8 +2,39 @@ get:
   summary: Get all articles
   description: |
     Retrieves all articles in published date order. The response includes a list of simplified article data containing essential information such as path, title, and published date for each article. This endpoint provides a complete archive of all published content.
+
+    Results can be narrowed down by period. Every bound is optional. Bounds are inclusive. Articles are always returned in descending published date order.
   tags:
     - Archives
+  parameters:
+    - in: query
+      name: published_from
+      schema:
+        type: integer
+        format: int64
+      example: 1625065318
+      description: Unix time. Returns articles published at or after this time.
+    - in: query
+      name: published_to
+      schema:
+        type: integer
+        format: int64
+      example: 1656601318
+      description: Unix time. Returns articles published at or before this time.
+    - in: query
+      name: updated_from
+      schema:
+        type: integer
+        format: int64
+      example: 1625065318
+      description: Unix time. Returns articles updated at or after this time.
+    - in: query
+      name: updated_to
+      schema:
+        type: integer
+        format: int64
+      example: 1656601318
+      description: Unix time. Returns articles updated at or before this time.
   responses:
     200:
       description: Response when Success

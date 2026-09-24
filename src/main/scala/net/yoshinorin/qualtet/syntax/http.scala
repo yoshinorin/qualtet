@@ -1,6 +1,7 @@
 package net.yoshinorin.qualtet.syntax
 
 import net.yoshinorin.qualtet.domains.pagination.{Limit, Order, Page, PaginationQueryParametersModel}
+import net.yoshinorin.qualtet.domains.period.*
 import net.yoshinorin.qualtet.http.response.Translator
 
 import cats.Monad
@@ -57,6 +58,27 @@ trait http {
 
       PaginationQueryParametersModel(Some(Page(a.getOrElse(1))), Some(Limit(b.getOrElse(10))), Some(o.getOrElse(Order.DESC)))
     }
-  }
 
+    def asPeriod: Seq[Period] = {
+
+      def parse(target: String)(f: (Option[From], Option[To]) => Period): Option[Period] = {
+        val from = q.getOrElse(s"${target}_from", "").trim
+        val to = q.getOrElse(s"${target}_to", "").trim
+
+        for {
+          periods <- (from, to) match {
+            case (a, b) if (a.nonEmpty && b.isEmpty) => Try(f(Option(From(from.toLong)), None)).toOption
+            case (a, b) if (a.isEmpty && b.nonEmpty) => Try(f(None, Option(To(to.toLong)))).toOption
+            case (a, b) if (a.nonEmpty && b.nonEmpty) => Try(f(Option(From(from.toLong)), Option(To(to.toLong)))).toOption
+            case _ => None
+          }
+        } yield periods
+      }
+
+      Seq(
+        parse("published")(Period.Published(_, _)),
+        parse("updated")(Period.Updated(_, _))
+      ).flatten
+    }
+  }
 }
