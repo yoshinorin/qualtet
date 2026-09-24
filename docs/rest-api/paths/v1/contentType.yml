@@ -10,7 +10,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/contentType'
+            $ref: '../../components/schemas/response/contentType.yml'
     404:
       description: Content-Type not found
       content:
