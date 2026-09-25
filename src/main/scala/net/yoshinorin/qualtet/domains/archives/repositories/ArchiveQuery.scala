@@ -23,6 +23,7 @@ object ArchiveQuery {
     ).flatten
   }
 
+  // TODO: Consider create index for `published_at`, `updated_at`
   def get(contentTypeId: ContentTypeId, periods: Seq[Period]): Read[ArchiveReadModel] ?=> Query0[ArchiveReadModel] = {
     val where = whereAndOpt(fr"content_type_id = ${contentTypeId.value}" :: periods.flatMap(toFragments).toList)
     sql"""
