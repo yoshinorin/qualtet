@@ -2,20 +2,20 @@ import sbt.*
 
 object Dependencies {
 
-  val jsoniterVersion = "2.39.1"
+  val jsoniterVersion = "2.41.2"
   val doobieVersion = "1.0.0-RC13"
   val jwtScalaVersion = "11.0.4"
-  val flywayVersion = "13.1.0"
-  val http4sVersion = "1.0.0-M47"
+  val flywayVersion = "13.8.0"
+  val http4sVersion = "1.0.0-M48"
   val log4catsVersion = "2.8.0"
-  val otel = "1.64.0"
-  val otel4s = "1.0.1"
+  val otel = "1.66.0"
+  val otel4s = "1.1.0"
   val otelInstrumentation = "2.26.1-alpha"
 
   val dependencies = Seq(
     "com.typesafe" % "config" % "1.4.9",
     // NOTE: doobie 1.0.0-RC4 and http4s 1.0.0-M40 dependes on cats-effect 3.5.1
-    "org.typelevel" %% "cats-effect" % "3.7.0",
+    "org.typelevel" %% "cats-effect" % "3.7.1",
     "org.typelevel" %% "log4cats-core" % log4catsVersion,
     "org.typelevel" %% "log4cats-slf4j" % log4catsVersion,
     "org.http4s" %% "http4s-dsl" % http4sVersion,
@@ -36,15 +36,15 @@ object Dependencies {
     "org.typelevel" %% "doobie-hikari" % doobieVersion,
     // "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
     "org.wvlet.airframe" %% "airframe-ulid" % "2026.2.2",
-    "com.github.ben-manes.caffeine" % "caffeine" % "3.2.4",
+    "com.github.ben-manes.caffeine" % "caffeine" % "3.3.0",
     "org.flywaydb" % "flyway-core" % flywayVersion,
     "org.flywaydb" % "flyway-mysql" % flywayVersion,
-    "ch.qos.logback" % "logback-classic" % "1.6.1",
+    "ch.qos.logback" % "logback-classic" % "1.6.4",
     "net.logstash.logback" % "logstash-logback-encoder" % "9.0",
     "org.codehaus.janino" % "janino" % "3.1.12",
-    "org.springframework.security" % "spring-security-core" % "7.1.0",
-    "org.slf4j" % "slf4j-api" % "2.0.18",
+    "org.springframework.security" % "spring-security-core" % "7.1.1",
+    "org.slf4j" % "slf4j-api" % "2.0.20",
     "org.scalatest" %% "scalatest" % "3.2.20" % "test",
-    "org.mockito" % "mockito-core" % "5.23.0" % "test"
+    "org.mockito" % "mockito-core" % "5.24.0" % "test"
   )
 }
