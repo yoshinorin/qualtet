@@ -8,7 +8,7 @@ object Dependencies {
   val flywayVersion = "13.8.0"
   val http4sVersion = "1.0.0-M48"
   val log4catsVersion = "2.8.0"
-  val otel = "1.66.0"
+  val otel = "1.64.0"
   val otel4s = "1.1.0"
   val otelInstrumentation = "2.26.1-alpha"
 
