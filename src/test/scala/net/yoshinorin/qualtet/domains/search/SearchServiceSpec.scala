@@ -10,6 +10,7 @@ import net.yoshinorin.qualtet.fixture.unsafe
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.wordspec.AnyWordSpec
 import cats.effect.unsafe.implicits.global
+import cats.syntax.foldable.*
 
 // testOnly net.yoshinorin.qualtet.domains.search.SearchServiceSpec
 class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
@@ -99,7 +100,7 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         )
       )
       assert(
-        result === List(ProblemDetailsError(message = "Search query required.", code = "SEARCH_QUERY_REQUIRED"))
+        result.leftMap(_.toList).toEither === Left(List(ProblemDetailsError(message = "Search query required.", code = "SEARCH_QUERY_REQUIRED")))
       )
     }
 
@@ -116,16 +117,23 @@ class SearchServiceSpec extends AnyWordSpec with BeforeAndAfterAll {
         )
       )
       assert(
-        result === List(
-          ProblemDetailsError(message = "a is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
-          ProblemDetailsError(message = "abc is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
-          ProblemDetailsError(message = "Contains unusable chars in d.", code = "INVALID_CHARS_INCLUDED"),
-          ProblemDetailsError(message = "d. is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
-          ProblemDetailsError(message = "Contains unusable chars in 1234567890123456", code = "INVALID_CHARS_INCLUDED"),
-          ProblemDetailsError(message = "1234567890123456 is too long. You must be less than 15 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_LONG"),
-          ProblemDetailsError(message = "Search words must be less than 3. You specified 7.", code = "TOO_MANY_SEARCH_WORDS")
+        result.leftMap(_.toList).toEither === Left(
+          List(
+            ProblemDetailsError(message = "a is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
+            ProblemDetailsError(message = "abc is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
+            ProblemDetailsError(message = "Contains unusable chars in d.", code = "INVALID_CHARS_INCLUDED"),
+            ProblemDetailsError(message = "d. is too short. You must be more than 4 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_SHORT"),
+            ProblemDetailsError(message = "Contains unusable chars in 1234567890123456", code = "INVALID_CHARS_INCLUDED"),
+            ProblemDetailsError(message = "1234567890123456 is too long. You must be less than 15 chars in one word.", code = "SEARCH_CHAR_LENGTH_TOO_LONG"),
+            ProblemDetailsError(message = "Search words must be less than 3. You specified 7.", code = "TOO_MANY_SEARCH_WORDS")
+          )
         )
       )
+    }
+
+    "return valid query strings" in {
+      val result = searchService.accumurateQueryStringsErrors(List("aaaa", "bbbb"))
+      assert(result.toEither === Right(List("aaaa", "bbbb")))
     }
 
     "return sarch result" in {

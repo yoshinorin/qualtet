@@ -7,7 +7,7 @@ import net.yoshinorin.qualtet.syntax.*
 import net.yoshinorin.qualtet.types.Points
 
 import cats.Monad
-import cats.data.ContT
+import cats.data.{ContT, Validated, ValidatedNec}
 import cats.implicits.*
 import scala.annotation.tailrec
 
@@ -28,51 +28,58 @@ class SearchService[F[_]: Monad, G[_]: Monad](
 
   private[search] def extractQueryStringsFromQuery(query: Map[String, List[String]]): List[String] = query.getOrElse("q", List()).map(_.trim.toLower)
 
+  private def validateWord(q: String): ValidatedNec[ProblemDetailsError, String] = {
+    val noIgnoreChars = Validated.condNec(
+      !q.hasIgnoreChars,
+      q,
+      ProblemDetailsError(
+        code = "INVALID_CHARS_INCLUDED",
+        message = s"Contains unusable chars in ${q}"
+      )
+    )
+
+    val notTooShort = Validated.condNec(
+      q.length >= searchConfig.minWordLength,
+      q,
+      ProblemDetailsError(
+        code = "SEARCH_CHAR_LENGTH_TOO_SHORT",
+        message = s"${q} is too short. You must be more than ${searchConfig.minWordLength} chars in one word."
+      )
+    )
+
+    val notTooLong = Validated.condNec(
+      q.length <= searchConfig.maxWordLength,
+      q,
+      ProblemDetailsError(
+        code = "SEARCH_CHAR_LENGTH_TOO_LONG",
+        message = s"${q} is too long. You must be less than ${searchConfig.maxWordLength} chars in one word."
+      )
+    )
+
+    (noIgnoreChars, notTooShort, notTooLong).mapN((_, _, _) => q)
+  }
+
   // TODO: move constant values
-  private[search] def accumurateQueryStringsErrors(queryStrings: List[String]): Seq[ProblemDetailsError] = {
-    val validator: (Boolean, ProblemDetailsError) => Option[ProblemDetailsError] = (cond, err) => { if cond then Some(err) else None }
-    val isEmptyError = validator(
-      queryStrings.isEmpty,
+  private[search] def accumurateQueryStringsErrors(queryStrings: List[String]): ValidatedNec[ProblemDetailsError, List[String]] = {
+    val notEmpty = Validated.condNec(
+      queryStrings.nonEmpty,
+      queryStrings,
       ProblemDetailsError(
         code = "SEARCH_QUERY_REQUIRED",
         message = "Search query required."
       )
     )
 
-    val tooManySearchWordsError = validator(
-      queryStrings.sizeIs > searchConfig.maxWords,
+    val notTooManySearchWords = Validated.condNec(
+      queryStrings.sizeIs <= searchConfig.maxWords,
+      queryStrings,
       ProblemDetailsError(
         code = "TOO_MANY_SEARCH_WORDS",
         message = s"Search words must be less than ${searchConfig.maxWords}. You specified ${queryStrings.size}."
       )
     )
 
-    val errorsByWords = queryStrings.map { q =>
-      List(
-        validator(
-          q.hasIgnoreChars,
-          ProblemDetailsError(
-            code = "INVALID_CHARS_INCLUDED",
-            message = s"Contains unusable chars in ${q}"
-          )
-        ),
-        validator(
-          q.length < searchConfig.minWordLength,
-          ProblemDetailsError(
-            code = "SEARCH_CHAR_LENGTH_TOO_SHORT",
-            message = s"${q} is too short. You must be more than ${searchConfig.minWordLength} chars in one word."
-          )
-        ),
-        validator(
-          q.length > searchConfig.maxWordLength,
-          ProblemDetailsError(
-            code = "SEARCH_CHAR_LENGTH_TOO_LONG",
-            message = s"${q} is too long. You must be less than ${searchConfig.maxWordLength} chars in one word."
-          )
-        )
-      )
-    }
-    (errorsByWords.flatten :+ isEmptyError :+ tooManySearchWordsError).collect { case Some(x) => x }
+    (queryStrings.traverse(validateWord), notEmpty, notTooManySearchWords).mapN((qs, _, _) => qs)
   }
 
   private[search] def positions(words: List[String], sentence: String): Seq[Points] = {
@@ -113,9 +120,11 @@ class SearchService[F[_]: Monad, G[_]: Monad](
   def search(query: Map[String, List[String]]): F[SearchWithCountResponseModel] = {
     val queryStrings = extractQueryStringsFromQuery(query)
     for {
-      accErrors <- Monad[F].pure(accumurateQueryStringsErrors(queryStrings))
-      _ <- Monad[F].pure(if (accErrors.nonEmpty) {
-        throw new InvalidSearchConditions(detail = "Invalid search conditions. Please see error details.", errors = Some(accErrors))
+      validated <- Monad[F].pure(accumurateQueryStringsErrors(queryStrings))
+      _ <- Monad[F].pure(validated match {
+        case Validated.Invalid(errors) =>
+          throw new InvalidSearchConditions(detail = "Invalid search conditions. Please see error details.", errors = Some(errors.toList))
+        case Validated.Valid(_) => ()
       })
       searchResult <- executer.transact(cont(queryStrings))
     } yield
