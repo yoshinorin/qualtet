@@ -8,15 +8,17 @@ trait ContentTypeRepository[F[_]] {
 
 object ContentTypeRepository {
 
-  import org.typelevel.doobie.{ConnectionIO, Read, Write}
+  import org.typelevel.doobie.{ConnectionIO, Get, Read, Write}
 
   given ContentTypeRepository: ContentTypeRepository[ConnectionIO] = {
     new ContentTypeRepository[ConnectionIO] {
+      given contentTypeNameGet: Get[ContentTypeName] = Get[String].map(ContentTypeName.fromTrusted)
+
       given contentTypeRead: Read[ContentTypeReadModel] =
-        Read[(String, String)].map { case (id, name) =>
+        Read[(String, ContentTypeName)].map { case (id, name) =>
           ContentTypeReadModel(
             ContentTypeId(id),
-            ContentTypeName.fromTrusted(name)
+            name
           )
         }
 

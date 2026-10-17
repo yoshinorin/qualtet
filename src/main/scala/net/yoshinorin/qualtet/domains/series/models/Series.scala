@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.series
 
-import net.yoshinorin.qualtet.domains.{FromTrustedSource, Request, UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{Request, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.{DomainError, InvalidPath}
 
 import com.github.plokhotnyuk.jsoniter_scala.core.*
@@ -35,12 +35,8 @@ object SeriesPath extends ValueExtender[SeriesPath] {
     Right(normalized)
   }
 
-  private def unsafeFrom(value: String): SeriesPath = {
+  private[domains] def fromTrusted(value: String): SeriesPath = {
     if (!value.startsWith("/")) s"/${value}" else value
-  }
-
-  given fromTrustedSource: FromTrustedSource[SeriesPath] with {
-    def fromTrusted(value: String): SeriesPath = unsafeFrom(value)
   }
 }
 

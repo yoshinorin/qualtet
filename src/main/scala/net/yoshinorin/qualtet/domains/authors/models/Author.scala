@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.authors
 
-import net.yoshinorin.qualtet.domains.{FromTrustedSource, UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.{DomainError, InvalidAuthorDisplayName, InvalidAuthorName, Unauthorized}
 import net.yoshinorin.qualtet.syntax.*
 
@@ -27,11 +27,7 @@ object AuthorName extends ValueExtender[AuthorName] {
     }
   }
 
-  private def unsafeFrom(value: String): AuthorName = value.toLower
-
-  given fromTrustedSource: FromTrustedSource[AuthorName] with {
-    def fromTrusted(value: String): AuthorName = unsafeFrom(value)
-  }
+  private[domains] def fromTrusted(value: String): AuthorName = value.toLower
 }
 
 opaque type AuthorDisplayName = String
@@ -47,11 +43,7 @@ object AuthorDisplayName extends ValueExtender[AuthorDisplayName] {
     }
   }
 
-  private def unsafeFrom(value: String): AuthorDisplayName = value
-
-  given fromTrustedSource: FromTrustedSource[AuthorDisplayName] with {
-    def fromTrusted(value: String): AuthorDisplayName = unsafeFrom(value)
-  }
+  private[domains] def fromTrusted(value: String): AuthorDisplayName = value
 }
 
 opaque type BCryptPassword = String
@@ -65,9 +57,7 @@ object BCryptPassword extends ValueExtender[BCryptPassword] {
     }
   }
 
-  given fromTrustedSource: FromTrustedSource[BCryptPassword] with {
-    def fromTrusted(value: String): BCryptPassword = value
-  }
+  private[domains] def fromTrusted(value: String): BCryptPassword = value
 }
 
 final case class Author(

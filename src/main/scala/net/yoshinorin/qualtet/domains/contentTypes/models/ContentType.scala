@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.contentTypes
 
-import net.yoshinorin.qualtet.domains.{FromTrustedSource, UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.InvalidContentTypeName
 import net.yoshinorin.qualtet.syntax.*
 
@@ -26,11 +26,7 @@ object ContentTypeName extends ValueExtender[ContentTypeName] {
     }
   }
 
-  private def unsafeFrom(value: String): ContentTypeName = value.toLower
-
-  given fromTrustedSource: FromTrustedSource[ContentTypeName] with {
-    def fromTrusted(value: String): ContentTypeName = unsafeFrom(value)
-  }
+  private[domains] def fromTrusted(value: String): ContentTypeName = value.toLower
 }
 
 final case class ContentType(

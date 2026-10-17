@@ -9,12 +9,14 @@ object VersionRepository {
 
   import net.yoshinorin.qualtet.syntax.*
 
-  import org.typelevel.doobie.{ConnectionIO, Read, Write}
+  import org.typelevel.doobie.{ConnectionIO, Get, Read, Write}
 
   given VersionRepository: VersionRepository[ConnectionIO] = {
     new VersionRepository[ConnectionIO] {
+      given versionStringGet: Get[VersionString] = Get[String].map(VersionString.fromTrusted)
+
       given versionRead: Read[VersionReadModel] =
-        Read[(String, String, Long)].map { case (verstion, migrationStatus, deployedAt) =>
+        Read[(VersionString, String, Long)].map { case (verstion, migrationStatus, deployedAt) =>
           VersionReadModel(verstion, MigrationStatus.valueOf(migrationStatus.toUpper), deployedAt)
         }
 

@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.externalResources
 
-import net.yoshinorin.qualtet.domains.{FromTrustedSource, ValueExtender}
+import net.yoshinorin.qualtet.domains.ValueExtender
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.errors.InvalidExternalResourceKind
 
@@ -20,11 +20,7 @@ object ExternalResourceKind extends ValueExtender[ExternalResourceKind] {
     }
   }
 
-  private def unsafeFrom(value: String): ExternalResourceKind = value
-
-  given fromTrustedSource: FromTrustedSource[ExternalResourceKind] with {
-    def fromTrusted(value: String): ExternalResourceKind = unsafeFrom(value)
-  }
+  private[domains] def fromTrusted(value: String): ExternalResourceKind = value
 }
 
 final case class ExternalResource(

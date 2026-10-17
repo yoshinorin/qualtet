@@ -44,28 +44,32 @@ trait AuthorRepository[F[_]] {
 
 object AuthorRepository {
 
-  import org.typelevel.doobie.{ConnectionIO, Read, Write}
+  import org.typelevel.doobie.{ConnectionIO, Get, Read, Write}
 
   given AuthorRepository: AuthorRepository[ConnectionIO] = {
     new AuthorRepository[ConnectionIO] {
 
+      given authorNameGet: Get[AuthorName] = Get[String].map(AuthorName.fromTrusted)
+      given authorDisplayNameGet: Get[AuthorDisplayName] = Get[String].map(AuthorDisplayName.fromTrusted)
+      given bcryptPasswordGet: Get[BCryptPassword] = Get[String].map(BCryptPassword.fromTrusted)
+
       given authorWithoutPasswordRead: Read[AuthorWithoutPasswordReadModel] =
-        Read[(String, String, String, Long)].map { case (id, name, displayName, createdAt) =>
+        Read[(String, AuthorName, AuthorDisplayName, Long)].map { case (id, name, displayName, createdAt) =>
           AuthorWithoutPasswordReadModel(
             AuthorId(id),
-            AuthorName.fromTrusted(name),
-            AuthorDisplayName.fromTrusted(displayName),
+            name,
+            displayName,
             createdAt
           )
         }
 
       given authorRead: Read[AuthorReadModel] =
-        Read[(String, String, String, String, Long)].map { case (id, name, displayName, password, createdAt) =>
+        Read[(String, AuthorName, AuthorDisplayName, BCryptPassword, Long)].map { case (id, name, displayName, password, createdAt) =>
           AuthorReadModel(
             AuthorId(id),
-            AuthorName.fromTrusted(name),
-            AuthorDisplayName.fromTrusted(displayName),
-            BCryptPassword.fromTrusted(password),
+            name,
+            displayName,
+            password,
             createdAt
           )
         }

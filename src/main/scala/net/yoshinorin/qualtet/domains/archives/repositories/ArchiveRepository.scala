@@ -11,13 +11,15 @@ object ArchiveRepository {
 
   import net.yoshinorin.qualtet.domains.contents.ContentPath
 
-  import org.typelevel.doobie.{ConnectionIO, Read}
+  import org.typelevel.doobie.{ConnectionIO, Get, Read}
 
   given ArchiveRepository: ArchiveRepository[ConnectionIO] = {
     new ArchiveRepository[ConnectionIO] {
+      given contentPathGet: Get[ContentPath] = Get[String].map(ContentPath.fromTrusted)
+
       given archivesRead: Read[ArchiveReadModel] =
-        Read[(String, String, Long)].map { case (path, title, publishedAt) =>
-          ArchiveReadModel(ContentPath.fromTrusted(path), title, publishedAt)
+        Read[(ContentPath, String, Long)].map { case (path, title, publishedAt) =>
+          ArchiveReadModel(path, title, publishedAt)
         }
 
       override def get(contentTypeId: ContentTypeId, periods: Seq[Period]): ConnectionIO[Seq[ArchiveReadModel]] =

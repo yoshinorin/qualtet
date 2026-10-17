@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.sitemaps
 
-import net.yoshinorin.qualtet.domains.{FromTrustedSource, ValueExtender}
+import net.yoshinorin.qualtet.domains.ValueExtender
 import net.yoshinorin.qualtet.domains.errors.InvalidLastMod
 
 import com.github.plokhotnyuk.jsoniter_scala.core.*
@@ -54,11 +54,7 @@ object LastMod extends ValueExtender[LastMod] {
     }
   }
 
-  private def unsafeFrom(value: String): LastMod = value
-
-  given fromTrustedSource: FromTrustedSource[LastMod] with {
-    def fromTrusted(value: String): LastMod = unsafeFrom(value)
-  }
+  private[domains] def fromTrusted(value: String): LastMod = value
 }
 
 // TODO: consider rename to Sitemaps

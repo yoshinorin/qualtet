@@ -11,19 +11,21 @@ trait ExternalResourceRepository[F[_]] {
 
 object ExternalResourceRepository {
 
-  import org.typelevel.doobie.{ConnectionIO, Read, Write}
+  import org.typelevel.doobie.{ConnectionIO, Get, Read, Write}
 
   given ExternalResourceRepository: ExternalResourceRepository[ConnectionIO] = {
     new ExternalResourceRepository[ConnectionIO] {
+
+      given externalResourceKindGet: Get[ExternalResourceKind] = Get[String].map(ExternalResourceKind.fromTrusted)
 
       given externalResourceWrite: Write[ExternalResourceWriteModel] =
         Write[(String, String, String)].contramap(p => (p.contentId.value, p.kind.value, p.name))
 
       given externalResourceRead: Read[ExternalResourcesReadModel] =
-        Read[(String, String, String)].map { case (contentId, kind, name) =>
+        Read[(String, ExternalResourceKind, String)].map { case (contentId, kind, name) =>
           ExternalResourcesReadModel(
             ContentId(contentId),
-            ExternalResourceKind.fromTrusted(kind),
+            kind,
             name
           )
         }

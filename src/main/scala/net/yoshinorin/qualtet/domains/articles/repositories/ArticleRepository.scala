@@ -19,17 +19,19 @@ object ArticleRepository {
 
   import net.yoshinorin.qualtet.domains.contents.ContentId
 
-  import org.typelevel.doobie.{ConnectionIO, Read}
+  import org.typelevel.doobie.{ConnectionIO, Get, Read}
 
   given ArticleRepository: ArticleRepository[ConnectionIO] = {
     new ArticleRepository[ConnectionIO] {
+      given contentPathGet: Get[ContentPath] = Get[String].map(ContentPath.fromTrusted)
+
       given articlesWithCountRead: Read[(Int, ArticleReadModel)] =
-        Read[(Int, (String, String, String, String, Long, Long))].map { case (cnt, (id, path, title, content, publishedAt, updatedAt)) =>
+        Read[(Int, (String, ContentPath, String, String, Long, Long))].map { case (cnt, (id, path, title, content, publishedAt, updatedAt)) =>
           (
             cnt,
             ArticleReadModel(
               ContentId(id),
-              ContentPath.fromTrusted(path),
+              path,
               title,
               content,
               publishedAt,

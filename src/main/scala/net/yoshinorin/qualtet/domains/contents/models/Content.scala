@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import net.yoshinorin.qualtet.domains.{FromTrustedSource, UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.InvalidPath
@@ -58,12 +58,8 @@ object ContentPath extends ValueExtender[ContentPath] {
     Right(normalized)
   }
 
-  private def unsafeFrom(value: String): ContentPath = {
+  private[domains] def fromTrusted(value: String): ContentPath = {
     if (!value.startsWith("/")) s"/${value}" else value
-  }
-
-  given fromTrustedSource: FromTrustedSource[ContentPath] with {
-    def fromTrusted(value: String): ContentPath = unsafeFrom(value)
   }
 }
 

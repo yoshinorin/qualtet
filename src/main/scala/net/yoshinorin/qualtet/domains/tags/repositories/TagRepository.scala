@@ -13,29 +13,31 @@ trait TagRepository[F[_]] {
 
 object TagRepository {
 
-  import org.typelevel.doobie.{ConnectionIO, Read, Write}
+  import org.typelevel.doobie.{ConnectionIO, Get, Read, Write}
 
   given TagRepository: TagRepository[ConnectionIO] = {
     new TagRepository[ConnectionIO] {
 
+      given tagPathGet: Get[TagPath] = Get[String].map(TagPath.fromTrusted)
+
       given tagWithCountRead: Read[(Int, TagReadModel)] =
-        Read[(Int, (String, String, String))].map { case (count, (id, name, path)) =>
+        Read[(Int, (String, String, TagPath))].map { case (count, (id, name, path)) =>
           (
             count,
             TagReadModel(
               TagId(id),
               TagName(name),
-              TagPath.fromTrusted(path)
+              path
             )
           )
         }
 
       given tagRead: Read[TagReadModel] =
-        Read[(String, String, String)].map { case (id, name, path) =>
+        Read[(String, String, TagPath)].map { case (id, name, path) =>
           TagReadModel(
             TagId(id),
             TagName(name),
-            TagPath.fromTrusted(path)
+            path
           )
         }
 

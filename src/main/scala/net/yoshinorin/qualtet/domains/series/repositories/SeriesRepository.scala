@@ -15,10 +15,12 @@ trait SeriesRepository[F[_]] {
 
 object SeriesRepository {
 
-  import org.typelevel.doobie.{ConnectionIO, Read, Write}
+  import org.typelevel.doobie.{ConnectionIO, Get, Read, Write}
 
   given SeriesRepository: SeriesRepository[ConnectionIO] = {
     new SeriesRepository[ConnectionIO] {
+
+      given seriesPathGet: Get[SeriesPath] = Get[String].map(SeriesPath.fromTrusted)
 
       given seriesWrite: Write[SeriesWriteModel] =
         Write[(String, String, String, String, Option[String])].contramap { s =>
@@ -26,11 +28,11 @@ object SeriesRepository {
         }
 
       given seriesRead: Read[SeriesReadModel] =
-        Read[(String, String, String, String, Option[String])].map { case (seriesId, name, path, title, description) =>
+        Read[(String, String, SeriesPath, String, Option[String])].map { case (seriesId, name, path, title, description) =>
           SeriesReadModel(
             SeriesId(seriesId),
             SeriesName(name),
-            SeriesPath.fromTrusted(path),
+            path,
             title,
             description
           )

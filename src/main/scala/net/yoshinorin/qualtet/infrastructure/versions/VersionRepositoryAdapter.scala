@@ -25,8 +25,7 @@ class VersionRepositoryAdapter[F[_]: Monad](
       versionRepository.get.map { version =>
         version.map(v =>
           Version(
-            // TODO: use `unsafe` in `Repository`
-            version = VersionString.fromTrusted(v.version),
+            version = v.version,
             migrationStatus = v.migrationStatus,
             deployedAt = v.deployedAt
           )

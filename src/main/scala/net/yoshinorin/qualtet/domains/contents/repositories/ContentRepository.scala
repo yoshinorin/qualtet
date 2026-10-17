@@ -17,18 +17,22 @@ object ContentRepository {
   import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
   import net.yoshinorin.qualtet.domains.robots.Attributes
 
-  import org.typelevel.doobie.{ConnectionIO, Read, Write}
+  import org.typelevel.doobie.{ConnectionIO, Get, Read, Write}
 
   given ContentRepository: ContentRepository[ConnectionIO] = {
     new ContentRepository[ConnectionIO] {
+      given contentPathGet: Get[ContentPath] = Get[String].map(ContentPath.fromTrusted)
+      given attributesGet: Get[Attributes] = Get[String].map(Attributes.fromTrusted)
+      given authorNameGet: Get[AuthorName] = Get[String].map(AuthorName.fromTrusted)
+
       given contentRead: Read[ContentReadModel] =
-        Read[(String, String, String, String, String, String, String, Long, Long)].map {
+        Read[(String, String, String, ContentPath, String, String, String, Long, Long)].map {
           case (contentId, authorId, contentTypeId, path, title, rawContent, htmlContent, publishedAt, updatedAt) =>
             ContentReadModel(
               ContentId(contentId),
               AuthorId(authorId),
               ContentTypeId(contentTypeId),
-              ContentPath.fromTrusted(path),
+              path,
               title,
               rawContent,
               htmlContent,
@@ -38,7 +42,7 @@ object ContentRepository {
         }
 
       given contentWithMetaRead: Read[ContentWithMetaReadModel] =
-        Read[(String, String, String, Option[String], Option[String], Option[String], Option[String], Option[String], String, String, Long, Long)].map {
+        Read[(String, String, Attributes, Option[String], Option[String], Option[String], Option[String], Option[String], String, AuthorName, Long, Long)].map {
           case (
                 id,
                 title,
@@ -56,21 +60,21 @@ object ContentRepository {
             ContentWithMetaReadModel(
               ContentId(id),
               title,
-              Attributes.fromTrusted(robotsAttributes),
+              robotsAttributes,
               externalResourceKindKeys,
               externalResourceKindValues,
               tagIds,
               tagNames,
               tagPaths,
               content,
-              AuthorName.fromTrusted(authorName),
+              authorName,
               publishedAt,
               updatedAt
             )
         }
 
       given adjacentContentRead: Read[(Option[AdjacentContentModel], Option[AdjacentContentModel])] =
-        Read[(Option[String], Option[String], Option[String], Option[Long], Option[String], Option[String], Option[String], Option[Long])].map {
+        Read[(Option[String], Option[ContentPath], Option[String], Option[Long], Option[String], Option[ContentPath], Option[String], Option[Long])].map {
           case (prevId, prevPath, prevTitle, prevPublished, nextId, nextPath, nextTitle, nextPublished) =>
             val previous = for {
               id <- prevId
@@ -79,7 +83,7 @@ object ContentRepository {
               published <- prevPublished
             } yield AdjacentContentModel(
               ContentId(id),
-              ContentPath.fromTrusted(path),
+              path,
               title,
               published
             )
@@ -91,7 +95,7 @@ object ContentRepository {
               published <- nextPublished
             } yield AdjacentContentModel(
               ContentId(id),
-              ContentPath.fromTrusted(path),
+              path,
               title,
               published
             )

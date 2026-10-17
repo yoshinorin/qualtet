@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.robots
 
-import net.yoshinorin.qualtet.domains.{FromTrustedSource, ValueExtender}
+import net.yoshinorin.qualtet.domains.ValueExtender
 import net.yoshinorin.qualtet.domains.contents.ContentId
 import net.yoshinorin.qualtet.domains.errors.InvalidAttributes
 
@@ -41,11 +41,7 @@ object Attributes extends ValueExtender[Attributes] {
     }
   }
 
-  private def unsafeFrom(value: String): Attributes = value
-
-  given fromTrustedSource: FromTrustedSource[Attributes] with {
-    def fromTrusted(value: String): Attributes = unsafeFrom(value)
-  }
+  private[domains] def fromTrusted(value: String): Attributes = value
 
   extension (attributes: Attributes) {
     def sort: Attributes = attributes.value.split(",").map(x => x.trim).sorted.mkString(", ")

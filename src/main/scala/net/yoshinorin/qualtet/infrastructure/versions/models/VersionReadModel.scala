@@ -1,7 +1,7 @@
 package net.yoshinorin.qualtet.infrastructure.versions
 
 final case class VersionReadModel(
-  version: String,
+  version: VersionString,
   migrationStatus: MigrationStatus,
   deployedAt: Long
 )

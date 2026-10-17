@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.tags
 
-import net.yoshinorin.qualtet.domains.{FromTrustedSource, Request, UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{Request, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.{DomainError, InvalidPath}
 
 import com.github.plokhotnyuk.jsoniter_scala.core.*
@@ -37,12 +37,8 @@ object TagPath extends ValueExtender[TagPath] {
     Right(normalized)
   }
 
-  private def unsafeFrom(value: String): TagPath = {
+  private[domains] def fromTrusted(value: String): TagPath = {
     if (!value.startsWith("/")) s"/${value}" else value
-  }
-
-  given fromTrustedSource: FromTrustedSource[TagPath] with {
-    def fromTrusted(value: String): TagPath = unsafeFrom(value)
   }
 }
 

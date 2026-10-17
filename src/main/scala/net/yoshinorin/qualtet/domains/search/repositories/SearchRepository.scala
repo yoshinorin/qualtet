@@ -8,17 +8,19 @@ object SearchRepository {
 
   import net.yoshinorin.qualtet.domains.contents.ContentPath
 
-  import org.typelevel.doobie.{ConnectionIO, Read}
+  import org.typelevel.doobie.{ConnectionIO, Get, Read}
 
   given SearchRepository: SearchRepository[ConnectionIO] = {
     new SearchRepository[ConnectionIO] {
 
+      given contentPathGet: Get[ContentPath] = Get[String].map(ContentPath.fromTrusted)
+
       given responseArticleWithCountRead: Read[(Int, SearchResuletReadModel)] =
-        Read[(Int, (String, String, String, Long, Long))].map { case (cnt, (path, title, content, publishedAt, updatedAt)) =>
+        Read[(Int, (ContentPath, String, String, Long, Long))].map { case (cnt, (path, title, content, publishedAt, updatedAt)) =>
           (
             cnt,
             SearchResuletReadModel(
-              ContentPath.fromTrusted(path),
+              path,
               title,
               content,
               publishedAt,

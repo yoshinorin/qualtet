@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.infrastructure.versions
 
-import net.yoshinorin.qualtet.domains.{FromTrustedSource, ValueExtender}
+import net.yoshinorin.qualtet.domains.ValueExtender
 import net.yoshinorin.qualtet.domains.errors.InvalidVersion
 
 enum MigrationStatus(val value: String) {
@@ -42,11 +42,7 @@ object VersionString extends ValueExtender[VersionString] {
     }
   }
 
-  private def unsafeFrom(value: String): VersionString = value
-
-  given fromTrustedSource: FromTrustedSource[VersionString] with {
-    def fromTrusted(value: String): VersionString = unsafeFrom(value)
-  }
+  private[versions] def fromTrusted(value: String): VersionString = value
 
   given eq: Eq[VersionString] = Eq.instance { (a, b) =>
     a.value == b.value
