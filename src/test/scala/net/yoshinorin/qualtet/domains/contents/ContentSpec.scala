@@ -167,6 +167,33 @@ class ContentSpec extends AnyWordSpec {
       assert(contentPath.isRight)
       assert(contentPath.unsafe.value === s"/${pathWithoutSlash}")
     }
+
+    "accept path with max length" in {
+      val validPaths = List(
+        "/" + "a" * 511,
+        "a" * 511,
+        "/" + "😀" * 511
+      )
+
+      validPaths.foreach { path =>
+        assert(ContentPath(path).isRight)
+      }
+    }
+
+    "throw InvalidPath exception with too long path" in {
+      val invalidPaths = List(
+        "/" + "a" * 512,
+        "a" * 512,
+        "/" + "😀" * 512,
+        "%" * 8000 + "x" * 16000 + "\n"
+      )
+
+      invalidPaths.foreach { path =>
+        val result = ContentPath(path)
+        assert(result.isLeft)
+        assert(result.error.detail === "Path must be 512 characters or less")
+      }
+    }
   }
 
   "ContentPath.fromTrusted" should {

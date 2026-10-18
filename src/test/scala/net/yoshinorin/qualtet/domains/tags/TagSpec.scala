@@ -127,6 +127,33 @@ class TagSpec extends AnyWordSpec {
       assert(tagPath.isRight)
       assert(tagPath.unsafe.value === s"/${pathWithoutSlash}")
     }
+
+    "accept path with max length" in {
+      val validPaths = List(
+        "/" + "a" * 511,
+        "a" * 511,
+        "/" + "😀" * 511
+      )
+
+      validPaths.foreach { path =>
+        assert(TagPath(path).isRight)
+      }
+    }
+
+    "throw InvalidPath exception with too long path" in {
+      val invalidPaths = List(
+        "/" + "a" * 512,
+        "a" * 512,
+        "/" + "😀" * 512,
+        "%" * 8000 + "x" * 16000 + "\n"
+      )
+
+      invalidPaths.foreach { path =>
+        val result = TagPath(path)
+        assert(result.isLeft)
+        assert(result.left.toOption.get.detail === "Path must be 512 characters or less")
+      }
+    }
   }
 
   "TagPath.fromTrusted" should {
