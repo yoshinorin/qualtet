@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.contents
 
-import net.yoshinorin.qualtet.domains.{UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{PathValidator, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.authors.{AuthorId, AuthorName}
 import net.yoshinorin.qualtet.domains.contentTypes.ContentTypeId
 import net.yoshinorin.qualtet.domains.errors.InvalidPath
@@ -18,11 +18,8 @@ object ContentId extends ValueExtender[ContentId] with UlidConvertible[ContentId
 }
 
 opaque type ContentPath = String
-object ContentPath extends ValueExtender[ContentPath] {
+object ContentPath extends ValueExtender[ContentPath] with PathValidator {
   given codecPath: JsonValueCodec[ContentPath] = JsonCodecMaker.make
-
-  private lazy val unusableChars = "[:?#@!$&'()*+,;=<>\"\\\\^`{}|~]"
-  private lazy val invalidPercentRegex = ".*%(?![0-9A-Fa-f]{2}).*"
 
   private val RESERVED_PATHS: Set[String] = Set(
     "adjacent",
@@ -44,23 +41,13 @@ object ContentPath extends ValueExtender[ContentPath] {
   }
 
   def apply(value: String): Either[InvalidPath, ContentPath] = {
-
-    if (unusableChars.r.findFirstMatchIn(value).isDefined) {
-      return Left(InvalidPath(detail = s"Invalid character contains: ${value}"))
-    }
-    if (invalidPercentRegex.r.matches(value)) {
-      return Left(InvalidPath(detail = s"Invalid percent encoding in path: ${value}"))
-    }
-    if (isReserved(value)) {
-      return Left(InvalidPath(detail = s"Path contains reserved word: ${value}"))
-    }
-    val normalized = if (!value.startsWith("/")) s"/${value}" else value
-    Right(normalized)
+    for {
+      _ <- validate(value)
+      _ <- if (isReserved(value)) Left(InvalidPath(detail = s"Path contains reserved word: ${value}")) else Right(())
+    } yield normalize(value)
   }
 
-  private[domains] def fromTrusted(value: String): ContentPath = {
-    if (!value.startsWith("/")) s"/${value}" else value
-  }
+  private[domains] def fromTrusted(value: String): ContentPath = normalize(value)
 }
 
 final case class Content(

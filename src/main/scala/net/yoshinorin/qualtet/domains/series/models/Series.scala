@@ -1,6 +1,6 @@
 package net.yoshinorin.qualtet.domains.series
 
-import net.yoshinorin.qualtet.domains.{Request, UlidConvertible, ValueExtender}
+import net.yoshinorin.qualtet.domains.{PathValidator, Request, UlidConvertible, ValueExtender}
 import net.yoshinorin.qualtet.domains.errors.{DomainError, InvalidPath}
 
 import com.github.plokhotnyuk.jsoniter_scala.core.*
@@ -18,26 +18,14 @@ object SeriesName extends ValueExtender[SeriesName] {
 }
 
 opaque type SeriesPath = String
-object SeriesPath extends ValueExtender[SeriesPath] {
+object SeriesPath extends ValueExtender[SeriesPath] with PathValidator {
   given codecSeriesPath: JsonValueCodec[SeriesPath] = JsonCodecMaker.make
 
-  private lazy val unusableChars = "[:?#@!$&'()*+,;=<>\"\\\\^`{}|~]"
-  private lazy val invalidPercentRegex = ".*%(?![0-9A-Fa-f]{2}).*"
-
   def apply(value: String): Either[InvalidPath, SeriesPath] = {
-    if (unusableChars.r.findFirstMatchIn(value).isDefined) {
-      return Left(InvalidPath(detail = s"Invalid character contains: ${value}"))
-    }
-    if (invalidPercentRegex.r.matches(value)) {
-      return Left(InvalidPath(detail = s"Invalid percent encoding in path: ${value}"))
-    }
-    val normalized = if (!value.startsWith("/")) s"/${value}" else value
-    Right(normalized)
+    validate(value).map(_ => normalize(value))
   }
 
-  private[domains] def fromTrusted(value: String): SeriesPath = {
-    if (!value.startsWith("/")) s"/${value}" else value
-  }
+  private[domains] def fromTrusted(value: String): SeriesPath = normalize(value)
 }
 
 final case class Series(
