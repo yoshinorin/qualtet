@@ -20,9 +20,8 @@ RUN sh docker/commit-hash.sh \
 
 
 # Runtime image
-# NOTE: need jdk image for inspect heapdump (e.g: need jstat etc)
-# docker buildx imagetools inspect eclipse-temurin:25.0.4.1_1-jdk-resolute
-FROM eclipse-temurin:25.0.4.1_1-jdk-resolute@sha256:17e081f8323d42b077a835963e96df7b5a7747ffa478a9aee2d0cd1ad7da71ed
+# docker buildx imagetools inspect eclipse-temurin:25.0.4.1_1-jre-resolute
+FROM eclipse-temurin:25.0.4.1_1-jre-resolute@sha256:41d9263c0d5b2a74d89af6e29e73b04298bc65e3cb705d03e9e2271ef49fef84
 
 WORKDIR /usr/opt/qualtet
 
