@@ -37,7 +37,7 @@ jobs:
         run: sbt compile
 
       - name: Caching
-        uses: coursier/cache-action@95e5b1029b6b86e7bac033ee44a0697d8a527d2d #8.1.1
+        uses: coursier/cache-action@ee0650f98295f27a505e4bfd284c9bfaa913a465 #9.0.1
 
       - name: Cache test DB image
         id: dbimage
